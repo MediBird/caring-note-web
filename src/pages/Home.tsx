@@ -40,6 +40,7 @@ function Home() {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center bg-blue-300 w-full px-20 pt-10">
+          <DatePickerComponent></DatePickerComponent>
           <div className="bg-gray-100 w-full h-screen rounded-xl cursor-pointer">
             <p
               className="text-3xl text-center mt-10"

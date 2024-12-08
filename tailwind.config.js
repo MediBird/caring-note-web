@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/react-tailwindcss-datepicker/dist/index.esm.{js,ts}",
+  ],
   theme: {
     extend: {
       fontSize: {
@@ -22,6 +26,13 @@ export default {
         bold: "700",
       },
       colors: {
+        blue: {
+          100: "#CCE0FF",
+          200: "#D5E9FF",
+          500: "#2888F6",
+          600: "#0076E0",
+          700: "#005EB4",
+        },
         primary: {
           5: "#F5F7FF",
           10: "#CCE0FF",

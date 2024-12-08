@@ -1,79 +1,44 @@
-import { ko } from "date-fns/locale"; // 한국어 로케일
 import React, { useState } from "react";
-import DatePicker, { registerLocale } from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
 
-registerLocale("ko", ko);
+interface DatePickerComponentProps {
+  placeholder?: string; // Placeholder를 동적으로 받을 수 있도록 설정
+  useRange?: boolean; // 범위 선택 여부
+  asSingle?: boolean; // 단일 선택 여부
+  displayFormat?: string; // 날짜 표시 포맷
+  readOnly?: boolean;
+}
 
-const DatePickerComponent: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
+  placeholder = "날짜를 선택하세요", // 기본 Placeholder
+  useRange = false, // 기본값: 단일 날짜 선택
+  asSingle = true, // 기본값: 단일 날짜 선택 UI
+  displayFormat = "YYYY년 MM월 DD일", // 기본 날짜 표시 포맷
+  readOnly = false,
+}) => {
+  const [value, setValue] = useState<DateValueType>({
+    startDate: new Date(),
+    endDate: null,
+  });
 
-  const renderCustomHeader = ({
-    date,
-    decreaseMonth,
-    increaseMonth,
-  }: {
-    date: Date;
-    decreaseMonth: () => void;
-    increaseMonth: () => void;
-  }) => (
-    <div className="flex justify-between items-center px-4 py-2">
-      <span className="text-black font-bold">
-        {date.getFullYear()}년 {date.getMonth() + 1}월
-      </span>
-      <button
-        onClick={decreaseMonth}
-        className="text-gray-500 hover:text-blue-500 focus:outline-none">
-        {"<"}
-      </button>
-      <button
-        onClick={increaseMonth}
-        className=" text-gray-500 hover:text-blue-500 focus:outline-none">
-        {">"}
-      </button>
-    </div>
-  );
-
-  const dayClassName = (date: Date) => {
-    const today = new Date();
-    if (
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    ) {
-      return "border-primary-60 text-body2 text-grayscale-80 font-medium rounded-full"; // 오늘 날짜 스타일
-    }
-    if (
-      selectedDate &&
-      date.getDate() === selectedDate.getDate() &&
-      date.getMonth() === selectedDate.getMonth() &&
-      date.getFullYear() === selectedDate.getFullYear()
-    ) {
-      return "bg-primary-50 rounded-full text-white text-body2 font-medium";
-    }
-    return "hover:bg-grayscale-5";
+  const handleValueChange = (newValue: DateValueType) => {
+    setValue(newValue);
   };
-
-  const onChange = (date: Date | null) => {
-    setSelectedDate(date);
-  };
-
   return (
-    <div className="w-full max-w-xs">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        날짜 선택
-      </label>
-      <DatePicker
-        selected={selectedDate}
-        onChange={onChange}
-        dateFormat="yyyy년 MM월 dd일"
-        locale="ko"
-        renderCustomHeader={renderCustomHeader}
-        dayClassName={dayClassName}
-        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        popperClassName="shadow-lg rounded-md"
-      />
-    </div>
+    <Datepicker
+      value={value}
+      primaryColor={"blue"}
+      i18n={"ko"}
+      onChange={handleValueChange}
+      useRange={useRange}
+      asSingle={asSingle}
+      readOnly={readOnly}
+      displayFormat={displayFormat}
+      placeholder={placeholder} // Placeholder를 props로 전달
+      inputClassName="w-full rounded-md focus:ring-0 font-medium bg-white focus:border-grayscale-5 placeholder:text-grayscale-40 text-grayscale-80 dark:bg-blue-900 dark:placeholder:text-blue-100"
+      popoverDirection="down"
+      toggleClassName="absolute text-grayscale-80 right-0 h-full px-3 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+    />
   );
 };
 
