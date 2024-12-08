@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 
@@ -19,14 +18,9 @@ const generateTimeOptions = (): TimeOption[] => {
 
 const timeOptions = generateTimeOptions();
 
-const TimePickerComponent: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+const TimePicker: React.FC = () => {
   const [startTime, setStartTime] = useState<TimeOption | null>(null);
   const [endTime, setEndTime] = useState<TimeOption | null>(null);
-
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-  };
 
   const handleStartTimeChange = (option: TimeOption | null) => {
     setStartTime(option);
@@ -38,19 +32,6 @@ const TimePickerComponent: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center space-y-6">
-      {/* Date Picker */}
-      <div className="w-full max-w-xs">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          날짜 선택
-        </label>
-        <DatePicker
-          selected={selectedDate}
-          onChange={handleDateChange}
-          dateFormat="yyyy년 MM월 dd일"
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        />
-      </div>
-
       {/* Time Picker */}
       <div className="flex items-center space-x-4 w-full max-w-lg">
         <div className="w-full">
@@ -85,4 +66,4 @@ const TimePickerComponent: React.FC = () => {
   );
 };
 
-export default TimePickerComponent;
+export default TimePicker;
