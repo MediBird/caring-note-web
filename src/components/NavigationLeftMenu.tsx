@@ -1,28 +1,32 @@
 import React, { useState } from "react";
 
 interface NavigationLeftMenuProps {
-  isActive?: boolean;
-  imgSrc: string;
-  activeImgSrc: string;
   menuName: string;
+  menuIcon?: React.ReactNode;
+  activteMenuIcon?: React.ReactNode;
+  isActive?: boolean;
   onClick?: () => void;
 }
 
 const NavigationLeftMenu: React.FC<NavigationLeftMenuProps> = ({
-  isActive = false,
-  activeImgSrc,
-  imgSrc,
   menuName,
+  menuIcon,
+  activteMenuIcon,
+  isActive = false,
   onClick,
 }) => {
   return (
     <div
-      className={`flex items-center mx-2 p-4 cursor-pointer rounded-md border-2 border-white hover:border-2 hover:border-blue-300 ${
-        isActive ? "text-blue-500 font-bold bg-blue-100 " : "bg-white text-black"
-      }`}
+      className={`flex items-center mx-2 p-4 cursor-pointer rounded-md border-2 border-grayscale-3 hover:border-2 hover:border-primary-50
+        ${isActive ? "bg-primary-10" : ""}`}
       onClick={onClick}>
-      <img src={isActive ? activeImgSrc : imgSrc} alt={menuName} className="w-4 h-4 mr-3" />
-      <span>{menuName}</span>
+      {isActive ? activteMenuIcon : menuIcon}
+      <span
+        className={`text-body1 font-medium leading-6 text-center ml-2 ${
+          isActive ? "text-primary-50" : "text-grayscale-90"
+        }`}>
+        {menuName}
+      </span>
     </div>
   );
 };

@@ -1,18 +1,20 @@
+import AdminBlackIcon from "@icon/24/accountcircle.fiiled.black.svg?react";
+import AdminBlueIcon from "@icon/24/accountcircle.fiiled.blue.svg?react";
+import HomeBlackIcon from "@icon/24/home.filled.black.svg?react";
+import HomeBlueIcon from "@icon/24/home.filled.blue.svg?react";
+import NoteBlackIcon from "@icon/24/note.fiiled.black.svg?react";
+import NoteBlueIcon from "@icon/24/note.fiiled.blue.svg?react";
+import PaperPlainBlackIcon from "@icon/24/paperplane.black.svg?react";
+import PaperPlainBlueIcon from "@icon/24/paperplane.blue.svg?react";
+import SettingBlackIcon from "@icon/24/settings.fiiled.black.svg?react";
 import React from "react";
-import adminBlack from "@icon/adminBlack.png";
-import adminBlue from "@icon/adminBlue.png";
-import homeBlack from "@icon/homeBlack.png";
-import homeBlue from "@icon/homeBlue.png";
-import noteBlack from "@icon/noteBlack.png";
-import questionBlack from "@icon/questionBlack.png";
-import settingBlack from "@icon/settingBlack.png";
+import { useNavigate } from "react-router-dom";
 import logoBlack from "../assets/logoBlack.png";
 import Button from "../components/Button";
 import NavigationLeftMenu from "../components/NavigationLeftMenu";
-import { useNavigate } from "react-router-dom";
-import noteBlue from "@icon/noteBlue.png";
-import paperPlaneBlack from "@icon/paperPlaneBlack.png";
-import paperPlaneBlue from "@icon/paperPlaneBlue.png";
+// import SettingBlueIcon from "@icon/24/setting.filled.blue.svg?react";
+import QuestionBlackIcon from "@icon/24/help.fiiled.black.svg?react";
+// import QuestionBlueIcon from "@icon/24/question.filled.blue.svg?react";
 
 interface NavigationLeftProps {}
 
@@ -20,7 +22,7 @@ const NavigationLeft: React.FC<NavigationLeftProps> = ({}) => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-64 h-auto relative py-4 z-1000">
+    <div className="w-64 h-auto bg-grayscale-3 relative py-4 z-1000">
       <div className="flex justify-center items-center">
         <img
           className="hover:cursor-pointer"
@@ -41,34 +43,34 @@ const NavigationLeft: React.FC<NavigationLeftProps> = ({}) => {
       </div>
       <NavigationLeftMenu
         isActive={true}
-        imgSrc={homeBlack}
-        activeImgSrc={homeBlue}
+        menuIcon={<HomeBlackIcon width={24} height={24} />}
+        activteMenuIcon={<HomeBlueIcon width={24} height={24} />}
         menuName="홈"
       />
       <NavigationLeftMenu
-        imgSrc={noteBlack}
-        activeImgSrc={noteBlue}
+        menuIcon={<PaperPlainBlackIcon width={24} height={24} />}
+        activteMenuIcon={<PaperPlainBlueIcon width={24} height={24} />}
         menuName="상담노트"
       />
       <NavigationLeftMenu
-        imgSrc={paperPlaneBlack}
-        activeImgSrc={paperPlaneBlue}
+        menuIcon={<NoteBlackIcon width={24} height={24} />}
+        activteMenuIcon={<NoteBlueIcon width={24} height={24} />}
         menuName="케어링노트"
       />
       <NavigationLeftMenu
-        imgSrc={adminBlack}
-        activeImgSrc={adminBlue}
+        menuIcon={<AdminBlackIcon width={24} height={24} />}
+        activteMenuIcon={<AdminBlueIcon width={24} height={24} />}
         menuName="계정관리"
       />
       <div className="absolute bottom-5 w-full">
         <NavigationLeftMenu
-          imgSrc={settingBlack}
-          activeImgSrc={homeBlue}
+          menuIcon={<SettingBlackIcon width={24} height={24} />}
+          activteMenuIcon={<SettingBlackIcon width={24} height={24} />}
           menuName="설정"
         />
         <NavigationLeftMenu
-          imgSrc={questionBlack}
-          activeImgSrc={homeBlue}
+          menuIcon={<QuestionBlackIcon width={24} height={24} />}
+          activteMenuIcon={<QuestionBlackIcon width={24} height={24} />}
           menuName="도움말"
         />
       </div>
