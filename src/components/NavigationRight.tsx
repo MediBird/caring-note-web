@@ -29,7 +29,7 @@ const NavigationRight: React.FC<NavigationRightProps> = ({}) => {
         onClick={toggleMenu}>
         <Badge variant="primary" size="sm" type="outline" text="녹음중" />
         <img src={micBlack} alt="micBlack" className="w-8 h-8" />
-        <div className="h-0.5 w-8 bg-gray-300 my-4" />
+        <div className="h-0.5 w-8 bg-grayscale-10 my-4" />
         <img src={pencilBlack} alt="pencilBlack" className="w-8 h-8" />
       </div>
     );
@@ -39,8 +39,8 @@ const NavigationRight: React.FC<NavigationRightProps> = ({}) => {
     <div
       className={`fixed top-0 right-0 h-full ${
         isOpen ? "w-96" : "w-16"
-      } bg-gray-100 ${
-        isOpen ? "" : "hover:bg-blue-100"
+      } bg-white ${
+        isOpen ? "" : "hover:bg-primary-5"
       } transition-width duration-300`}
       style={{
         boxShadow: "-4px 0 8px rgba(0,0,0,0.2)",
@@ -49,9 +49,9 @@ const NavigationRight: React.FC<NavigationRightProps> = ({}) => {
       {isOpen && (
         <div className="flex justify-start">
           {defaultMenu()}
-          <div className="bg-white w-full border-l-2 border-gray-300">
-            <div className="flex justify-between border-b-2 border-gray-100">
-              <span className="mt-8 mb-4 mx-8 text-lg text-black font-bold">
+          <div className="bg-white w-full border-l-2 border-grayscale-10">
+            <div className="flex items-center justify-between border-b-2 border-grayscale-10">
+              <span className="mt-8 mb-4 mx-8 text-subtitle2 font-bold text-grayscale-90">
                 상담기록
               </span>
               <img
