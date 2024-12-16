@@ -5,6 +5,7 @@ import Badge from "@components/common/Badge";
 import CardContainer from "../../components/common/CardContainer";
 import InputLayout from "../../components/layout/input/InputLayout";
 import InfoBlueIcon from "@icon/24/info.filled.blue.svg";
+import TabContentContainer from "@components/consult/TabContentContainer";
 type option = {
   val: string;
   name: string;
@@ -101,24 +102,31 @@ const AssistantBasicInfo = () => {
     setAssistantBasicInfo({ ...assistantBasicInfo, [name]: value });
   };
   return (
-    <div className="w-full h-auto px-10 pt-8">
-      <Badge
-        variant="outline"
-        color="primary"
-        customIcon={<img src={InfoBlueIcon} />}>
-        이전 상담 노트에서 불러온 정보를 토대로 손쉽게 작성해보세요.
-      </Badge>
-      {/* 박진완 : CardContainer 리팩토링 완료! 사용법은 ConsultCard.tsx 를 참고하시면 편해용 */}
-      <CardContainer title={"기본정보"} variant="grayscale">
-        <div className="px-5">
-          <InputLayout
-            inputsRef={inputsRef}
-            onChange={onChange}
-            onSelect={onSelect}
-          />
+    <>
+      <TabContentContainer>
+        <div className="flex items-center justify-between">
+          <Badge
+            variant="outline"
+            color="primary"
+            customIcon={<img src={InfoBlueIcon} />}>
+            이전 상담 노트에서 불러온 정보를 토대로 손쉽게 작성해보세요.
+          </Badge>
         </div>
-      </CardContainer>
-    </div>
+
+        {/* 박진완 : CardContainer 리팩토링 완료! 사용법은 ConsultCard.tsx 를 참고하시면 편해용 */}
+        <div className="flex items-start justify-between space-x-4">
+          <CardContainer title={"기본정보"} variant="grayscale">
+            <div className="px-5">
+              <InputLayout
+                inputsRef={inputsRef}
+                onChange={onChange}
+                onSelect={onSelect}
+              />
+            </div>
+          </CardContainer>
+        </div>
+      </TabContentContainer>
+    </>
   );
 };
 export default AssistantBasicInfo;
