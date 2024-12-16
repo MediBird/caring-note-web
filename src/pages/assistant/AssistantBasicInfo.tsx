@@ -106,8 +106,9 @@ const AssistantBasicInfo = () => {
       <TabContentContainer>
         <div className="flex items-center justify-between">
           <Badge
-            variant="outline"
+            variant="tint"
             color="primary"
+            className="mt-2 mb-6 bg-primary-5"
             customIcon={<img src={InfoBlueIcon} />}>
             이전 상담 노트에서 불러온 정보를 토대로 손쉽게 작성해보세요.
           </Badge>
