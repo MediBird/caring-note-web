@@ -26,7 +26,7 @@ const tabTitle = (text: string, goPage: string) => {
 const AssistantHome = () => {
   return (
     <div>
-      <div className="flex flex-col items-center justify-start w-full h-fit bg-gray-0 px-8 py-4">
+      <div className="flex flex-col items-center justify-start w-full px-8 py-4 h-fit bg-gray-0">
         <div className="flex flex-row justify-start w-full h-8 mt-4">
           <img
             src={arrowHeadLeftGray}
@@ -34,14 +34,17 @@ const AssistantHome = () => {
             className="w-6 h-6"
           />
         </div>
-        <div className="flex flex-row items-center justify-start w-full h-8 mt-4 pl-6">
-          <p className="text-4xl text-black font-black">상담 카드 작성</p>
+        <div className="flex flex-row items-center justify-start w-full h-8 pl-6 mt-4">
+          <p className="text-4xl font-black text-black">상담 카드 작성</p>
+          <Button _class="ml-6" variant="secondary" onClick={() => {}}>
+            임시저장
+          </Button>
           <Button _class="ml-4" variant="primary" onClick={() => {}}>
             기록완료
           </Button>
         </div>
       </div>
-      <div className="flex flex-row items-center justify-start w-full h-14 pl-14 my-0 border-t-2 border-gray-200 border-b-2 border-b-gray-300">
+      <div className="flex flex-row items-center justify-start w-full my-0 border-t-2 border-b-2 border-gray-200 h-14 pl-14 border-b-gray-300">
         {tabTitle("기본 정보", "/assistant/basicInfo")}
         {tabTitle("건강 정보", "/assistant/healthInfo")}
         {tabTitle("생활 정보", "/assistant/lifeInfo")}
