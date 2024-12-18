@@ -26,7 +26,7 @@ const RadioGroupItem = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "aspect-square h-4 w-4 rounded-full border-[2.29px] border-grayscale-50 bg-white text-grayscale-90 active:border-grayscale-80 ring-offset-white hover:border-grayscale-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:border-neutral-50 dark:text-neutral-50 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300",
+        "aspect-square h-4 w-4 rounded-full border-[2.29px] border-grayscale-50 bg-white text-grayscale-90 active:border-grayscale-80 ring-offset-white hover:border-grayscale-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-50 dark:text-neutral-50 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300",
         className,
       )}
       {...props}>
