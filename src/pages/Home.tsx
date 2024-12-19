@@ -23,6 +23,17 @@ import {
   createDefaultTextColumn,
 } from "@utils/TableUtils";
 import moment from "moment";
+import {
+  Dialog,
+  DialogOverlay,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+  DialogFooter,
+} from "@components/components/ui/dialog";
 
 function Home() {
   const navigate = useNavigate();
@@ -37,7 +48,7 @@ function Home() {
           ? moment(params.value).format("HH:mm")
           : null;
         return (
-          formattedDate || <span className="text-gray-400 italic">HH:mm</span>
+          formattedDate || <span className="italic text-gray-400">HH:mm</span>
         );
       },
     },
@@ -123,47 +134,47 @@ function Home() {
   return (
     <>
       <div className="flex flex-col items-center justify-center pt-20 bg-blue-100">
-        <p className="w-full text-h2 font-bold text-primary-70 pl-28">
+        <p className="w-full font-bold text-h2 text-primary-70 pl-28">
           박진완님, <br />
           오늘도 힘찬 하루를 보내세요!{" "}
         </p>
         <div className="flex flex-row items-center justify-center w-full px-24 mt-10 space-x-5">
-          <div className="w-1/2 h-32 border-2 border-white rounded-xl bg-opacity-60 bg-white">
+          <div className="w-1/2 h-32 bg-white border-2 border-white rounded-xl bg-opacity-60">
             <div className="flex flex-row w-full h-full">
               <div className="flex flex-col items-start justify-center w-1/2 pl-5 space-y-2">
-                <p className="text-body1 font-medium">
+                <p className="font-medium text-body1">
                   올해 케어링 메세지 공유 수
                 </p>
-                <p className="text-h2 font-bold text-primary-50">{"1,234"}회</p>
+                <p className="font-bold text-h2 text-primary-50">{"1,234"}회</p>
               </div>
               <div className="flex flex-col items-start justify-center w-1/2 pl-5 space-y-2">
-                <p className="text-body1 font-medium">올해 상담한 내담자 수</p>
-                <p className="text-h2 font-bold text-primary-50">{"201"}명</p>
+                <p className="font-medium text-body1">올해 상담한 내담자 수</p>
+                <p className="font-bold text-h2 text-primary-50">{"201"}명</p>
               </div>
             </div>
           </div>
-          <div className="w-1/2 h-32 border-2 border-white rounded-xl bg-opacity-60 bg-white">
+          <div className="w-1/2 h-32 bg-white border-2 border-white rounded-xl bg-opacity-60">
             <div className="flex flex-row w-full h-full">
               <div className="flex flex-col items-start justify-center w-1/2 pl-5 space-y-2">
-                <p className="text-body1 font-medium">
+                <p className="font-medium text-body1">
                   올해 케어링 메세지 공유 수
                 </p>
-                <p className="text-h2 font-bold text-secondary-50">
+                <p className="font-bold text-h2 text-secondary-50">
                   {"1,234"}회
                 </p>
               </div>
               <div className="flex flex-col items-start justify-center w-1/2 pl-5 space-y-2">
-                <p className="text-body1 font-medium">올해 상담한 내담자 수</p>
-                <p className="text-h2 font-bold text-secondary-50">{"201"}명</p>
+                <p className="font-medium text-body1">올해 상담한 내담자 수</p>
+                <p className="font-bold text-h2 text-secondary-50">{"201"}명</p>
               </div>
             </div>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center w-full px-24 pt-10">
-          <div className="w-full h-auto bg-white rounded-xl p-10">
+          <div className="w-full h-auto p-10 bg-white rounded-xl">
             {/* 실제 코드 */}
-            <div className="w-full h-10 flex flex-row justify-between items-center">
-              <span className="text-h3 font-bold">오늘의 상담 일정</span>
+            <div className="flex flex-row items-center justify-between w-full h-10">
+              <span className="font-bold text-h3">오늘의 상담 일정</span>
               <Button variant="secondary">전체 상담 노트 보기</Button>
             </div>
             <div className="mt-10">
@@ -224,7 +235,7 @@ function Home() {
             <Tooltip id="tooltip" text="This is a tooltip" eventType="hover" />
             <Tooltip id="tooltip2" text="This is a tooltip" eventType="click" />
 
-            <div className="grid grid-cols-4 gap-4 items-start">
+            <div className="grid items-start grid-cols-4 gap-4">
               <div>
                 <Badge variant="filled" size="extra-large" color="primary">
                   Badge
@@ -266,6 +277,20 @@ function Home() {
                 </Badge>
               </div>
             </div>
+            <Dialog>
+              <DialogTrigger>Open</DialogTrigger>
+              <DialogOverlay />
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>타이틀</DialogTitle>
+                </DialogHeader>
+                <DialogDescription>내용을 넣어주세요</DialogDescription>
+                <DialogFooter>
+                  <DialogClose>취소</DialogClose>
+                  <DialogTrigger>확인</DialogTrigger>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>
