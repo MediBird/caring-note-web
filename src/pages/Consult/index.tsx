@@ -108,15 +108,7 @@ function index() {
 
   return (
     <div>
-      <div className="flex flex-col items-center justify-start w-full h-fit px-8 py-4">
-        <div className="flex flex-row justify-start w-full mt-6">
-          {/* 스펙 아웃 */}
-          {/* <img
-            src={arrowHeadLeftGray}
-            alt="arrowHeadLeftGray"
-            className="w-6 h-6"
-          /> */}
-        </div>
+      <div className="flex flex-col items-center justify-start w-full h-fit px-8 py-10">
         <div className="flex flex-row items-center justify-start w-full h-8 mt-4 pl-6">
           <p className="text-h2 font-bold text-grayscale-100">
             {counseleeBaseInfoQuery.data?.name}

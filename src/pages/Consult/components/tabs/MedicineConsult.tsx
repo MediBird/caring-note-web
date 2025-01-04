@@ -1,20 +1,13 @@
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/app/reduxHooks";
+import { useAppSelector } from "@/app/reduxHooks";
 import logoBlack from "@/assets/logoBlack.png";
 import HighlightInput from "@/components/consult/HighlightInput";
 import TabContentContainer from "@/components/consult/TabContentContainer";
-import { changeActiveTab } from "@/reducers/tabReducer";
 import GrayContainer from "@/pages/Consult/components/GrayContainer";
 
 const MedicineConsult: React.FC = () => {
-  const dispatch = useAppDispatch();
   const isRightNavigationOpen = useAppSelector(
     (state) => state.navigation.isOpenRightNavigation,
   );
-
-  useEffect(() => {
-    dispatch(changeActiveTab("/consult/medicineConsult")); // 해당 tab의 url
-  }, []);
 
   const ViewWarningImage = () => {
     return (
@@ -41,11 +34,6 @@ const MedicineConsult: React.FC = () => {
           subTitle="하이라이트 시, 다음 지속 상담에 해당 내용을 가장 먼저 확인할 수 있어요">
           {isRightNavigationOpen ? <ViewWarningImage /> : <HighlightInput />}
         </GrayContainer>
-
-        {/* 늘픔가치 1차 인터뷰 이후 스펙아웃 */}
-        {/* <GrayContainer title="상담 필요도">
-          <div className="h-96">라디오 버튼</div>
-        </GrayContainer> */}
       </TabContentContainer>
     </>
   );

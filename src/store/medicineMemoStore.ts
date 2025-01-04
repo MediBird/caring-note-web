@@ -1,13 +1,16 @@
-import { SelectCounselCardRes, SelectMedicationRecordHistRes } from "@/api";
+import {
+  AddAndUpdateMedicationRecordHistReq,
+  SelectMedicationRecordHistRes,
+} from "@/api";
 import { create } from "zustand";
 
 interface MedicineMemoState {
   httpStatus?: number;
   originalData?: SelectMedicationRecordHistRes[];
-  editedData?: SelectMedicationRecordHistRes[];
+  editedData?: AddAndUpdateMedicationRecordHistReq[];
   setHttpStatus?: (status: number) => void;
   setOriginalData?: (data: SelectMedicationRecordHistRes[]) => void;
-  setEditedData?: (data: SelectMedicationRecordHistRes[]) => void;
+  setEditedData?: (data: AddAndUpdateMedicationRecordHistReq[]) => void;
   resetEditedData?: () => void;
 }
 
@@ -17,7 +20,7 @@ const useMedicineMemoStore = create<MedicineMemoState>((set, get) => ({
   setHttpStatus: (status: number) => set({ httpStatus: status }),
   setOriginalData: (data: SelectMedicationRecordHistRes[]) =>
     set({ originalData: [...data] }),
-  setEditedData: (data: SelectMedicationRecordHistRes[]) =>
+  setEditedData: (data: AddAndUpdateMedicationRecordHistReq[]) =>
     set({ editedData: [...data] }),
   resetEditedData: () =>
     set({ editedData: JSON.parse(JSON.stringify(get().originalData)) }),

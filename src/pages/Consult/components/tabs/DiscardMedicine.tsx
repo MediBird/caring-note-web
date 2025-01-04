@@ -1,22 +1,13 @@
+import Button from "@/components/Button";
 import InputContainer from "@/components/common/InputContainer";
+import TabContentContainer from "@/components/consult/TabContentContainer";
+import TabContentTitle from "@/components/consult/TabContentTitle";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@mui/material";
-import { useEffect } from "react";
-import { useAppDispatch } from "@/app/reduxHooks";
-import Button from "@/components/Button";
-import TabContentContainer from "@/components/consult/TabContentContainer";
-import TabContentTitle from "@/components/consult/TabContentTitle";
-import { changeActiveTab } from "@/reducers/tabReducer";
 
 const DiscardMedicine: React.FC = () => {
-  // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(changeActiveTab("/consult/discardMedicine")); // 해당 tab의 url
-  }, []);
-
   return (
     <>
       <TabContentContainer>

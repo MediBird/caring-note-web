@@ -1,24 +1,20 @@
 import {
   CounselSessionControllerApi,
   MedicationCounselControllerApi,
-  SelectPreviousCounselSessionListRes,
-  SelectPreviousMedicationCounselRes,
 } from "@/api";
 import TableComponent from "@/components/common/TableComponent";
 import PastConsultContainer from "@/components/consult/PastConsultContainer";
-import { GridColDef } from "@mui/x-data-grid";
-import { useQuery } from "@tanstack/react-query";
 import {
   createDefaultDateColumn,
   createDefaultNumberColumn,
   createDefaultTextColumn,
 } from "@/utils/TableUtils";
+import { GridColDef } from "@mui/x-data-grid";
+import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
-import React, { useEffect } from "react";
-import { useAppDispatch } from "../../../../app/reduxHooks";
+import React from "react";
 import TabContentContainer from "../../../../components/consult/TabContentContainer";
 import TabContentTitle from "../../../../components/consult/TabContentTitle";
-import { changeActiveTab } from "../../../../reducers/tabReducer";
 
 const PastConsult: React.FC = () => {
   const counselSessionId = "TEST-COUNSEL-SESSION-01"; // TODO : 다른 곳에서 전달받아야됨
@@ -51,13 +47,6 @@ const PastConsult: React.FC = () => {
     queryKey: ["selectPreviousCounselSessionList"],
     queryFn: selectPreviousCounselSessionList,
   });
-
-  // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(changeActiveTab("/consult/pastConsult")); // 해당 tab의 url
-  }, []);
 
   const columns: GridColDef[] = [
     {
