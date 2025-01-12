@@ -20,7 +20,11 @@ const NavigationLeft = () => {
   const { keycloak } = useKeycloak();
 
   return (
-    <div className="w-52 h-auto bg-grayscale-3 relative py-0 z-1000">
+    <div
+      className="w-52 h-auto bg-grayscale-3 relative py-0 z-1000"
+      style={{
+        boxShadow: '4px 0 8px rgba(0,0,0,0.2)',
+      }}>
       <div className="flex justify-start items-end p-5">
         <span className="text-subtitle2 font-bold mr-3">
           {keycloak.tokenParsed?.family_name ?? ''}
