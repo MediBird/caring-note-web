@@ -27,7 +27,7 @@ const MedicineConsult: React.FC = () => {
   };
 
   return (
-    <>
+    <div>
       <TabContentContainer>
         <GrayContainer
           title="상담 기록"
@@ -35,7 +35,7 @@ const MedicineConsult: React.FC = () => {
           {isRightNavigationOpen ? <ViewWarningImage /> : <HighlightInput />}
         </GrayContainer>
       </TabContentContainer>
-    </>
+    </div>
   );
 };
 
