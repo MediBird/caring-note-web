@@ -92,7 +92,8 @@ function Index() {
   useEffect(() => {
     previousCounselQuery.refetch();
     counseleeBaseInfoQuery.refetch();
-  }, [counseleeBaseInfoQuery, previousCounselQuery]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (previousCounselQuery.data?.status !== 204) {
