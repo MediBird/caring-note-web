@@ -66,7 +66,7 @@ function Home() {
             />
           </div>
           <div className="flex flex-col items-center justify-center flex-grow w-full max-w-[1020px]">
-            <div className="w-full h-auto p-6 bg-white rounded-xl ">
+            <div className="w-full h-auto p-6 bg-white rounded-xl shadow-container">
               <div className="flex items-center justify-between w-full h-10">
                 <span className="font-bold text-h3">오늘의 상담 일정</span>
                 <Button variant="secondary">전체 상담 노트 보기</Button>

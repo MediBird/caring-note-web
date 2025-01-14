@@ -8,9 +8,7 @@ interface ConsultCountProps {
 
 function ConsultCount({ messageCount, patientCount, date }: ConsultCountProps) {
   return (
-    <div
-      className="flex flex-row 2xl:flex-col w-full bg-white rounded-xl bg-opacity-60 px-4 py-3 gap-3"
-      style={{ boxShadow: '0px 0px 20px 0px #00000014' }}>
+    <div className="flex flex-row 2xl:flex-col w-full bg-white rounded-xl bg-opacity-60 px-4 py-3 gap-3 shadow-container">
       <div className="p-3">
         <h1 className="w-[168px] text-xl font-bold break-keep text-secondary-50">
           약으로 이어지는 <br className="2xl:hidden" />
