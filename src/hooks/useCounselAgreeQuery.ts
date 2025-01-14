@@ -28,7 +28,6 @@ const selectCounseleeConsent = async ({
 export const useCounseleeConsentQueryId = (
   paramId?: string,
   queryId?: string,
-  _p0?: { enabled: boolean },
 ) => {
   return useQuery({
     queryKey: ['details', paramId, queryId],

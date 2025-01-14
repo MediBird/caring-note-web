@@ -1,18 +1,17 @@
+import { AddCounselCardReqCardRecordStatusEnum } from '@/api/api';
+import CollegeMessage from '@/components/CollegeMessage';
 import TableComponent from '@/components/common/TableComponent';
+import ConsultCount from '@/components/ConsultCount';
 import { Button } from '@/components/ui/button';
-import { GridColDef } from '@mui/x-data-grid';
+import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
 import {
   createDefaultDateColumn,
   createDefaultStatusColumn,
   createDefaultTextColumn,
 } from '@/utils/TableUtils';
-import { useNavigate } from 'react-router-dom';
-import ConsultCount from '@/components/ConsultCount';
-import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
+import { GridColDef } from '@mui/x-data-grid';
 import { useKeycloak } from '@react-keycloak/web';
 import { useMemo } from 'react';
-import CollegeMessage from '@/components/CollegeMessage';
-import { AddCounselCardReqCardRecordStatusEnum } from '@/api/api';
 
 function Home() {
   const { keycloak } = useKeycloak();

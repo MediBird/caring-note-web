@@ -1,24 +1,23 @@
-import { useEffect, useState, lazy, Suspense } from "react";
-import Button from "@/components/Button";
-import { CounseleeControllerApi, CounselSessionControllerApi } from "@/api/api";
-import { useQuery } from "@tanstack/react-query";
-import useConsultTabStore, { ConsultTab } from "@/store/consultTabStore";
-import { set } from "date-fns";
+import { CounseleeControllerApi, CounselSessionControllerApi } from '@/api/api';
+import Button from '@/components/Button';
+import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
+import { useQuery } from '@tanstack/react-query';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 
 const PastConsult = lazy(
-  () => import("@/pages/Consult/components/tabs/PastConsult"),
+  () => import('@/pages/Consult/components/tabs/PastConsult'),
 );
 const ConsultCard = lazy(
-  () => import("@/pages/Consult/components/tabs/ConsultCard"),
+  () => import('@/pages/Consult/components/tabs/ConsultCard'),
 );
 const MedicineMemo = lazy(
-  () => import("@/pages/Consult/components/tabs/MedicineMemo"),
+  () => import('@/pages/Consult/components/tabs/MedicineMemo'),
 );
 const MedicineConsult = lazy(
-  () => import("@/pages/Consult/components/tabs/MedicineConsult"),
+  () => import('@/pages/Consult/components/tabs/MedicineConsult'),
 );
 const DiscardMedicine = lazy(
-  () => import("@/pages/Consult/components/tabs/DiscardMedicine"),
+  () => import('@/pages/Consult/components/tabs/DiscardMedicine'),
 );
 
 const TabTitle = ({
@@ -36,10 +35,10 @@ const TabTitle = ({
     <p
       className={`${
         activeTab === goPage
-          ? "text-body2 font-bold text-primary-50 border-b-2 border-primary-50"
-          : "text-body2 font-medium text-grayscale-50"
+          ? 'text-body2 font-bold text-primary-50 border-b-2 border-primary-50'
+          : 'text-body2 font-medium text-grayscale-50'
       } ${
-        isHidden ? "hidden" : ""
+        isHidden ? 'hidden' : ''
       } mr-10 py-3 h-full flex items-center hover:text-primary-50 hover:border-b-2 border-primary-50 cursor-pointer`}
       onClick={() => {
         setActiveTab(goPage);
@@ -49,14 +48,14 @@ const TabTitle = ({
   );
 };
 
-function index() {
+function Index() {
   const { activeTab, setActiveTab } = useConsultTabStore();
 
   const [hidePastConsultTab, setHidePastConsultTab] = useState(true);
-  let diseasesLength = 0;
+  const diseasesLengthRef = useRef(0);
   const SHOW_DISEASE_COUNT = 5;
 
-  const counselSessionId = "TEST-COUNSEL-SESSION-01"; // TODO : 다른 곳에서 전달받아야됨
+  const counselSessionId = 'TEST-COUNSEL-SESSION-01'; // TODO : 다른 곳에서 전달받아야됨
 
   const counselSessionControllerApi = new CounselSessionControllerApi();
   const counseleeControllerApi = new CounseleeControllerApi();
@@ -80,12 +79,12 @@ function index() {
   };
 
   const previousCounselQuery = useQuery({
-    queryKey: ["previousCounsel"],
+    queryKey: ['previousCounsel'],
     queryFn: selectPreviousCounselSessionList,
     enabled: false,
   });
   const counseleeBaseInfoQuery = useQuery({
-    queryKey: ["counseleeBaseInfo"],
+    queryKey: ['counseleeBaseInfo'],
     queryFn: selectCounseleeBaseInformation,
     enabled: false,
   });
@@ -93,7 +92,7 @@ function index() {
   useEffect(() => {
     previousCounselQuery.refetch();
     counseleeBaseInfoQuery.refetch();
-  }, []);
+  }, [counseleeBaseInfoQuery, previousCounselQuery]);
 
   useEffect(() => {
     if (previousCounselQuery.data?.status !== 204) {
@@ -102,10 +101,11 @@ function index() {
       setHidePastConsultTab(true);
       setActiveTab(ConsultTab.consultCard);
     }
-  }, [previousCounselQuery.data]);
+  }, [previousCounselQuery.data, setActiveTab]);
 
   useEffect(() => {
-    diseasesLength = counseleeBaseInfoQuery.data?.diseases?.length || 0;
+    diseasesLengthRef.current =
+      counseleeBaseInfoQuery.data?.diseases?.length || 0;
   }, [counseleeBaseInfoQuery.data]);
 
   return (
@@ -130,17 +130,19 @@ function index() {
           <p className="text-body1 font-medium text-grayscale-70">
             {counseleeBaseInfoQuery.data?.diseases
               ?.slice(0, SHOW_DISEASE_COUNT)
-              .join(" · ")}
+              .join(' · ')}
           </p>
-          {diseasesLength > SHOW_DISEASE_COUNT ? (
+          {diseasesLengthRef.current > SHOW_DISEASE_COUNT ? (
             <p className="text-body1 font-medium text-grayscale-30 px-2">
-              외 {diseasesLength - SHOW_DISEASE_COUNT}개의 질병
+              외 {diseasesLengthRef.current - SHOW_DISEASE_COUNT}개의 질병
             </p>
           ) : null}
         </div>
       </div>
       <div className="flex flex-row items-center justify-start w-full h-auto pl-14 my-0 border-t-2 border-b-2 border-grayscale-5 ">
-        {hidePastConsultTab ? null : <TabTitle text="이전 상담 내역" goPage={ConsultTab.pastConsult} />}
+        {hidePastConsultTab ? null : (
+          <TabTitle text="이전 상담 내역" goPage={ConsultTab.pastConsult} />
+        )}
         <TabTitle text="상담카드" goPage={ConsultTab.consultCard} />
         <TabTitle text="의약물 기록" goPage={ConsultTab.medicineMemo} />
         <TabTitle text="복약 상담" goPage={ConsultTab.medicineConsult} />
@@ -153,11 +155,11 @@ function index() {
             <div
               className="animate-spin rounded-full border-2 border-solid border-primary-50"
               style={{
-                borderTopColor: "transparent",
-                borderRightColor: "transparent",
-                width: "40px",
-                height: "40px",
-                animation: "spin 1s linear infinite",
+                borderTopColor: 'transparent',
+                borderRightColor: 'transparent',
+                width: '40px',
+                height: '40px',
+                animation: 'spin 1s linear infinite',
               }}
             />
           </div>
@@ -171,7 +173,7 @@ function index() {
   );
 }
 
-export default index;
+export default Index;
 
 function TabContent({
   activeTab,

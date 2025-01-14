@@ -1,5 +1,5 @@
-import { GridRowModel, GridRowsProp } from "@mui/x-data-grid";
-import { create } from "zustand";
+import { GridRowModel, GridRowsProp } from '@mui/x-data-grid';
+import { create } from 'zustand';
 
 interface PrescribedMedicineTableState {
   prescribedMedicineRows: GridRowsProp;
@@ -42,7 +42,7 @@ const usePrescribedMedicineTableStore = create<PrescribedMedicineTableState>(
         ),
       })),
     setSelectedPrescribedMedicineRowIds: (ids) =>
-      set((state) => ({
+      set(() => ({
         selectedPrescribedMedicineRowIds: ids,
       })),
   }),

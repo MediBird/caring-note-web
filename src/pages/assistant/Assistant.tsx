@@ -15,8 +15,8 @@ import {
   SelectCounselSessionListItemCardRecordStatusEnum,
   SelectCounselSessionListItemStatusEnum,
 } from '@/api/api';
-import Index from '@/pages/Assistant/dialogs/Index';
 import { useCounseleeConsentQueryId } from '@/hooks/useCounselAgreeQuery';
+import Index from '@/pages/assistant/dialogs/Index';
 import { useNavigate } from 'react-router-dom';
 
 const Assistant = () => {
@@ -54,7 +54,7 @@ const Assistant = () => {
         setIsOpen(true);
       }
     }
-  }, [isLoading, data, setIsOpen]);
+  }, [isLoading, data, setIsOpen, navigate]);
 
   const columns: GridColDef[] = [
     {

@@ -1,5 +1,5 @@
-import { GridRowModel, GridRowsProp } from "@mui/x-data-grid";
-import { create } from "zustand";
+import { GridRowModel, GridRowsProp } from '@mui/x-data-grid';
+import { create } from 'zustand';
 
 interface MedicineTableState {
   normalMedicineRows: GridRowsProp;
@@ -41,7 +41,7 @@ const useNomalMedicineTableStore = create<MedicineTableState>((set) => ({
       ),
     })),
   setSelectedNormalMedicineRowIds: (ids) =>
-    set((state) => ({
+    set(() => ({
       selectedNormalMedicineRowIds: ids,
     })),
 }));

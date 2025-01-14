@@ -73,20 +73,13 @@ const MedicineMemo: React.FC = () => {
     enabled: false,
   });
 
-  const {
-    originalData,
-    editedData,
-    setOriginalData,
-    setEditedData,
-    setHttpStatus,
-  } = useMedicineMemoStore();
+  const { originalData, editedData, setOriginalData, setHttpStatus } =
+    useMedicineMemoStore();
 
   const {
     normalMedicineRows,
-    selectedNormalMedicineRowIds,
     addNormalMedicineRow,
     updateNormalMedicineRowById,
-    deleteNormalMedicineRowById,
     setSelectedNormalMedicineRowIds,
   } = useNomalMedicineTableStore();
 
@@ -153,13 +146,22 @@ const MedicineMemo: React.FC = () => {
         });
       }
     });
-  }, [selectMedicationRecordListBySessionIdQuery.isSuccess]);
+  }, [
+    addNormalMedicineRow,
+    addPrescribedMedicineRow,
+    originalData,
+    searchMedicationByKeywordQuery,
+    selectMedicationRecordListBySessionIdQuery,
+    selectMedicationRecordListBySessionIdQuery.isSuccess,
+    setHttpStatus,
+    setOriginalData,
+  ]);
 
   useEffect(() => {
     // if (keyword.length > 1) {
     searchMedicationByKeywordQuery.refetch();
     // }
-  }, [keyword]);
+  }, [keyword, searchMedicationByKeywordQuery]);
 
   const columns: GridColDef[] = [
     {

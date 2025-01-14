@@ -1,11 +1,11 @@
+import { useAppDispatch } from '@/app/reduxHooks';
 import CardContainer from '@/components/common/CardContainer';
+import TabContentContainer from '@/components/consult/TabContentContainer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import TabContentContainer from '@/components/consult/TabContentContainer';
-import { useEffect, useState } from 'react';
-import { useAppDispatch } from '@/app/reduxHooks';
 import { changeActiveTab } from '@/reducers/tabReducer';
+import { useEffect, useState } from 'react';
 
 const isSmokingTypes = ['흡연', '비흡연'];
 const smokingDailyCounts = ['1갑', '2갑', '3갑 이상'];
@@ -46,7 +46,7 @@ const LifeInfo = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/lifeInfo')); // 해당 tab의 url
-  }, []);
+  }, [dispatch]);
   const [formData, setFormData] = useState({
     isSmoking: '흡연',
     smokingPeriod: '',

@@ -1,16 +1,16 @@
-import { CounselCardControllerApi } from "@/api/api";
-import ClockBlackIcon from "@/assets/icon/24/clock.outlined.black.svg?react";
-import HistoryList from "@/components/common/HistoryList";
-import { useQuery } from "@tanstack/react-query";
-import classNames from "classnames";
-import React, { useEffect, useState } from "react";
-import ReactModal from "react-modal";
+import { CounselCardControllerApi } from '@/api/api';
+import ClockBlackIcon from '@/assets/icon/24/clock.outlined.black.svg?react';
+import HistoryList from '@/components/common/HistoryList';
+import { useQuery } from '@tanstack/react-query';
+import classNames from 'classnames';
+import React, { useEffect, useState } from 'react';
+import ReactModal from 'react-modal';
 
 interface CardContainerProps {
   className?: string;
-  variant?: "primary" | "secondary" | "grayscale" | "error";
+  variant?: 'primary' | 'secondary' | 'grayscale' | 'error';
   title?: string;
-  titleIcon?: "clock";
+  titleIcon?: 'clock';
   informationName?: string;
   itemName?: string;
   children: React.ReactNode;
@@ -20,12 +20,12 @@ const CardContainer = ({
   className,
   variant,
   title,
-  informationName = "",
+  informationName = '',
   itemName,
-  titleIcon = itemName !== "baseInfo" ? "clock" : undefined, // 모든 cardContainer에 clock 아이콘이 추가되도록 기획이 수정됨 -> 기본정보에선 없음..
+  titleIcon = itemName !== 'baseInfo' ? 'clock' : undefined, // 모든 cardContainer에 clock 아이콘이 추가되도록 기획이 수정됨 -> 기본정보에선 없음..
   children,
 }: CardContainerProps) => {
-  const counselSessionId = "TEST-COUNSEL-SESSION-01"; // TODO : 다른 곳에서 전달받아야됨
+  const counselSessionId = 'TEST-COUNSEL-SESSION-01'; // TODO : 다른 곳에서 전달받아야됨
   const counselCardControllerApi = new CounselCardControllerApi();
 
   const selectPreviousHistoryItemList = async () => {
@@ -33,14 +33,14 @@ const CardContainer = ({
       await counselCardControllerApi.selectPreviousItemListByInformationNameAndItemName(
         counselSessionId,
         informationName,
-        itemName || "",
+        itemName || '',
       );
-    console.log("상담카드 history", response.data);
+    console.log('상담카드 history', response.data);
     return response.data;
   };
 
   const previousHistoryItemQuery = useQuery({
-    queryKey: ["previousHistoryItemList"],
+    queryKey: ['previousHistoryItemList'],
     queryFn: selectPreviousHistoryItemList,
   });
 
@@ -51,10 +51,10 @@ const CardContainer = ({
     if (isHistoryModalOpen && informationName && itemName) {
       previousHistoryItemQuery.refetch();
     }
-  }, [isHistoryModalOpen]);
+  }, [isHistoryModalOpen, informationName, itemName, previousHistoryItemQuery]);
 
   const getTitleIcon = () => {
-    if (titleIcon === "clock") {
+    if (titleIcon === 'clock') {
       return (
         <span
           className="w-6 h-6 text-grayscale-50 ml-3 cursor-pointer"
@@ -71,22 +71,22 @@ const CardContainer = ({
     const { clientX, clientY } = e;
 
     // 클릭한 위치가 왼쪽인지 오른쪽인지 확인
-    const dir = clientX > window.innerWidth / 2 ? "left" : "right";
+    const dir = clientX > window.innerWidth / 2 ? 'left' : 'right';
 
     // 모달의 위치를 클릭한 위치로 설정
     setModalStyle({
       content: {
         top: `${clientY + 10}px`, // 클릭 위치에서 10px 아래
-        left: `${dir === "left" ? clientX - 300 : clientX + 10}px`, // -300은 width와 같음
-        position: "absolute",
-        transform: "none", // transform은 사용하지 않음
-        padding: "20px",
-        borderRadius: "10px",
-        backgroundColor: "white",
-        width: "32rem", // 원하는 너비 설정
-        height: "auto",
+        left: `${dir === 'left' ? clientX - 300 : clientX + 10}px`, // -300은 width와 같음
+        position: 'absolute',
+        transform: 'none', // transform은 사용하지 않음
+        padding: '20px',
+        borderRadius: '10px',
+        backgroundColor: 'white',
+        width: '32rem', // 원하는 너비 설정
+        height: 'auto',
       },
-      overlay: { backgroundColor: "rgba(0,0,0,0.1)" },
+      overlay: { backgroundColor: 'rgba(0,0,0,0.1)' },
     });
 
     setIsHistoryModalOpen(true);
@@ -96,101 +96,102 @@ const CardContainer = ({
    * 으아....정녕 이 방법뿐이 없을까...
    * 근데 방법이 없어...boolean 때문에...
    */
-  const extractItemToString = (item: any): string[] => {
+  const extractItemToString = (item: unknown): string[] => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let itemDto: any;
 
     switch (itemName) {
-      case "counselPurposeAndNote":
+      case 'counselPurposeAndNote':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
-      case "smoking":
+      case 'smoking':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
-          itemDto?.isSmoking ? "흡연" : "비흡연",
+          itemDto?.isSmoking ? '흡연' : '비흡연',
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
-      case "drinking":
+      case 'drinking':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
-          itemDto?.isDrinking ? "음주" : "음주안함",
+          itemDto?.isDrinking ? '음주' : '음주안함',
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
-      case "nutrition":
+      case 'nutrition':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
-      case "exercise":
+      case 'exercise':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
-      case "medicationManagement":
+      case 'medicationManagement':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
-          itemDto?.isAlone ? "독거" : "동거",
+          itemDto?.isAlone ? '독거' : '동거',
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
-      case "diseaseInfo":
+      case 'diseaseInfo':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
-      case "allergy":
+      case 'allergy':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
-          itemDto?.isAllergy ? "있음" : "없음",
+          itemDto?.isAllergy ? '있음' : '없음',
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
-      case "medicationSideEffect":
+      case 'medicationSideEffect':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
-          itemDto?.isSideEffect ? "있음" : "없음",
+          itemDto?.isSideEffect ? '있음' : '없음',
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
-      case "walking":
+      case 'walking':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
-      case "evacuation":
+      case 'evacuation':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
-      case "Communication":
+      case 'Communication':
         itemDto = JSON.parse(JSON.stringify(item));
         return [
           ...Object.values(itemDto).filter(
-            (value): value is string => typeof value === "string",
+            (value): value is string => typeof value === 'string',
           ),
         ];
       default:
-        return ["히스토리 불러오기 실패"];
+        return ['히스토리 불러오기 실패'];
     }
   };
 
@@ -198,8 +199,8 @@ const CardContainer = ({
     <>
       <div
         className={classNames(
-          "py-4 w-full bg-grayscale-3 rounded-md mb-4",
-          variant ? `border-t-4 border-${variant}-30` : "",
+          'py-4 w-full bg-grayscale-3 rounded-md mb-4',
+          variant ? `border-t-4 border-${variant}-30` : '',
           className,
         )}>
         {title && (
@@ -214,7 +215,7 @@ const CardContainer = ({
       </div>
 
       <ReactModal
-        appElement={document.getElementById("root") as HTMLElement}
+        appElement={document.getElementById('root') as HTMLElement}
         isOpen={isHistoryModalOpen}
         style={modalStyle}
         onRequestClose={() => setIsHistoryModalOpen(false)}>
@@ -229,7 +230,7 @@ const CardContainer = ({
                   return (
                     <HistoryList
                       key={index}
-                      date={item?.counselDate || ""}
+                      date={item?.counselDate || ''}
                       items={extractItemToString(item.counselCardItem)}
                     />
                   );

@@ -1,9 +1,9 @@
+import InfoBlueIcon from '@/assets/icon/24/info.filled.blue.svg';
 import Badge from '@/components/common/Badge';
+import TabContentContainer from '@/components/consult/TabContentContainer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import TabContentContainer from '@/components/consult/TabContentContainer';
-import InfoBlueIcon from '@/assets/icon/24/info.filled.blue.svg';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../../app/reduxHooks';
 import CardContainer from '../../../components/common/CardContainer';
@@ -24,7 +24,7 @@ const BasicInfo = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/basicInfo')); // 해당 tab의 url
-  }, []);
+  }, [dispatch]);
 
   const [formData, setFormData] = useState({
     name: '',

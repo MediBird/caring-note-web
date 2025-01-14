@@ -1,5 +1,5 @@
 // src/keycloak.js
-import { AuthClientError, AuthClientEvent } from '@react-keycloak/core';
+import { AuthClientEvent } from '@react-keycloak/core';
 import Keycloak from 'keycloak-js';
 
 // Keycloak 설정. 여기서 url, realm, clientId는 위에서 만든 값으로 교체
@@ -19,7 +19,7 @@ export const initOptions = {
 // keycloak provider 의 onEvent 에 넣어준다.
 export const onKeycloakEvent = (
   event: AuthClientEvent,
-  error?: AuthClientError,
+  // error?: AuthClientError,
 ) => {
   console.log('keycloak', keycloak);
   console.log('keycloak.token:', keycloak.token);
@@ -29,7 +29,6 @@ export const onKeycloakEvent = (
       break;
     case 'onAuthSuccess':
       console.log('onAuthSuccess');
-      // useAuth.getState().login(keycloak.token);
       break;
     case 'onAuthRefreshError':
       keycloak.login();
