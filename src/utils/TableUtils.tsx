@@ -1,3 +1,4 @@
+import { AddCounselSessionReqStatusEnum } from '@/api/api';
 import { cn } from '@/lib/utils';
 import { GridColDef } from '@mui/x-data-grid';
 import moment from 'moment';
@@ -101,13 +102,13 @@ export const createDefaultStatusColumn = ({
 }): GridColDef => {
   const getCounselSessionStatusColor = (status: string): string => {
     switch (status) {
-      case 'COMPLETED':
+      case AddCounselSessionReqStatusEnum.Completed:
         return 'text-grayscale-100';
-      case 'SCHEDULED':
+      case AddCounselSessionReqStatusEnum.Scheduled:
         return 'text-grayscale-50';
-      case 'PROGRESS':
+      case AddCounselSessionReqStatusEnum.Progress:
         return 'text-primary-50';
-      case 'CANCELLED':
+      case AddCounselSessionReqStatusEnum.Canceled:
         return 'text-error-50';
       default:
         return 'text-black';

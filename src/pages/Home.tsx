@@ -12,6 +12,7 @@ import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
 import { useKeycloak } from '@react-keycloak/web';
 import { useMemo } from 'react';
 import CollegeMessage from '@/components/CollegeMessage';
+import { AddCounselCardReqCardRecordStatusEnum } from '@/api/api';
 
 function Home() {
   const { keycloak } = useKeycloak();
@@ -153,17 +154,19 @@ const getCardColumns = ({
       flex: 1,
       renderCell: (params) => {
         const recordStatus = params.value;
-        return recordStatus === 'RECORDED' ? (
+        return AddCounselCardReqCardRecordStatusEnum.Recorded ===
+          recordStatus ? (
           <Button variant={'secondary'} disabled>
             작성 완료
           </Button>
-        ) : recordStatus === 'UNRECORDED' ? (
+        ) : AddCounselCardReqCardRecordStatusEnum.Unrecorded ===
+          recordStatus ? (
           <Button variant={'primary'} onClick={handleClickCardRecord}>
             카드 작성
           </Button>
         ) : (
           <Button variant={'secondary'} disabled>
-            작성 완료
+            작성 중
           </Button>
         );
       },
