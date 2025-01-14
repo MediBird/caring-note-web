@@ -123,15 +123,14 @@ export const createDefaultStatusColumn = ({
       const status =
         counselSessionStatus[params.value as keyof typeof counselSessionStatus];
       return (
-        (
-          <span className={cn(getCounselSessionStatusColor(params.value))}>
-            {status}
-          </span>
-        ) || (
-          <span className={cn(getCounselSessionStatusColor(params.value))}>
-            {'-'}
-          </span>
-        )
+        <span className={cn(getCounselSessionStatusColor(params.value))}>
+          {status}
+        </span>
+        // ) || (
+        //   <span className={cn(getCounselSessionStatusColor(params.value))}>
+        //     {'-'}
+        //   </span>
+        // )
       );
     },
     headerClassName: isFirstColumn ? '!pl-6' : '',

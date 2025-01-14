@@ -1,9 +1,8 @@
-import React from 'react';
-
 interface CollegeMessageProps {
   message: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function CollegeMessage({ message }: CollegeMessageProps) {
   return (
     <div className="flex flex-row 2xl:flex-col w-full bg-white border-white rounded-xl bg-opacity-60 pt-6 pb-3 gap-3 px-4 items-center justify-between shadow-container">

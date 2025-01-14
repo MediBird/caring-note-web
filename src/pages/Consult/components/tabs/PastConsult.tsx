@@ -1,23 +1,23 @@
 import {
   CounselSessionControllerApi,
   MedicationCounselControllerApi,
-} from "@/api";
-import TableComponent from "@/components/common/TableComponent";
-import PastConsultContainer from "@/components/consult/PastConsultContainer";
+} from '@/api';
+import TableComponent from '@/components/common/TableComponent';
+import PastConsultContainer from '@/components/consult/PastConsultContainer';
 import {
   createDefaultDateColumn,
   createDefaultNumberColumn,
   createDefaultTextColumn,
-} from "@/utils/TableUtils";
-import { GridColDef } from "@mui/x-data-grid";
-import { useQuery } from "@tanstack/react-query";
-import moment from "moment";
-import React from "react";
-import TabContentContainer from "../../../../components/consult/TabContentContainer";
-import TabContentTitle from "../../../../components/consult/TabContentTitle";
+} from '@/utils/TableUtils';
+import { GridColDef } from '@mui/x-data-grid';
+import { useQuery } from '@tanstack/react-query';
+import moment from 'moment';
+import React from 'react';
+import TabContentContainer from '../../../../components/consult/TabContentContainer';
+import TabContentTitle from '../../../../components/consult/TabContentTitle';
 
 const PastConsult: React.FC = () => {
-  const counselSessionId = "TEST-COUNSEL-SESSION-01"; // TODO : 다른 곳에서 전달받아야됨
+  const counselSessionId = 'TEST-COUNSEL-SESSION-01'; // TODO : 다른 곳에서 전달받아야됨
 
   const counselSessionControllerApi = new CounselSessionControllerApi();
   const medicationCounselControllerApi = new MedicationCounselControllerApi();
@@ -40,43 +40,50 @@ const PastConsult: React.FC = () => {
   };
 
   const previousMedicationCounselQuery = useQuery({
-    queryKey: ["selectPreviousMedicationCounsel"],
+    queryKey: ['selectPreviousMedicationCounsel'],
     queryFn: selectPreviousMedicationCounsel,
   });
   const previousCounselSessionListQuery = useQuery({
-    queryKey: ["selectPreviousCounselSessionList"],
+    queryKey: ['selectPreviousCounselSessionList'],
     queryFn: selectPreviousCounselSessionList,
   });
 
-  const columns: GridColDef[] = [
-    {
-      ...createDefaultNumberColumn({
-        field: "col1",
-        headerName: "상담횟수",
-        unitName: "회차",
-        isFirstColumn: true,
-      }),
-    },
-    {
-      ...createDefaultDateColumn({
-        field: "col2",
-        headerName: "상담일자",
-      }),
-    },
-    { ...createDefaultTextColumn({ field: "col3", headerName: "담당약사" }) },
-    {
-      ...createDefaultTextColumn({ field: "col4", headerName: "케어링메세지" }),
-    },
-  ];
+  const columns: GridColDef[] = React.useMemo(
+    () => [
+      {
+        ...createDefaultNumberColumn({
+          field: 'col1',
+          headerName: '상담횟수',
+          unitName: '회차',
+          isFirstColumn: true,
+        }),
+      },
+      {
+        ...createDefaultDateColumn({
+          field: 'col2',
+          headerName: '상담일자',
+        }),
+      },
+      { ...createDefaultTextColumn({ field: 'col3', headerName: '담당약사' }) },
+      {
+        ...createDefaultTextColumn({
+          field: 'col4',
+          headerName: '케어링메세지',
+        }),
+      },
+    ],
+    [],
+  );
+
   const memoizedColumns = React.useMemo(() => columns, [columns]);
 
   const pastConsultRows = previousCounselSessionListQuery.data?.data?.data?.map(
     (counsel, index) => ({
       id: index + 1,
       col1: index + 1,
-      col2: moment(counsel.counselSessionDate).format("YYYY-MM-DD"),
+      col2: moment(counsel.counselSessionDate).format('YYYY-MM-DD'),
       col3: counsel.counselorName,
-      col4: counsel.isShardCaringMessage ? "공유완료" : "-",
+      col4: counsel.isShardCaringMessage ? '공유완료' : '-',
     }),
   );
 
@@ -118,7 +125,7 @@ const PastConsult: React.FC = () => {
         </p>
         <div className="h-auto mt-4">
           <TableComponent
-            tableKey={"past-consult"}
+            tableKey={'past-consult'}
             rows={pastConsultRows || []}
             columns={memoizedColumns}
           />

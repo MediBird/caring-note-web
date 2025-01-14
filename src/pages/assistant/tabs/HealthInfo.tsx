@@ -1,11 +1,11 @@
+import { useAppDispatch } from '@/app/reduxHooks';
 import CardContainer from '@/components/common/CardContainer';
+import TabContentContainer from '@/components/consult/TabContentContainer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import TabContentContainer from '@/components/consult/TabContentContainer';
-import { useEffect, useState } from 'react';
-import { useAppDispatch } from '@/app/reduxHooks';
 import { changeActiveTab } from '@/reducers/tabReducer';
+import { useEffect, useState } from 'react';
 
 const diseaseList = [
   '고혈압',
@@ -37,7 +37,7 @@ const HealthInfo = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/healthInfo')); // 해당 tab의 url
-  }, []);
+  }, [dispatch]);
 
   const [formData, setFormData] = useState({
     diseases: [] as string[],

@@ -1,4 +1,5 @@
 import arrowForwardIcon from '@/assets/icon/24/arrowback.outlined.black.svg';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -7,14 +8,13 @@ import {
   DialogOverlay,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import InformationUse from '@/pages/Assistant/dialogs/InformationUse';
-import InformationThirdParties from '@/pages/Assistant/dialogs/InformationThirdParties';
-import ExpiredMedications from '@/pages/Assistant/dialogs/ExpiredMedications';
 import { usePostCounselAgree } from '@/hooks/useCounselAgreeQuery';
+import ExpiredMedications from '@/pages/assistant/dialogs/ExpiredMedications';
+import InformationThirdParties from '@/pages/assistant/dialogs/InformationThirdParties';
+import InformationUse from '@/pages/assistant/dialogs/InformationUse';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type MainDialogTypes = {
   isOpen: boolean;

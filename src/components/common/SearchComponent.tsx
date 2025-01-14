@@ -44,11 +44,13 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
   };
 
   const debouncedOnChangeInputValue = useCallback(
-    debounce((value: string) => {
-      console.log('debouncedOnChangeInputValue::' + value);
-      if (onChangeInputValue) onChangeInputValue(value);
-    }, 300),
-    [],
+    (value: string) => {
+      debounce(() => {
+        console.log('debouncedOnChangeInputValue::' + value);
+        if (onChangeInputValue) onChangeInputValue(value);
+      }, 300)();
+    },
+    [onChangeInputValue],
   );
 
   const handleSelect = (item: string) => {

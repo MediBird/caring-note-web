@@ -15,8 +15,8 @@ import {
   SelectCounselSessionListItemCardRecordStatusEnum,
   SelectCounselSessionListItemStatusEnum,
 } from '@/api/api';
-import Index from '@/pages/Assistant/dialogs/Index';
 import { useCounseleeConsentQueryId } from '@/hooks/useCounselAgreeQuery';
+import Index from '@/pages/assistant/dialogs/Index';
 import { useNavigate } from 'react-router-dom';
 
 const Assistant = () => {
@@ -38,9 +38,6 @@ const Assistant = () => {
   const { data, isLoading } = useCounseleeConsentQueryId(
     detail?.counselSessionId || undefined,
     detail?.counseleeId || undefined,
-    {
-      enabled: !!detail, // detail이 존재할 때만 요청 실행
-    },
   );
   const handleRegisterCard = (row: SelectCounselSessionListItem) => {
     setDetail(row);
@@ -54,7 +51,7 @@ const Assistant = () => {
         setIsOpen(true);
       }
     }
-  }, [isLoading, data, setIsOpen]);
+  }, [isLoading, data, setIsOpen, navigate]);
 
   const columns: GridColDef[] = [
     {

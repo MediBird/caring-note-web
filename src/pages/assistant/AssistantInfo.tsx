@@ -1,12 +1,12 @@
 import arrowHeadLeftGray from '@/assets/icon/arrowHeadLeftGray.png';
 import Button from '@/components/Button';
+import BasicInfo from '@/pages/assistant/tabs/BasicInfo';
+import HealthInfo from '@/pages/assistant/tabs/HealthInfo';
+import IndependentInfo from '@/pages/assistant/tabs/IndependentInfo';
+import LifeInfo from '@/pages/assistant/tabs/LifeInfo';
 import useAssistantInfoTabStore, {
   AssistantInfoTab,
 } from '@/store/assistantTabStore';
-import BasicInfo from './tabs/BasicInfo';
-import HealthInfo from './tabs/HealthInfo';
-import LifeInfo from './tabs/LifeInfo';
-import IndependentInfo from './tabs/IndependentInfo';
 import { useState } from 'react';
 
 const TabTitle = ({
@@ -66,6 +66,7 @@ const TabContent = ({
 
 const AssistantInfo = () => {
   const { activeTab } = useAssistantInfoTabStore();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [hideIndependentInfoTab, setHideIndependentInfoTab] = useState(true);
   return (
     <div>

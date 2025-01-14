@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../app/store";
+import { createSlice } from '@reduxjs/toolkit';
+import type { RootState } from '../app/store';
 
 // Define a type for the slice state
 interface NavigationState {
@@ -12,10 +12,10 @@ const initialState: NavigationState = {
 };
 
 export const NavigationSlice = createSlice({
-  name: "navigationChanger",
+  name: 'navigationChanger',
   initialState,
   reducers: {
-    toggleRightNavigation: (state, action: PayloadAction<void>) => {
+    toggleRightNavigation: (state) => {
       state.isOpenRightNavigation = !state.isOpenRightNavigation;
     },
   },
