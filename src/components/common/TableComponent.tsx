@@ -1,13 +1,14 @@
-import PlusBlueIcon from "@/assets/icon/24/add.outlined.blue.svg?react"; // TODO : Figma에 Blue 아이콘 추가되면 해당 파일로 교체 필요
+import PlusBlueIcon from '@/assets/icon/24/add.outlined.blue.svg?react'; // TODO : Figma에 Blue 아이콘 추가되면 해당 파일로 교체 필요
 import {
   DataGrid,
+  gridClasses,
   GridColDef,
   GridRowModel,
   GridRowSelectionModel,
   GridRowsProp,
-} from "@mui/x-data-grid";
-import classNames from "classnames";
-import React from "react";
+} from '@mui/x-data-grid';
+import classNames from 'classnames';
+import React from 'react';
 
 type TableComponentProps = {
   tableKey: string;
@@ -38,12 +39,23 @@ const TableComponent: React.FC<TableComponentProps> = ({
       <DataGrid
         key={tableKey}
         className={classNames(
-          withAddButton ? "!rounded-t-xl" : "!rounded-xl",
-          "!min-h-96",
+          withAddButton ? '!rounded-t-xl' : '!rounded-xl',
+          '!min-h-96',
         )}
         classes={{
-          columnHeader: "bg-gray-200",
-          cell: "bg-white",
+          columnHeader: 'bg-gray-200',
+          cell: 'border-none',
+          row: 'hover:!bg-primary-10',
+        }}
+        sx={{
+          [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]:
+            {
+              outline: 'none',
+            },
+          [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
+            {
+              outline: 'none',
+            },
         }}
         rows={memoizedRows}
         columns={memoizedColumns}
@@ -67,6 +79,8 @@ const TableComponent: React.FC<TableComponentProps> = ({
               <span className="text-gray-400">항목이 존재하지 않습니다</span>
             </div>
           ),
+          columnMenu: () => null,
+          columnMenuIcon: () => null,
         }}
       />
       {withAddButton ? (
