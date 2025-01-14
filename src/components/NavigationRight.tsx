@@ -1,11 +1,10 @@
-import CloseBlackIcon from "@/assets/icon/24/close.outlined.black.svg?react";
-import PencilBlackIcon from "@/assets/icon/24/create.filled.black.svg?react";
-import MicBlackIcon from "@/assets/icon/24/mic.filled.black.svg?react";
-import Badge from "@/components/common/Badge";
-import { useAppDispatch, useAppSelector } from "../app/reduxHooks";
-import { toggleRightNavigation } from "../reducers/navigationReducer";
-import HighlightInput from "./consult/HighlightInput";
-
+import CloseBlackIcon from '@/assets/icon/24/close.outlined.black.svg?react';
+import PencilBlackIcon from '@/assets/icon/24/create.filled.black.svg?react';
+import MicBlackIcon from '@/assets/icon/24/mic.filled.black.svg?react';
+import Badge from '@/components/common/Badge';
+import { useAppDispatch, useAppSelector } from '../app/reduxHooks';
+import { toggleRightNavigation } from '../reducers/navigationReducer';
+import HighlightInput from './consult/HighlightInput';
 
 const NavigationRight = () => {
   const isOpen = useAppSelector(
@@ -21,7 +20,7 @@ const NavigationRight = () => {
     return (
       <div
         className={`flex flex-col items-center justify-start h-screen ${
-          isOpen ? "w-20" : ""
+          isOpen ? 'w-20' : ''
         } py-4`}
         onClick={toggleMenu}>
         <Badge
@@ -41,13 +40,10 @@ const NavigationRight = () => {
   return (
     <div
       className={`fixed top-0 right-0 h-full ${
-        isOpen ? "w-96" : "w-16"
+        isOpen ? 'w-96' : 'w-16'
       } bg-white ${
-        isOpen ? "" : "hover:bg-primary-5"
-      } transition-width duration-300`}
-      style={{
-        boxShadow: "-4px 0 8px rgba(0,0,0,0.2)",
-      }}>
+        isOpen ? '' : 'hover:bg-primary-5'
+      } transition-width duration-300 shadow-nav-right`}>
       {!isOpen && defaultMenu()}
       {isOpen && (
         <div className="flex justify-start">
