@@ -38,9 +38,6 @@ const Assistant = () => {
   const { data, isLoading } = useCounseleeConsentQueryId(
     detail?.counselSessionId || undefined,
     detail?.counseleeId || undefined,
-    {
-      enabled: !!detail, // detail이 존재할 때만 요청 실행
-    },
   );
   const handleRegisterCard = (row: SelectCounselSessionListItem) => {
     setDetail(row);
