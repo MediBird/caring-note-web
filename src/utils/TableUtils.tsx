@@ -1,5 +1,6 @@
-import { GridColDef } from "@mui/x-data-grid";
-import moment from "moment";
+import { cn } from '@/lib/utils';
+import { GridColDef } from '@mui/x-data-grid';
+import moment from 'moment';
 
 export const createDefaultTextColumn = ({
   field,
@@ -16,20 +17,18 @@ export const createDefaultTextColumn = ({
     flex: 1,
     renderCell: (params) => {
       return (
-        params.value || (
-          <span className="text-gray-400 italic">{headerName}</span>
-        )
+        params.value || <span className="text-gray-400">{headerName}</span>
       );
     },
-    headerClassName: isFirstColumn ? "!pl-6" : "",
-    cellClassName: isFirstColumn ? "!pl-6" : "",
+    headerClassName: isFirstColumn ? '!pl-6' : '',
+    cellClassName: isFirstColumn ? '!pl-6' : '',
   };
 };
 
 export const createDefaultNumberColumn = ({
   field,
   headerName,
-  unitName = "",
+  unitName = '',
   isFirstColumn = false,
 }: {
   field: string;
@@ -40,26 +39,26 @@ export const createDefaultNumberColumn = ({
   return {
     field,
     headerName,
-    headerAlign: "left",
+    headerAlign: 'left',
     flex: 1,
-    type: "number",
+    type: 'number',
     renderCell: (params) => {
       return params.value > 0 ? (
         `${params.value} ${unitName}`
       ) : (
-        <span className="text-gray-400 italic">0</span>
+        <span className="text-gray-400 ">0</span>
       );
     },
-    align: "left",
-    headerClassName: isFirstColumn ? "!pl-6" : "",
-    cellClassName: isFirstColumn ? "!pl-6" : "",
+    align: 'left',
+    headerClassName: isFirstColumn ? '!pl-6' : '',
+    cellClassName: isFirstColumn ? '!pl-6' : '',
   };
 };
 
 export const createDefaultDateColumn = ({
   field,
   headerName,
-  dateFormat = "YYYY-MM-DD",
+  dateFormat = 'YYYY-MM-DD',
   isFirstColumn = false,
 }: {
   field: string;
@@ -76,12 +75,65 @@ export const createDefaultDateColumn = ({
         ? moment(params.value).format(dateFormat)
         : null;
       return (
-        formattedDate || (
-          <span className="text-gray-400 italic">{dateFormat}</span>
+        formattedDate || <span className="text-gray-400 ">{dateFormat}</span>
+      );
+    },
+    headerClassName: isFirstColumn ? '!pl-6' : '',
+    cellClassName: isFirstColumn ? '!pl-6' : '',
+  };
+};
+
+const counselSessionStatus = {
+  COMPLETED: '완료',
+  SCHEDULED: '예정',
+  PROGRESS: '진행',
+  CANCELLED: '취소',
+};
+
+export const createDefaultStatusColumn = ({
+  field,
+  headerName,
+  isFirstColumn = false,
+}: {
+  field: string;
+  headerName: string;
+  isFirstColumn?: boolean;
+}): GridColDef => {
+  const getCounselSessionStatusColor = (status: string): string => {
+    switch (status) {
+      case 'COMPLETED':
+        return 'text-grayscale-100';
+      case 'SCHEDULED':
+        return 'text-grayscale-50';
+      case 'PROGRESS':
+        return 'text-primary-50';
+      case 'CANCELLED':
+        return 'text-error-50';
+      default:
+        return 'text-black';
+    }
+  };
+
+  return {
+    field,
+    headerName,
+    flex: 1,
+    renderCell: (params) => {
+      const status =
+        counselSessionStatus[params.value as keyof typeof counselSessionStatus];
+      return (
+        (
+          <span className={cn(getCounselSessionStatusColor(params.value))}>
+            {status}
+          </span>
+        ) || (
+          <span className={cn(getCounselSessionStatusColor(params.value))}>
+            {'-'}
+          </span>
         )
       );
     },
-    headerClassName: isFirstColumn ? "!pl-6" : "",
-    cellClassName: isFirstColumn ? "!pl-6" : "",
+    headerClassName: isFirstColumn ? '!pl-6' : '',
+    cellClassName: isFirstColumn ? '!pl-6' : '',
   };
 };
