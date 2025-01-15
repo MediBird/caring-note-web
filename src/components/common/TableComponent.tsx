@@ -1,11 +1,14 @@
 import PlusBlueIcon from '@/assets/icon/24/add.outlined.blue.svg?react'; // TODO : Figma에 Blue 아이콘 추가되면 해당 파일로 교체 필요
 import {
   DataGrid,
+  GridCallbackDetails,
+  GridCellParams,
   gridClasses,
   GridColDef,
   GridRowModel,
   GridRowSelectionModel,
   GridRowsProp,
+  MuiEvent,
 } from '@mui/x-data-grid';
 import classNames from 'classnames';
 import React from 'react';
@@ -19,6 +22,11 @@ type TableComponentProps = {
   onRowSelectionModelChange?: (selection: string[]) => void;
   withAddButton?: boolean;
   onClickAddButton?: () => void;
+  onCellClick?: (
+    params: GridCellParams,
+    event: MuiEvent<React.MouseEvent<HTMLElement>>,
+    details: GridCallbackDetails,
+  ) => void;
 };
 
 const TableComponent: React.FC<TableComponentProps> = ({
@@ -30,6 +38,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
   onRowSelectionModelChange,
   withAddButton,
   onClickAddButton,
+  onCellClick,
 }) => {
   const memoizedRows = React.useMemo(() => rows, [rows]);
   const memoizedColumns = React.useMemo(() => columns, [columns]);
@@ -38,6 +47,11 @@ const TableComponent: React.FC<TableComponentProps> = ({
     <div>
       <DataGrid
         key={tableKey}
+        onCellClick={(params, event, details) => {
+          if (onCellClick) {
+            onCellClick(params, event, details);
+          }
+        }}
         className={classNames(
           withAddButton ? '!rounded-t-xl' : '!rounded-xl',
           '!min-h-96',
