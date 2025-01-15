@@ -15,14 +15,17 @@ import moment from 'moment';
 import React from 'react';
 import TabContentContainer from '../../../../components/consult/TabContentContainer';
 import TabContentTitle from '../../../../components/consult/TabContentTitle';
+import { useParams } from 'react-router-dom';
 
 const PastConsult: React.FC = () => {
-  const counselSessionId = 'TEST-COUNSEL-SESSION-01'; // TODO : 다른 곳에서 전달받아야됨
+  const { counselSessionId } = useParams();
 
+  // TODO: 쿼리 커스텀 훅 분리 및 데이터 store set init 로직 개선 필요
   const counselSessionControllerApi = new CounselSessionControllerApi();
   const medicationCounselControllerApi = new MedicationCounselControllerApi();
 
   const selectPreviousMedicationCounsel = async () => {
+    if (!counselSessionId) return;
     const response =
       await medicationCounselControllerApi.selectPreviousMedicationCounsel(
         counselSessionId,
@@ -31,6 +34,7 @@ const PastConsult: React.FC = () => {
     return response;
   };
   const selectPreviousCounselSessionList = async () => {
+    if (!counselSessionId) return;
     const response =
       await counselSessionControllerApi.selectPreviousCounselSessionList(
         counselSessionId,
@@ -40,12 +44,15 @@ const PastConsult: React.FC = () => {
   };
 
   const previousMedicationCounselQuery = useQuery({
-    queryKey: ['selectPreviousMedicationCounsel'],
+    queryKey: ['selectPreviousMedicationCounsel', counselSessionId],
     queryFn: selectPreviousMedicationCounsel,
+    enabled: !!counselSessionId,
   });
+
   const previousCounselSessionListQuery = useQuery({
-    queryKey: ['selectPreviousCounselSessionList'],
+    queryKey: ['selectPreviousCounselSessionList', counselSessionId],
     queryFn: selectPreviousCounselSessionList,
+    enabled: !!counselSessionId,
   });
 
   const columns: GridColDef[] = React.useMemo(

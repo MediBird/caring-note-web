@@ -23,20 +23,24 @@ import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import GrayContainer from '../GrayContainer';
+import { useParams } from 'react-router-dom';
 
 const MedicineMemo: React.FC = () => {
-  const counselSessionId = 'TEST-COUNSEL-SESSION-01'; // TODO : 다른 곳에서 전달받아야됨
+  const { counselSessionId } = useParams();
 
   const medicationApi = new MedicationControllerApi();
   const medicationRecordHistControllerApi =
     new MedicationRecordHistControllerApi();
 
+  // TODO: 쿼리 커스텀 훅 분리 및 데이터 store set init 로직 개선 필요
   const searchMedicationByKeyword = async (keyword: string) => {
     const response = await medicationApi.searchMedicationByKeyword(keyword);
     console.log('searchMedicationByKeyword', response);
     return response;
   };
+
   const selectMedicationRecordListBySessionId1 = async () => {
+    if (!counselSessionId) return;
     const response =
       await medicationRecordHistControllerApi.selectMedicationRecordListBySessionId1(
         counselSessionId,
@@ -44,9 +48,11 @@ const MedicineMemo: React.FC = () => {
     console.log('selectMedicationRecordListBySessionId1', response);
     return response;
   };
+
   const addAndUpdateMedicationRecordHist = async (
     editedData: AddAndUpdateMedicationRecordHistReq[],
   ) => {
+    if (!counselSessionId) return;
     const response =
       await medicationRecordHistControllerApi.addAndUpdateMedicationRecordHist(
         counselSessionId,
@@ -57,20 +63,23 @@ const MedicineMemo: React.FC = () => {
   };
 
   const [keyword, setKeyword] = useState<string>('');
+
   const searchMedicationByKeywordQuery = useQuery({
-    queryKey: ['searchMedicationByKeyword'],
+    queryKey: ['searchMedicationByKeyword', keyword],
     queryFn: () => searchMedicationByKeyword(keyword),
-    enabled: false,
+    enabled: keyword.length > 1,
   });
+
   const selectMedicationRecordListBySessionIdQuery = useQuery({
-    queryKey: ['selectMedicationRecordListBySessionId'],
+    queryKey: ['selectMedicationRecordListBySessionId', counselSessionId],
     queryFn: selectMedicationRecordListBySessionId1,
-    enabled: false,
+    enabled: !!counselSessionId,
   });
+
   const addAndUpdateMedicationRecordHistQuery = useQuery({
-    queryKey: ['addAndUpdateMedicationRecordHist'],
+    queryKey: ['addAndUpdateMedicationRecordHist', counselSessionId],
     queryFn: () => addAndUpdateMedicationRecordHist(editedData || []),
-    enabled: false,
+    enabled: !!counselSessionId,
   });
 
   const { originalData, editedData, setOriginalData, setHttpStatus } =
@@ -94,74 +103,63 @@ const MedicineMemo: React.FC = () => {
 
   useEffect(() => {
     // API 호출
-    searchMedicationByKeywordQuery.refetch();
-    selectMedicationRecordListBySessionIdQuery.refetch().then(() => {
-      // 처방 의약품 데이터 셋팅
-      if (
-        selectMedicationRecordListBySessionIdQuery.isSuccess &&
-        JSON.stringify(originalData) === '[]'
-      ) {
-        if (setHttpStatus)
-          setHttpStatus(
-            selectMedicationRecordListBySessionIdQuery.data?.status || 0,
-          );
-        if (setOriginalData)
-          setOriginalData([
-            ...(selectMedicationRecordListBySessionIdQuery.data?.data?.data ||
-              []),
-          ]);
 
-        console.log('jw, medicineMemo:: originalData updated!!');
+    // 처방 의약품 데이터 셋팅
+    if (
+      selectMedicationRecordListBySessionIdQuery.isSuccess &&
+      JSON.stringify(originalData) === '[]'
+    ) {
+      if (setHttpStatus)
+        setHttpStatus(
+          selectMedicationRecordListBySessionIdQuery.data?.status || 0,
+        );
+      if (setOriginalData)
+        setOriginalData([
+          ...(selectMedicationRecordListBySessionIdQuery.data?.data?.data ||
+            []),
+        ]);
 
-        // 의약품 테이블 zustand 데이터 세팅
-        (
-          selectMedicationRecordListBySessionIdQuery.data?.data
-            ?.data as SelectMedicationRecordHistRes[]
-        )?.map((item) => {
-          if (
-            item.divisionCode ===
-            SelectMedicationRecordHistResDivisionCodeEnum.Prescription
-          ) {
-            addPrescribedMedicineRow({
-              id: item.rowId,
-              col1: item.usageStatusCode,
-              col2: item.medicationName,
-              col3: item.usageObject,
-              col4: item.prescriptionDate,
-              col5: item.prescriptionDays,
-            });
-          } else if (
-            item.divisionCode ===
-            SelectMedicationRecordHistResDivisionCodeEnum.Otc
-          ) {
-            addNormalMedicineRow({
-              id: item.rowId,
-              col1: item.usageStatusCode,
-              col2: item.medicationName,
-              col3: item.usageObject,
-              col4: item.prescriptionDate,
-              col5: item.prescriptionDays,
-            });
-          }
-        });
-      }
-    });
+      console.log('jw, medicineMemo:: originalData updated!!');
+
+      // 의약품 테이블 zustand 데이터 세팅
+      (
+        selectMedicationRecordListBySessionIdQuery.data?.data
+          ?.data as SelectMedicationRecordHistRes[]
+      )?.map((item) => {
+        if (
+          item.divisionCode ===
+          SelectMedicationRecordHistResDivisionCodeEnum.Prescription
+        ) {
+          addPrescribedMedicineRow({
+            id: item.rowId,
+            col1: item.usageStatusCode,
+            col2: item.medicationName,
+            col3: item.usageObject,
+            col4: item.prescriptionDate,
+            col5: item.prescriptionDays,
+          });
+        } else if (
+          item.divisionCode ===
+          SelectMedicationRecordHistResDivisionCodeEnum.Otc
+        ) {
+          addNormalMedicineRow({
+            id: item.rowId,
+            col1: item.usageStatusCode,
+            col2: item.medicationName,
+            col3: item.usageObject,
+            col4: item.prescriptionDate,
+            col5: item.prescriptionDays,
+          });
+        }
+      });
+    }
   }, [
+    selectMedicationRecordListBySessionIdQuery.isSuccess,
     addNormalMedicineRow,
     addPrescribedMedicineRow,
-    originalData,
-    searchMedicationByKeywordQuery,
-    selectMedicationRecordListBySessionIdQuery,
-    selectMedicationRecordListBySessionIdQuery.isSuccess,
     setHttpStatus,
     setOriginalData,
   ]);
-
-  useEffect(() => {
-    // if (keyword.length > 1) {
-    searchMedicationByKeywordQuery.refetch();
-    // }
-  }, [keyword, searchMedicationByKeywordQuery]);
 
   const columns: GridColDef[] = [
     {
@@ -235,10 +233,11 @@ const MedicineMemo: React.FC = () => {
             <DatePickerComponent
               initialDate={params.value ? new Date(params.value) : undefined}
               handleClicked={(date) => {
-                updatePrescribedMedicineRowById({
-                  ...params.row,
-                  col4: date ? moment(date).format('YYYY-MM-DD') : '',
-                });
+                // TODO:: updatePrescribedMedicineRowById 무한렌더링 유발 임시 주석 처리
+                // updatePrescribedMedicineRowById({
+                //   ...params.row,
+                //   col4: date ? moment(date).format('YYYY-MM-DD') : '',
+                // });
               }}
             />
           </div>
@@ -334,7 +333,6 @@ const MedicineMemo: React.FC = () => {
     console.log('수정된 editedData', editedData);
 
     // edited Data 에 있는 값으로 API 호출
-    addAndUpdateMedicationRecordHistQuery.refetch();
   };
 
   return (

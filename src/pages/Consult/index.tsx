@@ -3,6 +3,7 @@ import Button from '@/components/Button';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useQuery } from '@tanstack/react-query';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const PastConsult = lazy(
   () => import('@/pages/Consult/components/tabs/PastConsult'),
@@ -50,17 +51,17 @@ const TabTitle = ({
 
 function Index() {
   const { activeTab, setActiveTab } = useConsultTabStore();
+  const { counselSessionId } = useParams();
 
   const [hidePastConsultTab, setHidePastConsultTab] = useState(true);
   const diseasesLengthRef = useRef(0);
   const SHOW_DISEASE_COUNT = 5;
 
-  const counselSessionId = 'TEST-COUNSEL-SESSION-01'; // TODO : 다른 곳에서 전달받아야됨
-
   const counselSessionControllerApi = new CounselSessionControllerApi();
   const counseleeControllerApi = new CounseleeControllerApi();
 
   const selectPreviousCounselSessionList = async () => {
+    if (!counselSessionId) return;
     const response =
       await counselSessionControllerApi.selectPreviousCounselSessionList(
         counselSessionId,
@@ -70,6 +71,7 @@ function Index() {
   };
 
   const selectCounseleeBaseInformation = async () => {
+    if (!counselSessionId) return;
     const response =
       await counseleeControllerApi.selectCounseleeBaseInformation(
         counselSessionId,
@@ -81,19 +83,15 @@ function Index() {
   const previousCounselQuery = useQuery({
     queryKey: ['previousCounsel'],
     queryFn: selectPreviousCounselSessionList,
-    enabled: false,
-  });
-  const counseleeBaseInfoQuery = useQuery({
-    queryKey: ['counseleeBaseInfo'],
-    queryFn: selectCounseleeBaseInformation,
-    enabled: false,
+    enabled: !!counselSessionId,
   });
 
-  useEffect(() => {
-    previousCounselQuery.refetch();
-    counseleeBaseInfoQuery.refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const counseleeBaseInfoQuery = useQuery({
+    queryKey: ['counseleeBaseInfo', counselSessionId],
+    queryFn: selectCounseleeBaseInformation,
+  });
+
+  console.log(previousCounselQuery.data);
 
   useEffect(() => {
     if (previousCounselQuery.data?.status !== 204) {
