@@ -20,10 +20,9 @@ import {
 } from '@/utils/TableUtils';
 import { GridColDef } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
-import GrayContainer from '../GrayContainer';
 import { useParams } from 'react-router-dom';
+import GrayContainer from '../GrayContainer';
 
 const MedicineMemo: React.FC = () => {
   const { counselSessionId } = useParams();
@@ -76,6 +75,7 @@ const MedicineMemo: React.FC = () => {
     enabled: !!counselSessionId,
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const addAndUpdateMedicationRecordHistQuery = useQuery({
     queryKey: ['addAndUpdateMedicationRecordHist', counselSessionId],
     queryFn: () => addAndUpdateMedicationRecordHist(editedData || []),
@@ -153,6 +153,7 @@ const MedicineMemo: React.FC = () => {
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     selectMedicationRecordListBySessionIdQuery.isSuccess,
     addNormalMedicineRow,
@@ -232,6 +233,7 @@ const MedicineMemo: React.FC = () => {
           <div className="w-full h-full flex items-center justify-center ">
             <DatePickerComponent
               initialDate={params.value ? new Date(params.value) : undefined}
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               handleClicked={(date) => {
                 // TODO:: updatePrescribedMedicineRowById 무한렌더링 유발 임시 주석 처리
                 // updatePrescribedMedicineRowById({
