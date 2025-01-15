@@ -6,23 +6,26 @@ import eraserBlack from "@/assets/icon/24/erase.outlined.black.svg";
 import highlightpenBlack from "@/assets/icon/24/highlighter.outlined.black.svg";
 import { Editor, EditorState, Modifier, ContentState, SelectionState } from "draft-js";
 import "draft-js/dist/Draft.css";
-import React from "react";
-import { useSelectMedicineConsult } from "@/hooks/useMedicineConsultQuery";
+import React, { forwardRef, useImperativeHandle } from "react";
+import { useSelectMedicineConsult, useSaveMedicineConsult } from "@/hooks/useMedicineConsultQuery";
 import { useMedicineConsultStore} from "@/store/medicineConsultStore";
 import { useEffect} from "react";
 
+const HighlightInput = forwardRef((_, ref) => {
 
-const HighlightInput: React.FC = () => {
   const dispatch = useAppDispatch();
   const editorState = useAppSelector((state) => state.editorState.editorState);
-
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const counselSessionId = "TEST-COUNSEL-SESSION-01";
-  const { setMedicationConsult
+  const { medicineConsult
+        , setMedicationConsult
         , setCounselRecordHighlights
-        ,setCounselRecord } = useMedicineConsultStore();
+        , setCounselRecord } = useMedicineConsultStore();
+
+        
   const { data } = useSelectMedicineConsult(counselSessionId);
+  const saveMedicineConsult = useSaveMedicineConsult();
   const styleMap = {
     HIGHLIGHT: {
       backgroundColor: "#FFBD14",
@@ -31,6 +34,12 @@ const HighlightInput: React.FC = () => {
       backgroundColor: "#FFFFFF",
     },
   };
+
+  useImperativeHandle(ref, () => ({
+    saveMedicineConsult: () => {
+      saveMedicineConsult.mutate(medicineConsult);
+    },
+  }));
 
 
   useEffect(() => {
@@ -186,6 +195,6 @@ const HighlightInput: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default HighlightInput;
