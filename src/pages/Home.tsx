@@ -9,15 +9,17 @@ import {
   createDefaultStatusColumn,
   createDefaultTextColumn,
 } from '@/utils/TableUtils';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { useKeycloak } from '@react-keycloak/web';
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const { keycloak } = useKeycloak();
   const { data: counselList, isLoading } = useSelectCounselSessionList({
     size: 15,
   });
+  const navigate = useNavigate();
 
   const formattedCounselList = useMemo(() => {
     return counselList?.map((item) => {
@@ -34,6 +36,20 @@ function Home() {
 
   const handleClickCardRecord = () => {
     console.log('카드 작성 버튼 클릭');
+  };
+
+  const handleCellClick: GridEventListener<'cellClick'> = (params) => {
+    const navigableFields = [
+      'scheduledTime',
+      'scheduledDate',
+      'status',
+      'counseleeName',
+      'counselorName',
+    ];
+
+    if (navigableFields.includes(params.field)) {
+      navigate(`/consult/${params.row.counselSessionId}`);
+    }
   };
 
   const columns = getCardColumns({
@@ -68,16 +84,16 @@ function Home() {
           <div className="flex flex-col items-center justify-center flex-grow w-full max-w-[1020px]">
             <div className="w-full h-auto p-6 bg-white rounded-xl shadow-container">
               <div className="flex items-center justify-between w-full h-10">
-                <span className="font-bold text-h3">오늘의 상담 일정</span>
-                <Button variant="secondary">전체 상담 노트 보기</Button>
+                <span className="font-bold text-2xl">오늘 일정</span>
               </div>
-              <div className="mt-10">
+              <div className="mt-5">
                 <TableComponent
                   tableKey="home-table"
                   rows={isLoading ? [] : formattedCounselList ?? []}
                   columns={columns}
                   checkboxSelection={false}
                   onUpdateCell={() => {}}
+                  onCellClick={handleCellClick}
                   onRowSelectionModelChange={() => {}}
                 />
               </div>

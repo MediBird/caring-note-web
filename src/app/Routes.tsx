@@ -5,7 +5,7 @@ import Consult from '@/pages/Consult';
 import ErrorPage from '@/pages/ErrorPage';
 import Home from '@/pages/Home';
 import Layout from '@/pages/Layout';
-import { RouteObject, useRoutes } from 'react-router-dom';
+import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 
 type AppRouteObject = RouteObject & {
   children?: AppRouteObject[];
@@ -34,7 +34,12 @@ const Routes = () => {
     element: <Layout />,
     children: [
       {
+        //block route when counselSessionId is not provided
         path: '',
+        element: <Navigate to="/" />,
+      },
+      {
+        path: ':counselSessionId',
         element: <Consult />,
       },
     ],
@@ -54,6 +59,7 @@ const Routes = () => {
       },
     ],
   };
+
   const routes: AppRouteObject[] = [
     noMatchRoutes,
     mainRoutes,

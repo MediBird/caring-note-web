@@ -3,17 +3,20 @@ import CardContent from '@/components/common/CardContent';
 import useConsultCardStore from '@/store/consultCardStore';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Button from '../../../../components/Button';
 import CardContainer from '../../../../components/common/CardContainer';
 import TabContentContainer from '../../../../components/consult/TabContentContainer';
 import TabContentTitle from '../../../../components/consult/TabContentTitle';
 
 const ConsultCard: React.FC = () => {
-  const counselSessionId = 'TEST-COUNSEL-SESSION-01'; // TODO : 다른 곳에서 전달받아야됨
+  const { counselSessionId } = useParams();
 
   const counselCardControllerApi = new CounselCardControllerApi();
 
   const selectCounselCard = async () => {
+    if (!counselSessionId) return;
+
     const response = await counselCardControllerApi.selectCounselCard(
       counselSessionId,
     );
@@ -21,38 +24,33 @@ const ConsultCard: React.FC = () => {
     return response;
   };
 
+  // TODO: 쿼리 커스텀 훅 분리 및 데이터 store set init 로직 개선 필요
   // tanstack/react-query 를 사용하여 데이터 fetch
-  const consultCardQuery = useQuery({
-    queryKey: ['consultCard'],
-    queryFn: selectCounselCard,
-    enabled: false, // 자동 새로고침 block
-  });
+  const { data: consultCardData, isSuccess: isConsultCardQuerySuccess } =
+    useQuery({
+      queryKey: ['consultCard', counselSessionId],
+      queryFn: selectCounselCard,
+      enabled: !!counselSessionId,
+    });
+
   // zustand 로 상태관리
   const { originalData, setOriginalData, setEditedData, setHttpStatus } =
     useConsultCardStore();
 
   useEffect(() => {
-    // API 호출
-    consultCardQuery.refetch().then(() => {
-      // originalData 가 비어있을 때만 setOriginalData 호출
-      if (consultCardQuery.isSuccess && JSON.stringify(originalData) === '{}') {
-        // Zustand 상태 update
-        if (setHttpStatus) {
-          setHttpStatus(consultCardQuery.data?.status || 0);
-        }
-        if (setOriginalData) {
-          setOriginalData(consultCardQuery.data?.data?.data || {});
-        }
-        if (setEditedData) {
-          setEditedData(consultCardQuery.data?.data?.data || {});
-        }
+    // originalData 가 비어있을 때만 setOriginalData 호출
+    if (isConsultCardQuerySuccess && JSON.stringify(originalData) === '{}') {
+      // Zustand 상태 update
+      setHttpStatus(consultCardData?.status || 0);
+      setOriginalData(consultCardData?.data?.data || {});
+      setEditedData(consultCardData?.data?.data || {});
 
-        console.log('jw, consultCard:: originalData updated!!');
-      }
-    });
+      console.log('jw, consultCard:: originalData updated!!');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    consultCardQuery,
-    consultCardQuery.isSuccess,
+    counselSessionId,
+    isConsultCardQuerySuccess,
     originalData,
     setEditedData,
     setHttpStatus,

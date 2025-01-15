@@ -1,13 +1,13 @@
-import { SelectCounselCardRes } from "@/api";
-import { create } from "zustand";
+import { SelectCounselCardRes } from '@/api';
+import { create } from 'zustand';
 
 interface ConsultCardState {
   httpStatus?: number;
   originalData?: SelectCounselCardRes;
   editedData?: SelectCounselCardRes;
-  setHttpStatus?: (status: number) => void;
-  setOriginalData?: (data: SelectCounselCardRes) => void;
-  setEditedData?: (data: SelectCounselCardRes) => void;
+  setHttpStatus: (status: number) => void;
+  setOriginalData: (data: SelectCounselCardRes) => void;
+  setEditedData: (data: SelectCounselCardRes) => void;
   resetEditedData?: () => void;
 }
 
