@@ -35,6 +35,7 @@ const NavigationLeft = () => {
         menuIcon={<HomeBlackIcon width={24} height={24} />}
         activteMenuIcon={<HomeBlueIcon width={24} height={24} />}
         menuName="홈"
+        onClick={() => navigate('/')}
       />
       <NavigationLeftMenu
         menuIcon={<NoteBlackIcon width={24} height={24} />}
