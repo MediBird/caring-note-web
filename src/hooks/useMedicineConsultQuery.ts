@@ -1,9 +1,12 @@
 import {MedicationCounselControllerApi,
         UpdateMedicationCounselReq,
+        UpdateMedicationCounselRes,
         AddMedicationCounselReq,
+        AddMedicationCounselRes,
         DeleteMedicationCounselReq
         } from "@/api/api";
-import {useQuery} from "@tanstack/react-query";
+import {useQuery, useMutation} from "@tanstack/react-query";
+import { MedicineConsultDTO }  from "@/types/MedicineConsultDTO";
 
 const medicationCounselControllerApi = new MedicationCounselControllerApi();
 
@@ -20,25 +23,25 @@ const selectMedicationCounsel = async (counselSessionId: string) => {
 
 }
 
-const updateMedicationCounsel = async (updateMedicationCounselReq: UpdateMedicationCounselReq) => {
+const saveMedicationCounsel = async (medicineConsultDTO: MedicineConsultDTO) => {
 
-    const response = await medicationCounselControllerApi.updateMedicationCounsel(updateMedicationCounselReq);
-    return response.data.data;
+    if (medicineConsultDTO.medicationCounselId === "") {
+    
+        const response = await medicationCounselControllerApi.addMedicationCounsel({
+            counselSessionId: medicineConsultDTO.counselSessionId,
+            counselRecord: medicineConsultDTO.counselRecord,
+            counselRecordHighlights: medicineConsultDTO.counselRecordHighlights,
+          });
+          return response.data.data?.medicationCounselId;
+    } else {
 
-}
-
-const addMedicationCounsel = async (addMedicationCounselReq: AddMedicationCounselReq) => {
-
-    const response = await medicationCounselControllerApi.addMedicationCounsel(addMedicationCounselReq);
-    return response.data.data;
-
-}
-
-const deleteMedicationCounsel = async (deleteMedicationCounselReq : DeleteMedicationCounselReq) => {
-
-    const response = await medicationCounselControllerApi.deleteMedicationCounsel(deleteMedicationCounselReq);
-    return response.data.data;
-
+        const response = await medicationCounselControllerApi.updateMedicationCounsel({
+            medicationCounselId: medicineConsultDTO.medicationCounselId,
+            counselRecord: medicineConsultDTO.counselRecord,
+            counselRecordHighlights: medicineConsultDTO.counselRecordHighlights,
+          });
+        return response.data.data?.updatedMedicationCounselId;
+    }
 }
 
 export const useSelectMedicineConsult = (counselSessionId: string) =>{
@@ -49,22 +52,10 @@ export const useSelectMedicineConsult = (counselSessionId: string) =>{
       });
     }
 
+export const useSaveMedicineConsult = () => {
 
-export const useUpdateMedicineConsult = (updateMedicationCounselReq: UpdateMedicationCounselReq) => 
-    useQuery({
-        queryKey: [updateMedicationCounselReq],
-        queryFn: () => updateMedicationCounsel(updateMedicationCounselReq),
-      });
-
-
-export const useAddMedicineConsult = (addMedicationCounselReq: AddMedicationCounselReq) =>
-    useQuery({
-        queryKey: [addMedicationCounselReq],
-        queryFn: () => addMedicationCounsel(addMedicationCounselReq),
-      });
-
-export const useDeleteMedicineConsult = (deleteMedicationCounselReq: DeleteMedicationCounselReq) => 
-    useQuery({
-        queryKey: [deleteMedicationCounselReq],
-        queryFn: () => deleteMedicationCounsel(deleteMedicationCounselReq),
-      });
+    return useMutation<string | undefined, Error, MedicineConsultDTO>({
+          mutationFn: (medicineConsultDTO: MedicineConsultDTO) =>
+            saveMedicationCounsel(medicineConsultDTO),
+        });
+    };
