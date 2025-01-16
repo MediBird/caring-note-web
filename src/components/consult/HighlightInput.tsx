@@ -86,6 +86,11 @@ const HighlightInput: React.FC = () => {
     }
   }, [data,dispatch,setMedicationConsult]); 
 
+
+  useEffect(() => {
+    setCounselRecordHighlights(getHighlightedText() || []);
+  }, [editorState, setCounselRecordHighlights]); 
+
   // 하이라이트 버튼 핸들러
   const applyHighlight = () => {
     const contentState = editorState.getCurrentContent();
@@ -103,8 +108,6 @@ const HighlightInput: React.FC = () => {
       "change-inline-style",
     );
     dispatch(changeEditorState(newEditorState));
-
-    setCounselRecordHighlights(getHighlightedText()||[]);
   };
 
   // 하이라이트 버튼 핸들러
@@ -125,7 +128,6 @@ const HighlightInput: React.FC = () => {
     );
 
     dispatch(changeEditorState(newEditorState));
-    setCounselRecordHighlights(getHighlightedText()||[]);
   };
 
 
