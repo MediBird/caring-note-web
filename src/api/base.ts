@@ -12,24 +12,24 @@
  * Do not edit the class manually.
  */
 
-import type { Configuration } from "./configuration";
+import type { Configuration } from './configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from "axios";
-import globalAxios from "axios";
-import { keycloak } from "@/app/keycloak";
+import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
+import globalAxios from 'axios';
+import { keycloak } from '@/app/keycloak';
 
-export const BASE_PATH = "https://caringnote.co.kr/api".replace(/\/+$/, "");
+export const BASE_PATH = 'https://caringnote.co.kr/api'.replace(/\/+$/, '');
 
 /**
  *
  * @export
  */
 export const COLLECTION_FORMATS = {
-  csv: ",",
-  ssv: " ",
-  tsv: "\t",
-  pipes: "|",
+  csv: ',',
+  ssv: ' ',
+  tsv: '\t',
+  pipes: '|',
 };
 
 /**
@@ -62,24 +62,13 @@ export class BaseAPI {
 
     this.axios.interceptors.request.use(async (config) => {
       // keycloak이 초기화될 때까지 대기
-      if (!keycloak.authenticated) {
-        try {
-          await keycloak.init({
-            onLoad: "check-sso",
-            silentCheckSsoRedirectUri:
-              window.location.origin + "/silent-check-sso.html",
-          });
-        } catch (error) {
-          console.error("Keycloak initialization failed:", error);
-        }
-      }
 
       // 토큰이 만료되었다면 갱신
       if (keycloak.token && keycloak.isTokenExpired()) {
         try {
           await keycloak.updateToken(5);
         } catch (error) {
-          console.error("Token refresh failed:", error);
+          console.error('Token refresh failed:', error);
         }
       }
 
@@ -101,7 +90,7 @@ export class BaseAPI {
 export class RequiredError extends Error {
   constructor(public field: string, msg?: string) {
     super(msg);
-    this.name = "RequiredError";
+    this.name = 'RequiredError';
   }
 }
 
