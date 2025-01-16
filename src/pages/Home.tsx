@@ -126,30 +126,35 @@ const getCardColumns = ({
       headerName: '예약시간',
       flex: 1,
       maxWidth: 112,
+      cellClassName: 'cursor-pointer',
     },
     {
       ...createDefaultDateColumn({
         field: 'scheduledDate',
         headerName: '상담일자',
       }),
+      cellClassName: 'cursor-pointer',
     },
     {
       ...createDefaultStatusColumn({
         field: 'status',
         headerName: '상담진행',
       }),
+      cellClassName: 'cursor-pointer',
     },
     {
       ...createDefaultTextColumn({
         field: 'counseleeName',
         headerName: '내담자',
       }),
+      cellClassName: 'cursor-pointer',
     },
     {
       ...createDefaultTextColumn({
         field: 'counselorName',
         headerName: '담당약사',
       }),
+      cellClassName: 'cursor-pointer',
     },
     {
       field: 'counselorAssign',
