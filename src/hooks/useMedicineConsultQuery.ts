@@ -7,7 +7,7 @@ const medicationCounselControllerApi = new MedicationCounselControllerApi();
 const selectMedicationCounsel = async (counselSessionId: string) => {
 
     const response = await medicationCounselControllerApi.selectMedicationCounsel(counselSessionId);
-
+  
     return response.data.data||{
         medicationCounselId: '',
         counselRecord: '',
@@ -41,11 +41,12 @@ const saveMedicationCounsel = async (medicineConsultDTO: MedicineConsultDTO) => 
     return medicineConsultDTO.counselSessionId;
 }
 
-export const useSelectMedicineConsult = (counselSessionId: string) =>{
+export const useSelectMedicineConsult = (counselSessionId?: string) =>{
 
     return useQuery({
         queryKey: ["SelectMedicationConsult", counselSessionId],
-        queryFn: () => selectMedicationCounsel(counselSessionId),
+        queryFn: () => selectMedicationCounsel(counselSessionId!),
+        enabled: !!counselSessionId,
       });
     }
 
