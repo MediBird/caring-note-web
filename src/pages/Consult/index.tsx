@@ -4,6 +4,7 @@ import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useQuery } from '@tanstack/react-query';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSaveMedicineConsultWithState } from "@/hooks/useSaveMedicineConsultWithState";
 
 const PastConsult = lazy(
   () => import('@/pages/Consult/components/tabs/PastConsult'),
@@ -93,6 +94,8 @@ function Index() {
 
   console.log(previousCounselQuery.data);
 
+  const {handleSaveMedicineConsult} = useSaveMedicineConsultWithState();
+
   useEffect(() => {
     if (previousCounselQuery.data?.status !== 204) {
       setHidePastConsultTab(false);
@@ -107,6 +110,8 @@ function Index() {
       counseleeBaseInfoQuery.data?.diseases?.length || 0;
   }, [counseleeBaseInfoQuery.data]);
 
+
+
   return (
     <div>
       <div className="flex flex-col items-center justify-start w-full h-fit px-8 py-10">
@@ -114,7 +119,9 @@ function Index() {
           <p className="text-h2 font-bold text-grayscale-100">
             {counseleeBaseInfoQuery.data?.name}
           </p>
-          <Button _class="ml-6" variant="secondary" onClick={() => {}}>
+          <Button _class="ml-6" variant="secondary" onClick={() => {
+            handleSaveMedicineConsult();
+          }}>
             임시저장
           </Button>
           <Button _class="ml-2" variant="primary" onClick={() => {}}>

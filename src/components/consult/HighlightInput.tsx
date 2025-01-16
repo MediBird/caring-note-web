@@ -10,19 +10,22 @@ import React from "react";
 import { useSelectMedicineConsult } from "@/hooks/useMedicineConsultQuery";
 import { useMedicineConsultStore} from "@/store/medicineConsultStore";
 import { useEffect} from "react";
-
+import { useParams } from "react-router-dom";
 
 const HighlightInput: React.FC = () => {
+
   const dispatch = useAppDispatch();
   const editorState = useAppSelector((state) => state.editorState.editorState);
-
   const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const counselSessionId = "TEST-COUNSEL-SESSION-01";
+  const { counselSessionId } = useParams(); 
   const { setMedicationConsult
         , setCounselRecordHighlights
-        ,setCounselRecord } = useMedicineConsultStore();
+        , setCounselRecord } = useMedicineConsultStore();
+
+        
   const { data } = useSelectMedicineConsult(counselSessionId);
+
   const styleMap = {
     HIGHLIGHT: {
       backgroundColor: "#FFBD14",
@@ -32,13 +35,12 @@ const HighlightInput: React.FC = () => {
     },
   };
 
-
   useEffect(() => {
 
     if (data) {
       
       setMedicationConsult({
-       counselSessionId: counselSessionId,
+       counselSessionId: counselSessionId || '',
         medicationCounselId: data.medicationCounselId || '',
        counselRecord: data.counselRecord || '',
        counselRecordHighlights: data.counselRecordHighlights || [],
@@ -83,7 +85,12 @@ const HighlightInput: React.FC = () => {
       dispatch(changeEditorState(newEditorState));
 
     }
-  }, [data,dispatch,setMedicationConsult]); 
+  }, [data,dispatch,setMedicationConsult,counselSessionId]); 
+
+
+  useEffect(() => {
+    setCounselRecordHighlights(getHighlightedText() || []);
+  }, [editorState, setCounselRecordHighlights]); 
 
   // 하이라이트 버튼 핸들러
   const applyHighlight = () => {
@@ -102,8 +109,6 @@ const HighlightInput: React.FC = () => {
       "change-inline-style",
     );
     dispatch(changeEditorState(newEditorState));
-
-    setCounselRecordHighlights(getHighlightedText()||[]);
   };
 
   // 하이라이트 버튼 핸들러
@@ -124,7 +129,6 @@ const HighlightInput: React.FC = () => {
     );
 
     dispatch(changeEditorState(newEditorState));
-    setCounselRecordHighlights(getHighlightedText()||[]);
   };
 
 
