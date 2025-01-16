@@ -17,6 +17,7 @@ const selectMedicationCounsel = async (counselSessionId: string) => {
 
 }
 
+
 const saveMedicationCounsel = async (medicineConsultDTO: MedicineConsultDTO) => {
 
     if (medicineConsultDTO.medicationCounselId === "") {
@@ -25,6 +26,7 @@ const saveMedicationCounsel = async (medicineConsultDTO: MedicineConsultDTO) => 
             counselSessionId: medicineConsultDTO.counselSessionId,
             counselRecord: medicineConsultDTO.counselRecord,
             counselRecordHighlights: medicineConsultDTO.counselRecordHighlights,
+            counselNeedStatus: "ONE"
           });
     } else {
 
@@ -32,6 +34,7 @@ const saveMedicationCounsel = async (medicineConsultDTO: MedicineConsultDTO) => 
             medicationCounselId: medicineConsultDTO.medicationCounselId,
             counselRecord: medicineConsultDTO.counselRecord,
             counselRecordHighlights: medicineConsultDTO.counselRecordHighlights,
+            counselNeedStatus: "ONE"
           });
     }
 
