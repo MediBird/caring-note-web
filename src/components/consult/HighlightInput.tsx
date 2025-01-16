@@ -85,7 +85,7 @@ const HighlightInput: React.FC = () => {
       dispatch(changeEditorState(newEditorState));
 
     }
-  }, [data,dispatch,setMedicationConsult]); 
+  }, [data,dispatch,setMedicationConsult,counselSessionId]); 
 
 
   useEffect(() => {
