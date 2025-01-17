@@ -19,7 +19,7 @@ const HealthInfo = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/healthInfo')); // 해당 tab의 url
-  }, []);
+  }, [dispatch]);
   const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   const [formData, setFormData] = useState<HealthInformationDTO>(
     counselAssistant.healthInformation || {
@@ -56,7 +56,6 @@ const HealthInfo = () => {
     section: 'diseaseInfo' | 'allergy' | 'medicationSideEffect',
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [section]: {
@@ -71,7 +70,7 @@ const HealthInfo = () => {
       ...counselAssistant,
       healthInformation: formData,
     });
-  }, [formData]);
+  }, [formData, setCounselAssistant, counselAssistant]);
 
   return (
     <>
