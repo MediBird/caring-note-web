@@ -1,10 +1,7 @@
 // src/keycloak.js
 
-import { CounselorControllerApiFactory } from '@/api/api';
-import { setUserInfo } from '@/store/actions';
 import { AuthClientEvent } from '@react-keycloak/core';
 import Keycloak from 'keycloak-js';
-import store from './store';
 
 // Keycloak 설정. 여기서 url, realm, clientId는 위에서 만든 값으로 교체
 export const keycloak = new Keycloak({
@@ -33,7 +30,6 @@ export const onKeycloakEvent = (
       break;
     case 'onAuthSuccess':
       console.log('onAuthSuccess');
-      fetchUserInfo();
       break;
     case 'onAuthRefreshError':
       keycloak.login();
@@ -41,17 +37,6 @@ export const onKeycloakEvent = (
     case 'onTokenExpired':
       keycloak.updateToken(30);
       break;
-  }
-};
-const fetchUserInfo = async () => {
-  if (keycloak.authenticated) {
-    try {
-      const response = await CounselorControllerApiFactory().getMyInfo();
-      // 사용자 정보를 store에 저장하는 액션 호출
-      store.dispatch(setUserInfo(response.data));
-    } catch (error) {
-      console.error('Failed to fetch user info:', error);
-    }
   }
 };
 

@@ -5,22 +5,25 @@ import { Provider } from 'react-redux';
 import keycloak, { initOptions, onKeycloakEvent } from './keycloak';
 import Router from './Router';
 import store from './store';
+import { AuthContextProvider } from '@/context/AuthContext';
 // Tanstack : QueryClient 인스턴스 생성
 const queryClient = new QueryClient();
 
 const App = () => {
   return (
-    <ReactKeycloakProvider
-      authClient={keycloak}
-      initOptions={initOptions}
-      onEvent={onKeycloakEvent}>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <Router />
-        </QueryClientProvider>
-      </Provider>
-    </ReactKeycloakProvider>
+    <Provider store={store}>
+      <ReactKeycloakProvider
+        authClient={keycloak}
+        initOptions={initOptions}
+        onEvent={onKeycloakEvent}>
+        <AuthContextProvider>
+          <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools initialIsOpen={false} />
+            <Router />
+          </QueryClientProvider>
+        </AuthContextProvider>
+      </ReactKeycloakProvider>
+    </Provider>
   );
 };
 export default App;
