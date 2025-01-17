@@ -447,7 +447,24 @@ export interface BaseInfoDTO {
    * @memberof BaseInfoDTO
    */
   lastCounselDate?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof BaseInfoDTO
+   */
+  healthInsuranceType?: BaseInfoDTOHealthInsuranceTypeEnum;
 }
+
+export const BaseInfoDTOHealthInsuranceTypeEnum = {
+  HealthInsurance: 'HEALTH_INSURANCE',
+  MedicalAid: 'MEDICAL_AID',
+  VeteransBenefits: 'VETERANS_BENEFITS',
+  NonCovered: 'NON_COVERED',
+} as const;
+
+export type BaseInfoDTOHealthInsuranceTypeEnum =
+  (typeof BaseInfoDTOHealthInsuranceTypeEnum)[keyof typeof BaseInfoDTOHealthInsuranceTypeEnum];
+
 /**
  *
  * @export
@@ -940,10 +957,10 @@ export interface CommunicationDTO {
 export interface CounselPurposeAndNoteDTO {
   /**
    *
-   * @type {string}
+   * @type {Array<string>}
    * @memberof CounselPurposeAndNoteDTO
    */
-  counselPurpose?: string;
+  counselPurpose?: Array<string>;
   /**
    *
    * @type {string}
@@ -1620,7 +1637,7 @@ export interface SelectCounseleeBaseInformationByCounseleeIdRes {
    * @type {boolean}
    * @memberof SelectCounseleeBaseInformationByCounseleeIdRes
    */
-  isisDisability?: boolean;
+  isDisability?: boolean;
 }
 
 export const SelectCounseleeBaseInformationByCounseleeIdResGenderEnum = {
