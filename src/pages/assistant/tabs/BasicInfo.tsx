@@ -1,54 +1,82 @@
-import InfoBlueIcon from '@/assets/icon/24/info.filled.blue.svg';
 import Badge from '@/components/common/Badge';
-import TabContentContainer from '@/components/consult/TabContentContainer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import TabContentContainer from '@/components/consult/TabContentContainer';
+import InfoBlueIcon from '@/assets/icon/24/info.filled.blue.svg';
 import { useEffect, useState } from 'react';
-import { useAppDispatch } from '../../../app/reduxHooks';
-import CardContainer from '../../../components/common/CardContainer';
-import { changeActiveTab } from '../../../reducers/tabReducer';
-
-const insuranceTypes = ['건강보험', '의료급여', '보훈', '비급여'];
-const consultationCounts = ['1회차', '2회차', '3회차', '4회차', '5회차 이상'];
-const consultationGoals = [
-  '약물 부작용 상담',
-  '생활습관 관리',
-  '증상/질병에 대한 이해',
-  '복용약물에 대한 검토',
-  '기타',
-];
+import { useAppDispatch } from '@/app/reduxHooks';
+import CardContainer from '@/components/common/CardContainer';
+import { changeActiveTab } from '@/reducers/tabReducer';
+import { useCounselAssistantStore } from '@/store/counselAssistantStore';
+import { BaseInfoDTOHealthInsuranceTypeEnum, BaseInformationDTO } from '@/api';
+import {
+  insuranceTypes,
+  consultationCounts,
+  consultationGoals,
+} from '@/pages/assistant/constants/baseInfo';
 
 const BasicInfo = () => {
   // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
   const dispatch = useAppDispatch();
+  const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/basicInfo')); // 해당 tab의 url
-  }, [dispatch]);
+  }, []);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    birthDate: '',
-    insuranceType: '건강보험',
-    consultationCount: '2회차',
-    lastConsultationDate: '',
-    goals: [] as string[],
-    specialNotes: '',
-    medications: '',
-  });
+  const [formData, setFormData] = useState<BaseInformationDTO>(
+    counselAssistant.baseInformation || {
+      version: '1.2',
+      baseInfo: {
+        name: '',
+        birthDate: '',
+        healthInsuranceType: BaseInfoDTOHealthInsuranceTypeEnum.HealthInsurance,
+        counselSessionOrder: '1회차',
+        lastCounselDate: '',
+      },
+      counselPurposeAndNote: {
+        counselPurpose: [],
+        SignificantNote: '',
+        MedicationNote: '',
+      },
+    },
+  );
 
   const toggleGoal = (goal: string) => {
     setFormData((prev) => ({
       ...prev,
-      goals: prev.goals.includes(goal)
-        ? prev.goals.filter((g) => g !== goal)
-        : [...prev.goals, goal],
+      counselPurposeAndNote: {
+        ...prev.counselPurposeAndNote,
+        counselPurpose: prev.counselPurposeAndNote?.counselPurpose?.includes(
+          goal,
+        )
+          ? prev.counselPurposeAndNote.counselPurpose.filter(
+              (item) => item !== goal,
+            )
+          : [...(prev.counselPurposeAndNote?.counselPurpose || []), goal],
+      },
     }));
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (
+    section: 'baseInfo' | 'counselPurposeAndNote',
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [e.target.name]: e.target.value,
+      },
+    }));
   };
+
+  useEffect(() => {
+    setCounselAssistant({
+      ...counselAssistant,
+      baseInformation: formData,
+    });
+  }, [formData]);
 
   return (
     <>
@@ -76,8 +104,8 @@ const BasicInfo = () => {
                 id="name"
                 name="name"
                 placeholder="이름"
-                value={formData.name}
-                onChange={handleInputChange}
+                value={formData.baseInfo?.name || ''}
+                onChange={(e) => handleInputChange('baseInfo', e)}
                 className="mt-3"
               />
             </div>
@@ -91,8 +119,8 @@ const BasicInfo = () => {
                 id="birthDate"
                 name="birthDate"
                 placeholder="YYYYMMDD"
-                value={formData.birthDate}
-                onChange={handleInputChange}
+                value={formData.baseInfo?.birthDate || ''}
+                onChange={(e) => handleInputChange('baseInfo', e)}
                 className="mt-3"
               />
             </div>
@@ -105,18 +133,26 @@ const BasicInfo = () => {
               <div className="flex gap-2">
                 {insuranceTypes.map((type) => (
                   <Button
-                    key={type}
+                    key={type.value}
                     id="insuranceType"
                     type="button"
                     variant={
-                      formData.insuranceType === type ? 'secondary' : 'outline'
+                      formData.baseInfo?.healthInsuranceType === type.value
+                        ? 'secondary'
+                        : 'outline'
                     }
                     className="p-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      setFormData({ ...formData, insuranceType: type })
+                      setFormData({
+                        ...formData,
+                        baseInfo: {
+                          ...formData.baseInfo,
+                          healthInsuranceType: type.value,
+                        },
+                      })
                     }>
-                    {type}
+                    {type.label}
                   </Button>
                 ))}
               </div>
@@ -134,14 +170,20 @@ const BasicInfo = () => {
                     id="consultationCount"
                     type="button"
                     variant={
-                      formData.consultationCount === count
+                      formData.baseInfo?.counselSessionOrder === count
                         ? 'secondary'
                         : 'outline'
                     }
                     className="p-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      setFormData({ ...formData, consultationCount: count })
+                      setFormData({
+                        ...formData,
+                        baseInfo: {
+                          ...formData.baseInfo,
+                          counselSessionOrder: count,
+                        },
+                      })
                     }>
                     {count}
                   </Button>
@@ -151,15 +193,15 @@ const BasicInfo = () => {
 
             {/* 최근 상담일 */}
             <div className="w-1/4 p-4">
-              <Label htmlFor="lastConsultationDate" className="font-bold">
+              <Label htmlFor="lastCounselDate" className="font-bold">
                 최근 상담일
               </Label>
               <Input
-                id="lastConsultationDate"
-                name="lastConsultationDate"
+                id="lastCounselDate"
+                name="lastCounselDate"
                 placeholder="YYYY-MM-DD"
-                value={formData.lastConsultationDate}
-                onChange={handleInputChange}
+                value={formData.baseInfo?.lastCounselDate || ''}
+                onChange={(e) => handleInputChange('baseInfo', e)}
                 className="mt-3"
               />
             </div>
@@ -184,7 +226,11 @@ const BasicInfo = () => {
                     id="goal"
                     type="button"
                     variant={
-                      formData.goals.includes(goal) ? 'secondary' : 'outline'
+                      formData.counselPurposeAndNote?.counselPurpose?.includes(
+                        goal,
+                      )
+                        ? 'secondary'
+                        : 'outline'
                     }
                     className="p-3 font-medium rounded-lg"
                     size="lg"
@@ -197,30 +243,30 @@ const BasicInfo = () => {
 
             {/* 특이사항 */}
             <div className="p-4">
-              <Label htmlFor="specialNotes" className="font-bold">
+              <Label htmlFor="SignificantNote" className="font-bold">
                 특이사항
               </Label>
               <Input
-                id="specialNotes"
-                name="specialNotes"
+                id="SignificantNote"
+                name="SignificantNote"
                 placeholder="특이사항 혹은 약사에게 궁금한 점을 작성해주세요."
-                value={formData.specialNotes}
-                onChange={handleInputChange}
+                value={formData.counselPurposeAndNote?.SignificantNote || ''}
+                onChange={(e) => handleInputChange('counselPurposeAndNote', e)}
                 className="pt-5 mt-3 pb-36"
               />
             </div>
 
             {/* 의약물 */}
             <div className="p-4">
-              <Label htmlFor="medications" className="font-bold">
+              <Label htmlFor="MedicationNote" className="font-bold">
                 의약물
               </Label>
               <Input
-                id="medications"
-                name="medications"
+                id="MedicationNote"
+                name="MedicationNote"
                 placeholder="약사님께 전달해 드릴 의약물을 작성해 주세요."
-                value={formData.medications}
-                onChange={handleInputChange}
+                value={formData.counselPurposeAndNote?.MedicationNote || ''}
+                onChange={(e) => handleInputChange('counselPurposeAndNote', e)}
                 className="pt-5 mt-3 pb-36"
               />
             </div>
