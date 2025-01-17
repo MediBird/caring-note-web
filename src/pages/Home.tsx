@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const { keycloak } = useKeycloak();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user } = useAuthContext();
   const { data: counselList, isLoading } = useSelectCounselSessionList({
     size: 15,
