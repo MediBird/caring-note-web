@@ -20,7 +20,7 @@ const selectCounselCard = async (counselSessionId: string) => {
 // 실제 사용하는 커스텀 훅
 export const useSelectCounselCard = (counselSessionId: string) => {
   return useQuery({
-    queryKey: ['dataItems', counselSessionId],
+    queryKey: ['counselcard', counselSessionId],
     queryFn: () => selectCounselCard(counselSessionId),
     enabled: !!counselSessionId,
   });
