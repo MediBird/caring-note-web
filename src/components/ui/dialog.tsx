@@ -1,9 +1,9 @@
-import CloseBlackIcon from "@/assets/icon/24/close.outlined.black.svg?react";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import * as React from "react";
+import CloseBlackIcon from '@/assets/icon/24/close.outlined.black.svg?react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import * as React from 'react';
 
-import { cn } from "@/lib/utils";
-import clsx from "clsx";
+import { cn } from '@/lib/utils';
+import clsx from 'clsx';
 
 const Dialog = DialogPrimitive.Root;
 
@@ -14,14 +14,7 @@ const DialogTrigger = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Trigger>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      "px-3 py-1 text-white border-2 bg-primary-50 border-primary-50 rounded font-bold hover:bg-opacity-80 w-14 h-8 text-sm",
-      className,
-    )}
-    {...props}
-  />
+  <DialogPrimitive.Trigger ref={ref} {...props} />
 ));
 DialogTrigger.displayName = DialogPrimitive.Trigger.displayName;
 
@@ -32,7 +25,7 @@ const DialogOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
-    className={cn("fixed inset-0 bg-grayscale-100 bg-opacity-30", className)}
+    className={cn('fixed inset-0 bg-grayscale-100 bg-opacity-30', className)}
     {...props}
   />
 ));
@@ -46,7 +39,7 @@ const DialogClose = React.forwardRef<
   <DialogPrimitive.Close
     ref={ref}
     className={cn(
-      "px-3 py-1 text-primary-50 border-2 border-primary-50 rounded font-bold hover:bg-blue-100 w-14 h-8 text-sm",
+      'px-3 py-1 text-primary-50 border-2 border-primary-50 rounded font-bold hover:bg-blue-100 w-14 h-8 text-sm',
       className,
     )}
     {...props}
@@ -60,12 +53,13 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
+    <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
       className={clsx(
-        "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
-        "bg-white rounded-xl shadow-md w-[400px] max-w-full p-4",
-        "focus:outline-none",
+        'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
+        'bg-white rounded-xl shadow-md w-[400px] max-w-full p-4',
+        'focus:outline-none',
         className,
       )}
       {...props}>
@@ -83,14 +77,14 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-row space-y-1.5 text-center sm:text-left border-b-2",
+      'flex flex-row space-y-1.5 text-center sm:text-left border-b-2',
       className,
     )}
     {...props}>
     {children}
   </div>
 );
-DialogHeader.displayName = "DialogHeader";
+DialogHeader.displayName = 'DialogHeader';
 
 // DialogCloseButton 컴포넌트
 const DialogCloseButton: React.FC = () => {
@@ -100,7 +94,7 @@ const DialogCloseButton: React.FC = () => {
     </DialogPrimitive.Close>
   );
 };
-DialogCloseButton.displayName = "DialogCloseButton";
+DialogCloseButton.displayName = 'DialogCloseButton';
 
 // DialogTitle 컴포넌트
 const DialogTitle = React.forwardRef<
@@ -109,7 +103,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-lg pb-2 font-bold text-grayscale-90", className)}
+    className={cn('text-lg pb-2 font-bold text-grayscale-90', className)}
     {...props}
   />
 ));
@@ -122,7 +116,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm mt-2 mb-4 text-grayscale-80", className)}
+    className={cn('text-sm mt-2 mb-4 text-grayscale-80', className)}
     {...props}
   />
 ));
@@ -133,9 +127,9 @@ const DialogFooter = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex justify-end space-x-2", className)} {...props} />
+  <div className={cn('flex justify-end space-x-2', className)} {...props} />
 );
-DialogFooter.displayName = "DialogFooter";
+DialogFooter.displayName = 'DialogFooter';
 
 export {
   Dialog,
