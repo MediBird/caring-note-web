@@ -26,4 +26,5 @@ export const useSelectCounselSessionList = (params: FetchParams) =>
   useQuery({
     queryKey: ['dataItems', params],
     queryFn: () => selectCounselSessionList(params),
+    enabled: !!params,
   });
