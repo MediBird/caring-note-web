@@ -26,7 +26,7 @@ const BasicInfo = () => {
 
   const [formData, setFormData] = useState<BaseInformationDTO>(
     counselAssistant.baseInformation || {
-      version: '1.2',
+      version: '1.1',
       baseInfo: {
         name: '',
         birthDate: '',
@@ -71,11 +71,17 @@ const BasicInfo = () => {
     }));
   };
 
+  // `formData`가 변경되었을 때 `counselAssistant` 업데이트
   useEffect(() => {
-    setCounselAssistant({
-      ...counselAssistant,
-      baseInformation: formData,
-    });
+    if (
+      JSON.stringify(counselAssistant.baseInformation) !==
+      JSON.stringify(formData)
+    ) {
+      setCounselAssistant({
+        ...counselAssistant,
+        baseInformation: formData,
+      });
+    }
   }, [formData, setCounselAssistant, counselAssistant]);
 
   return (
