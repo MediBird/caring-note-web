@@ -41,9 +41,7 @@ const Assistant = () => {
   const { data, isLoading } = useCounseleeConsentQueryId(
     detail?.counselSessionId || undefined,
     detail?.counseleeId || undefined,
-    {
-      enabled: !!detail, // detail이 존재할 때만 요청 실행
-    },
+    !!detail,
   );
   const handleRegisterCard = (row: SelectCounselSessionListItem) => {
     setDetail(row);
@@ -63,7 +61,7 @@ const Assistant = () => {
         consent: data?.data?.data?.isConsent,
       });
     }
-  }, [isLoading, data]);
+  }, [isLoading, data, setCounseleeConsent, navigate]);
 
   const columns: GridColDef[] = [
     {
