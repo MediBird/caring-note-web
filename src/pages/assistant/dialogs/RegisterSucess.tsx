@@ -8,12 +8,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
-import { useEffect } from 'react';
 import { useCounselAssistantStore } from '@/store/counselAssistantStore';
-import {
-  usePostCounselAssistant,
-  useSelectCounselCard,
-} from '@/hooks/useCounselAssistantQuery';
+import { usePostCounselAssistant } from '@/hooks/useCounselAssistantQuery';
 import { AddCounselCardReqCardRecordStatusEnum } from '@/api/api';
 import CloseButton from '@/assets/icon/24/close.outlined.black.svg';
 import { useNavigate } from 'react-router-dom';
@@ -30,10 +26,6 @@ const RegistSucess = ({ isOpen, handleOpen }: RegistSucessDialogTypes) => {
   const { counselAssistant } = useCounselAssistantStore();
   // 상담카드 등록
   const addCounselCard = usePostCounselAssistant();
-  // 상담카드 조회
-  const selectCounselCard = useSelectCounselCard(
-    detail?.counselSessionId || '',
-  );
 
   const handleRegister = () => {
     if (detail && counselAssistant) {
@@ -51,7 +43,7 @@ const RegistSucess = ({ isOpen, handleOpen }: RegistSucessDialogTypes) => {
       // addCounselCard.mutate로 요청 실행
       if (counselAssistant !== null) {
         addCounselCard.mutate(requestBody, {
-          onSuccess: (data) => {
+          onSuccess: () => {
             navigate('/');
           },
           onError: () => {
