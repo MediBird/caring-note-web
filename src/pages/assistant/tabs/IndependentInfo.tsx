@@ -29,7 +29,7 @@ const IndependentInfo = () => {
   const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/livingInfo')); // 해당 tab의 url
-  }, []);
+  }, [dispatch]);
   const [formData, setFormData] = useState<IndependentLifeInformationDTO>(
     counselAssistant.independentLifeInformation || {
       walking: {
@@ -106,7 +106,7 @@ const IndependentInfo = () => {
       ...counselAssistant,
       independentLifeInformation: formData,
     });
-  }, [formData]);
+  }, [formData, setCounselAssistant, counselAssistant]);
   return (
     <>
       <TabContentContainer>
