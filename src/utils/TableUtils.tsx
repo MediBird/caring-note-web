@@ -18,7 +18,9 @@ export const createDefaultTextColumn = ({
     flex: 1,
     renderCell: (params) => {
       return (
-        params.value || <span className="text-gray-400">{headerName}</span>
+        <span className="text-grayscale-100">
+          {params?.value ? params.value : '-'}
+        </span>
       );
     },
     headerClassName: isFirstColumn ? '!pl-6' : '',
