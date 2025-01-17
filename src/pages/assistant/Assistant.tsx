@@ -25,12 +25,9 @@ const Assistant = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { params } = useCounselSessionStore();
-
-  const fetchParams = {
-    ...params,
-    size: params?.size || 15,
-  };
-  const { data: items } = useSelectCounselSessionList(fetchParams);
+  const { data: items } = useSelectCounselSessionList(
+    params ? { ...params, size: params.size ?? 15 } : { size: 15 },
+  );
 
   const setDetail = useDetailCounselSessionStore((state) => state.setDetail);
   const detail = useDetailCounselSessionStore((state) => state.detail);
@@ -61,7 +58,13 @@ const Assistant = () => {
         consent: data?.data?.data?.isConsent,
       });
     }
-  }, [isLoading, data, setCounseleeConsent, navigate]);
+  }, [
+    isLoading,
+    data,
+    setCounseleeConsent,
+    navigate,
+    detail?.counselSessionId,
+  ]);
 
   const columns: GridColDef[] = [
     {
