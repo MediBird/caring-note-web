@@ -60,14 +60,14 @@ const ConsultCard: React.FC = () => {
   return (
     <>
       <TabContentContainer>
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <TabContentTitle text="상담카드" />
           <Button variant="secondary" onClick={() => {}}>
             수정하기
           </Button>
         </div>
 
-        <div className="flex justify-between items-start space-x-4">
+        <div className="flex items-start justify-between space-x-4">
           <div id="consult-card-left" className="w-1/2">
             <CardContainer
               title="기본 정보"
@@ -98,8 +98,15 @@ const ConsultCard: React.FC = () => {
               <CardContent
                 item="상담 목적"
                 value={
-                  originalData?.baseInformation?.counselPurposeAndNote
-                    ?.counselPurpose || ''
+                  Array.isArray(
+                    originalData?.baseInformation?.counselPurposeAndNote
+                      ?.counselPurpose,
+                  )
+                    ? originalData.baseInformation.counselPurposeAndNote.counselPurpose.join(
+                        ', ',
+                      ) // 배열을 문자열로 변환
+                    : originalData?.baseInformation?.counselPurposeAndNote
+                        ?.counselPurpose || '' // string인 경우 그대로 사용
                 }
               />
               <CardContent

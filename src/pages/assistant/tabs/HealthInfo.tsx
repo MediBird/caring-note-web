@@ -1,36 +1,18 @@
-import { useAppDispatch } from '@/app/reduxHooks';
 import CardContainer from '@/components/common/CardContainer';
-import TabContentContainer from '@/components/consult/TabContentContainer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { changeActiveTab } from '@/reducers/tabReducer';
+import TabContentContainer from '@/components/consult/TabContentContainer';
 import { useEffect, useState } from 'react';
-
-const diseaseList = [
-  '고혈압',
-  '고지혈증',
-  '뇌혈관질환',
-  '심장질환',
-  '당뇨병',
-  '갑상선질환',
-  '위장관질환',
-  '파킨슨',
-  '치매, 인지장애',
-  '수면장애',
-  '우울증/불안장애',
-  '신장질환',
-  '간질환',
-  '비뇨·생식기질환(전립선비대증, 자궁내막염, 방광염 등)',
-  '암질환',
-  '뇌경색',
-  '척추·관절염/신경통·근육통',
-  '호흡기질환(천식, COPD 등)',
-  '안질환(백내장, 녹내장, 안구건조증 등)',
-  '이비인후과',
-];
-const isAllergyTypes = ['알레르기 있음', '알레르기 없음'];
-const isMedicineTypes = ['약물 부작용 있음', '약물 부작용 없음'];
+import { useAppDispatch } from '@/app/reduxHooks';
+import { changeActiveTab } from '@/reducers/tabReducer';
+import { HealthInformationDTO } from '@/api';
+import { useCounselAssistantStore } from '@/store/counselAssistantStore';
+import {
+  diseaseList,
+  isAllergyTypes,
+  isMedicineTypes,
+} from '@/pages/assistant/constants/healthInfo';
 
 const HealthInfo = () => {
   // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
@@ -38,31 +20,64 @@ const HealthInfo = () => {
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/healthInfo')); // 해당 tab의 url
   }, [dispatch]);
-
-  const [formData, setFormData] = useState({
-    diseases: [] as string[],
-    pastHistory: '',
-    symptoms: '',
-    isAllergy: '알레르기 있음',
-    allergyDetails: '',
-    isMedicine: '약물 부작용 있음',
-    medicneDetails: '',
-    medicneSymptoms: '',
-  });
+  const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
+  const [formData, setFormData] = useState<HealthInformationDTO>(
+    counselAssistant.healthInformation || {
+      version: '1.1',
+      diseaseInfo: {
+        diseases: [],
+        historyNote: '',
+        mainInconvenienceNote: '',
+      },
+      allergy: {
+        isAllergy: false,
+        allergyNote: '',
+      },
+      medicationSideEffect: {
+        isSideEffect: false,
+        suspectedMedicationNote: '',
+        symptomsNote: '',
+      },
+    },
+  );
 
   const toggleDisease = (disease: string) => {
     setFormData((prev) => ({
       ...prev,
-      diseases: prev.diseases.includes(disease)
-        ? prev.diseases.filter((d) => d !== disease)
-        : [...prev.diseases, disease],
+      diseaseInfo: {
+        ...prev.diseaseInfo,
+        diseases: prev.diseaseInfo?.diseases?.includes(disease)
+          ? prev.diseaseInfo?.diseases?.filter((item) => item !== disease)
+          : [...(prev.diseaseInfo?.diseases ?? []), disease],
+      },
     }));
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleInputChange = (
+    section: 'diseaseInfo' | 'allergy' | 'medicationSideEffect',
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [e.target.name]: e.target.value,
+      },
+    }));
   };
+
+  // `formData`가 변경되었을 때 `counselAssistant` 업데이트
+  useEffect(() => {
+    if (
+      JSON.stringify(counselAssistant.healthInformation) !==
+      JSON.stringify(formData)
+    ) {
+      setCounselAssistant({
+        ...counselAssistant,
+        healthInformation: formData,
+      });
+    }
+  }, [formData, setCounselAssistant, counselAssistant]);
 
   return (
     <>
@@ -79,7 +94,7 @@ const HealthInfo = () => {
                     id="disease"
                     type="button"
                     variant={
-                      formData.diseases.includes(disease)
+                      formData.diseaseInfo?.diseases?.includes(disease)
                         ? 'secondary'
                         : 'outline'
                     }
@@ -94,30 +109,30 @@ const HealthInfo = () => {
 
             {/* 질병 및 수술 이력 */}
             <div className="p-4">
-              <Label htmlFor="pastHistory" className="font-bold">
+              <Label htmlFor="historyNote" className="font-bold">
                 질병 및 수술 이력
               </Label>
               <Input
-                id="pastHistory"
-                name="pastHistory"
+                id="historyNote"
+                name="historyNote"
                 placeholder="과거 질병 및 수술 이력을 작성해주세요."
-                value={formData.pastHistory}
-                onChange={handleInputChange}
+                value={formData.diseaseInfo?.historyNote || ''}
+                onChange={(e) => handleInputChange('diseaseInfo', e)}
                 className="pt-5 mt-3 pb-36"
               />
             </div>
 
             {/* 주요 불편 증상 */}
             <div className="p-4">
-              <Label htmlFor="symptoms" className="font-bold">
+              <Label htmlFor="mainInconvenienceNote" className="font-bold">
                 주요 불편 증상
               </Label>
               <Input
-                id="symptoms"
-                name="symptoms"
+                id="mainInconvenienceNote"
+                name="mainInconvenienceNote"
                 placeholder="건강상 불편한 점을 작성해주세요."
-                value={formData.symptoms}
-                onChange={handleInputChange}
+                value={formData.diseaseInfo?.mainInconvenienceNote || ''}
+                onChange={(e) => handleInputChange('diseaseInfo', e)}
                 className="pt-5 mt-3 pb-36"
               />
             </div>
@@ -134,18 +149,26 @@ const HealthInfo = () => {
               <div className="flex gap-2">
                 {isAllergyTypes.map((allergy) => (
                   <Button
-                    key={allergy}
+                    key={allergy.label}
                     id="isAllergy"
                     type="button"
                     variant={
-                      formData.isAllergy === allergy ? 'secondary' : 'outline'
+                      formData.allergy?.isAllergy === allergy.value
+                        ? 'secondary'
+                        : 'outline'
                     }
                     className="p-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      setFormData({ ...formData, isAllergy: allergy })
+                      setFormData({
+                        ...formData,
+                        allergy: {
+                          ...formData.allergy,
+                          isAllergy: allergy.value,
+                        },
+                      })
                     }>
-                    {allergy}
+                    {allergy.label}
                   </Button>
                 ))}
               </div>
@@ -153,17 +176,17 @@ const HealthInfo = () => {
 
             {/* 알레르기 의심 식품/약품 */}
             <div className="p-4">
-              {formData.isAllergy === '알레르기 있음' && (
+              {formData.allergy?.isAllergy == true && (
                 <div className="mb-6">
-                  <Label htmlFor="allergyDetails" className="font-bold">
+                  <Label htmlFor="allergyNote" className="font-bold">
                     의심 식품/약물
                   </Label>
                   <Input
-                    id="allergyDetails"
-                    name="allergyDetails"
+                    id="allergyNote"
+                    name="allergyNote"
                     placeholder="예: 땅콩, 돼지고기"
-                    value={formData.allergyDetails}
-                    onChange={handleInputChange}
+                    value={formData.allergy?.allergyNote || ''}
+                    onChange={(e) => handleInputChange('allergy', e)}
                     className="pt-5 mt-3 pb-36"
                   />
                 </div>
@@ -183,18 +206,27 @@ const HealthInfo = () => {
               <div className="flex gap-2">
                 {isMedicineTypes.map((medicine) => (
                   <Button
-                    key={medicine}
+                    key={medicine.label}
                     id="isMedicine"
                     type="button"
                     variant={
-                      formData.isMedicine === medicine ? 'secondary' : 'outline'
+                      formData.medicationSideEffect?.isSideEffect ===
+                      medicine.value
+                        ? 'secondary'
+                        : 'outline'
                     }
                     className="p-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      setFormData({ ...formData, isMedicine: medicine })
+                      setFormData({
+                        ...formData,
+                        medicationSideEffect: {
+                          ...formData.medicationSideEffect,
+                          isSideEffect: medicine.value,
+                        },
+                      })
                     }>
-                    {medicine}
+                    {medicine.label}
                   </Button>
                 ))}
               </div>
@@ -202,17 +234,24 @@ const HealthInfo = () => {
 
             {/* 부작용 의심 약물 */}
             <div className="p-4">
-              {formData.isMedicine === '약물 부작용 있음' && (
+              {formData.medicationSideEffect?.isSideEffect == true && (
                 <div className="mb-6">
-                  <Label htmlFor="medicneDetails" className="font-bold">
+                  <Label
+                    htmlFor="suspectedMedicationNote"
+                    className="font-bold">
                     부작용 의심 약물
                   </Label>
                   <Input
-                    id="medicneDetails"
-                    name="medicneDetails"
+                    id="suspectedMedicationNote"
+                    name="suspectedMedicationNote"
                     placeholder="예: 항암제"
-                    value={formData.medicneDetails}
-                    onChange={handleInputChange}
+                    value={
+                      formData.medicationSideEffect.suspectedMedicationNote ||
+                      ''
+                    }
+                    onChange={(e) =>
+                      handleInputChange('medicationSideEffect', e)
+                    }
                     className="pt-5 mt-3 pb-36"
                   />
                 </div>
@@ -221,17 +260,19 @@ const HealthInfo = () => {
 
             {/* 부작용 증상 */}
             <div className="p-4">
-              {formData.isMedicine === '약물 부작용 있음' && (
+              {formData.medicationSideEffect?.isSideEffect == true && (
                 <div className="mb-6">
-                  <Label htmlFor="medicneSymptoms" className="font-bold">
+                  <Label htmlFor="symptomsNote" className="font-bold">
                     부작용 증상
                   </Label>
                   <Input
-                    id="medicneSymptoms"
-                    name="medicneSymptoms"
+                    id="symptomsNote"
+                    name="symptomsNote"
                     placeholder="예: 손발 저림, 오심, 구토, 탈모"
-                    value={formData.medicneSymptoms}
-                    onChange={handleInputChange}
+                    value={formData.medicationSideEffect.symptomsNote || ''}
+                    onChange={(e) =>
+                      handleInputChange('medicationSideEffect', e)
+                    }
                     className="pt-5 mt-3 pb-36"
                   />
                 </div>

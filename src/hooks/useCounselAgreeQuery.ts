@@ -2,6 +2,8 @@ import {
   AddCounseleeConsentReq,
   AddCounseleeConsentRes,
   CounseleeConsentControllerApi,
+  UpdateCounseleeConsentReq,
+  UpdateCounseleeConsentRes,
 } from '@/api/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
@@ -28,17 +30,17 @@ const selectCounseleeConsent = async ({
 export const useCounseleeConsentQueryId = (
   paramId?: string,
   queryId?: string,
-) => {
-  return useQuery({
+  enabled?: boolean,
+) =>
+  useQuery({
     queryKey: ['details', paramId, queryId],
     queryFn: () =>
       selectCounseleeConsent({
         paramId: paramId || '',
         queryId: queryId || '',
       }),
-    enabled: !!paramId,
+    enabled,
   });
-};
 
 //내담자 개인정보 수집 동의 여부 등록 API 호출
 const postCounselAgree = async (body: AddCounseleeConsentReq) => {
@@ -53,5 +55,21 @@ const postCounselAgree = async (body: AddCounseleeConsentReq) => {
 export const usePostCounselAgree = () => {
   return useMutation({
     mutationFn: postCounselAgree,
+  });
+};
+
+//내담자 개인정보 수집 동의 여부 수정 API 호출
+const putCounselAgree = async (body: UpdateCounseleeConsentReq) => {
+  // 내담자 개인정보 수집 동의 여부 수정 API 호출
+  const response = await counseleeConsentControllerApi.updateCounseleeConsent(
+    body,
+  );
+  return response.data.data as UpdateCounseleeConsentRes;
+};
+
+// 실제 사용하는 커스텀 훅
+export const usePutCounselAgree = () => {
+  return useMutation({
+    mutationFn: putCounselAgree,
   });
 };

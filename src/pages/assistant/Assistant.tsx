@@ -15,43 +15,56 @@ import {
   SelectCounselSessionListItemCardRecordStatusEnum,
   SelectCounselSessionListItemStatusEnum,
 } from '@/api/api';
-import { useCounseleeConsentQueryId } from '@/hooks/useCounselAgreeQuery';
 import Index from '@/pages/assistant/dialogs/Index';
+import { useCounseleeConsentQueryId } from '@/hooks/useCounselAgreeQuery';
 import { useNavigate } from 'react-router-dom';
+import { useCounselAgreeSessionStore } from '@/store/counselAgreeStore';
 
 const Assistant = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const { params } = useCounselSessionStore();
-
-  const fetchParams = {
-    ...params,
-    size: params?.size || 15,
-  };
-  const { data: items } = useSelectCounselSessionList(fetchParams);
+  const { data: items } = useSelectCounselSessionList(
+    params ? { ...params, size: params.size ?? 15 } : { size: 15 },
+  );
 
   const setDetail = useDetailCounselSessionStore((state) => state.setDetail);
   const detail = useDetailCounselSessionStore((state) => state.detail);
-
-  // 항상 Hook을 최상위에서 호출
+  const setCounseleeConsent = useCounselAgreeSessionStore(
+    (state) => state.setCounseleeConsent,
+  );
+  // 내담자 개인정보 수집 동의 여부 조회
   const { data, isLoading } = useCounseleeConsentQueryId(
     detail?.counselSessionId || undefined,
     detail?.counseleeId || undefined,
+    !!detail,
   );
   const handleRegisterCard = (row: SelectCounselSessionListItem) => {
     setDetail(row);
   };
 
   useEffect(() => {
+    // data가 있을경우
     if (!isLoading && data) {
-      if (data.status === 200) {
-        navigate('/assistant/info');
+      // data.status가 200이고 data.data.data?.isConsent가 true일 경우
+      if (data.status === 200 && data.data.data?.isConsent === true) {
+        navigate(`/assistant/${detail?.counselSessionId}/info`);
       } else {
         setIsOpen(true);
       }
+      setCounseleeConsent({
+        counseleeConsentId: data?.data?.data?.counseleeConsentId,
+        consent: data?.data?.data?.isConsent,
+      });
     }
-  }, [isLoading, data, setIsOpen, navigate]);
+  }, [
+    isLoading,
+    data,
+    setCounseleeConsent,
+    navigate,
+    detail?.counselSessionId,
+  ]);
 
   const columns: GridColDef[] = [
     {

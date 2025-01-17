@@ -1,78 +1,103 @@
-import { useAppDispatch } from '@/app/reduxHooks';
 import CardContainer from '@/components/common/CardContainer';
-import TabContentContainer from '@/components/consult/TabContentContainer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { changeActiveTab } from '@/reducers/tabReducer';
+import TabContentContainer from '@/components/consult/TabContentContainer';
 import { useEffect, useState } from 'react';
+import { useAppDispatch } from '@/app/reduxHooks';
+import { changeActiveTab } from '@/reducers/tabReducer';
+import { LivingInformationDTO } from '@/api';
+import { useCounselAssistantStore } from '@/store/counselAssistantStore';
+import {
+  isAloneTypes,
+  isDrinkingTypes,
+  isSmokingTypes,
+  medicinetakingMembers,
+  smokingDailyCounts,
+  drkingWeeklyCounts,
+  dailyEatingTypes,
+  exerciseWeeklyCounts,
+} from '@/pages/assistant/constants/lifeInfo';
 
-const isSmokingTypes = ['흡연', '비흡연'];
-const smokingDailyCounts = ['1갑', '2갑', '3갑 이상'];
-const isDrinkingTypes = ['음주', '비음주'];
-const drkingWeeklyCounts = [
-  '주 1회',
-  '주 2회',
-  '주 3회',
-  '주 4회',
-  '주 5회 이상',
-];
-const dailyEatingTypes = [
-  '하루 한 끼 규칙적 식사',
-  '하루 두끼 규칙적 식사',
-  '하루 세끼 규칙적 식사',
-  '불규칙적 식사',
-];
-const exerciseWeeklyCounts = [
-  '주 1회',
-  '주 2회',
-  '주 3회',
-  '주 4회',
-  '주 5회 이상',
-  '운동 안 함',
-];
-const livingWithType = ['독거', '동거'];
-const medicinetakingMembers = [
-  '본인',
-  '배우자',
-  '자녀',
-  '친인척',
-  '친구',
-  '요양보호사 또는 돌봄종사자',
-  '기타',
-];
 const LifeInfo = () => {
   // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
   const dispatch = useAppDispatch();
+  const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/lifeInfo')); // 해당 tab의 url
   }, [dispatch]);
-  const [formData, setFormData] = useState({
-    isSmoking: '흡연',
-    smokingPeriod: '',
-    smokingDailyCount: '1갑',
-    isDrinking: '음주',
-    drinkingWeeklyCount: '주 1회',
-    dailyEatingType: '하루 한 끼 규칙적 식사',
-    dailyEatingDetails: '',
-    exerciseWeeklyCount: '주 1회',
-    exerciseWeeklyDetails: '',
-    isLivingwith: '독거',
-    livingWithMember: '',
-    members: [] as string[],
-  });
+  const [formData, setFormData] = useState<LivingInformationDTO>(
+    counselAssistant.livingInformation || {
+      version: '1.1',
+      smoking: {
+        isSmoking: false,
+        smokingAmount: '',
+        smokingPeriodNote: '',
+      },
+      drinking: {
+        isDrinking: false,
+        drinkingAmount: '',
+      },
+      nutrition: {
+        mealPattern: '',
+        nutritionNote: '',
+      },
+      exercise: {
+        exercisePattern: '',
+        exerciseNote: '',
+      },
+      medicationManagement: {
+        isAlone: false,
+        houseMateNote: '',
+        medicationAssistants: [],
+      },
+    },
+  );
+
   const toggleGoal = (member: string) => {
     setFormData((prev) => ({
       ...prev,
-      members: prev.members.includes(member)
-        ? prev.members.filter((g) => g !== member)
-        : [...prev.members, member],
+      medicationManagement: {
+        ...prev.medicationManagement,
+        medicationAssistants:
+          prev.medicationManagement?.medicationAssistants?.includes(member)
+            ? prev.medicationManagement.medicationAssistants.filter(
+                (item) => item !== member,
+              )
+            : [
+                ...(prev.medicationManagement?.medicationAssistants || []),
+                member,
+              ],
+      },
     }));
   };
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+  const handleInputChange = (
+    section: 'smoking' | 'nutrition' | 'exercise' | 'medicationManagement',
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [e.target.name]: e.target.value,
+      },
+    }));
   };
+
+  // `formData`가 변경되었을 때 `counselAssistant` 업데이트
+  useEffect(() => {
+    if (
+      JSON.stringify(counselAssistant.livingInformation) !==
+      JSON.stringify(formData)
+    ) {
+      setCounselAssistant({
+        ...counselAssistant,
+        livingInformation: formData,
+      });
+    }
+  }, [formData, setCounselAssistant, counselAssistant]);
+
   return (
     <>
       <TabContentContainer>
@@ -87,35 +112,43 @@ const LifeInfo = () => {
               <div className="flex gap-2">
                 {isSmokingTypes.map((smoking) => (
                   <Button
-                    key={smoking}
+                    key={smoking.label}
                     id="isSmoking"
                     type="button"
                     variant={
-                      formData.isSmoking === smoking ? 'secondary' : 'outline'
+                      formData.smoking?.isSmoking === smoking.value
+                        ? 'secondary'
+                        : 'outline'
                     }
                     className="p-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      setFormData({ ...formData, isSmoking: smoking })
+                      setFormData({
+                        ...formData,
+                        smoking: {
+                          ...formData.smoking,
+                          isSmoking: smoking.value,
+                        },
+                      })
                     }>
-                    {smoking}
+                    {smoking.label}
                   </Button>
                 ))}
               </div>
             </div>
             {/* 총 흡연기간 */}
             <div className="w-1/4 p-4">
-              {formData.isSmoking === '흡연' && (
+              {formData.smoking?.isSmoking == true && (
                 <div className="mb-6">
-                  <Label htmlFor="smokingPeriod" className="font-bold">
+                  <Label htmlFor="smokingPeriodNote" className="font-bold">
                     총 흡연기간
                   </Label>
                   <Input
-                    id="smokingPeriod"
-                    name="smokingPeriod"
+                    id="smokingPeriodNote"
+                    name="smokingPeriodNote"
                     placeholder="예: 10년 6개월"
-                    value={formData.smokingPeriod}
-                    onChange={handleInputChange}
+                    value={formData.smoking?.smokingPeriodNote || ''}
+                    onChange={(e) => handleInputChange('smoking', e)}
                     className="mt-3"
                   />
                 </div>
@@ -123,26 +156,32 @@ const LifeInfo = () => {
             </div>
             {/* 하루 평균 흡연량 */}
             <div className="p-4">
-              {formData.isSmoking === '흡연' && (
+              {formData.smoking?.isSmoking == true && (
                 <div className="mb-6">
-                  <Label htmlFor="smokingDailyCount" className="font-bold">
+                  <Label htmlFor="smokingAmount" className="font-bold">
                     하루 평균 흡연량
                   </Label>
                   <div className="flex gap-2">
                     {smokingDailyCounts.map((count) => (
                       <Button
                         key={count}
-                        id="smokingDailyCount"
+                        id="smokingAmount"
                         type="button"
                         variant={
-                          formData.smokingDailyCount === count
+                          formData.smoking?.smokingAmount === count
                             ? 'secondary'
                             : 'outline'
                         }
                         className="p-3 mt-3 font-medium rounded-lg"
                         size="lg"
                         onClick={() =>
-                          setFormData({ ...formData, smokingDailyCount: count })
+                          setFormData({
+                            ...formData,
+                            smoking: {
+                              ...formData.smoking,
+                              smokingAmount: count,
+                            },
+                          })
                         }>
                         {count}
                       </Button>
@@ -165,18 +204,26 @@ const LifeInfo = () => {
               <div className="flex gap-2">
                 {isDrinkingTypes.map((drinking) => (
                   <Button
-                    key={drinking}
+                    key={drinking.label}
                     id="isDrinking"
                     type="button"
                     variant={
-                      formData.isDrinking === drinking ? 'secondary' : 'outline'
+                      formData.drinking?.isDrinking === drinking.value
+                        ? 'secondary'
+                        : 'outline'
                     }
                     className="p-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      setFormData({ ...formData, isDrinking: drinking })
+                      setFormData({
+                        ...formData,
+                        drinking: {
+                          ...formData.drinking,
+                          isDrinking: drinking.value,
+                        },
+                      })
                     }>
-                    {drinking}
+                    {drinking.label}
                   </Button>
                 ))}
               </div>
@@ -184,19 +231,19 @@ const LifeInfo = () => {
 
             {/* 음주 횟수 */}
             <div className="p-4">
-              {formData.isDrinking === '음주' && (
+              {formData.drinking?.isDrinking == true && (
                 <div className="mb-6">
-                  <Label htmlFor="drinkingWeeklyCount" className="font-bold">
+                  <Label htmlFor="drinkingAmount" className="font-bold">
                     음주 횟수
                   </Label>
                   <div className="flex gap-2">
                     {drkingWeeklyCounts.map((count) => (
                       <Button
                         key={count}
-                        id="drinkingWeeklyCount"
+                        id="drinkingAmount"
                         type="button"
                         variant={
-                          formData.drinkingWeeklyCount === count
+                          formData.drinking?.drinkingAmount === count
                             ? 'secondary'
                             : 'outline'
                         }
@@ -205,7 +252,10 @@ const LifeInfo = () => {
                         onClick={() =>
                           setFormData({
                             ...formData,
-                            drinkingWeeklyCount: count,
+                            drinking: {
+                              ...formData.drinking,
+                              drinkingAmount: count,
+                            },
                           })
                         }>
                         {count}
@@ -223,24 +273,30 @@ const LifeInfo = () => {
           <CardContainer title={'영양상태'}>
             {/* 하루 식사 패턴 */}
             <div className="inline-block w-1/4 p-4">
-              <Label htmlFor="isSmoking" className="font-bold">
+              <Label htmlFor="mealPattern" className="font-bold">
                 하루 식사 패턴
               </Label>
               <div className="flex gap-2">
                 {dailyEatingTypes.map((type) => (
                   <Button
                     key={type}
-                    id="dailyEatingType"
+                    id="mealPattern"
                     type="button"
                     variant={
-                      formData.dailyEatingType === type
+                      formData.nutrition?.mealPattern === type
                         ? 'secondary'
                         : 'outline'
                     }
                     className="p-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      setFormData({ ...formData, dailyEatingType: type })
+                      setFormData({
+                        ...formData,
+                        nutrition: {
+                          ...formData.nutrition,
+                          mealPattern: type,
+                        },
+                      })
                     }>
                     {type}
                   </Button>
@@ -250,15 +306,15 @@ const LifeInfo = () => {
 
             {/* 식생활 특이사항 */}
             <div className="p-4">
-              <Label htmlFor="dailyEatingDetails" className="font-bold">
+              <Label htmlFor="nutritionNote" className="font-bold">
                 식생활 특이사항
               </Label>
               <Input
-                id="dailyEatingDetails"
-                name="dailyEatingDetails"
+                id="nutritionNote"
+                name="nutritionNote"
                 placeholder="예:잇몸 문제로 딱딱한 음식 섭취 어려움"
-                value={formData.dailyEatingDetails}
-                onChange={handleInputChange}
+                value={formData.nutrition?.nutritionNote || ''}
+                onChange={(e) => handleInputChange('nutrition', e)}
                 className="mt-3"
               />
             </div>
@@ -270,24 +326,30 @@ const LifeInfo = () => {
           <CardContainer title={'운동'}>
             {/* 주간 운동 패턴 */}
             <div className="inline-block w-1/4 p-4">
-              <Label htmlFor="exerciseWeeklyCount" className="font-bold">
+              <Label htmlFor="exercisePattern" className="font-bold">
                 주간 운동 패턴
               </Label>
               <div className="flex gap-2">
                 {exerciseWeeklyCounts.map((count) => (
                   <Button
                     key={count}
-                    id="exerciseWeeklyCount"
+                    id="exercisePattern"
                     type="button"
                     variant={
-                      formData.exerciseWeeklyCount === count
+                      formData.exercise?.exercisePattern === count
                         ? 'secondary'
                         : 'outline'
                     }
                     className="p-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      setFormData({ ...formData, exerciseWeeklyCount: count })
+                      setFormData({
+                        ...formData,
+                        exercise: {
+                          ...formData.exercise,
+                          exercisePattern: count,
+                        },
+                      })
                     }>
                     {count}
                   </Button>
@@ -297,17 +359,17 @@ const LifeInfo = () => {
 
             {/* 규칙적으로 하는 운동 종류 */}
             <div className="w-1/4 p-4">
-              {formData.exerciseWeeklyCount !== '운동 안 함' && (
+              {formData.exercise?.exercisePattern != '운동 안 함' && (
                 <div className="mb-6">
-                  <Label htmlFor="exerciseWeeklyDetails" className="font-bold">
+                  <Label htmlFor="exerciseNote" className="font-bold">
                     규칙적으로 하는 운동 종류
                   </Label>
                   <Input
-                    id="exerciseWeeklyDetails"
-                    name="exerciseWeeklyDetails"
+                    id="exerciseNote"
+                    name="exerciseNote"
                     placeholder="예: 산책, 수영"
-                    value={formData.exerciseWeeklyDetails}
-                    onChange={handleInputChange}
+                    value={formData.exercise?.exerciseNote || ''}
+                    onChange={(e) => handleInputChange('exercise', e)}
                     className="mt-3"
                   />
                 </div>
@@ -321,41 +383,51 @@ const LifeInfo = () => {
           <CardContainer title={'약 복용 관리'}>
             {/* 독거 여부 */}
             <div className="inline-block w-1/4 p-4">
-              <Label htmlFor="isLivingwith" className="font-bold">
+              <Label htmlFor="isAlone" className="font-bold">
                 독거 여부
               </Label>
               <div className="flex gap-2">
-                {livingWithType.map((living) => (
+                {isAloneTypes.map((living) => (
                   <Button
-                    key={living}
-                    id="isLivingwith"
+                    key={living.label}
+                    id="isAlone"
                     type="button"
                     variant={
-                      formData.isLivingwith === living ? 'secondary' : 'outline'
+                      formData.medicationManagement?.isAlone === living.value
+                        ? 'secondary'
+                        : 'outline'
                     }
                     className="p-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      setFormData({ ...formData, isLivingwith: living })
+                      setFormData({
+                        ...formData,
+                        medicationManagement: {
+                          ...formData.medicationManagement,
+                          isAlone: living.value,
+                        },
+                      })
                     }>
-                    {living}
+                    {living.label}
                   </Button>
                 ))}
               </div>
             </div>
             {/* 동거인 구성원 */}
             <div className="w-1/4 p-4">
-              {formData.isLivingwith === '동거' && (
+              {formData.medicationManagement?.isAlone == false && (
                 <div className="mb-6">
-                  <Label htmlFor="livingWithMember" className="font-bold">
+                  <Label htmlFor="houseMateNote" className="font-bold">
                     동거인 구성원
                   </Label>
                   <Input
-                    id="livingWithMember"
-                    name="livingWithMember"
+                    id="houseMateNote"
+                    name="houseMateNote"
                     placeholder="예: 손녀"
-                    value={formData.livingWithMember}
-                    onChange={handleInputChange}
+                    value={formData.medicationManagement?.houseMateNote || ''}
+                    onChange={(e) =>
+                      handleInputChange('medicationManagement', e)
+                    }
                     className="mt-3"
                   />
                 </div>
@@ -363,7 +435,7 @@ const LifeInfo = () => {
             </div>
             {/* 복용자 및 투약 보조자 */}
             <div className="p-4">
-              <Label htmlFor="takingAssistant" className="font-bold">
+              <Label htmlFor="medicationAssistants" className="font-bold">
                 복용자 및 투약 보조자
               </Label>
               <p className="mt-3 mb-3 text-sm text-gray-500">
@@ -373,10 +445,12 @@ const LifeInfo = () => {
                 {medicinetakingMembers.map((member) => (
                   <Button
                     key={member}
-                    id="takingAssistant"
+                    id="medicationAssistants"
                     type="button"
                     variant={
-                      formData.members.includes(member)
+                      formData.medicationManagement?.medicationAssistants?.includes(
+                        member,
+                      )
                         ? 'secondary'
                         : 'outline'
                     }
