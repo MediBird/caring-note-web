@@ -1,10 +1,15 @@
-import { AddCounselCardReqCardRecordStatusEnum } from '@/api/api';
+import {
+  AddCounselCardReqCardRecordStatusEnum,
+  SelectCounselSessionListItem,
+  UpdateCounselorInCounselSessionReq,
+} from '@/api/api';
 import CollegeMessage from '@/components/CollegeMessage';
 import TableComponent from '@/components/common/TableComponent';
 import ConsultCount from '@/components/ConsultCount';
 import { Button } from '@/components/ui/button';
-import { useAuthContext } from '@/context/AuthContext';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
+import AssignDialog from '@/pages/Home/components/AssignDialog';
+import { useCounselAssign } from '@/pages/Home/hooks/query/useCounselAssign';
 import {
   createDefaultDateColumn,
   createDefaultStatusColumn,
@@ -17,15 +22,17 @@ import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const { keycloak } = useKeycloak();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { user } = useAuthContext();
+  console.log(keycloak.tokenParsed);
+
   const { data: counselList, isLoading } = useSelectCounselSessionList({
     size: 15,
   });
   const navigate = useNavigate();
 
+  const { mutate: assignCounsel } = useCounselAssign();
+
   const formattedCounselList = useMemo(() => {
-    return counselList?.map((item) => {
+    return counselList?.map((item: SelectCounselSessionListItem) => {
       return {
         ...item,
         id: item.counselSessionId,
@@ -33,8 +40,10 @@ function Home() {
     });
   }, [counselList]);
 
-  const handleClickAssignMe = () => {
-    console.log('할당하기 버튼 클릭');
+  const handleClickAssignMe = ({
+    counselSessionId,
+  }: UpdateCounselorInCounselSessionReq) => {
+    assignCounsel({ counselSessionId });
   };
 
   const handleClickCardRecord = () => {
@@ -58,6 +67,7 @@ function Home() {
   const columns = getCardColumns({
     handleClickAssignMe,
     handleClickCardRecord,
+    counselorId: keycloak.tokenParsed?.sub as string,
   });
   return (
     <>
@@ -116,9 +126,11 @@ export default Home;
 const getCardColumns = ({
   handleClickAssignMe,
   handleClickCardRecord,
+  counselorId,
 }: {
-  handleClickAssignMe: () => void;
+  handleClickAssignMe: (params: UpdateCounselorInCounselSessionReq) => void;
   handleClickCardRecord: () => void;
+  counselorId: string;
 }): GridColDef[] => {
   const columns: GridColDef[] = [
     {
@@ -163,9 +175,16 @@ const getCardColumns = ({
       renderCell: (params) => {
         // TODO : 할당 여부에 따라 버튼 diable 처리 (아래는 임시 코드)
         return params.value ? (
-          <Button variant={'secondary'}>할당 완료</Button>
+          <AssignDialog
+            counselSessionId={params.row.counselSessionId}
+            counselorId={params.row.counselorId}
+            title="상담을 시작하시겠어요?"
+            description="나에게 할당된 상담입니다."
+          />
         ) : (
-          <Button variant={'primary'} onClick={handleClickAssignMe}>
+          <Button
+            variant={'primary'}
+            onClick={() => handleClickAssignMe(params.row.counselSessionId)}>
             나에게 할당
           </Button>
         );
