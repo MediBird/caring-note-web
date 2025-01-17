@@ -25,7 +25,7 @@ const LifeInfo = () => {
   const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/lifeInfo')); // 해당 tab의 url
-  }, []);
+  }, [dispatch]);
   const [formData, setFormData] = useState<LivingInformationDTO>(
     counselAssistant.livingInformation || {
       smoking: {
@@ -89,7 +89,7 @@ const LifeInfo = () => {
       ...counselAssistant,
       livingInformation: formData,
     });
-  }, [formData]);
+  }, [formData, setCounselAssistant, counselAssistant]);
 
   return (
     <>
