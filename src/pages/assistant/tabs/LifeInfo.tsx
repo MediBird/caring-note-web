@@ -28,6 +28,7 @@ const LifeInfo = () => {
   }, [dispatch]);
   const [formData, setFormData] = useState<LivingInformationDTO>(
     counselAssistant.livingInformation || {
+      version: '1.1',
       smoking: {
         isSmoking: false,
         smokingAmount: '',
@@ -84,11 +85,17 @@ const LifeInfo = () => {
     }));
   };
 
+  // `formData`가 변경되었을 때 `counselAssistant` 업데이트
   useEffect(() => {
-    setCounselAssistant({
-      ...counselAssistant,
-      livingInformation: formData,
-    });
+    if (
+      JSON.stringify(counselAssistant.livingInformation) !==
+      JSON.stringify(formData)
+    ) {
+      setCounselAssistant({
+        ...counselAssistant,
+        livingInformation: formData,
+      });
+    }
   }, [formData, setCounselAssistant, counselAssistant]);
 
   return (
