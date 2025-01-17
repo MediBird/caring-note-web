@@ -1,65 +1,112 @@
-import { useAppDispatch } from '@/app/reduxHooks';
 import CardContainer from '@/components/common/CardContainer';
-import TabContentContainer from '@/components/consult/TabContentContainer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { changeActiveTab } from '@/reducers/tabReducer';
+import TabContentContainer from '@/components/consult/TabContentContainer';
 import { useEffect, useState } from 'react';
-
-type handleOptionChangeTypes =
-  | 'selectedMobility'
-  | 'selectedAbility'
-  | 'selectedEvacuation'
-  | 'selectedSight'
-  | 'selectedHearing'
-  | 'selectedCommunication'
-  | 'selectedUsingKorean';
-
-const IswalkingTypes = ['외상 및 보행불가', '자립보행 가능', '이동장비 필요'];
-const walkingTools = ['지팡이', '워커', '휠체어', '기타'];
-const evacuationMethods = [
-  '자립 화장실 사용',
-  '화장실 유도',
-  '이동식 변기 사용',
-  '기저귀 사용',
-  '소변통 사용',
-  '기타',
-];
-const sightTypes = ['잘 보임', '잘 안 보인', '안 보임', '안경 사용'];
-const hearingTypes = ['잘 들림', '잘 안 들림', '안 들림', '보청기 사용'];
-const communicationTypes = ['소통 가능함', '대강 가능함', '불가능'];
-const usingKoreanTypes = ['읽기 가능', '쓰기 가능'];
+import { useAppDispatch } from '@/app/reduxHooks';
+import { changeActiveTab } from '@/reducers/tabReducer';
+import { useCounselAssistantStore } from '@/store/counselAssistantStore';
+import {
+  IswalkingTypes,
+  walkingTools,
+  evacuationMethods,
+  sightTypes,
+  hearingTypes,
+  communicationTypes,
+  usingKoreanTypes,
+} from '@/pages/assistant/constants/IndependentInfo';
+import {
+  CommunicationDTO,
+  EvacuationDTO,
+  IndependentLifeInformationDTO,
+  WalkingDTO,
+} from '@/api';
 
 const IndependentInfo = () => {
   // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
   const dispatch = useAppDispatch();
+  const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/livingInfo')); // 해당 tab의 url
-  }, [dispatch]);
-  const [formData, setFormData] = useState({
-    selectedAbility: [] as string[],
-    selectedMobility: [] as string[],
-    selectedEvacuation: [] as string[],
-    selectedSight: [] as string[],
-    selectedHearing: [] as string[],
-    selectedCommunication: [] as string[],
-    selectedUsingKorean: [] as string[],
-    equipInfo: '',
-    evacuationDetails: '',
-  });
-  const handleOptionChange = (option: string, key: handleOptionChangeTypes) => {
+  }, []);
+  const [formData, setFormData] = useState<IndependentLifeInformationDTO>(
+    counselAssistant.independentLifeInformation || {
+      walking: {
+        walkingMethods: [],
+        walkingEquipments: [],
+        etcNote: '',
+      },
+      evacuation: {
+        evacuationMethods: [],
+        etcNote: '',
+      },
+      communication: {
+        sights: [],
+        hearings: [],
+        communications: [],
+        usingKoreans: [],
+      },
+    },
+  );
+  const handleOptionChange = (
+    option: string,
+    section: keyof IndependentLifeInformationDTO,
+    field: keyof WalkingDTO | keyof EvacuationDTO | keyof CommunicationDTO,
+  ) => {
+    setFormData((prev) => {
+      let current: string[] = [];
+      if (
+        section === 'walking' &&
+        (field === 'walkingMethods' ||
+          field === 'walkingEquipments' ||
+          field === 'etcNote')
+      ) {
+        current = (prev.walking?.[field] ?? []) as string[];
+      } else if (
+        section === 'evacuation' &&
+        (field === 'evacuationMethods' || field === 'etcNote')
+      ) {
+        current = (prev.evacuation?.[field] ?? []) as string[];
+      } else if (
+        section === 'communication' &&
+        (field === 'sights' ||
+          field === 'hearings' ||
+          field === 'communications' ||
+          field === 'usingKoreans')
+      ) {
+        current = (prev.communication?.[field] ?? []) as string[];
+      }
+      const updated = current.includes(option)
+        ? current.filter((item) => item !== option)
+        : [...current, option];
+      return {
+        ...prev,
+        [section]: {
+          ...(typeof prev[section] === 'object' ? prev[section] : {}),
+          [field]: updated,
+        },
+      };
+    });
+  };
+  const handleInputChange = (
+    section: 'walking' | 'evacuation' | 'communication',
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setFormData((prev) => ({
       ...prev,
-      [key]: prev[key].includes(option)
-        ? prev[key].filter((item) => item !== option)
-        : [...prev[key], option],
+      [section]: {
+        ...prev[section],
+        [e.target.name]: e.target.value,
+      },
     }));
   };
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  useEffect(() => {
+    setCounselAssistant({
+      ...counselAssistant,
+      independentLifeInformation: formData,
+    });
+  }, [formData]);
   return (
     <>
       <TabContentContainer>
@@ -81,14 +128,14 @@ const IndependentInfo = () => {
                     id="walking"
                     type="button"
                     variant={
-                      formData.selectedAbility.includes(walking)
+                      formData.walking?.walkingMethods?.includes(walking)
                         ? 'secondary'
                         : 'outline'
                     }
                     className="p-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      handleOptionChange(walking, 'selectedAbility')
+                      handleOptionChange(walking, 'walking', 'walkingMethods')
                     }>
                     {walking}
                   </Button>
@@ -111,14 +158,14 @@ const IndependentInfo = () => {
                     id="tools"
                     type="button"
                     variant={
-                      formData.selectedMobility.includes(tool)
+                      formData.walking?.walkingEquipments?.includes(tool)
                         ? 'secondary'
                         : 'outline'
                     }
                     className="p-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      handleOptionChange(tool, 'selectedMobility')
+                      handleOptionChange(tool, 'walking', 'walkingEquipments')
                     }>
                     {tool}
                   </Button>
@@ -127,17 +174,17 @@ const IndependentInfo = () => {
             </div>
 
             {/* 기타 */}
-            {formData.selectedMobility.includes('기타') && (
+            {formData.walking?.walkingEquipments?.includes('기타') && (
               <div className="p-4 mb-6">
-                <Label htmlFor="equipInfo" className="font-bold">
+                <Label htmlFor="etcNote" className="font-bold">
                   기타
                 </Label>
                 <Input
-                  id="equipInfo"
-                  name="equipInfo"
+                  id="etcNote"
+                  name="etcNote"
                   placeholder="‘기타' 선택시, 이동 장비를 작성해주세요."
-                  value={formData.equipInfo}
-                  onChange={handleInputChange}
+                  value={formData.walking?.etcNote || ''}
+                  onChange={(e) => handleInputChange('walking', e)}
                   className="mt-3 "
                 />
               </div>
@@ -164,14 +211,20 @@ const IndependentInfo = () => {
                     id="evacuation"
                     type="button"
                     variant={
-                      formData.selectedEvacuation.includes(evacuation)
+                      formData.evacuation?.evacuationMethods?.includes(
+                        evacuation,
+                      )
                         ? 'secondary'
                         : 'outline'
                     }
                     className="p-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      handleOptionChange(evacuation, 'selectedEvacuation')
+                      handleOptionChange(
+                        evacuation,
+                        'evacuation',
+                        'evacuationMethods',
+                      )
                     }>
                     {evacuation}
                   </Button>
@@ -180,17 +233,17 @@ const IndependentInfo = () => {
             </div>
 
             {/* 기타 */}
-            {formData.selectedEvacuation.includes('기타') && (
+            {formData.evacuation?.evacuationMethods?.includes('기타') && (
               <div className="p-4 mb-6">
-                <Label htmlFor="evacuationDetails" className="font-bold">
+                <Label htmlFor="etcNote" className="font-bold">
                   기타
                 </Label>
                 <Input
-                  id="evacuationDetails"
-                  name="evacuationDetails"
+                  id="etcNote"
+                  name="etcNote"
                   placeholder="‘기타' 선택시, 배변 처리 방식을 작성해주세요."
-                  value={formData.evacuationDetails}
-                  onChange={handleInputChange}
+                  value={formData.evacuation?.etcNote || ''}
+                  onChange={(e) => handleInputChange('evacuation', e)}
                   className="mt-3 "
                 />
               </div>
@@ -216,13 +269,15 @@ const IndependentInfo = () => {
                     id="sight"
                     type="button"
                     variant={
-                      formData.selectedSight.includes(sight)
+                      formData.communication?.sights?.includes(sight)
                         ? 'secondary'
                         : 'outline'
                     }
                     className="p-3 font-medium rounded-lg"
                     size="lg"
-                    onClick={() => handleOptionChange(sight, 'selectedSight')}>
+                    onClick={() =>
+                      handleOptionChange(sight, 'communication', 'sights')
+                    }>
                     {sight}
                   </Button>
                 ))}
@@ -244,14 +299,14 @@ const IndependentInfo = () => {
                     id="hearing"
                     type="button"
                     variant={
-                      formData.selectedHearing.includes(hearing)
+                      formData.communication?.hearings?.includes(hearing)
                         ? 'secondary'
                         : 'outline'
                     }
                     className="p-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      handleOptionChange(hearing, 'selectedHearing')
+                      handleOptionChange(hearing, 'communication', 'hearings')
                     }>
                     {hearing}
                   </Button>
@@ -274,14 +329,20 @@ const IndependentInfo = () => {
                     id="communication"
                     type="button"
                     variant={
-                      formData.selectedCommunication.includes(communication)
+                      formData.communication?.communications?.includes(
+                        communication,
+                      )
                         ? 'secondary'
                         : 'outline'
                     }
                     className="p-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      handleOptionChange(communication, 'selectedCommunication')
+                      handleOptionChange(
+                        communication,
+                        'communication',
+                        'communications',
+                      )
                     }>
                     {communication}
                   </Button>
@@ -304,14 +365,18 @@ const IndependentInfo = () => {
                     id="useKorean"
                     type="button"
                     variant={
-                      formData.selectedUsingKorean.includes(useKorean)
+                      formData.communication?.usingKoreans?.includes(useKorean)
                         ? 'secondary'
                         : 'outline'
                     }
                     className="p-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
-                      handleOptionChange(useKorean, 'selectedUsingKorean')
+                      handleOptionChange(
+                        useKorean,
+                        'communication',
+                        'usingKoreans',
+                      )
                     }>
                     {useKorean}
                   </Button>
