@@ -22,7 +22,7 @@ const BasicInfo = () => {
   const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/basicInfo')); // 해당 tab의 url
-  }, []);
+  }, [dispatch]);
 
   const [formData, setFormData] = useState<BaseInformationDTO>(
     counselAssistant.baseInformation || {
@@ -76,7 +76,7 @@ const BasicInfo = () => {
       ...counselAssistant,
       baseInformation: formData,
     });
-  }, [formData]);
+  }, [formData, setCounselAssistant, counselAssistant]);
 
   return (
     <>
