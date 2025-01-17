@@ -37,12 +37,10 @@ const Index = ({ isOpen, handleOpen }: MainDialogTypes) => {
     (state) => state.counseleeConsent || '',
   );
   // 내담자 개인정보 수집 동의 여부 조회
-  const { data, isLoading } = useCounseleeConsentQueryId(
+  const { data } = useCounseleeConsentQueryId(
     detail?.counselSessionId || undefined,
     detail?.counseleeId || undefined,
-    {
-      enabled: !!detail, // detail이 존재할 때만 요청 실행
-    },
+    !!detail,
   );
   // 내담자 개인정보 수집 동의 여부 등록 API 연결
   const addCounselAgree = usePostCounselAgree();
