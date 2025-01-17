@@ -23,6 +23,7 @@ const HealthInfo = () => {
   const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   const [formData, setFormData] = useState<HealthInformationDTO>(
     counselAssistant.healthInformation || {
+      version: '1.1',
       diseaseInfo: {
         diseases: [],
         historyNote: '',
@@ -65,11 +66,17 @@ const HealthInfo = () => {
     }));
   };
 
+  // `formData`가 변경되었을 때 `counselAssistant` 업데이트
   useEffect(() => {
-    setCounselAssistant({
-      ...counselAssistant,
-      healthInformation: formData,
-    });
+    if (
+      JSON.stringify(counselAssistant.healthInformation) !==
+      JSON.stringify(formData)
+    ) {
+      setCounselAssistant({
+        ...counselAssistant,
+        healthInformation: formData,
+      });
+    }
   }, [formData, setCounselAssistant, counselAssistant]);
 
   return (
