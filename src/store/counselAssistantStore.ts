@@ -32,7 +32,7 @@ export const useCounselAssistantStore = create<CounselAssistantState>()(
       counselSessionId: '',
       cardRecordStatus: AddCounselCardReqCardRecordStatusEnum.Recorded,
       baseInformation: {
-        version: '1.2',
+        version: '1.1',
         baseInfo: {
           name: '',
           birthDate: '',
