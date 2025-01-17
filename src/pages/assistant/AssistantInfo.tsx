@@ -10,7 +10,7 @@ import IndependentInfo from '@/pages/assistant/tabs/IndependentInfo';
 import { useEffect, useState } from 'react';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { usePutCounselAgree } from '@/hooks/useCounselAgreeQuery';
 import { useCounselAgreeSessionStore } from '@/store/counselAgreeStore';
 import RegistSucess from '@/pages/assistant/dialogs/RegisterSucess';
@@ -74,9 +74,15 @@ const TabContent = ({
 const AssistantInfo = () => {
   const { activeTab } = useAssistantInfoTabStore();
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+
   const [isTemporaySaveOpen, setIsTemporaySaveOpen] = useState(false);
-  const detail = useDetailCounselSessionStore((state) => state.detail);
-  const { data } = useSelectCounseleeInfo(detail?.counselSessionId || '');
+  const detail = useDetailCounselSessionStore((state) => state?.detail);
+  //useParams()를 통해 counselSessionId를 가져옴
+  const { counselSessionId } = useParams();
+  const { data } = useSelectCounseleeInfo(
+    counselSessionId ? detail?.counselSessionId ?? '' : '',
+  );
+
   const counseleeConsent = useCounselAgreeSessionStore(
     (state) => state.counseleeConsent || '',
   );
@@ -95,13 +101,15 @@ const AssistantInfo = () => {
     navigate(-1); // 이전 페이지로 이동
     resetDetail(); // detail 초기화
   };
+
   useEffect(() => {
-    if (data?.isDisability == true) {
+    if (data?.isDisability === true) {
       setOpenIndependentInfoTab(true);
     } else {
       setOpenIndependentInfoTab(false);
     }
-  }, [data]);
+  }, [data, detail, counselSessionId]);
+
   const goBackandPut = () => {
     if (counseleeConsent) {
       const requestBody = {
@@ -125,6 +133,8 @@ const AssistantInfo = () => {
     setIsRegisterOpen(!isRegisterOpen);
   };
   const handleTemporaySaveOpen = () => {
+    console.log('handleTemporaySaveOpen');
+
     setIsTemporaySaveOpen(!isTemporaySaveOpen);
   };
 
