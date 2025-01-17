@@ -32,6 +32,7 @@ const IndependentInfo = () => {
   }, [dispatch]);
   const [formData, setFormData] = useState<IndependentLifeInformationDTO>(
     counselAssistant.independentLifeInformation || {
+      version: '1.1',
       walking: {
         walkingMethods: [],
         walkingEquipments: [],
@@ -101,11 +102,17 @@ const IndependentInfo = () => {
       },
     }));
   };
+  // `formData`가 변경되었을 때 `counselAssistant` 업데이트
   useEffect(() => {
-    setCounselAssistant({
-      ...counselAssistant,
-      independentLifeInformation: formData,
-    });
+    if (
+      JSON.stringify(counselAssistant.independentLifeInformation) !==
+      JSON.stringify(formData)
+    ) {
+      setCounselAssistant({
+        ...counselAssistant,
+        independentLifeInformation: formData,
+      });
+    }
   }, [formData, setCounselAssistant, counselAssistant]);
   return (
     <>
