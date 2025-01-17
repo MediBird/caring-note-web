@@ -30,18 +30,17 @@ const selectCounseleeConsent = async ({
 export const useCounseleeConsentQueryId = (
   paramId?: string,
   queryId?: string,
-  _p0?: { enabled: boolean },
-) => {
-  return useQuery({
+  enabled?: boolean,
+) =>
+  useQuery({
     queryKey: ['details', paramId, queryId],
     queryFn: () =>
       selectCounseleeConsent({
         paramId: paramId || '',
         queryId: queryId || '',
       }),
-    enabled: !!paramId,
+    enabled,
   });
-};
 
 //내담자 개인정보 수집 동의 여부 등록 API 호출
 const postCounselAgree = async (body: AddCounseleeConsentReq) => {
