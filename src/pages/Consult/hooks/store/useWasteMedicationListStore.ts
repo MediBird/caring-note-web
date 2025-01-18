@@ -1,12 +1,5 @@
+import { WasteMedicationListDTO } from '@/types/WasteMedicationDTO';
 import { create } from 'zustand';
-
-export interface WasteMedicationListDTO {
-  id: string;
-  medicationId: string;
-  medicationName: string;
-  unit: number;
-  disposalReason: string;
-}
 
 export const useWasteMedicationListStore = create<{
   wasteMedicationList: WasteMedicationListDTO[];

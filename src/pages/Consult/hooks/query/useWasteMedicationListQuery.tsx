@@ -1,7 +1,7 @@
 import { WasteMedicationControllerApi } from '@/api/api';
 import { useQuery } from '@tanstack/react-query';
 
-export interface AddAndUpdateWasteMedicationRecordDTO {
+export interface AddAndUpdateWasteMedicationDisposalDTO {
   rowId?: string;
   medicationId?: string;
   unit: number;
