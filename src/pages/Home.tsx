@@ -3,6 +3,7 @@ import CollegeMessage from '@/components/CollegeMessage';
 import TableComponent from '@/components/common/TableComponent';
 import ConsultCount from '@/components/ConsultCount';
 import { Button } from '@/components/ui/button';
+import { useAuthContext } from '@/context/AuthContext';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
 import {
   createDefaultDateColumn,
@@ -16,6 +17,8 @@ import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const { keycloak } = useKeycloak();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { user } = useAuthContext();
   const { data: counselList, isLoading } = useSelectCounselSessionList({
     size: 15,
   });

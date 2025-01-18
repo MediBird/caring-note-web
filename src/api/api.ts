@@ -12,32 +12,23 @@
  * Do not edit the class manually.
  */
 
-import type { Configuration } from './configuration';
-import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
+import type { AxiosInstance, AxiosPromise, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
+import type { Configuration } from './configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
+import type { RequestArgs } from './base';
 import {
   DUMMY_BASE_URL,
   assertParamExists,
-  setApiKeyToObject,
-  setBasicAuthToObject,
-  setBearerAuthToObject,
-  setOAuthToObject,
-  setSearchParams,
-  serializeDataIfNeeded,
-  toPathString,
   createRequestFunction,
+  serializeDataIfNeeded,
+  setBearerAuthToObject,
+  setSearchParams,
+  toPathString,
 } from './common';
-import type { RequestArgs } from './base';
 // @ts-ignore
-import {
-  BASE_PATH,
-  COLLECTION_FORMATS,
-  BaseAPI,
-  RequiredError,
-  operationServerMap,
-} from './base';
+import { BASE_PATH, BaseAPI, RequiredError, operationServerMap } from './base';
 
 /**
  *
@@ -150,10 +141,10 @@ export interface AddAndUpdateWasteMedicationRecordReq {
   medicationId?: string;
   /**
    *
-   * @type {string}
+   * @type {number}
    * @memberof AddAndUpdateWasteMedicationRecordReq
    */
-  unit: string;
+  unit: number;
   /**
    *
    * @type {string}
@@ -1176,6 +1167,71 @@ export interface ExerciseDTO {
 /**
  *
  * @export
+ * @interface GetCounselorRes
+ */
+export interface GetCounselorRes {
+  /**
+   *
+   * @type {string}
+   * @memberof GetCounselorRes
+   */
+  id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GetCounselorRes
+   */
+  name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GetCounselorRes
+   */
+  email?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GetCounselorRes
+   */
+  phoneNumber?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof GetCounselorRes
+   */
+  roleType?: GetCounselorResRoleTypeEnum;
+  /**
+   *
+   * @type {number}
+   * @memberof GetCounselorRes
+   */
+  medicationCounselingCount?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof GetCounselorRes
+   */
+  counseledCounseleeCount?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof GetCounselorRes
+   */
+  participationDays?: number;
+}
+
+export const GetCounselorResRoleTypeEnum = {
+  Admin: 'ROLE_ADMIN',
+  User: 'ROLE_USER',
+  Assistant: 'ROLE_ASSISTANT',
+} as const;
+
+export type GetCounselorResRoleTypeEnum =
+  (typeof GetCounselorResRoleTypeEnum)[keyof typeof GetCounselorResRoleTypeEnum];
+
+/**
+ *
+ * @export
  * @interface HealthInformationDTO
  */
 export interface HealthInformationDTO {
@@ -1879,10 +1935,10 @@ export interface SelectMedicationRecordListBySessionIdRes {
   medicationName?: string;
   /**
    *
-   * @type {string}
+   * @type {number}
    * @memberof SelectMedicationRecordListBySessionIdRes
    */
-  unit?: string;
+  unit?: number;
   /**
    *
    * @type {string}
@@ -3366,49 +3422,6 @@ export const DefaultApiAxiosParamCreator = function (
           `{${'counselSessionId'}}`,
           encodeURIComponent(String(counselSessionId)),
         );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: 'GET',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      // authentication bearer-jwt required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     * Keycloak 로그인 페이지로 리다이렉트
-     * @summary 로그인
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    login: async (
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/v1/counselor/login`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -5141,30 +5154,6 @@ export const DefaultApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath);
     },
     /**
-     * Keycloak 로그인 페이지로 리다이렉트
-     * @summary 로그인
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async login(
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.login(options);
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['DefaultApi.login']?.[localVarOperationServerIndex]
-          ?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
      *
      * @summary 약 검색
      * @param {string} keyword
@@ -6147,17 +6136,6 @@ export const DefaultApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
-     * Keycloak 로그인 페이지로 리다이렉트
-     * @summary 로그인
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    login(options?: RawAxiosRequestConfig): AxiosPromise<void> {
-      return localVarFp
-        .login(options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
      *
      * @summary 약 검색
      * @param {string} keyword
@@ -6770,19 +6748,6 @@ export class DefaultApi extends BaseAPI {
   ) {
     return DefaultApiFp(this.configuration)
       .getWasteMedicationDisposal(counselSessionId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   * Keycloak 로그인 페이지로 리다이렉트
-   * @summary 로그인
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof DefaultApi
-   */
-  public login(options?: RawAxiosRequestConfig) {
-    return DefaultApiFp(this.configuration)
-      .login(options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -9806,15 +9771,15 @@ export const CounselorControllerApiAxiosParamCreator = function (
 ) {
   return {
     /**
-     * Keycloak 로그인 페이지로 리다이렉트
-     * @summary 로그인
+     * 내 정보를 조회한다.
+     * @summary 내 정보 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    login: async (
+    getMyInfo: async (
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
-      const localVarPath = `/v1/counselor/login`;
+      const localVarPath = `/v1/counselor/my-info`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -9862,20 +9827,25 @@ export const CounselorControllerApiFp = function (
     CounselorControllerApiAxiosParamCreator(configuration);
   return {
     /**
-     * Keycloak 로그인 페이지로 리다이렉트
-     * @summary 로그인
+     * 내 정보를 조회한다.
+     * @summary 내 정보 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async login(
+    async getMyInfo(
       options?: RawAxiosRequestConfig,
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<GetCounselorRes>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.login(options);
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getMyInfo(
+        options,
+      );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
-        operationServerMap['CounselorControllerApi.login']?.[
+        operationServerMap['CounselorControllerApi.getMyInfo']?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -9901,14 +9871,14 @@ export const CounselorControllerApiFactory = function (
   const localVarFp = CounselorControllerApiFp(configuration);
   return {
     /**
-     * Keycloak 로그인 페이지로 리다이렉트
-     * @summary 로그인
+     * 내 정보를 조회한다.
+     * @summary 내 정보 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    login(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+    getMyInfo(options?: RawAxiosRequestConfig): AxiosPromise<GetCounselorRes> {
       return localVarFp
-        .login(options)
+        .getMyInfo(options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -9922,15 +9892,15 @@ export const CounselorControllerApiFactory = function (
  */
 export class CounselorControllerApi extends BaseAPI {
   /**
-   * Keycloak 로그인 페이지로 리다이렉트
-   * @summary 로그인
+   * 내 정보를 조회한다.
+   * @summary 내 정보 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof CounselorControllerApi
    */
-  public login(options?: RawAxiosRequestConfig) {
+  public getMyInfo(options?: RawAxiosRequestConfig) {
     return CounselorControllerApiFp(this.configuration)
-      .login(options)
+      .getMyInfo(options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
