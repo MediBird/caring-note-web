@@ -1,4 +1,5 @@
 import PlusBlueIcon from '@/assets/icon/24/add.outlined.blue.svg?react'; // TODO : Figma에 Blue 아이콘 추가되면 해당 파일로 교체 필요
+import { cn } from '@/lib/utils';
 import {
   DataGrid,
   GridCallbackDetails,
@@ -10,7 +11,6 @@ import {
   GridRowsProp,
   MuiEvent,
 } from '@mui/x-data-grid';
-import classNames from 'classnames';
 import React from 'react';
 
 type TableComponentProps = {
@@ -52,9 +52,9 @@ const TableComponent: React.FC<TableComponentProps> = ({
             onCellClick(params, event, details);
           }
         }}
-        className={classNames(
+        className={cn(
+          'bg-transparent',
           withAddButton ? '!rounded-t-xl' : '!rounded-xl',
-          '!min-h-96',
         )}
         classes={{
           columnHeader: 'bg-gray-200',
@@ -62,9 +62,20 @@ const TableComponent: React.FC<TableComponentProps> = ({
           row: 'hover:!bg-primary-5 bg-white',
         }}
         sx={{
+          [`& .${gridClasses.cell}--editing`]: {
+            borderRadius: '8px !important',
+            outline: 'none !important',
+            padding: '4px !important',
+            zIndex: '1000 !important',
+          },
           [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]:
             {
               outline: 'none',
+            },
+          [`& .MuiDataGrid-cell[data-editing="true"]:focus, & .MuiDataGrid-cell[data-editing="true"]:focus-within`]:
+            {
+              outline: 'none !important', // 편집 모드 셀 포커스 보더 제거
+              padding: '0px !important',
             },
           [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
             {
