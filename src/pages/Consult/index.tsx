@@ -4,7 +4,8 @@ import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useQuery } from '@tanstack/react-query';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSaveMedicineConsultWithState } from "@/hooks/useSaveMedicineConsultWithState";
+import { useSaveMedicineConsultWithState } from '@/hooks/useSaveMedicineConsultWithState';
+import { useSaveWasteMedication } from '@/hooks/useSaveWasteMedication';
 
 const PastConsult = lazy(
   () => import('@/pages/Consult/components/tabs/PastConsult'),
@@ -67,7 +68,7 @@ function Index() {
       await counselSessionControllerApi.selectPreviousCounselSessionList(
         counselSessionId,
       );
-    console.log(response.data);
+
     return response;
   };
 
@@ -77,7 +78,7 @@ function Index() {
       await counseleeControllerApi.selectCounseleeBaseInformation(
         counselSessionId,
       );
-    console.log(response.data);
+
     return response.data.data;
   };
 
@@ -92,9 +93,10 @@ function Index() {
     queryFn: selectCounseleeBaseInformation,
   });
 
-  console.log(previousCounselQuery.data);
-
-  const {handleSaveMedicineConsult} = useSaveMedicineConsultWithState();
+  const { handleSaveMedicineConsult } = useSaveMedicineConsultWithState();
+  const { handleSaveWasteMedication } = useSaveWasteMedication(
+    counselSessionId as string,
+  );
 
   useEffect(() => {
     if (previousCounselQuery.data?.status !== 204) {
@@ -110,8 +112,6 @@ function Index() {
       counseleeBaseInfoQuery.data?.diseases?.length || 0;
   }, [counseleeBaseInfoQuery.data]);
 
-
-
   return (
     <div>
       <div className="flex flex-col items-center justify-start w-full h-fit px-8 py-10">
@@ -119,9 +119,13 @@ function Index() {
           <p className="text-h2 font-bold text-grayscale-100">
             {counseleeBaseInfoQuery.data?.name}
           </p>
-          <Button _class="ml-6" variant="secondary" onClick={() => {
-            handleSaveMedicineConsult();
-          }}>
+          <Button
+            _class="ml-6"
+            variant="secondary"
+            onClick={() => {
+              handleSaveMedicineConsult();
+              handleSaveWasteMedication();
+            }}>
             임시저장
           </Button>
           <Button _class="ml-2" variant="primary" onClick={() => {}}>

@@ -3,7 +3,7 @@ import CardContent from '@/components/common/CardContent';
 import useConsultCardStore from '@/store/consultCardStore';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../../components/Button';
 import CardContainer from '../../../../components/common/CardContainer';
 import TabContentContainer from '../../../../components/consult/TabContentContainer';
@@ -11,7 +11,7 @@ import TabContentTitle from '../../../../components/consult/TabContentTitle';
 
 const ConsultCard: React.FC = () => {
   const { counselSessionId } = useParams();
-
+  const navigate = useNavigate();
   const counselCardControllerApi = new CounselCardControllerApi();
 
   const selectCounselCard = async () => {
@@ -62,7 +62,11 @@ const ConsultCard: React.FC = () => {
       <TabContentContainer>
         <div className="flex items-center justify-between">
           <TabContentTitle text="상담카드" />
-          <Button variant="secondary" onClick={() => {}}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              navigate(`/assistant/${counselSessionId}`);
+            }}>
             수정하기
           </Button>
         </div>
