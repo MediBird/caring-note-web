@@ -13,8 +13,8 @@ import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePutCounselAgree } from '@/hooks/useCounselAgreeQuery';
 import { useCounselAgreeSessionStore } from '@/store/counselAgreeStore';
-import RegistSucess from '@/pages/assistant/dialogs/RegisterSucess';
-import TemporaySave from './dialogs/TemporaySave';
+import { CounselAssistantDialogTypes } from './constants/modal';
+import SaveCounselAsstaint from './dialogs/SaveCounselAsstaint';
 
 const TabTitle = ({
   text,
@@ -72,36 +72,42 @@ const TabContent = ({
 };
 
 const AssistantInfo = () => {
-  const { activeTab } = useAssistantInfoTabStore();
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const navigate = useNavigate(); // useNavigate()를 통해 navigate 함수를 가져옴
+  const { counselSessionId } = useParams(); //useParams()를 통해 counselSessionId를 가져옴
 
-  const [isTemporaySaveOpen, setIsTemporaySaveOpen] = useState(false);
-  const detail = useDetailCounselSessionStore((state) => state?.detail);
-  //useParams()를 통해 counselSessionId를 가져옴
-  const { counselSessionId } = useParams();
-  const { data } = useSelectCounseleeInfo(
-    counselSessionId ? detail?.counselSessionId ?? '' : '',
-  );
+  const [dialogType, setDialogType] =
+    useState<CounselAssistantDialogTypes>(null); // modalType을 상태로 관리
+  const [openIndependentInfoTab, setOpenIndependentInfoTab] = useState(false); // openIndependentInfoTab을 상태로 관리
 
+  const { activeTab } = useAssistantInfoTabStore(); // activeTab을 상태로 관리
+  const detail = useDetailCounselSessionStore((state) => state?.detail); // 상담 세션 정보 조회
+  // 내담자 개인정보 수집 동의 여부 조회
   const counseleeConsent = useCounselAgreeSessionStore(
     (state) => state.counseleeConsent || '',
   );
-
-  const { setUpdatedCounseleeConsentId } = useCounselAgreeSessionStore();
-  // 내담자 개인정보 수집 동의 여부 수정 API 연결
-  const putCounselAgree = usePutCounselAgree();
-
-  const [openIndependentInfoTab, setOpenIndependentInfoTab] = useState(false);
-  const navigate = useNavigate();
+  // 내담자 정보 초기화
   const resetDetail = useDetailCounselSessionStore(
     (state) => state.resetDetail,
   );
+  // 내담자 정보 조회
+  const { data } = useSelectCounseleeInfo(
+    counselSessionId ? detail?.counselSessionId ?? '' : '',
+  );
+  // updatedCounseleeConsentId 상태와 setUpdatedCounseleeConsentId 함수를 가져옴
+  const { setUpdatedCounseleeConsentId } = useCounselAgreeSessionStore();
+
+  // openModal, closeModal 함수
+  const openModal = (type: CounselAssistantDialogTypes) => setDialogType(type);
+  const closeModal = () => setDialogType(null);
+  // 내담자 개인정보 수집 동의 여부 수정 API 연결
+  const putCounselAgree = usePutCounselAgree();
 
   const goBack = () => {
     navigate(-1); // 이전 페이지로 이동
     resetDetail(); // detail 초기화
   };
 
+  // data.isDisability이 true일 경우 openIndependentInfoTab을 true로 변경
   useEffect(() => {
     if (data?.isDisability === true) {
       setOpenIndependentInfoTab(true);
@@ -124,18 +130,9 @@ const AssistantInfo = () => {
           if (data.updatedCounseleeConsentId) {
             setUpdatedCounseleeConsentId(data.updatedCounseleeConsentId);
           }
-        }, // 성공 시 이동
+        },
       });
     }
-  };
-
-  const handleRegisterOpen = () => {
-    setIsRegisterOpen(!isRegisterOpen);
-  };
-  const handleTemporaySaveOpen = () => {
-    console.log('handleTemporaySaveOpen');
-
-    setIsTemporaySaveOpen(!isTemporaySaveOpen);
   };
 
   return (
@@ -158,13 +155,13 @@ const AssistantInfo = () => {
             <Button
               _class="ml-6"
               variant="secondary"
-              onClick={handleTemporaySaveOpen}>
+              onClick={() => openModal('TEMP_SAVE')}>
               임시저장
             </Button>
             <Button
               _class="ml-4"
               variant="primary"
-              onClick={handleRegisterOpen}>
+              onClick={() => openModal('REGISTER')}>
               기록완료
             </Button>
           </div>
@@ -185,12 +182,11 @@ const AssistantInfo = () => {
         activeTab={activeTab}
         openIndependentInfoTab={openIndependentInfoTab}
       />
-
-      <TemporaySave
-        isOpen={isTemporaySaveOpen}
-        handleOpen={handleTemporaySaveOpen}
+      <SaveCounselAsstaint
+        isOpen={dialogType !== null}
+        dialogType={dialogType}
+        onClose={closeModal}
       />
-      <RegistSucess isOpen={isRegisterOpen} handleOpen={handleRegisterOpen} />
     </div>
   );
 };
