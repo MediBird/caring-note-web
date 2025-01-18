@@ -1,31 +1,33 @@
-import { AddCounselCardReqCardRecordStatusEnum } from '@/api/api';
+import {
+  AddCounselCardReqCardRecordStatusEnum,
+  SelectCounselSessionListItem,
+} from '@/api/api';
 import CollegeMessage from '@/components/CollegeMessage';
 import TableComponent from '@/components/common/TableComponent';
 import ConsultCount from '@/components/ConsultCount';
 import { Button } from '@/components/ui/button';
 import { useAuthContext } from '@/context/AuthContext';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
+import AssignDialog from '@/pages/Home/components/AssignDialog';
 import {
   createDefaultDateColumn,
   createDefaultStatusColumn,
   createDefaultTextColumn,
 } from '@/utils/TableUtils';
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
-import { useKeycloak } from '@react-keycloak/web';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
-  const { keycloak } = useKeycloak();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user } = useAuthContext();
+
   const { data: counselList, isLoading } = useSelectCounselSessionList({
     size: 15,
   });
   const navigate = useNavigate();
 
   const formattedCounselList = useMemo(() => {
-    return counselList?.map((item) => {
+    return counselList?.map((item: SelectCounselSessionListItem) => {
       return {
         ...item,
         id: item.counselSessionId,
@@ -33,12 +35,8 @@ function Home() {
     });
   }, [counselList]);
 
-  const handleClickAssignMe = () => {
-    console.log('할당하기 버튼 클릭');
-  };
-
-  const handleClickCardRecord = () => {
-    console.log('카드 작성 버튼 클릭');
+  const handleClickCardRecord = (counselSessionId: string) => {
+    navigate(`/assistant/${counselSessionId}`);
   };
 
   const handleCellClick: GridEventListener<'cellClick'> = (params) => {
@@ -56,15 +54,13 @@ function Home() {
   };
 
   const columns = getCardColumns({
-    handleClickAssignMe,
     handleClickCardRecord,
   });
   return (
     <>
       <div className="flex flex-col h-full items-center justify-start bg-gray-50">
         <p className="w-full font-bold text-h3 text-primary-80 pl-20 pt-[148px] pb-6 bg-primary-30">
-          {keycloak.tokenParsed?.family_name ?? ''}
-          {keycloak.tokenParsed?.given_name ?? ''}님, <br />
+          {user?.name ?? ''}님, <br />
           오늘도 힘찬 하루를 보내세요!
         </p>
         <div className="flex w-full gap-8 2xl:items-start mt-8 justify-center 2xl:flex-row flex-col items-center">
@@ -114,11 +110,9 @@ function Home() {
 export default Home;
 
 const getCardColumns = ({
-  handleClickAssignMe,
   handleClickCardRecord,
 }: {
-  handleClickAssignMe: () => void;
-  handleClickCardRecord: () => void;
+  handleClickCardRecord: (counselSessionId: string) => void;
 }): GridColDef[] => {
   const columns: GridColDef[] = [
     {
@@ -126,52 +120,56 @@ const getCardColumns = ({
       headerName: '예약시간',
       flex: 1,
       maxWidth: 112,
+      cellClassName: 'cursor-pointer',
     },
     {
       ...createDefaultDateColumn({
         field: 'scheduledDate',
         headerName: '상담일자',
       }),
+      cellClassName: 'cursor-pointer',
     },
     {
       ...createDefaultStatusColumn({
         field: 'status',
         headerName: '상담진행',
       }),
+      cellClassName: 'cursor-pointer',
     },
     {
       ...createDefaultTextColumn({
         field: 'counseleeName',
         headerName: '내담자',
       }),
+      cellClassName: 'cursor-pointer',
     },
     {
       ...createDefaultTextColumn({
         field: 'counselorName',
         headerName: '담당약사',
       }),
+      cellClassName: 'cursor-pointer',
     },
     {
       field: 'counselorAssign',
       headerName: '상담 할당',
       flex: 1,
       renderCell: (params) => {
-        // TODO : 할당 여부에 따라 버튼 diable 처리 (아래는 임시 코드)
-        return params.value ? (
-          <Button variant={'secondary'}>할당 완료</Button>
-        ) : (
-          <Button variant={'primary'} onClick={handleClickAssignMe}>
-            나에게 할당
-          </Button>
+        return (
+          <AssignDialog
+            counselSessionId={params.row.counselSessionId}
+            counselorId={params.row.counselorId}
+          />
         );
       },
     },
     {
       field: 'cardRecordStatus',
-      headerName: '기초 상담 카드',
+      headerName: '기초 설문',
       flex: 1,
       renderCell: (params) => {
         const recordStatus = params.value;
+        const counselSessionId = params.row.counselSessionId;
         return AddCounselCardReqCardRecordStatusEnum.Recorded ===
           recordStatus ? (
           <Button variant={'secondary'} disabled>
@@ -179,11 +177,15 @@ const getCardColumns = ({
           </Button>
         ) : AddCounselCardReqCardRecordStatusEnum.Unrecorded ===
           recordStatus ? (
-          <Button variant={'primary'} onClick={handleClickCardRecord}>
+          <Button
+            variant={'primary'}
+            onClick={() => handleClickCardRecord(counselSessionId)}>
             카드 작성
           </Button>
         ) : (
-          <Button variant={'secondary'} disabled>
+          <Button
+            variant={'secondary'}
+            onClick={() => handleClickCardRecord(counselSessionId)}>
             작성 중
           </Button>
         );

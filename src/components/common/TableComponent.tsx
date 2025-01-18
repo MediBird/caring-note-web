@@ -59,7 +59,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
         classes={{
           columnHeader: 'bg-gray-200',
           cell: 'border-none',
-          row: 'hover:!bg-primary-10',
+          row: 'hover:!bg-primary-5 bg-white',
         }}
         sx={{
           [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]:

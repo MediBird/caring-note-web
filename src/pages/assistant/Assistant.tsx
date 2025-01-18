@@ -15,10 +15,10 @@ import {
   SelectCounselSessionListItemCardRecordStatusEnum,
   SelectCounselSessionListItemStatusEnum,
 } from '@/api/api';
-import Index from '@/pages/assistant/dialogs/Index';
 import { useCounseleeConsentQueryId } from '@/hooks/useCounselAgreeQuery';
-import { useNavigate } from 'react-router-dom';
+import Index from '@/pages/assistant/dialogs/Index';
 import { useCounselAgreeSessionStore } from '@/store/counselAgreeStore';
+import { useNavigate } from 'react-router-dom';
 
 const Assistant = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const Assistant = () => {
     if (!isLoading && data) {
       // data.status가 200이고 data.data.data?.isConsent가 true일 경우
       if (data.status === 200 && data.data.data?.isConsent === true) {
-        navigate(`/assistant/${detail?.counselSessionId}/info`);
+        navigate(`/assistant/${detail?.counselSessionId}`);
       } else {
         setIsOpen(true);
       }

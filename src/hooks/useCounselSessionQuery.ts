@@ -21,10 +21,16 @@ const selectCounselSessionList = async (params: FetchParams) => {
   return response.data.data;
 };
 
-//실제 사용하는 커스텀 훅
+// 쿼리키를 상수로 정의
+export const COUNSEL_SESSION_KEYS = {
+  all: ['counselSession'] as const,
+  list: (params: FetchParams) =>
+    [...COUNSEL_SESSION_KEYS.all, 'list', params] as const,
+} as const;
+
 export const useSelectCounselSessionList = (params: FetchParams) =>
   useQuery({
-    queryKey: ['dataItems', params],
+    queryKey: COUNSEL_SESSION_KEYS.list(params),
     queryFn: () => selectCounselSessionList(params),
     enabled: !!params,
   });
