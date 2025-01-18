@@ -87,6 +87,9 @@ const HealthInfo = () => {
           <CardContainer title={'앓고 있는 질병'} variant="grayscale">
             {/* 앓고 있는 질병 */}
             <div className="p-4">
+              <Label htmlFor="historyNote" className="font-bold">
+                질병
+              </Label>
               <div className="gap-2">
                 {diseaseList.map((disease) => (
                   <Button
@@ -95,10 +98,10 @@ const HealthInfo = () => {
                     type="button"
                     variant={
                       formData.diseaseInfo?.diseases?.includes(disease)
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 mt-3 mr-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 mt-3 mr-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() => toggleDisease(disease)}>
                     {disease}
@@ -154,10 +157,10 @@ const HealthInfo = () => {
                     type="button"
                     variant={
                       formData.allergy?.isAllergy === allergy.value
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 mt-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       setFormData({
@@ -212,10 +215,10 @@ const HealthInfo = () => {
                     variant={
                       formData.medicationSideEffect?.isSideEffect ===
                       medicine.value
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 mt-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       setFormData({

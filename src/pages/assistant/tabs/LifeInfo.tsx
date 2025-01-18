@@ -117,10 +117,10 @@ const LifeInfo = () => {
                     type="button"
                     variant={
                       formData.smoking?.isSmoking === smoking.value
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 mt-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       setFormData({
@@ -169,10 +169,10 @@ const LifeInfo = () => {
                         type="button"
                         variant={
                           formData.smoking?.smokingAmount === count
-                            ? 'secondary'
-                            : 'outline'
+                            ? 'pressed'
+                            : 'nonpressed'
                         }
-                        className="p-3 mt-3 font-medium rounded-lg"
+                        className="pl-3 pr-3 mt-3 font-medium rounded-lg"
                         size="lg"
                         onClick={() =>
                           setFormData({
@@ -209,10 +209,10 @@ const LifeInfo = () => {
                     type="button"
                     variant={
                       formData.drinking?.isDrinking === drinking.value
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 mt-3 font-medium rounded-lg"
+                    className="pl-3 pr-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       setFormData({
@@ -244,10 +244,10 @@ const LifeInfo = () => {
                         type="button"
                         variant={
                           formData.drinking?.drinkingAmount === count
-                            ? 'secondary'
-                            : 'outline'
+                            ? 'pressed'
+                            : 'nonpressed'
                         }
-                        className="p-3 mt-3 font-medium rounded-lg"
+                        className="pl-3 pr-3 mt-3 font-medium rounded-lg"
                         size="lg"
                         onClick={() =>
                           setFormData({
@@ -284,10 +284,10 @@ const LifeInfo = () => {
                     type="button"
                     variant={
                       formData.nutrition?.mealPattern === type
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 mt-3 font-medium rounded-lg"
+                    className="pl-3 pr-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       setFormData({
@@ -337,10 +337,10 @@ const LifeInfo = () => {
                     type="button"
                     variant={
                       formData.exercise?.exercisePattern === count
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 mt-3 font-medium rounded-lg"
+                    className="pl-3 pr-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       setFormData({
@@ -394,10 +394,10 @@ const LifeInfo = () => {
                     type="button"
                     variant={
                       formData.medicationManagement?.isAlone === living.value
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 mt-3 font-medium rounded-lg"
+                    className="pl-3 pr-3 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       setFormData({
@@ -451,10 +451,10 @@ const LifeInfo = () => {
                       formData.medicationManagement?.medicationAssistants?.includes(
                         member,
                       )
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 mt-3 font-medium rounded-lg"
+                    className="pl-3 pr-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() => toggleGoal(member)}>
                     {member}
