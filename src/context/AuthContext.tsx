@@ -27,11 +27,12 @@ export const AuthContextProvider = ({
 
   useEffect(() => {
     (async () => {
-      const user = await CounselorControllerApiFactory().getMyInfo();
-
-      setUser(user.data);
+      if (keycloak.authenticated) {
+        const user = await CounselorControllerApiFactory().getMyInfo();
+        setUser(user.data);
+      }
     })();
-  }, [keycloak.authenticated, keycloak.token]);
+  }, [keycloak.authenticated]);
 
   return (
     <AuthContext.Provider

@@ -54,7 +54,7 @@ const Routes = () => {
         element: <Assistant />,
       },
       {
-        path: ':counselSessionId/info',
+        path: ':counselSessionId',
         element: <AssistantInfo />,
       },
     ],

@@ -12,21 +12,33 @@ import PatientBlackIcon from '@/assets/icon/24/patient.fiiled.black.svg?react';
 import PatientBlueIcon from '@/assets/icon/24/patient.fiiled.blue.svg?react';
 import logoBlack from '@/assets/logoBlack.png';
 import NavigationLeftMenu from '@/components/NavigationLeftMenu';
+import { useAuthContext } from '@/context/AuthContext';
 import { useKeycloak } from '@react-keycloak/web';
 import { useNavigate } from 'react-router-dom';
 
 const NavigationLeft = () => {
   const navigate = useNavigate();
+  const { user } = useAuthContext();
   const { keycloak } = useKeycloak();
 
   return (
     <div className="w-52 h-auto bg-grayscale-3 relative py-0 z-1000 shadow-nav-left">
-      <div className="flex justify-start items-end p-5">
+      <div className="flex items-end p-5">
         <span className="text-subtitle2 font-bold mr-3">
-          {keycloak.tokenParsed?.family_name ?? ''}
-          {keycloak.tokenParsed?.given_name ?? ''}
+          {user?.name ?? ''}
         </span>
-        <span className="text-body1 font-medium">{`${'약사'}님`}</span>
+        <span className="text-body1 font-medium">{`${(() => {
+          switch (user?.roleType) {
+            case 'ROLE_ADMIN':
+              return '관리자';
+            case 'ROLE_ASSISTANT':
+              return '상담사';
+            case 'ROLE_USER':
+              return '약사';
+            default:
+              return '';
+          }
+        })()}님`}</span>
       </div>
       <hr className="border-t border-grayscale-10" />
       <NavigationLeftMenu

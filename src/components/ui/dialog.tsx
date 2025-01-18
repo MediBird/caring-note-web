@@ -13,6 +13,7 @@ const DialogPortal = DialogPrimitive.Portal;
 const DialogTrigger = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Trigger>
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Trigger ref={ref} {...props} />
 ));

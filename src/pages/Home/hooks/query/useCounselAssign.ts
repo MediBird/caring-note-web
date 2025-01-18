@@ -2,6 +2,7 @@ import {
   CounselSessionControllerApi,
   UpdateCounselorInCounselSessionReq,
 } from '@/api/api';
+import { COUNSEL_SESSION_KEYS } from '@/hooks/useCounselSessionQuery';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 // 상담 담당 약사 할당
@@ -30,7 +31,7 @@ export const useCounselAssign = () => {
       updateCounselorInCounselSession(counselSessionId, counselorId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['SelectCounselSessionList'],
+        queryKey: COUNSEL_SESSION_KEYS.all,
       });
     },
     onError: (error) => {
