@@ -12,7 +12,6 @@ import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePutCounselAgree } from '@/hooks/useCounselAgreeQuery';
-import { useCounselAgreeSessionStore } from '@/store/counselAgreeStore';
 import { CounselAssistantDialogTypes } from './constants/modal';
 import SaveCounselAsstaint from './dialogs/SaveCounselAsstaint';
 
@@ -92,8 +91,6 @@ const AssistantInfo = () => {
   // openModal, closeModal 함수
   const openModal = (type: CounselAssistantDialogTypes) => setDialogType(type);
   const closeModal = () => setDialogType(null);
-  // 내담자 개인정보 수집 동의 여부 수정 API 연결
-  const putCounselAgree = usePutCounselAgree();
 
   const goBack = () => {
     navigate(-1); // 이전 페이지로 이동
