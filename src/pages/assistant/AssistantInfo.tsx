@@ -3,7 +3,7 @@ import Button from '@/components/Button';
 import useAssistantInfoTabStore, {
   AssistantInfoTab,
 } from '@/store/assistantTabStore';
-import BasicInfo from '@/pages/assistant/tabs/BasicInfo';
+import BaseInfo from '@/pages/assistant/tabs/BaseInfo';
 import HealthInfo from '@/pages/assistant/tabs/HealthInfo';
 import LifeInfo from '@/pages/assistant/tabs/LifeInfo';
 import IndependentInfo from '@/pages/assistant/tabs/IndependentInfo';
@@ -52,14 +52,14 @@ const TabContent = ({
   openIndependentInfoTab: boolean;
 }) => {
   const defaultTab = openIndependentInfoTab ? (
-    <BasicInfo />
+    <BaseInfo />
   ) : (
     <IndependentInfo />
   );
 
   switch (activeTab) {
     case AssistantInfoTab.basicInfo:
-      return <BasicInfo />;
+      return <BaseInfo />;
     case AssistantInfoTab.healthInfo:
       return <HealthInfo />;
     case AssistantInfoTab.lifeInfo:
