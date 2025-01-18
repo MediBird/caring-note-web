@@ -77,7 +77,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
   const renderTriggerButton = () => (
     <Button
       type="button"
-      variant={dialogState.UNASSIGNED ? 'secondary' : 'primary'}>
+      variant={dialogState.UNASSIGNED ? 'primary' : 'secondary'}>
       {dialogState.UNASSIGNED ? '나에게 할당' : '할당 완료'}
     </Button>
   );
