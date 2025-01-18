@@ -3,6 +3,8 @@ import {
   AddCounselCardReq,
   AddCounselCardRes,
   UpdateCounselCardReq,
+  SelectCounselCardRes,
+  UpdateCounselCardRes,
 } from '@/api/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
@@ -15,7 +17,7 @@ const selectCounselCard = async (counselSessionId: string) => {
   const response = await counselCardControllerApi.selectCounselCard(
     counselSessionId,
   );
-  return response.data.data;
+  return response.data.data as SelectCounselCardRes;
 };
 // 실제 사용하는 커스텀 훅
 export const useSelectCounselCard = (counselSessionId: string) => {
@@ -50,7 +52,7 @@ const updateCounselAssistant = async (
   const response = await counselCardControllerApi.updateCounselCard(
     counselAssistant,
   );
-  return response.data.data as AddCounselCardRes;
+  return response.data.data as UpdateCounselCardRes;
 };
 
 // 실제 사용하는 커스텀 훅
