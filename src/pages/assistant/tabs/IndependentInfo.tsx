@@ -136,10 +136,10 @@ const IndependentInfo = () => {
                     type="button"
                     variant={
                       formData.walking?.walkingMethods?.includes(walking)
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       handleOptionChange(walking, 'walking', 'walkingMethods')
@@ -166,10 +166,10 @@ const IndependentInfo = () => {
                     type="button"
                     variant={
                       formData.walking?.walkingEquipments?.includes(tool)
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       handleOptionChange(tool, 'walking', 'walkingEquipments')
@@ -221,10 +221,10 @@ const IndependentInfo = () => {
                       formData.evacuation?.evacuationMethods?.includes(
                         evacuation,
                       )
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       handleOptionChange(
@@ -277,10 +277,10 @@ const IndependentInfo = () => {
                     type="button"
                     variant={
                       formData.communication?.sights?.includes(sight)
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       handleOptionChange(sight, 'communication', 'sights')
@@ -307,10 +307,10 @@ const IndependentInfo = () => {
                     type="button"
                     variant={
                       formData.communication?.hearings?.includes(hearing)
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       handleOptionChange(hearing, 'communication', 'hearings')
@@ -339,10 +339,10 @@ const IndependentInfo = () => {
                       formData.communication?.communications?.includes(
                         communication,
                       )
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       handleOptionChange(
@@ -373,10 +373,10 @@ const IndependentInfo = () => {
                     type="button"
                     variant={
                       formData.communication?.usingKoreans?.includes(useKorean)
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       handleOptionChange(

@@ -144,10 +144,10 @@ const BasicInfo = () => {
                     type="button"
                     variant={
                       formData.baseInfo?.healthInsuranceType === type.value
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 mt-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       setFormData({
@@ -177,10 +177,10 @@ const BasicInfo = () => {
                     type="button"
                     variant={
                       formData.baseInfo?.counselSessionOrder === count
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 mt-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 mt-3 font-medium rounded-lg"
                     size="lg"
                     onClick={() =>
                       setFormData({
@@ -235,10 +235,10 @@ const BasicInfo = () => {
                       formData.counselPurposeAndNote?.counselPurpose?.includes(
                         goal,
                       )
-                        ? 'secondary'
-                        : 'outline'
+                        ? 'pressed'
+                        : 'nonpressed'
                     }
-                    className="p-3 font-medium rounded-lg"
+                    className="pl-2 pr-2 font-medium rounded-lg"
                     size="lg"
                     onClick={() => toggleGoal(goal)}>
                     {goal}
