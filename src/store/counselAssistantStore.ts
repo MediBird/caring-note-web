@@ -10,12 +10,13 @@ import { create } from 'zustand';
 
 // 상담 카드 등록 정보 관련 상태 관리
 export interface counselAssistantType {
-  counselSessionId: string;
-  cardRecordStatus: AddCounselCardReqCardRecordStatusEnum;
-  baseInformation: BaseInformationDTO | null;
-  healthInformation: HealthInformationDTO | null;
-  livingInformation: LivingInformationDTO | null;
-  independentLifeInformation: IndependentLifeInformationDTO | null;
+  counselCardId?: string;
+  counselSessionId?: string;
+  cardRecordStatus?: AddCounselCardReqCardRecordStatusEnum;
+  baseInformation?: BaseInformationDTO;
+  healthInformation?: HealthInformationDTO;
+  livingInformation?: LivingInformationDTO;
+  independentLifeInformation?: IndependentLifeInformationDTO;
 }
 
 export interface CounselAssistantState {
@@ -29,6 +30,7 @@ export interface CounselAssistantState {
 export const useCounselAssistantStore = create<CounselAssistantState>()(
   (set) => ({
     counselAssistant: {
+      counselCardId: '',
       counselSessionId: '',
       cardRecordStatus: AddCounselCardReqCardRecordStatusEnum.Recorded,
       baseInformation: {
