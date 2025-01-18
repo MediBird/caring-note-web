@@ -14,16 +14,18 @@ interface SearchComponentProps {
   items?: string[];
   onSelect?: (item: string) => void;
   onChangeInputValue?: (value: string) => void;
+  defaultInputValue?: string;
 }
 
-const SearchComponent: React.FC<SearchComponentProps> = ({
+const SearchComponent = ({
   commandProps,
   placeholder = 'Type a command or search...',
   items = [],
   onSelect,
   onChangeInputValue,
-}) => {
-  const [inputValue, setInputValue] = useState('');
+  defaultInputValue = '',
+}: SearchComponentProps) => {
+  const [inputValue, setInputValue] = useState(defaultInputValue);
   const [filteredItems, setFilteredItems] = useState(items); // 필터링된 items 상태 추가
 
   useEffect(() => {
@@ -59,8 +61,9 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
   };
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full bg-transparent">
       <Command
+        className="rounded-lg"
         {...commandProps}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
@@ -78,14 +81,21 @@ const SearchComponent: React.FC<SearchComponentProps> = ({
           onChangeCapture={handleInputChange}
           autoFocus
         />
-        <CommandList className="absolute left-0 top-10 z-10 mt-2 w-full max-h-48 overflow-auto rounded border bg-white shadow-lg">
-          {/* <CommandEmpty>No results found.</CommandEmpty> */}
-          <CommandGroup heading="Suggestions">
-            {filteredItems.map((item, index) => (
-              <CommandItem key={index} onSelect={() => handleSelect(item)}>
-                {item}
+
+        <CommandList className="absolute left-0 top-12 z-10 w-full max-h-48 overflow-auto rounded border bg-white shadow-lg">
+          <CommandGroup>
+            {filteredItems.length === 0 && (
+              <CommandItem className="text-left p-2 text-sm">
+                검색 결과가 없습니다.
               </CommandItem>
-            ))}
+            )}
+            {filteredItems.map((item, index) => {
+              return (
+                <CommandItem key={index} onSelect={() => handleSelect(item)}>
+                  {item}
+                </CommandItem>
+              );
+            })}
           </CommandGroup>
         </CommandList>
       </Command>
