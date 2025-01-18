@@ -84,7 +84,10 @@ const HealthInfo = () => {
       <TabContentContainer>
         <div className="flex items-start justify-between space-x-4">
           {/* 앓고 있는 질병 입력 */}
-          <CardContainer title={'앓고 있는 질병'} variant="grayscale">
+          <CardContainer
+            title={'앓고 있는 질병'}
+            variant="grayscale"
+            itemName="baseInfo">
             {/* 앓고 있는 질병 */}
             <div className="p-4">
               <Label htmlFor="historyNote" className="font-bold">
@@ -143,7 +146,7 @@ const HealthInfo = () => {
         </div>
         {/* 알레르기 */}
         <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'알레르기'}>
+          <CardContainer title={'알레르기'} itemName="baseInfo">
             {/* 알레르기 여부 */}
             <div className="inline-block w-1/4 p-4">
               <Label htmlFor="isAllergy" className="font-bold">
@@ -178,7 +181,7 @@ const HealthInfo = () => {
             </div>
 
             {/* 알레르기 의심 식품/약품 */}
-            <div className="p-4">
+            <div className="pl-4 pr-4">
               {formData.allergy?.isAllergy == true && (
                 <div className="mb-6">
                   <Label htmlFor="allergyNote" className="font-bold">
@@ -200,9 +203,9 @@ const HealthInfo = () => {
 
         {/* 약물 부작용 */}
         <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'약물 부작용'}>
+          <CardContainer title={'약물 부작용'} itemName="baseInfo">
             {/* 약물 부작용 여부 */}
-            <div className="inline-block w-1/4 p-4">
+            <div className="p-4">
               <Label htmlFor="isMedicine" className="font-bold">
                 약물 부작용 여부
               </Label>
@@ -236,7 +239,7 @@ const HealthInfo = () => {
             </div>
 
             {/* 부작용 의심 약물 */}
-            <div className="p-4">
+            <div className="pl-4 pr-4">
               {formData.medicationSideEffect?.isSideEffect == true && (
                 <div className="mb-6">
                   <Label
@@ -262,7 +265,7 @@ const HealthInfo = () => {
             </div>
 
             {/* 부작용 증상 */}
-            <div className="p-4">
+            <div className="pl-4 pr-4">
               {formData.medicationSideEffect?.isSideEffect == true && (
                 <div className="mb-6">
                   <Label htmlFor="symptomsNote" className="font-bold">

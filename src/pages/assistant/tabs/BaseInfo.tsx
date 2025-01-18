@@ -16,7 +16,7 @@ import {
   consultationGoals,
 } from '@/pages/assistant/constants/baseInfo';
 
-const BasicInfo = () => {
+const BaseInfo = () => {
   // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
   const dispatch = useAppDispatch();
   const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
@@ -100,7 +100,10 @@ const BasicInfo = () => {
         {/* 박진완 : CardContainer 리팩토링 완료! 사용법은 ConsultCard.tsx 를 참고하시면 편해용 */}
         <div className="flex items-start justify-between space-x-4">
           {/* 기본정보 입력 */}
-          <CardContainer title={'기본정보'} variant="grayscale">
+          <CardContainer
+            title={'기본정보'}
+            variant="grayscale"
+            itemName="baseInfo">
             {/* 성명 */}
             <div className="inline-block w-1/4 p-4">
               <Label htmlFor="name" className="font-bold">
@@ -216,13 +219,13 @@ const BasicInfo = () => {
 
         {/* 상담 목적 및 특이사항 */}
         <div className="flex items-start justify-between space-x-4 ">
-          <CardContainer title={'상담 목적 및 특이사항'}>
+          <CardContainer title={'상담 목적 및 특이사항'} itemName="baseInfo">
             {/* 상담 목적 */}
             <div className="inline-block p-4">
               <Label htmlFor="goal" className="font-bold">
                 상담 목적
               </Label>
-              <p className="mt-3 mb-3 text-sm text-gray-500">
+              <p className="mt-1 mb-3 text-sm text-gray-500">
                 여러개를 동시에 선택할 수 있어요.
               </p>
               <div className="flex gap-2">
@@ -282,4 +285,4 @@ const BasicInfo = () => {
     </>
   );
 };
-export default BasicInfo;
+export default BaseInfo;
