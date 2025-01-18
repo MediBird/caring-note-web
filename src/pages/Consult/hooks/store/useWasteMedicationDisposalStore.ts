@@ -11,7 +11,7 @@ export const initialWasteMedicationDisposalState: AddAndUpdateWasteMedicationDis
     wasteMedicationGram: 0,
   };
 
-export const useWateMedicationDisposalStore = create<{
+export const useWasteMedicationDisposalStore = create<{
   wasteMedicationDisposal: AddAndUpdateWasteMedicationDisposalDTO;
   setWasteMedicationDisposal: (
     data: AddAndUpdateWasteMedicationDisposalDTO,
