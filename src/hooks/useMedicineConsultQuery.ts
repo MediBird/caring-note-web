@@ -11,8 +11,7 @@ const selectMedicationCounsel = async (counselSessionId: string) => {
     return response.data.data||{
         medicationCounselId: '',
         counselRecord: '',
-        counselRecordHighlights: [],
-        counselNeedStatus: undefined, // 기본값으로 설정
+        counselRecordHighlights: []
       };
 
 }
@@ -26,7 +25,6 @@ const saveMedicationCounsel = async (medicineConsultDTO: MedicineConsultDTO) => 
             counselSessionId: medicineConsultDTO.counselSessionId,
             counselRecord: medicineConsultDTO.counselRecord,
             counselRecordHighlights: medicineConsultDTO.counselRecordHighlights,
-            counselNeedStatus: "ONE"
           });
     } else {
 
@@ -34,7 +32,6 @@ const saveMedicationCounsel = async (medicineConsultDTO: MedicineConsultDTO) => 
             medicationCounselId: medicineConsultDTO.medicationCounselId,
             counselRecord: medicineConsultDTO.counselRecord,
             counselRecordHighlights: medicineConsultDTO.counselRecordHighlights,
-            counselNeedStatus: "ONE"
           });
     }
 
