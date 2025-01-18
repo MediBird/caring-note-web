@@ -81,10 +81,6 @@ const AssistantInfo = () => {
 
   const { activeTab } = useAssistantInfoTabStore(); // activeTab을 상태로 관리
   const detail = useDetailCounselSessionStore((state) => state?.detail); // 상담 세션 정보 조회
-  // 내담자 개인정보 수집 동의 여부 조회
-  const counseleeConsent = useCounselAgreeSessionStore(
-    (state) => state.counseleeConsent || '',
-  );
   // 내담자 정보 초기화
   const resetDetail = useDetailCounselSessionStore(
     (state) => state.resetDetail,
@@ -93,9 +89,6 @@ const AssistantInfo = () => {
   const { data } = useSelectCounseleeInfo(
     counselSessionId ? detail?.counselSessionId ?? '' : '',
   );
-  // updatedCounseleeConsentId 상태와 setUpdatedCounseleeConsentId 함수를 가져옴
-  const { setUpdatedCounseleeConsentId } = useCounselAgreeSessionStore();
-
   // openModal, closeModal 함수
   const openModal = (type: CounselAssistantDialogTypes) => setDialogType(type);
   const closeModal = () => setDialogType(null);
@@ -116,25 +109,6 @@ const AssistantInfo = () => {
     }
   }, [data, detail, counselSessionId]);
 
-  const goBackandPut = () => {
-    if (counseleeConsent) {
-      const requestBody = {
-        counseleeConsentId: counseleeConsent.counseleeConsentId,
-        consent: false,
-      };
-      // addCounselAgree.mutate로 요청 실행
-      putCounselAgree.mutate(requestBody, {
-        onSuccess: (data) => {
-          navigate(-1); // 이전 페이지로 이동
-          resetDetail(); // detail 초기화
-          if (data.updatedCounseleeConsentId) {
-            setUpdatedCounseleeConsentId(data.updatedCounseleeConsentId);
-          }
-        },
-      });
-    }
-  };
-
   return (
     <div>
       <div className="flex flex-col items-center justify-start w-full px-8 py-4 h-fit bg-gray-0">
@@ -146,9 +120,6 @@ const AssistantInfo = () => {
               alt="arrowHeadLeftGray"
               className="w-6 h-6 cursor-pointer"
             />
-            <Button _class="ml-6" variant="primary" onClick={goBackandPut}>
-              동의 여부 수정
-            </Button>
             <p className="text-4xl font-black text-black">상담 카드 작성</p>
           </div>
           <div className="flex flex-row items-center justify-end w-full h-8 pl-6 mt-4">
