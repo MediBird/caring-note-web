@@ -113,14 +113,14 @@ const AssistantInfo = () => {
     <div>
       <div className="flex flex-col items-center justify-start w-full px-8 py-4 h-fit bg-gray-0">
         <div className="flex flex-row items-center justify-start w-full h-8 pl-6 mt-4">
-          <div className="flex flex-row items-center justify-start w-full h-8 pl-6 mt-4">
+          <div className="flex flex-row items-center justify-start w-full h-8 mt-4">
             <img
               src={arrowHeadLeftGray}
               onClick={goBack}
               alt="arrowHeadLeftGray"
               className="w-6 h-6 cursor-pointer"
             />
-            <p className="text-4xl font-black text-black">상담 카드 작성</p>
+            <p className="text-4xl font-black text-black">기초 설문 작성</p>
           </div>
           <div className="flex flex-row items-center justify-end w-full h-8 pl-6 mt-4">
             <Button
