@@ -184,7 +184,7 @@ const getCardColumns = ({
           </Button>
         ) : (
           <Button
-            variant={'primary'}
+            variant={'secondary'}
             onClick={() => handleClickCardRecord(counselSessionId)}>
             작성 중
           </Button>
