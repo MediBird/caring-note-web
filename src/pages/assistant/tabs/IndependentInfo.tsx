@@ -119,7 +119,7 @@ const IndependentInfo = () => {
       <TabContentContainer>
         {/* 보행 입력 */}
         <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'보행'} variant="error">
+          <CardContainer title={'보행'} variant="error" itemName="baseInfo">
             {/* 보행 여부 */}
             <div className="inline-block p-4">
               <Label htmlFor="walking" className="font-bold">
@@ -201,7 +201,7 @@ const IndependentInfo = () => {
 
         {/* 배변 */}
         <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'배변'}>
+          <CardContainer title={'배변'} itemName="baseInfo">
             {/* 배변 처리 방식 */}
             <div className="w-full p-4">
               <Label htmlFor="evacuationMethods" className="font-bold">
@@ -260,7 +260,7 @@ const IndependentInfo = () => {
 
         {/* 의사소통 입력 */}
         <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'의사소통 정도'}>
+          <CardContainer title={'의사소통 정도'} itemName="baseInfo">
             {/* 시력 */}
             <div className="w-full p-4">
               <Label htmlFor="sight" className="font-bold">

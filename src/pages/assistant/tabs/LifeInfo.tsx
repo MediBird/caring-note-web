@@ -103,7 +103,7 @@ const LifeInfo = () => {
       <TabContentContainer>
         {/* 흡연 입력 */}
         <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'흡연'} variant="secondary">
+          <CardContainer title={'흡연'} variant="secondary" itemName="baseInfo">
             {/* 흡연 여부 */}
             <div className="inline-block w-1/4 p-4">
               <Label htmlFor="isSmoking" className="font-bold">
@@ -137,7 +137,7 @@ const LifeInfo = () => {
               </div>
             </div>
             {/* 총 흡연기간 */}
-            <div className="w-1/4 p-4">
+            <div className="w-1/4 pl-4 pr-4">
               {formData.smoking?.isSmoking == true && (
                 <div className="mb-6">
                   <Label htmlFor="smokingPeriodNote" className="font-bold">
@@ -155,7 +155,7 @@ const LifeInfo = () => {
               )}
             </div>
             {/* 하루 평균 흡연량 */}
-            <div className="p-4">
+            <div className="pl-4 pr-4">
               {formData.smoking?.isSmoking == true && (
                 <div className="mb-6">
                   <Label htmlFor="smokingAmount" className="font-bold">
@@ -195,7 +195,7 @@ const LifeInfo = () => {
 
         {/* 음주 입력 */}
         <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'음주'}>
+          <CardContainer title={'음주'} itemName="baseInfo">
             {/* 음주 여부 */}
             <div className="inline-block w-1/4 p-4">
               <Label htmlFor="isDrinking" className="font-bold">
@@ -230,9 +230,9 @@ const LifeInfo = () => {
             </div>
 
             {/* 음주 횟수 */}
-            <div className="p-4">
+            <div className="pl-4 pr-4">
               {formData.drinking?.isDrinking == true && (
-                <div className="mb-6">
+                <div className="mt-4 mb-6">
                   <Label htmlFor="drinkingAmount" className="font-bold">
                     음주 횟수
                   </Label>
@@ -270,7 +270,7 @@ const LifeInfo = () => {
 
         {/* 영양상태 입력 */}
         <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'영양상태'}>
+          <CardContainer title={'영양상태'} itemName="baseInfo">
             {/* 하루 식사 패턴 */}
             <div className="inline-block w-1/4 p-4">
               <Label htmlFor="mealPattern" className="font-bold">
@@ -323,7 +323,7 @@ const LifeInfo = () => {
 
         {/* 운동 입력 */}
         <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'운동'}>
+          <CardContainer title={'운동'} itemName="baseInfo">
             {/* 주간 운동 패턴 */}
             <div className="inline-block w-1/4 p-4">
               <Label htmlFor="exercisePattern" className="font-bold">
@@ -358,9 +358,9 @@ const LifeInfo = () => {
             </div>
 
             {/* 규칙적으로 하는 운동 종류 */}
-            <div className="w-1/4 p-4">
+            <div className="pl-4 pr-4">
               {formData.exercise?.exercisePattern != '운동 안 함' && (
-                <div className="mb-6">
+                <div className="mt-4 mb-6">
                   <Label htmlFor="exerciseNote" className="font-bold">
                     규칙적으로 하는 운동 종류
                   </Label>
@@ -380,7 +380,7 @@ const LifeInfo = () => {
 
         {/* 약 복용 관리 입력 */}
         <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'약 복용 관리'}>
+          <CardContainer title={'약 복용 관리'} itemName="baseInfo">
             {/* 독거 여부 */}
             <div className="inline-block w-1/4 p-4">
               <Label htmlFor="isAlone" className="font-bold">
@@ -414,9 +414,9 @@ const LifeInfo = () => {
               </div>
             </div>
             {/* 동거인 구성원 */}
-            <div className="w-1/4 p-4">
+            <div className="pl-4 pr-4">
               {formData.medicationManagement?.isAlone == false && (
-                <div className="mb-6">
+                <div className="mb-4">
                   <Label htmlFor="houseMateNote" className="font-bold">
                     동거인 구성원
                   </Label>

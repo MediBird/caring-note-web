@@ -3,7 +3,7 @@ import Button from '@/components/Button';
 import useAssistantInfoTabStore, {
   AssistantInfoTab,
 } from '@/store/assistantTabStore';
-import BasicInfo from '@/pages/assistant/tabs/BasicInfo';
+import BaseInfo from '@/pages/assistant/tabs/BaseInfo';
 import HealthInfo from '@/pages/assistant/tabs/HealthInfo';
 import LifeInfo from '@/pages/assistant/tabs/LifeInfo';
 import IndependentInfo from '@/pages/assistant/tabs/IndependentInfo';
@@ -11,8 +11,6 @@ import { useEffect, useState } from 'react';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useNavigate, useParams } from 'react-router-dom';
-import { usePutCounselAgree } from '@/hooks/useCounselAgreeQuery';
-import { useCounselAgreeSessionStore } from '@/store/counselAgreeStore';
 import { CounselAssistantDialogTypes } from './constants/modal';
 import SaveCounselAsstaint from './dialogs/SaveCounselAsstaint';
 
@@ -52,14 +50,14 @@ const TabContent = ({
   openIndependentInfoTab: boolean;
 }) => {
   const defaultTab = openIndependentInfoTab ? (
-    <BasicInfo />
+    <BaseInfo />
   ) : (
     <IndependentInfo />
   );
 
   switch (activeTab) {
     case AssistantInfoTab.basicInfo:
-      return <BasicInfo />;
+      return <BaseInfo />;
     case AssistantInfoTab.healthInfo:
       return <HealthInfo />;
     case AssistantInfoTab.lifeInfo:
@@ -81,10 +79,6 @@ const AssistantInfo = () => {
 
   const { activeTab } = useAssistantInfoTabStore(); // activeTab을 상태로 관리
   const detail = useDetailCounselSessionStore((state) => state?.detail); // 상담 세션 정보 조회
-  // 내담자 개인정보 수집 동의 여부 조회
-  const counseleeConsent = useCounselAgreeSessionStore(
-    (state) => state.counseleeConsent || '',
-  );
   // 내담자 정보 초기화
   const resetDetail = useDetailCounselSessionStore(
     (state) => state.resetDetail,
@@ -93,14 +87,9 @@ const AssistantInfo = () => {
   const { data } = useSelectCounseleeInfo(
     counselSessionId ? detail?.counselSessionId ?? '' : '',
   );
-  // updatedCounseleeConsentId 상태와 setUpdatedCounseleeConsentId 함수를 가져옴
-  const { setUpdatedCounseleeConsentId } = useCounselAgreeSessionStore();
-
   // openModal, closeModal 함수
   const openModal = (type: CounselAssistantDialogTypes) => setDialogType(type);
   const closeModal = () => setDialogType(null);
-  // 내담자 개인정보 수집 동의 여부 수정 API 연결
-  const putCounselAgree = usePutCounselAgree();
 
   const goBack = () => {
     navigate(-1); // 이전 페이지로 이동
@@ -116,40 +105,18 @@ const AssistantInfo = () => {
     }
   }, [data, detail, counselSessionId]);
 
-  const goBackandPut = () => {
-    if (counseleeConsent) {
-      const requestBody = {
-        counseleeConsentId: counseleeConsent.counseleeConsentId,
-        consent: false,
-      };
-      // addCounselAgree.mutate로 요청 실행
-      putCounselAgree.mutate(requestBody, {
-        onSuccess: (data) => {
-          navigate(-1); // 이전 페이지로 이동
-          resetDetail(); // detail 초기화
-          if (data.updatedCounseleeConsentId) {
-            setUpdatedCounseleeConsentId(data.updatedCounseleeConsentId);
-          }
-        },
-      });
-    }
-  };
-
   return (
     <div>
       <div className="flex flex-col items-center justify-start w-full px-8 py-4 h-fit bg-gray-0">
         <div className="flex flex-row items-center justify-start w-full h-8 pl-6 mt-4">
-          <div className="flex flex-row items-center justify-start w-full h-8 pl-6 mt-4">
+          <div className="flex flex-row items-center justify-start w-full h-8 mt-4">
             <img
               src={arrowHeadLeftGray}
               onClick={goBack}
               alt="arrowHeadLeftGray"
               className="w-6 h-6 cursor-pointer"
             />
-            <Button _class="ml-6" variant="primary" onClick={goBackandPut}>
-              동의 여부 수정
-            </Button>
-            <p className="text-4xl font-black text-black">상담 카드 작성</p>
+            <p className="text-4xl font-black text-black">기초 설문 작성</p>
           </div>
           <div className="flex flex-row items-center justify-end w-full h-8 pl-6 mt-4">
             <Button
