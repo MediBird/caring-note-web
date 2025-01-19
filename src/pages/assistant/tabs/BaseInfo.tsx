@@ -127,7 +127,7 @@ const BaseInfo = () => {
               <Input
                 id="birthDate"
                 name="birthDate"
-                placeholder="YYYYMMDD"
+                placeholder="YYYY-MM-DD"
                 value={formData.baseInfo?.birthDate || ''}
                 onChange={(e) => handleInputChange('baseInfo', e)}
                 className="mt-3"
