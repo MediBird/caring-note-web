@@ -10,9 +10,14 @@ import IndependentInfo from '@/pages/assistant/tabs/IndependentInfo';
 import { useEffect, useState } from 'react';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useNavigationType, useParams } from 'react-router-dom';
 import { CounselAssistantDialogTypes } from './constants/modal';
 import SaveCounselAsstaint from './dialogs/SaveCounselAsstaint';
+import { useSelectCounselCard } from '@/hooks/useCounselAssistantQuery';
+import {
+  counselAssistantType,
+  useCounselAssistantStore,
+} from '@/store/counselAssistantStore';
 
 const TabTitle = ({
   text,
@@ -72,20 +77,29 @@ const TabContent = ({
 const AssistantInfo = () => {
   const navigate = useNavigate(); // useNavigate()를 통해 navigate 함수를 가져옴
   const { counselSessionId } = useParams(); //useParams()를 통해 counselSessionId를 가져옴
+  const navigationType = useNavigationType(); // 현재 내비게이션 타입 확인
 
   const [dialogType, setDialogType] =
     useState<CounselAssistantDialogTypes>(null); // modalType을 상태로 관리
   const [openIndependentInfoTab, setOpenIndependentInfoTab] = useState(false); // openIndependentInfoTab을 상태로 관리
-
-  const { activeTab } = useAssistantInfoTabStore(); // activeTab을 상태로 관리
-  const detail = useDetailCounselSessionStore((state) => state?.detail); // 상담 세션 정보 조회
+  // activeTab을 상태로 관리
+  const { activeTab } = useAssistantInfoTabStore();
   // 내담자 정보 초기화
   const resetDetail = useDetailCounselSessionStore(
     (state) => state.resetDetail,
   );
+  // 상담 카드 담기
+  const setCounselAssistant = useCounselAssistantStore(
+    (state) => state.setCounselAssistant,
+  );
+
   // 내담자 정보 조회
-  const { data } = useSelectCounseleeInfo(
-    counselSessionId ? detail?.counselSessionId ?? '' : '',
+  const { data: selectCounseleeInfo } = useSelectCounseleeInfo(
+    counselSessionId ?? '',
+  );
+  // 상담 카드 조회
+  const { data: selectCounselCardAssistantInfo } = useSelectCounselCard(
+    counselSessionId ?? '',
   );
   // openModal, closeModal 함수
   const openModal = (type: CounselAssistantDialogTypes) => setDialogType(type);
@@ -98,12 +112,20 @@ const AssistantInfo = () => {
 
   // data.isDisability이 true일 경우 openIndependentInfoTab을 true로 변경
   useEffect(() => {
-    if (data?.isDisability === true) {
+    if (selectCounseleeInfo?.isDisability === true) {
       setOpenIndependentInfoTab(true);
     } else {
       setOpenIndependentInfoTab(false);
     }
-  }, [data, detail, counselSessionId]);
+  }, [selectCounseleeInfo, counselSessionId]);
+
+  useEffect(() => {
+    if (selectCounselCardAssistantInfo) {
+      setCounselAssistant(selectCounselCardAssistantInfo);
+    } else {
+      setCounselAssistant({} as counselAssistantType);
+    }
+  }, [selectCounselCardAssistantInfo, counselSessionId, setCounselAssistant]);
 
   return (
     <div>
