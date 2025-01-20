@@ -54,11 +54,7 @@ const TabContent = ({
   activeTab: AssistantInfoTab;
   openIndependentInfoTab: boolean;
 }) => {
-  const defaultTab = openIndependentInfoTab ? (
-    <BaseInfo />
-  ) : (
-    <IndependentInfo />
-  );
+  const defaultTab = <BaseInfo />;
 
   switch (activeTab) {
     case AssistantInfoTab.basicInfo:
@@ -68,7 +64,7 @@ const TabContent = ({
     case AssistantInfoTab.lifeInfo:
       return <LifeInfo />;
     case AssistantInfoTab.independentInfo:
-      return <IndependentInfo />;
+      return openIndependentInfoTab ? <IndependentInfo /> : <BaseInfo />;
     default:
       return defaultTab;
   }
@@ -82,7 +78,7 @@ const AssistantInfo = () => {
     useState<CounselAssistantDialogTypes>(null); // modalType을 상태로 관리
   const [openIndependentInfoTab, setOpenIndependentInfoTab] = useState(false); // openIndependentInfoTab을 상태로 관리
   // activeTab을 상태로 관리
-  const { activeTab } = useAssistantInfoTabStore();
+  const { activeTab, setActiveTab } = useAssistantInfoTabStore();
   // 내담자 정보 초기화
   const resetDetail = useDetailCounselSessionStore(
     (state) => state.resetDetail,
@@ -115,8 +111,9 @@ const AssistantInfo = () => {
       setOpenIndependentInfoTab(true);
     } else {
       setOpenIndependentInfoTab(false);
+      setActiveTab(AssistantInfoTab.basicInfo); // 기본 정보 탭으로 설정
     }
-  }, [selectCounseleeInfo, counselSessionId]);
+  }, [selectCounseleeInfo, counselSessionId, setActiveTab]);
 
   useEffect(() => {
     if (selectCounselCardAssistantInfo) {
