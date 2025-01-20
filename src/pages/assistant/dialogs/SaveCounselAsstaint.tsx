@@ -13,7 +13,6 @@ import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { useCounselAssistantStore } from '@/store/counselAssistantStore';
 import {
   usePostCounselAssistant,
-  useSelectCounselCard,
   useUpdateCounselAssistant,
 } from '@/hooks/useCounselAssistantQuery';
 import {
@@ -34,9 +33,6 @@ const SaveCounselAssistant = ({
   const navigate = useNavigate();
   const { counselSessionId } = useParams();
   const detail = useDetailCounselSessionStore((state) => state.detail);
-  const selectCounselCard = useSelectCounselCard(
-    detail?.counselSessionId || '',
-  );
   const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   const updateCounselAssistant = useUpdateCounselAssistant();
   const addCounselCard = usePostCounselAssistant();
@@ -55,11 +51,11 @@ const SaveCounselAssistant = ({
       livingInformation: counselAssistant?.livingInformation || undefined,
       independentLifeInformation:
         counselAssistant?.independentLifeInformation || undefined,
-      counselCardId: selectCounselCard.data?.counselCardId || '',
+      counselCardId: counselAssistant?.counselCardId || '',
       counselSessionId: counselSessionId || detail?.counselSessionId || '',
     };
     // counselCardId가 있으면 업데이트, 없으면 추가
-    if (selectCounselCard.data?.counselCardId) {
+    if (counselAssistant?.counselCardId) {
       updateCounselAssistant.mutate(requestBody, {
         onSuccess: () => {
           if (isTempSave) {
@@ -70,8 +66,7 @@ const SaveCounselAssistant = ({
           }
         },
         onError: (error) => {
-          console.error('Failed to update counsel card:', error);
-          window.alert('상담 카드 업데이트에 실패했습니다.');
+          window.alert('상담 카드 임시저장에 실패했습니다.' + error);
         },
       });
     } else {
@@ -84,8 +79,7 @@ const SaveCounselAssistant = ({
           }
         },
         onError: (error) => {
-          console.error('Failed to add new counsel card:', error);
-          window.alert('상담 카드 등록에 실패했습니다.');
+          window.alert('상담 카드 등록에 실패했습니다.' + error);
         },
       });
     }
