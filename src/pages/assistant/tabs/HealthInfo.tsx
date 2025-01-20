@@ -13,6 +13,8 @@ import {
   isAllergyTypes,
   isMedicineTypes,
 } from '@/pages/assistant/constants/healthInfo';
+import { useParams } from 'react-router-dom';
+import { useSelectCounselCard } from '@/hooks/useCounselAssistantQuery';
 
 const HealthInfo = () => {
   // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
@@ -20,25 +22,18 @@ const HealthInfo = () => {
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/healthInfo')); // 해당 tab의 url
   }, [dispatch]);
+  const { counselSessionId } = useParams(); //useParams()를 통해 counselSessionId를 가져옴
   const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
+  // 상담 카드 조회
+  const { data: selectCounselCardAssistantInfo } = useSelectCounselCard(
+    counselSessionId ?? '',
+  );
   const [formData, setFormData] = useState<HealthInformationDTO>(
     counselAssistant.healthInformation || {
-      version: '1.1',
-      diseaseInfo: {
-        diseases: [],
-        historyNote: '',
-        mainInconvenienceNote: '',
-      },
-      allergy: {
-        isAllergy: false,
-        allergyNote: '',
-      },
-      medicationSideEffect: {
-        isSideEffect: false,
-        suspectedMedicationNote: '',
-        symptomsNote: '',
-      },
-    },
+      diseaseInfo: {},
+      allergy: {},
+      medicationSideEffect: {},
+    }, //counselAssistant.healthInformation이 없을 경우 초기값
   );
 
   const toggleDisease = (disease: string) => {
@@ -65,6 +60,12 @@ const HealthInfo = () => {
       },
     }));
   };
+
+  useEffect(() => {
+    if (selectCounselCardAssistantInfo?.healthInformation) {
+      setFormData(selectCounselCardAssistantInfo.healthInformation);
+    }
+  }, [selectCounselCardAssistantInfo, setCounselAssistant, counselSessionId]);
 
   // `formData`가 변경되었을 때 `counselAssistant` 업데이트
   useEffect(() => {

@@ -9,37 +9,33 @@ import { useAppDispatch } from '@/app/reduxHooks';
 import CardContainer from '@/components/common/CardContainer';
 import { changeActiveTab } from '@/reducers/tabReducer';
 import { useCounselAssistantStore } from '@/store/counselAssistantStore';
-import { BaseInfoDTOHealthInsuranceTypeEnum, BaseInformationDTO } from '@/api';
+import { BaseInformationDTO } from '@/api';
 import {
   insuranceTypes,
   consultationCounts,
   consultationGoals,
 } from '@/pages/assistant/constants/baseInfo';
+import { useParams } from 'react-router-dom';
+import { useSelectCounselCard } from '@/hooks/useCounselAssistantQuery';
 
 const BaseInfo = () => {
   // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
   const dispatch = useAppDispatch();
-  const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/basicInfo')); // 해당 tab의 url
   }, [dispatch]);
+  const { counselSessionId } = useParams(); //useParams()를 통해 counselSessionId를 가져옴
 
+  const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
+  // 상담 카드 조회
+  const { data: selectCounselCardAssistantInfo } = useSelectCounselCard(
+    counselSessionId ?? '',
+  );
   const [formData, setFormData] = useState<BaseInformationDTO>(
     counselAssistant.baseInformation || {
-      version: '1.1',
-      baseInfo: {
-        name: '',
-        birthDate: '',
-        healthInsuranceType: BaseInfoDTOHealthInsuranceTypeEnum.HealthInsurance,
-        counselSessionOrder: '1회차',
-        lastCounselDate: '',
-      },
-      counselPurposeAndNote: {
-        counselPurpose: [],
-        SignificantNote: '',
-        MedicationNote: '',
-      },
-    },
+      baseInfo: {},
+      counselPurposeAndNote: {},
+    }, //counselAssistant.baseInformation이 null이면 빈 객체를 넣어줌),
   );
 
   const toggleGoal = (goal: string) => {
@@ -71,6 +67,12 @@ const BaseInfo = () => {
     }));
   };
 
+  useEffect(() => {
+    if (selectCounselCardAssistantInfo?.baseInformation) {
+      setFormData(selectCounselCardAssistantInfo.baseInformation);
+    }
+  }, [selectCounselCardAssistantInfo, setCounselAssistant, counselSessionId]);
+
   // `formData`가 변경되었을 때 `counselAssistant` 업데이트
   useEffect(() => {
     if (
@@ -83,7 +85,6 @@ const BaseInfo = () => {
       });
     }
   }, [formData, setCounselAssistant, counselAssistant]);
-
   return (
     <>
       <TabContentContainer>

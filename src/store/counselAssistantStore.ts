@@ -82,11 +82,11 @@ export const useCounselAssistantStore = create<CounselAssistantState>()(
           nutritionNote: '',
         },
         exercise: {
-          exercisePattern: '',
+          exercisePattern: '운동 안 함',
           exerciseNote: '',
         },
         medicationManagement: {
-          isAlone: false,
+          isAlone: true,
           houseMateNote: '',
           medicationAssistants: [],
         },
