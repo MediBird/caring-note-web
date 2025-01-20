@@ -58,13 +58,7 @@ const Assistant = () => {
         consent: data?.data?.data?.isConsent,
       });
     }
-  }, [
-    isLoading,
-    data,
-    setCounseleeConsent,
-    navigate,
-    detail?.counselSessionId,
-  ]);
+  }, [isLoading, data, setCounseleeConsent, navigate, detail]);
 
   const columns: GridColDef[] = [
     {
