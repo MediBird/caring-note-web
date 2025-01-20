@@ -105,15 +105,17 @@ const AssistantInfo = () => {
     resetDetail(); // detail 초기화
   };
 
-  // data.isDisability이 true일 경우 openIndependentInfoTab을 true로 변경
+  // 자립생활 역량 탭 활성화 여부 설정
   useEffect(() => {
     if (selectCounseleeInfo?.isDisability === true) {
       setOpenIndependentInfoTab(true);
     } else {
       setOpenIndependentInfoTab(false);
-      setActiveTab(AssistantInfoTab.basicInfo); // 기본 정보 탭으로 설정
+      if (activeTab === AssistantInfoTab.independentInfo) {
+        setActiveTab(AssistantInfoTab.basicInfo); // 기본 탭으로 변경
+      }
     }
-  }, [selectCounseleeInfo, counselSessionId, setActiveTab]);
+  }, [selectCounseleeInfo, counselSessionId, setActiveTab, activeTab]);
 
   useEffect(() => {
     if (selectCounselCardAssistantInfo) {
