@@ -54,7 +54,7 @@ const Index = ({ isOpen, handleOpen }: MainDialogTypes) => {
       // addCounselAgree.mutate로 요청 실행
       putCounselAgree.mutate(requestBody, {
         onSuccess: () => {
-          navigate('/assistant/info');
+          navigate(`/assistant/${detail?.counselSessionId}`);
         }, // 성공 시 이동
       });
     } else {
@@ -66,7 +66,7 @@ const Index = ({ isOpen, handleOpen }: MainDialogTypes) => {
       // addCounselAgree.mutate로 요청 실행
       addCounselAgree.mutate(requestBody, {
         onSuccess: () => {
-          navigate('/assistant/info');
+          navigate(`/assistant/${detail?.counselSessionId}`);
         }, // 성공 시 이동
       });
     }
