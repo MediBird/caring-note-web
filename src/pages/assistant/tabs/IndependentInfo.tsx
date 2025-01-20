@@ -22,32 +22,26 @@ import {
   IndependentLifeInformationDTO,
   WalkingDTO,
 } from '@/api';
+import { useParams } from 'react-router-dom';
+import { useSelectCounselCard } from '@/hooks/useCounselAssistantQuery';
 
 const IndependentInfo = () => {
   // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
   const dispatch = useAppDispatch();
+  const { counselSessionId } = useParams(); //useParams()를 통해 counselSessionId를 가져옴
   const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/livingInfo')); // 해당 tab의 url
   }, [dispatch]);
+  // 상담 카드 조회
+  const { data: selectCounselCardAssistantInfo } = useSelectCounselCard(
+    counselSessionId ?? '',
+  );
   const [formData, setFormData] = useState<IndependentLifeInformationDTO>(
     counselAssistant.independentLifeInformation || {
-      version: '1.1',
-      walking: {
-        walkingMethods: [],
-        walkingEquipments: [],
-        etcNote: '',
-      },
-      evacuation: {
-        evacuationMethods: [],
-        etcNote: '',
-      },
-      communication: {
-        sights: [],
-        hearings: [],
-        communications: [],
-        usingKoreans: [],
-      },
+      walking: {},
+      evacuation: {},
+      communication: {},
     },
   );
   const handleOptionChange = (
@@ -102,6 +96,13 @@ const IndependentInfo = () => {
       },
     }));
   };
+
+  useEffect(() => {
+    if (selectCounselCardAssistantInfo?.independentLifeInformation) {
+      setFormData(selectCounselCardAssistantInfo.independentLifeInformation);
+    }
+  }, [selectCounselCardAssistantInfo, setCounselAssistant, counselSessionId]);
+
   // `formData`가 변경되었을 때 `counselAssistant` 업데이트
   useEffect(() => {
     if (

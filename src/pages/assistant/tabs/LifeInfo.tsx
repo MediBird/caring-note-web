@@ -18,40 +18,29 @@ import {
   dailyEatingTypes,
   exerciseWeeklyCounts,
 } from '@/pages/assistant/constants/lifeInfo';
+import { useParams } from 'react-router-dom';
+import { useSelectCounselCard } from '@/hooks/useCounselAssistantQuery';
 
 const LifeInfo = () => {
   // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
   const dispatch = useAppDispatch();
+  const { counselSessionId } = useParams(); //useParams()를 통해 counselSessionId를 가져옴
   const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
   useEffect(() => {
     dispatch(changeActiveTab('/assistant/view/lifeInfo')); // 해당 tab의 url
   }, [dispatch]);
+  // 상담 카드 조회
+  const { data: selectCounselCardAssistantInfo } = useSelectCounselCard(
+    counselSessionId ?? '',
+  );
   const [formData, setFormData] = useState<LivingInformationDTO>(
     counselAssistant.livingInformation || {
-      version: '1.1',
-      smoking: {
-        isSmoking: false,
-        smokingAmount: '',
-        smokingPeriodNote: '',
-      },
-      drinking: {
-        isDrinking: false,
-        drinkingAmount: '',
-      },
-      nutrition: {
-        mealPattern: '',
-        nutritionNote: '',
-      },
-      exercise: {
-        exercisePattern: '',
-        exerciseNote: '',
-      },
-      medicationManagement: {
-        isAlone: false,
-        houseMateNote: '',
-        medicationAssistants: [],
-      },
-    },
+      smoking: {},
+      drinking: {},
+      nutrition: {},
+      exercise: {},
+      medicationManagement: {},
+    }, //counselAssistant.livingInformation이 null이면 빈 객체를 넣어줌
   );
 
   const toggleGoal = (member: string) => {
@@ -84,6 +73,12 @@ const LifeInfo = () => {
       },
     }));
   };
+
+  useEffect(() => {
+    if (selectCounselCardAssistantInfo?.livingInformation) {
+      setFormData(selectCounselCardAssistantInfo.livingInformation);
+    }
+  }, [selectCounselCardAssistantInfo, setCounselAssistant, counselSessionId]);
 
   // `formData`가 변경되었을 때 `counselAssistant` 업데이트
   useEffect(() => {
