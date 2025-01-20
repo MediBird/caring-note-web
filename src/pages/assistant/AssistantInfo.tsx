@@ -10,7 +10,7 @@ import IndependentInfo from '@/pages/assistant/tabs/IndependentInfo';
 import { useEffect, useState } from 'react';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
-import { useNavigate, useNavigationType, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CounselAssistantDialogTypes } from './constants/modal';
 import SaveCounselAsstaint from './dialogs/SaveCounselAsstaint';
 import { useSelectCounselCard } from '@/hooks/useCounselAssistantQuery';
@@ -77,7 +77,6 @@ const TabContent = ({
 const AssistantInfo = () => {
   const navigate = useNavigate(); // useNavigate()를 통해 navigate 함수를 가져옴
   const { counselSessionId } = useParams(); //useParams()를 통해 counselSessionId를 가져옴
-  const navigationType = useNavigationType(); // 현재 내비게이션 타입 확인
 
   const [dialogType, setDialogType] =
     useState<CounselAssistantDialogTypes>(null); // modalType을 상태로 관리
