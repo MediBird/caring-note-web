@@ -2,7 +2,7 @@ import { CounselCardControllerApi } from '@/api';
 import CardContent from '@/components/common/CardContent';
 import useConsultCardStore from '@/store/consultCardStore';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../../components/Button';
 import CardContainer from '../../../../components/common/CardContainer';
@@ -12,7 +12,12 @@ import TabContentTitle from '../../../../components/consult/TabContentTitle';
 const ConsultCard: React.FC = () => {
   const { counselSessionId } = useParams();
   const navigate = useNavigate();
-  const counselCardControllerApi = new CounselCardControllerApi();
+
+  // useMemo를 사용하여 counselCardControllerApi를 메모이제이션
+  const counselCardControllerApi = useMemo(
+    () => new CounselCardControllerApi(),
+    [],
+  );
 
   const selectCounselCard = useCallback(async () => {
     if (!counselSessionId) return;
