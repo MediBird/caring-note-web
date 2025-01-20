@@ -2,7 +2,7 @@ import { CounselCardControllerApi } from '@/api';
 import CardContent from '@/components/common/CardContent';
 import useConsultCardStore from '@/store/consultCardStore';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../../components/Button';
 import CardContainer from '../../../../components/common/CardContainer';
@@ -12,9 +12,14 @@ import TabContentTitle from '../../../../components/consult/TabContentTitle';
 const ConsultCard: React.FC = () => {
   const { counselSessionId } = useParams();
   const navigate = useNavigate();
-  const counselCardControllerApi = new CounselCardControllerApi();
 
-  const selectCounselCard = async () => {
+  // useMemo를 사용하여 counselCardControllerApi를 메모이제이션
+  const counselCardControllerApi = useMemo(
+    () => new CounselCardControllerApi(),
+    [],
+  );
+
+  const selectCounselCard = useCallback(async () => {
     if (!counselSessionId) return;
 
     const response = await counselCardControllerApi.selectCounselCard(
@@ -22,7 +27,7 @@ const ConsultCard: React.FC = () => {
     );
     console.log('selectCounselCard', response);
     return response;
-  };
+  }, [counselSessionId, counselCardControllerApi]);
 
   // TODO: 쿼리 커스텀 훅 분리 및 데이터 store set init 로직 개선 필요
   // tanstack/react-query 를 사용하여 데이터 fetch
@@ -38,35 +43,35 @@ const ConsultCard: React.FC = () => {
     useConsultCardStore();
 
   useEffect(() => {
-    // originalData 가 비어있을 때만 setOriginalData 호출
     if (isConsultCardQuerySuccess && JSON.stringify(originalData) === '{}') {
-      // Zustand 상태 update
-      setHttpStatus(consultCardData?.status || 0);
-      setOriginalData(consultCardData?.data?.data || {});
-      setEditedData(consultCardData?.data?.data || {});
+      const status = consultCardData?.status || 0;
+      const data = status === 204 ? {} : consultCardData?.data?.data || {};
 
-      console.log('jw, consultCard:: originalData updated!!');
+      // Zustand 상태 update
+      setHttpStatus(status);
+      setOriginalData(data);
+      setEditedData(data);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     counselSessionId,
     isConsultCardQuerySuccess,
-    originalData,
-    setEditedData,
+    consultCardData,
     setHttpStatus,
     setOriginalData,
+    setEditedData,
   ]);
+
+  const handleNavigate = useCallback(() => {
+    navigate(`/assistant/${counselSessionId}`);
+  }, [navigate, counselSessionId]);
 
   return (
     <>
       <TabContentContainer>
         <div className="flex items-center justify-between">
           <TabContentTitle text="상담카드" />
-          <Button
-            variant="secondary"
-            onClick={() => {
-              navigate(`/assistant/${counselSessionId}`);
-            }}>
+          <Button variant="secondary" onClick={handleNavigate}>
             수정하기
           </Button>
         </div>
