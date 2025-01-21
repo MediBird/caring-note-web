@@ -5,14 +5,14 @@ import useAssistantInfoTabStore, {
 } from '@/store/assistantTabStore';
 import BaseInfo from '@/pages/assistant/tabs/BaseInfo';
 import HealthInfo from '@/pages/assistant/tabs/HealthInfo';
-import LifeInfo from '@/pages/assistant/tabs/LifeInfo';
+import LivingInfo from '@/pages/assistant/tabs/LivingInfo';
 import IndependentInfo from '@/pages/assistant/tabs/IndependentInfo';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CounselAssistantDialogTypes } from './constants/modal';
-import SaveCounselAsstaint from './dialogs/SaveCounselAsstaint';
+import { CounselAssistantDialogTypes } from '@/pages/assistant/constants/modal';
+import CounselAssistantInfo from '@/pages/assistant/dialogs/CounselAssistantInfo';
 import { useSelectCounselCard } from '@/hooks/useCounselAssistantQuery';
 import {
   counselAssistantType,
@@ -62,7 +62,7 @@ const TabContent = ({
     case AssistantInfoTab.healthInfo:
       return <HealthInfo />;
     case AssistantInfoTab.lifeInfo:
-      return <LifeInfo />;
+      return <LivingInfo />;
     case AssistantInfoTab.independentInfo:
       return openIndependentInfoTab ? <IndependentInfo /> : <BaseInfo />;
     default:
@@ -71,12 +71,13 @@ const TabContent = ({
 };
 
 const AssistantInfo = () => {
-  const navigate = useNavigate(); // useNavigate()를 통해 navigate 함수를 가져옴
   const { counselSessionId } = useParams(); //useParams()를 통해 counselSessionId를 가져옴
-
+  const navigate = useNavigate(); // useNavigate()를 통해 navigate 함수를 가져옴
+  // modalType을 상태로 관리
   const [dialogType, setDialogType] =
-    useState<CounselAssistantDialogTypes>(null); // modalType을 상태로 관리
-  const [openIndependentInfoTab, setOpenIndependentInfoTab] = useState(false); // openIndependentInfoTab을 상태로 관리
+    useState<CounselAssistantDialogTypes>(null);
+  // openIndependentInfoTab을 상태로 관리
+  const [openIndependentInfoTab, setOpenIndependentInfoTab] = useState(false);
   // activeTab을 상태로 관리
   const { activeTab, setActiveTab } = useAssistantInfoTabStore();
   // 내담자 정보 초기화
@@ -97,13 +98,33 @@ const AssistantInfo = () => {
     counselSessionId ?? '',
   );
   // openModal, closeModal 함수
-  const openModal = (type: CounselAssistantDialogTypes) => setDialogType(type);
-  const closeModal = () => setDialogType(null);
+  const openModal = useCallback(
+    (type: CounselAssistantDialogTypes) => setDialogType(type),
+    [],
+  );
+  const closeModal = useCallback(() => setDialogType(null), []);
 
+  // 뒤로 가기 버튼 클릭 시
   const goBack = () => {
-    navigate(-1); // 이전 페이지로 이동
+    openModal('EXIT'); // 모달 열기
     resetDetail(); // detail 초기화
   };
+  // 새로운 히스토리 상태 추가
+  const pushNewHistoryState = useCallback(() => {
+    window.history.pushState({ isModalOpen: true }, '', window.location.href);
+  }, []);
+
+  // 브라우저 뒤로가기 이벤트
+  useEffect(() => {
+    pushNewHistoryState();
+    const handlePopState = () => {
+      navigate('/');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [navigate, openModal, pushNewHistoryState, resetDetail]);
 
   // 자립생활 역량 탭 활성화 여부 설정
   useEffect(() => {
@@ -117,13 +138,14 @@ const AssistantInfo = () => {
     }
   }, [selectCounseleeInfo, counselSessionId, setActiveTab, activeTab]);
 
+  // 상담 카드 정보 설정
   useEffect(() => {
-    if (selectCounselCardAssistantInfo) {
-      setCounselAssistant(selectCounselCardAssistantInfo);
-    } else {
+    if (!selectCounselCardAssistantInfo) {
       setCounselAssistant({} as counselAssistantType);
+    } else {
+      setCounselAssistant(selectCounselCardAssistantInfo);
     }
-  }, [selectCounselCardAssistantInfo, counselSessionId, setCounselAssistant]);
+  }, [selectCounselCardAssistantInfo, setCounselAssistant]);
 
   return (
     <div>
@@ -169,7 +191,7 @@ const AssistantInfo = () => {
         activeTab={activeTab}
         openIndependentInfoTab={openIndependentInfoTab}
       />
-      <SaveCounselAsstaint
+      <CounselAssistantInfo
         isOpen={dialogType !== null}
         dialogType={dialogType}
         onClose={closeModal}
