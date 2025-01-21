@@ -16,50 +16,30 @@ import {
 import { useParams } from 'react-router-dom';
 import { useSelectCounselCard } from '@/hooks/useCounselAssistantQuery';
 
+type SectionFields = Record<string, string | undefined>;
+type ButtonOption = {
+  label: string;
+  value: string | number | boolean;
+};
 const HealthInfo = () => {
-  // 새로고침이 되었을 때도 active tab 을 잃지 않도록 컴포넌트 load 시 dispatch
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(changeActiveTab('/assistant/view/healthInfo')); // 해당 tab의 url
-  }, [dispatch]);
-  const { counselSessionId } = useParams(); //useParams()를 통해 counselSessionId를 가져옴
+  const { counselSessionId } = useParams();
   const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
-  // 상담 카드 조회
   const { data: selectCounselCardAssistantInfo } = useSelectCounselCard(
     counselSessionId ?? '',
   );
+
   const [formData, setFormData] = useState<HealthInformationDTO>(
     counselAssistant.healthInformation || {
       diseaseInfo: {},
       allergy: {},
       medicationSideEffect: {},
-    }, //counselAssistant.healthInformation이 없을 경우 초기값
+    },
   );
 
-  const toggleDisease = (disease: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      diseaseInfo: {
-        ...prev.diseaseInfo,
-        diseases: prev.diseaseInfo?.diseases?.includes(disease)
-          ? prev.diseaseInfo?.diseases?.filter((item) => item !== disease)
-          : [...(prev.diseaseInfo?.diseases ?? []), disease],
-      },
-    }));
-  };
-
-  const handleInputChange = (
-    section: 'diseaseInfo' | 'allergy' | 'medicationSideEffect',
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [e.target.name]: e.target.value,
-      },
-    }));
-  };
+  useEffect(() => {
+    dispatch(changeActiveTab('/assistant/view/healthInfo'));
+  }, [dispatch]);
 
   useEffect(() => {
     if (selectCounselCardAssistantInfo?.healthInformation) {
@@ -67,7 +47,6 @@ const HealthInfo = () => {
     }
   }, [selectCounselCardAssistantInfo, setCounselAssistant, counselSessionId]);
 
-  // `formData`가 변경되었을 때 `counselAssistant` 업데이트
   useEffect(() => {
     if (
       JSON.stringify(counselAssistant.healthInformation) !==
@@ -80,215 +59,248 @@ const HealthInfo = () => {
     }
   }, [formData, setCounselAssistant, counselAssistant]);
 
+  // 업데이트 하는 함수
+  const updateFormData = (
+    section: keyof HealthInformationDTO,
+    updates: Record<string, string | number | boolean>,
+    isArrayUpdate: boolean = false,
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [section]: {
+        ...(typeof prev[section] === 'object' ? prev[section] : {}),
+        ...(isArrayUpdate
+          ? {
+              ...updates,
+            }
+          : {
+              ...((prev[section] as SectionFields) ?? {}),
+              ...updates,
+            }),
+      },
+    }));
+  };
+  // 알레르기, 약물 부작용 여부가 false일 경우 빈 값으로 초기화
+  useEffect(() => {
+    if (formData.allergy?.isAllergy === false) {
+      updateFormData('allergy', { allergyNote: '' });
+    }
+
+    if (formData.medicationSideEffect?.isSideEffect === false) {
+      updateFormData('medicationSideEffect', {
+        suspectedMedicationNote: '',
+        symptomsNote: '',
+      });
+    }
+  }, [
+    formData.allergy?.isAllergy,
+    formData.medicationSideEffect?.isSideEffect,
+  ]);
+
+  // 입력값 함수
+  const handleInput = (
+    label: string,
+    placeholder: string,
+    section: keyof HealthInformationDTO,
+    fieldName: string,
+    condition?: boolean,
+  ) => {
+    if (condition === undefined || condition) {
+      return (
+        <div className="p-4">
+          <Label htmlFor={fieldName} className="font-bold">
+            {label}
+          </Label>
+          <Input
+            id={fieldName}
+            name={fieldName}
+            placeholder={placeholder}
+            value={(formData[section] as SectionFields)?.[fieldName] ?? ''}
+            onChange={(e) =>
+              updateFormData(section, { [e.target.name]: e.target.value })
+            }
+            className="pt-5 mt-3 pb-36"
+          />
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // 버튼 렌더링 함수
+  const renderButtons = (
+    label: string,
+    options: ButtonOption[],
+    section: keyof HealthInformationDTO,
+    field: string,
+    condition?: boolean,
+  ) => {
+    if (condition === undefined || condition) {
+      return (
+        <div className="p-4">
+          <Label htmlFor={field} className="font-bold">
+            {label}
+          </Label>
+          <div className="flex gap-2">
+            {options.map((option) => (
+              <Button
+                key={option.label}
+                type="button"
+                variant={
+                  (formData[section] as SectionFields)?.[field] === option.value
+                    ? 'pressed'
+                    : 'nonpressed'
+                }
+                className="pl-3 pr-3 mt-3 font-medium rounded-lg"
+                size="lg"
+                onClick={() =>
+                  updateFormData(section, { [field]: option.value })
+                }>
+                {option.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // 배열 값 토글 함수
+  const toggleArrayValue = (
+    section: keyof HealthInformationDTO,
+    field: string,
+    value: string,
+  ) => {
+    setFormData((prev) => {
+      const currentValues =
+        (prev[section] as SectionFields)?.[field] ?? ([] as string[]);
+      console.log('currentValues', currentValues);
+
+      return {
+        ...prev,
+        [section]: {
+          ...(typeof prev[section] === 'object' ? prev[section] : {}),
+          [field]: currentValues.includes(value)
+            ? Array.isArray(currentValues)
+              ? currentValues.filter((v) => v !== value)
+              : []
+            : [...currentValues, value],
+        },
+      };
+    });
+  };
+
+  // 배열 값 토글 함수
+  const renderMultiSelectButtons = (
+    label: string,
+    options: ButtonOption[],
+    section: keyof HealthInformationDTO,
+    field: string,
+  ) => {
+    return (
+      <div className="p-4">
+        <Label htmlFor={field} className="font-bold">
+          {label}
+        </Label>
+        <div className="gap-2">
+          {options.map((option) => (
+            <Button
+              key={option.label}
+              type="button"
+              variant={
+                (formData[section] as SectionFields)?.[field]?.includes(
+                  option.value.toString(),
+                )
+                  ? 'pressed'
+                  : 'nonpressed'
+              }
+              className="pl-3 pr-3 mt-3 mr-3 font-medium rounded-lg"
+              size="lg"
+              onClick={() =>
+                toggleArrayValue(section, field, option.value.toString())
+              }>
+              {option.label}
+            </Button>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <>
-      <TabContentContainer>
-        <div className="flex items-start justify-between space-x-4">
-          {/* 앓고 있는 질병 입력 */}
-          <CardContainer
-            title={'앓고 있는 질병'}
-            variant="grayscale"
-            itemName="baseInfo">
-            {/* 앓고 있는 질병 */}
-            <div className="p-4">
-              <Label htmlFor="historyNote" className="font-bold">
-                질병
-              </Label>
-              <div className="gap-2">
-                {diseaseList.map((disease) => (
-                  <Button
-                    key={disease}
-                    id="disease"
-                    type="button"
-                    variant={
-                      formData.diseaseInfo?.diseases?.includes(disease)
-                        ? 'pressed'
-                        : 'nonpressed'
-                    }
-                    className="pl-2 pr-2 mt-3 mr-3 font-medium rounded-lg"
-                    size="lg"
-                    onClick={() => toggleDisease(disease)}>
-                    {disease}
-                  </Button>
-                ))}
-              </div>
-            </div>
+    <TabContentContainer>
+      <div className="flex items-start justify-between space-x-4">
+        {/* 앓고 있는 질병 입력 */}
+        <CardContainer
+          title="앓고 있는 질병"
+          variant="grayscale"
+          itemName="baseInfo">
+          {renderMultiSelectButtons(
+            '질병',
+            diseaseList,
+            'diseaseInfo',
+            'diseases',
+          )}
+          {handleInput(
+            '질병 및 수술 이력',
+            '과거 질병 및 수술 이력을 작성해주세요.',
+            'diseaseInfo',
+            'historyNote',
+          )}
+          {handleInput(
+            '주요 불편 증상',
+            '건강상 불편한 점을 작성해주세요.',
+            'diseaseInfo',
+            'mainInconvenienceNote',
+          )}
+        </CardContainer>
+      </div>
 
-            {/* 질병 및 수술 이력 */}
-            <div className="p-4">
-              <Label htmlFor="historyNote" className="font-bold">
-                질병 및 수술 이력
-              </Label>
-              <Input
-                id="historyNote"
-                name="historyNote"
-                placeholder="과거 질병 및 수술 이력을 작성해주세요."
-                value={formData.diseaseInfo?.historyNote || ''}
-                onChange={(e) => handleInputChange('diseaseInfo', e)}
-                className="pt-5 mt-3 pb-36"
-              />
-            </div>
+      <div className="flex items-start justify-between space-x-4">
+        <CardContainer title="알레르기" itemName="baseInfo">
+          {renderButtons(
+            '알레르기 여부',
+            isAllergyTypes,
+            'allergy',
+            'isAllergy',
+          )}
+          {handleInput(
+            '의심 식품/약물',
+            '예: 땅콩, 돼지고기',
+            'allergy',
+            'allergyNote',
+            formData.allergy?.isAllergy,
+          )}
+        </CardContainer>
+      </div>
 
-            {/* 주요 불편 증상 */}
-            <div className="p-4">
-              <Label htmlFor="mainInconvenienceNote" className="font-bold">
-                주요 불편 증상
-              </Label>
-              <Input
-                id="mainInconvenienceNote"
-                name="mainInconvenienceNote"
-                placeholder="건강상 불편한 점을 작성해주세요."
-                value={formData.diseaseInfo?.mainInconvenienceNote || ''}
-                onChange={(e) => handleInputChange('diseaseInfo', e)}
-                className="pt-5 mt-3 pb-36"
-              />
-            </div>
-          </CardContainer>
-        </div>
-        {/* 알레르기 */}
-        <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'알레르기'} itemName="baseInfo">
-            {/* 알레르기 여부 */}
-            <div className="inline-block w-1/4 p-4">
-              <Label htmlFor="isAllergy" className="font-bold">
-                알레르기 여부
-              </Label>
-              <div className="flex gap-2">
-                {isAllergyTypes.map((allergy) => (
-                  <Button
-                    key={allergy.label}
-                    id="isAllergy"
-                    type="button"
-                    variant={
-                      formData.allergy?.isAllergy === allergy.value
-                        ? 'pressed'
-                        : 'nonpressed'
-                    }
-                    className="pl-2 pr-2 mt-3 font-medium rounded-lg"
-                    size="lg"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        allergy: {
-                          ...formData.allergy,
-                          isAllergy: allergy.value,
-                        },
-                      })
-                    }>
-                    {allergy.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* 알레르기 의심 식품/약품 */}
-            <div className="pl-4 pr-4">
-              {formData.allergy?.isAllergy == true && (
-                <div className="mb-6">
-                  <Label htmlFor="allergyNote" className="font-bold">
-                    의심 식품/약물
-                  </Label>
-                  <Input
-                    id="allergyNote"
-                    name="allergyNote"
-                    placeholder="예: 땅콩, 돼지고기"
-                    value={formData.allergy?.allergyNote || ''}
-                    onChange={(e) => handleInputChange('allergy', e)}
-                    className="pt-5 mt-3 pb-36"
-                  />
-                </div>
-              )}
-            </div>
-          </CardContainer>
-        </div>
-
-        {/* 약물 부작용 */}
-        <div className="flex items-start justify-between space-x-4">
-          <CardContainer title={'약물 부작용'} itemName="baseInfo">
-            {/* 약물 부작용 여부 */}
-            <div className="p-4">
-              <Label htmlFor="isMedicine" className="font-bold">
-                약물 부작용 여부
-              </Label>
-              <div className="flex gap-2">
-                {isMedicineTypes.map((medicine) => (
-                  <Button
-                    key={medicine.label}
-                    id="isMedicine"
-                    type="button"
-                    variant={
-                      formData.medicationSideEffect?.isSideEffect ===
-                      medicine.value
-                        ? 'pressed'
-                        : 'nonpressed'
-                    }
-                    className="pl-2 pr-2 mt-3 font-medium rounded-lg"
-                    size="lg"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        medicationSideEffect: {
-                          ...formData.medicationSideEffect,
-                          isSideEffect: medicine.value,
-                        },
-                      })
-                    }>
-                    {medicine.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* 부작용 의심 약물 */}
-            <div className="pl-4 pr-4">
-              {formData.medicationSideEffect?.isSideEffect == true && (
-                <div className="mb-6">
-                  <Label
-                    htmlFor="suspectedMedicationNote"
-                    className="font-bold">
-                    부작용 의심 약물
-                  </Label>
-                  <Input
-                    id="suspectedMedicationNote"
-                    name="suspectedMedicationNote"
-                    placeholder="예: 항암제"
-                    value={
-                      formData.medicationSideEffect.suspectedMedicationNote ||
-                      ''
-                    }
-                    onChange={(e) =>
-                      handleInputChange('medicationSideEffect', e)
-                    }
-                    className="pt-5 mt-3 pb-36"
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* 부작용 증상 */}
-            <div className="pl-4 pr-4">
-              {formData.medicationSideEffect?.isSideEffect == true && (
-                <div className="mb-6">
-                  <Label htmlFor="symptomsNote" className="font-bold">
-                    부작용 증상
-                  </Label>
-                  <Input
-                    id="symptomsNote"
-                    name="symptomsNote"
-                    placeholder="예: 손발 저림, 오심, 구토, 탈모"
-                    value={formData.medicationSideEffect.symptomsNote || ''}
-                    onChange={(e) =>
-                      handleInputChange('medicationSideEffect', e)
-                    }
-                    className="pt-5 mt-3 pb-36"
-                  />
-                </div>
-              )}
-            </div>
-          </CardContainer>
-        </div>
-      </TabContentContainer>
-    </>
+      <div className="flex items-start justify-between space-x-4">
+        <CardContainer title="약물 부작용" itemName="baseInfo">
+          {renderButtons(
+            '약물 부작용 여부',
+            isMedicineTypes,
+            'medicationSideEffect',
+            'isSideEffect',
+          )}
+          {handleInput(
+            '부작용 의심 약물',
+            '예: 항암제',
+            'medicationSideEffect',
+            'suspectedMedicationNote',
+            formData.medicationSideEffect?.isSideEffect,
+          )}
+          {handleInput(
+            '부작용 증상',
+            '예: 손발 저림, 오심, 구토, 탈모',
+            'medicationSideEffect',
+            'symptomsNote',
+            formData.medicationSideEffect?.isSideEffect,
+          )}
+        </CardContainer>
+      </div>
+    </TabContentContainer>
   );
 };
+
 export default HealthInfo;

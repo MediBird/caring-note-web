@@ -1,1 +1,5 @@
-export type CounselAssistantDialogTypes = 'REGISTER' | 'TEMP_SAVE' | null;
+export type CounselAssistantDialogTypes =
+  | 'REGISTER'
+  | 'TEMP_SAVE'
+  | 'EXIT'
+  | null;
