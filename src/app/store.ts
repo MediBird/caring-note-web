@@ -1,13 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
-import editorStateReducer from "../reducers/editorStateReducer";
-import navigationReducer from "../reducers/navigationReducer";
-import tabReducer from "../reducers/tabReducer";
+import { configureStore } from '@reduxjs/toolkit';
+import navigationReducer from '../reducers/navigationReducer';
+import tabReducer from '../reducers/tabReducer';
 
 const store = configureStore({
   reducer: {
     tab: tabReducer,
     navigation: navigationReducer,
-    editorState: editorStateReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
