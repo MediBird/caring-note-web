@@ -1,7 +1,5 @@
-import { useAppDispatch, useAppSelector } from '@/app/reduxHooks';
 import '@/assets/css/DraftJsCss.css';
 import Tooltip from '@/components/Tooltip';
-import { changeEditorState } from '@/reducers/editorStateReducer';
 import eraserBlack from '@/assets/icon/24/erase.outlined.black.svg';
 import highlightpenBlack from '@/assets/icon/24/highlighter.outlined.black.svg';
 import {
@@ -13,16 +11,15 @@ import {
   ContentBlock,
 } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useSelectMedicineConsult } from '@/hooks/useMedicineConsultQuery';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
-import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { CounselRecordHighlights } from '@/types/MedicineConsultDTO';
+import useCounselRecordEditorStateStore from '@/store/counselRecordEditorStateStore';
 
 const HighlightInput: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const editorState = useAppSelector((state) => state.editorState.editorState);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const { editorState, setEditorState } = useCounselRecordEditorStateStore();
 
   const { counselSessionId } = useParams();
   const { setMedicationConsult, setCounselRecordHighlights, setCounselRecord } =
@@ -60,8 +57,8 @@ const HighlightInput: React.FC = () => {
         // reduce를 사용하여 순차적으로 하이라이트 적용
         contentStateWithHighlight = data.counselRecordHighlights.reduce(
           (currentContent, highlight) => {
-            const start = data.counselRecord?.indexOf(highlight) ?? -1;
-            const end = start + highlight.length;
+            const start = highlight.startIndex;
+            const end = highlight.endIndex;
 
             if (start === -1) return currentContent;
 
@@ -111,13 +108,10 @@ const HighlightInput: React.FC = () => {
       const newEditorState = EditorState.createWithContent(
         contentStateWithHighlight,
       );
-      dispatch(changeEditorState(newEditorState));
-    }
-  }, [data, dispatch, setMedicationConsult, counselSessionId]);
 
-  useEffect(() => {
-    setCounselRecordHighlights(getHighlightedText() || []);
-  }, [editorState, setCounselRecordHighlights]);
+      setEditorState(newEditorState);
+    }
+  }, [data, setEditorState, setMedicationConsult, counselSessionId]);
 
   // 하이라이트 버튼 핸들러
   const applyHighlight = () => {
@@ -130,12 +124,14 @@ const HighlightInput: React.FC = () => {
       selectionState,
       'HIGHLIGHT',
     );
+
     const newEditorState = EditorState.push(
       editorState,
       newContentState,
       'change-inline-style',
     );
-    dispatch(changeEditorState(newEditorState));
+
+    setEditorState(newEditorState);
   };
 
   // 하이라이트 버튼 핸들러
@@ -155,34 +151,75 @@ const HighlightInput: React.FC = () => {
       'change-inline-style',
     );
 
-    dispatch(changeEditorState(newEditorState));
+    setEditorState(newEditorState);
   };
 
   // 현재 하이라이트된 텍스트 추출
-  const getHighlightedText = () => {
-    if (!containerRef.current) return;
+  const getHighlightedText = useCallback((): CounselRecordHighlights[] => {
+    const contentState = editorState.getCurrentContent();
+    const highlights: CounselRecordHighlights[] = [];
+    let totalOffset = 0;
 
-    // container 내에서 background가 yellow(#FFBD14)인 span 요소만 선택
-    const yellowSpans = Array.from(
-      containerRef.current.querySelectorAll('span'),
-    ).filter(
-      (span) => getComputedStyle(span).backgroundColor === 'rgb(255, 189, 20)', // #FFBD14
-    );
+    contentState.getBlockMap().forEach((block) => {
+      if (!block) return;
 
-    return yellowSpans.map((span) => span.textContent || '');
-  };
+      const text = block.getText();
+      const charList = block.getCharacterList();
+      let currentHighlight = '';
+      let startIndex = -1;
+
+      // 각 문자의 스타일을 확인
+      for (let i = 0; i < text.length; i++) {
+        const hasHighlight = charList.get(i).hasStyle('HIGHLIGHT');
+
+        if (hasHighlight) {
+          if (startIndex === -1) {
+            startIndex = totalOffset + i;
+            currentHighlight = text[i];
+          } else {
+            currentHighlight += text[i];
+          }
+        } else if (startIndex !== -1) {
+          highlights.push({
+            startIndex,
+            endIndex: totalOffset + i,
+            highlight: currentHighlight,
+          });
+          currentHighlight = '';
+          startIndex = -1;
+        }
+      }
+
+      // 블록 끝에서 하이라이트가 끝나는 경우 처리
+      if (startIndex !== -1) {
+        highlights.push({
+          startIndex,
+          endIndex: totalOffset + text.length,
+          highlight: currentHighlight,
+        });
+      }
+
+      // 다음 블록을 위한 오프셋 업데이트 (줄바꿈 문자 고려)
+      totalOffset += text.length + 1;
+    });
+
+    return highlights;
+  }, [editorState]);
+
+  useEffect(() => {
+    setCounselRecordHighlights(getHighlightedText() || []);
+  }, [setCounselRecordHighlights, getHighlightedText]);
 
   return (
     <div className="p-0 rounded-lg bg-white border-2 border-gray-300">
       <div
-        ref={containerRef}
         className="border-b p-2 min-h-64"
-        onClick={getHighlightedText}>
+        onClick={() => getHighlightedText()}>
         <Editor
           editorState={editorState}
           placeholder={`상담 내용을 기록하세요`}
           onChange={(editorState) => {
-            dispatch(changeEditorState(editorState));
+            setEditorState(editorState);
             setCounselRecord(editorState.getCurrentContent().getPlainText());
           }}
           customStyleMap={styleMap}

@@ -13,10 +13,11 @@ const saveWasteMedicationList = async (
 ) => {
   console.log(wasteMedicationListSaveDTO);
 
-  const response = await wasteMedicationControllerApi.addWasteMedicationRecord(
-    wasteMedicationListSaveDTO.counselSessionId,
-    wasteMedicationListSaveDTO.wasteMedicationList,
-  );
+  const response =
+    await wasteMedicationControllerApi.addAndUpdateWasteMedicationRecord(
+      wasteMedicationListSaveDTO.counselSessionId,
+      wasteMedicationListSaveDTO.wasteMedicationList,
+    );
 
   return response.data;
 };

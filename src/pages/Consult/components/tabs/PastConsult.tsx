@@ -13,8 +13,8 @@ import { GridColDef } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import React from 'react';
-import TabContentContainer from '../../../../components/consult/TabContentContainer';
-import TabContentTitle from '../../../../components/consult/TabContentTitle';
+import TabContentContainer from '@/components/consult/TabContentContainer';
+import TabContentTitle from '@/components/consult/TabContentTitle';
 import { useParams } from 'react-router-dom';
 
 const PastConsult: React.FC = () => {
@@ -30,7 +30,7 @@ const PastConsult: React.FC = () => {
       await medicationCounselControllerApi.selectPreviousMedicationCounsel(
         counselSessionId,
       );
-    console.log(response.data);
+
     return response;
   };
   const selectPreviousCounselSessionList = async () => {
@@ -39,7 +39,7 @@ const PastConsult: React.FC = () => {
       await counselSessionControllerApi.selectPreviousCounselSessionList(
         counselSessionId,
       );
-    console.log(response.data);
+
     return response;
   };
 
@@ -107,7 +107,7 @@ const PastConsult: React.FC = () => {
                     <li
                       key={index}
                       className="border-l-2 border-grayscale-10 pl-2">
-                      {item}
+                      {item.highlight}
                     </li>
                   );
                 },
