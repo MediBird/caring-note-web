@@ -15,6 +15,9 @@ interface SearchComponentProps {
   onSelect?: (item: string) => void;
   onChangeInputValue?: (value: string) => void;
   defaultInputValue?: string;
+  searchIcon?: React.ReactNode; // 돋보기 아이콘 추가
+  onFocus?: () => void; // onFocus 이벤트 추가
+  onBlur?: () => void; // onBlur 이벤트 추가
 }
 
 const SearchComponent = ({
@@ -24,9 +27,13 @@ const SearchComponent = ({
   onSelect,
   onChangeInputValue,
   defaultInputValue = '',
+  searchIcon,
+  onFocus, // onFocus 받기
+  onBlur, // onBlur 받기
 }: SearchComponentProps) => {
   const [inputValue, setInputValue] = useState(defaultInputValue);
   const [filteredItems, setFilteredItems] = useState(items); // 필터링된 items 상태 추가
+  const [isFocused, setIsFocused] = useState(false); // 포커스 상태 추가
 
   useEffect(() => {
     // items가 변경될 때 filteredItems 업데이트
@@ -37,18 +44,20 @@ const SearchComponent = ({
     const value = e.target.value;
     setInputValue(value);
     if (onChangeInputValue) debouncedOnChangeInputValue(value);
-
-    // 입력 값에 따라 items를 필터링
-    const updatedItems = items.filter((item) =>
-      item.toLowerCase().includes(value.toLowerCase()),
-    );
-    setFilteredItems(updatedItems);
+    if (value === '') {
+      setFilteredItems([]);
+    } else {
+      // 입력 값에 따라 items를 필터링
+      const updatedItems = items.filter((item) =>
+        item.toLowerCase().includes(value.toLowerCase()),
+      );
+      setFilteredItems(updatedItems);
+    }
   };
 
   const debouncedOnChangeInputValue = useCallback(
     (value: string) => {
       debounce(() => {
-        console.log('debouncedOnChangeInputValue::' + value);
         if (onChangeInputValue) onChangeInputValue(value);
       }, 300)();
     },
@@ -74,28 +83,45 @@ const SearchComponent = ({
             }
           }
         }}>
+        {/* 돋보기 아이콘 추가 */}
+        <div className="relative">
+          {searchIcon && (
+            <div className="absolute transform -translate-y-1/12 left-3 top-2">
+              {typeof searchIcon === 'string' && <img src={searchIcon} />}
+            </div>
+          )}
+        </div>
         <CommandInput
-          className="w-full h-full"
+          className={`w-full h-full ${searchIcon ? 'pl-8' : ''}`}
           placeholder={placeholder}
           value={inputValue}
+          onFocus={() => {
+            setIsFocused(true);
+            if (onFocus) onFocus();
+          }}
+          onBlur={() => {
+            setIsFocused(false);
+            if (onBlur) onBlur();
+          }}
           onChangeCapture={handleInputChange}
           autoFocus
         />
 
-        <CommandList className="absolute left-0 top-12 z-10 w-full max-h-48 overflow-auto rounded border bg-white shadow-lg">
+        <CommandList className="absolute left-0 z-10 w-full overflow-auto bg-white border rounded shadow-lg top-12 max-h-48">
           <CommandGroup>
-            {filteredItems.length === 0 && (
-              <CommandItem className="text-left p-2 text-sm">
+            {isFocused && (
+              <CommandItem className="p-2 text-sm text-left">
                 검색 결과가 없습니다.
               </CommandItem>
             )}
-            {filteredItems.map((item, index) => {
-              return (
-                <CommandItem key={index} onSelect={() => handleSelect(item)}>
-                  {item}
-                </CommandItem>
-              );
-            })}
+            {inputValue !== '' &&
+              filteredItems?.map((item, index) => {
+                return (
+                  <CommandItem key={index} onSelect={() => handleSelect(item)}>
+                    {item}
+                  </CommandItem>
+                );
+              })}
           </CommandGroup>
         </CommandList>
       </Command>
