@@ -13,8 +13,8 @@ const CounseleeManagement = () => {
   const [size, setSize] = useState(2);
   // 내담자 목록 조회
   const { data: selectCounseleeInfoList, refetch } = useSelectCounseleeList({
-    page: 1,
-    size: 2,
+    page: 0,
+    size: 10,
   });
   // modalType을 상태로 관리
   const [dialogType, setDialogType] = useState<CounseleeAddDialogTypes>(null);

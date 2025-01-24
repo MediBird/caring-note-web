@@ -57,8 +57,8 @@ const ItemChange = ({
 }) => {
   // 내담자 목록 조회 API
   const { data: selectCounseleeInfoList, refetch } = useSelectCounseleeList({
-    page: 1,
-    size: 2,
+    page: 0,
+    size: 10,
   });
   // 내담자 정보 상태 업데이트 API
   const addCounseleeInfo = useCreateCounseleeInfo();
@@ -374,7 +374,7 @@ const ItemChange = ({
               {renderButtons('성별', genderTypes, 'genderType')}
             </div>
             <div className="flex flex-row w-auto gap-3">
-              {handleInput('전화번호', '000-0000-0000', 'phoneNumber')}
+              {handleInput('전화번호', '-없이 숫자만 입력', 'phoneNumber')}
               {handleInput('행정동', 'OO동', 'address')}
             </div>
             <div className="flex flex-row w-auto gap-3">
