@@ -172,7 +172,7 @@ const MedicineMemo: React.FC = () => {
       valueOptions: ['상시 복용', '필요 시 복용', '복용 중단'],
       renderCell: (params) => {
         return (
-          params.value || <span className="text-gray-400 italic">선택</span>
+          params.value || <span className="italic text-gray-400">선택</span>
         );
       },
       // headerClassName: "!pl-6",
@@ -186,9 +186,9 @@ const MedicineMemo: React.FC = () => {
       editable: true,
       renderCell: (params) => {
         return (
-          <div className="truncate max-w-full">
+          <div className="max-w-full truncate">
             {params.value || (
-              <span className="text-gray-400 italic">{'성분명 / 상품명'}</span>
+              <span className="italic text-gray-400">{'성분명 / 상품명'}</span>
             )}
           </div>
         );
@@ -230,8 +230,9 @@ const MedicineMemo: React.FC = () => {
       flex: 1,
       renderCell: (params) => {
         return (
-          <div className="w-full h-full flex items-center justify-center ">
+          <div className="flex items-center justify-center w-full h-full ">
             <DatePickerComponent
+              selectionType="date"
               initialDate={params.value ? new Date(params.value) : undefined}
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               handleClicked={(date) => {
@@ -420,7 +421,7 @@ const MedicineMemo: React.FC = () => {
 
         <div>
           <p
-            className="text-subtitle2 font-bold text-grayscale-90 mt-8"
+            className="mt-8 font-bold text-subtitle2 text-grayscale-90"
             onClick={test}>
             유용한 사이트 (TEST : 여기를 클릭하여 의약물 등록 API 호출)
           </p>
@@ -428,17 +429,17 @@ const MedicineMemo: React.FC = () => {
             <img
               src={NulpeumImg}
               alt="늘픔가치"
-              className="w-60 h-60 inline-block mr-4"
+              className="inline-block mr-4 w-60 h-60"
             />
             <img
               src={NulpeumImg}
               alt="늘픔가치"
-              className="w-60 h-60 inline-block mr-4"
+              className="inline-block mr-4 w-60 h-60"
             />
             <img
               src={NulpeumImg}
               alt="늘픔가치"
-              className="w-60 h-60 inline-block mr-4"
+              className="inline-block mr-4 w-60 h-60"
             />
           </div>
         </div>
