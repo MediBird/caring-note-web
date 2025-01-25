@@ -3,3 +3,7 @@ export type CounseleeAddDialogTypes =
   | 'CALENDAR'
   | 'DELETE'
   | null;
+
+export interface CounseleeDeleteDialogTypes {
+  counseleeId: string;
+}

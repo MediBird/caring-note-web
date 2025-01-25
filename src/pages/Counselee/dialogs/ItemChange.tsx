@@ -1,4 +1,7 @@
-import { CounseleeAddDialogTypes } from '@/pages/Counselee/constants/dialog';
+import {
+  CounseleeAddDialogTypes,
+  CounseleeDeleteDialogTypes,
+} from '@/pages/Counselee/constants/dialog';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -34,10 +37,10 @@ import {
   useCounselCalendarInfoStore,
 } from '@/pages/Counselee/hooks/store/counselCalendarInfoStore';
 import { format } from 'date-fns';
-import { SelectCounseleeRes } from '@/api/api';
 import { useAuthContext } from '@/context/AuthContext';
 import { useAddCounselSession } from '../hooks/query/useCounselSessionQuery';
 import { useNavigate } from 'react-router-dom';
+import TimepickerComponent from '@/components/ui/timepicker';
 
 type ButtonOption = {
   label: string;
@@ -53,7 +56,7 @@ const ItemChange = ({
   isOpen: boolean;
   dialogType: CounseleeAddDialogTypes;
   onClose: () => void;
-  selectedData: SelectCounseleeRes;
+  selectedData: CounseleeDeleteDialogTypes[];
 }) => {
   // 내담자 목록 조회 API
   const { data: selectCounseleeInfoList, refetch } = useSelectCounseleeList({
@@ -205,9 +208,7 @@ const ItemChange = ({
         </Label>
         <div className="relative inline-block w-full pb-4">
           <SearchComponent
-            items={selectCounseleeInfoList
-              ?.map((item) => item.name)
-              .filter((name): name is string => name !== undefined)}
+            items={selectCounseleeInfoList?.map((item) => item.name || '')}
             defaultInputValue={keyword}
             searchIcon={Search}
             placeholder={placeholder}
@@ -249,24 +250,22 @@ const ItemChange = ({
         </Label>
         {isDateLabel ? (
           <DatePickerComponent
-            selectionType="date"
             className="w-[220px] mt-3"
-            palaceholder={placeholder}
+            placeholder={placeholder}
             handleClicked={(value) => {
               if (value) {
                 updateCounseleeCalendarData(
                   'scheduledStartDateTime',
-                  value,
+                  format(value, 'yyyy-MM-dd'),
                   'date',
                 ); // 날짜 업데이트
               }
             }}
           />
         ) : (
-          <DatePickerComponent
-            selectionType="time"
-            className="w-[220px] mt-3"
-            palaceholder={placeholder}
+          <TimepickerComponent
+            className="w-[180px] h-[34px] mt-2 pt-1"
+            placeholder={placeholder}
             handleClicked={(value) => {
               if (value) {
                 updateCounseleeCalendarData(
@@ -286,7 +285,6 @@ const ItemChange = ({
   const handleConfirmButton = () => {
     if (dialogType === 'COUNSELEE') {
       // 내담자 등록
-      console.log('내담자 등록' + counseleeInfoData);
       addCounseleeInfo.mutate(
         {
           ...counseleeInfoData,
@@ -304,7 +302,6 @@ const ItemChange = ({
       );
     } else {
       // 상담 일정 등록
-      console.log('상담 일정 등록' + counseleeCalendarData);
       addCounselSession.mutate(
         {
           ...counseleeCalendarData,
@@ -324,14 +321,17 @@ const ItemChange = ({
   };
 
   // 내담자 정보 삭제
-  const handleDeleteCounseleeInfo = () => {
+  const handleDeleteButton = () => {
     // 삭제 API 호출
-    if (selectedData?.id) {
-      deleteCounseleeInfo.mutate(selectedData.id, {
+    if (selectedData) {
+      deleteCounseleeInfo.mutate(selectedData, {
         onSuccess: () => {
+          onClose();
           // 삭제 성공 시, 내담자 목록 다시 조회
           refetch();
-          onClose();
+        },
+        onError: () => {
+          window.alert('내담자 삭제에 실패했습니다.');
         },
       });
     }
@@ -419,7 +419,7 @@ const ItemChange = ({
             </Button>
           )}
           {dialogType === 'DELETE' ? (
-            <Button onClick={handleDeleteCounseleeInfo} color="destructive">
+            <Button onClick={handleDeleteButton} color="destructive">
               삭제하기
             </Button>
           ) : (
