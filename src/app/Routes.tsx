@@ -1,6 +1,8 @@
-import Assistant from '@/pages/assistant/Assistant';
+import ClientManagement from '@/pages/Counselee';
+import CounseleeManagementLayout from '@/pages/Counselee/layout/CounseleeManagementLayout';
 import AssistantInfo from '@/pages/assistant/AssistantInfo';
 import AssistantLayout from '@/pages/assistant/layout/AssistantLayout';
+import Assistant from '@/pages/assistant/Assistant';
 import Consult from '@/pages/Consult';
 import ErrorPage from '@/pages/ErrorPage';
 import Home from '@/pages/Home';
@@ -60,11 +62,23 @@ const Routes = () => {
     ],
   };
 
+  const counseleeManagementRoute: AppRouteObject = {
+    path: '/counselee-management',
+    element: <CounseleeManagementLayout />,
+    children: [
+      {
+        path: '',
+        element: <ClientManagement />,
+      },
+    ],
+  };
+
   const routes: AppRouteObject[] = [
     noMatchRoutes,
     mainRoutes,
     consultRoutes,
     assistantRoutes,
+    counseleeManagementRoute,
   ];
 
   return useRoutes(routes);
