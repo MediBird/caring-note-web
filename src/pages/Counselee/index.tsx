@@ -209,7 +209,7 @@ const CounseleeManagement = () => {
                     selectedData === null
                   }
                   onClick={() => openModal('DELETE')}>
-                  리스트 삭제
+                  선택 삭제
                 </Button>
                 <Button
                   size="lg"
