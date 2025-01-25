@@ -108,10 +108,6 @@ const CounseleeManagement = () => {
     refetch();
   }, [size, refetch]);
 
-  useEffect(() => {
-    console.log('selectedData', selectedData);
-  }, [selectedData]);
-
   return (
     <div className="p-[2.5rem]">
       <div className="w-full h-[6.25rem] font-bold text-h3 border-b border-grayscale-10 text-grayscale-100 content-center ">
