@@ -1,6 +1,8 @@
 import {
   AddCounseleeReq,
   CounseleeControllerApi,
+  DeleteCounseleeBatchReq,
+  DeleteCounseleeBatchRes,
   SelectCounseleeRes,
 } from '@/api/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -51,13 +53,13 @@ export const useCreateCounseleeInfo = () => {
   });
 };
 
-// 내담자 기본 정보 삭제
-const deleteCounseleeInfo = async (counseleeId: string) => {
+// 내담자 기본 정보 삭제 (batch)
+const deleteCounseleeInfo = async (counseleeIds: DeleteCounseleeBatchReq[]) => {
   // 내담자 기본 정보 삭제 API 호출
-  const response = await counseleeInfoControllerApi.deleteCounselee(
-    counseleeId,
+  const response = await counseleeInfoControllerApi.deleteCounseleeBatch(
+    counseleeIds,
   );
-  return response.data.data as string;
+  return response.data as DeleteCounseleeBatchRes;
 };
 // 실제 사용하는 커스텀 훅
 export const useDeleteCounseleeInfo = () => {
