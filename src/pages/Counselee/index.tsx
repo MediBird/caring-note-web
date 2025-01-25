@@ -5,12 +5,16 @@ import addCounselee from '@/assets/icon/24/addcounselee.blue.svg';
 import addCalendar from '@/assets/icon/24/addcalendar.blue.svg';
 import { useCallback, useEffect, useState } from 'react';
 import ItemChange from '@/pages/Counselee/dialogs/ItemChange';
-import { CounseleeAddDialogTypes } from './constants/dialog';
+import {
+  CounseleeAddDialogTypes,
+  CounseleeDeleteDialogTypes,
+} from './constants/dialog';
 import { useSelectCounseleeList } from './hooks/query/useCounseleeInfoQuery';
 import { SelectCounseleeRes } from '@/api/api';
 
 const CounseleeManagement = () => {
-  const [size, setSize] = useState(2);
+  // 페이징 사이즈 상태
+  const [size, setSize] = useState(10);
   // 내담자 목록 조회
   const { data: selectCounseleeInfoList, refetch } = useSelectCounseleeList({
     page: 0,
@@ -18,7 +22,10 @@ const CounseleeManagement = () => {
   });
   // modalType을 상태로 관리
   const [dialogType, setDialogType] = useState<CounseleeAddDialogTypes>(null);
-
+  // 선택된 데이터 상태
+  const [selectedData, setSelectedData] = useState<
+    CounseleeDeleteDialogTypes[]
+  >([]);
   const columns: GridColDef[] = [
     { field: 'name', headerName: '내담자', flex: 1 },
     {
@@ -45,9 +52,6 @@ const CounseleeManagement = () => {
     { field: 'careManagerName', headerName: '생활지원사', flex: 1 },
     { field: 'note', headerName: '비고', flex: 1 },
   ];
-  const [selectedData, setSelectedData] = useState<SelectCounseleeRes | null>(
-    null,
-  );
 
   /* Filter Section 2차 릴리즈 예정 */
   // const options = [
@@ -75,8 +79,22 @@ const CounseleeManagement = () => {
   const closeModal = useCallback(() => setDialogType(null), []);
 
   const handleCellClick = (row: SelectCounseleeRes) => {
-    setSelectedData(row);
+    setSelectedData((prevSelectedData) => {
+      const updatedSelectedData = [...prevSelectedData];
+      const index = updatedSelectedData.findIndex(
+        (item) => item.counseleeId === row.id,
+      );
+      if (index === -1) {
+        // 아이디가 없으면 추가
+        updatedSelectedData.push({ counseleeId: row.id || '' });
+      } else {
+        // 아이디가 있으면 삭제
+        updatedSelectedData.splice(index, 1);
+      }
+      return updatedSelectedData;
+    });
   };
+
   // 사이즈 변경 시 데이터 다시 조회
   useEffect(() => {
     if (selectCounseleeInfoList) {
@@ -251,7 +269,7 @@ const CounseleeManagement = () => {
         isOpen={dialogType !== null}
         dialogType={dialogType}
         onClose={closeModal}
-        selectedData={selectedData as SelectCounseleeRes}
+        selectedData={selectedData as CounseleeDeleteDialogTypes[]}
       />
     </div>
   );
