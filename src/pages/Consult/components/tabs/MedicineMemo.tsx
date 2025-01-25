@@ -232,7 +232,6 @@ const MedicineMemo: React.FC = () => {
         return (
           <div className="flex items-center justify-center w-full h-full ">
             <DatePickerComponent
-              selectionType="date"
               initialDate={params.value ? new Date(params.value) : undefined}
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               handleClicked={(date) => {
