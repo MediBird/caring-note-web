@@ -21,9 +21,25 @@ const CounseleeManagement = () => {
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: '내담자', flex: 1 },
-    { field: 'disability', headerName: '장애 여부', flex: 1 },
+    {
+      field: 'disability',
+      headerName: '장애 여부',
+      flex: 1,
+      valueFormatter: (params) => {
+        return params ? '장애인' : '비장애인';
+      },
+    },
     { field: 'dateOfBirth', headerName: '생년월일', flex: 1 },
-    { field: 'phoneNumber', headerName: '연락처', flex: 1 },
+    {
+      field: 'phoneNumber',
+      headerName: '연락처',
+      flex: 1,
+      valueFormatter: (params: string) => {
+        return params
+          ? `${params.slice(0, 3)}-${params.slice(3, 7)}-${params.slice(7)}`
+          : '연락처 없음';
+      },
+    },
     { field: 'affiliatedWelfareInstitution', headerName: '연계 기관', flex: 1 },
     { field: 'address', headerName: '행정동', flex: 1 },
     { field: 'careManagerName', headerName: '생활지원사', flex: 1 },
