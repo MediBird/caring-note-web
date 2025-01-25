@@ -557,6 +557,12 @@ export interface CommonCursorResListSelectCounselSessionListItem {
 export interface CommonResAddCounselCardRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResAddCounselCardRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {AddCounselCardRes}
      * @memberof CommonResAddCounselCardRes
      */
@@ -568,6 +574,12 @@ export interface CommonResAddCounselCardRes {
  * @interface CommonResAddCounselSessionRes
  */
 export interface CommonResAddCounselSessionRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResAddCounselSessionRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {AddCounselSessionRes}
@@ -583,6 +595,12 @@ export interface CommonResAddCounselSessionRes {
 export interface CommonResAddCounseleeConsentRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResAddCounseleeConsentRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {AddCounseleeConsentRes}
      * @memberof CommonResAddCounseleeConsentRes
      */
@@ -594,6 +612,12 @@ export interface CommonResAddCounseleeConsentRes {
  * @interface CommonResAddMedicationCounselRes
  */
 export interface CommonResAddMedicationCounselRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResAddMedicationCounselRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {AddMedicationCounselRes}
@@ -609,6 +633,12 @@ export interface CommonResAddMedicationCounselRes {
 export interface CommonResDeleteCounselCardRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResDeleteCounselCardRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {DeleteCounselCardRes}
      * @memberof CommonResDeleteCounselCardRes
      */
@@ -620,6 +650,12 @@ export interface CommonResDeleteCounselCardRes {
  * @interface CommonResDeleteCounselSessionRes
  */
 export interface CommonResDeleteCounselSessionRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResDeleteCounselSessionRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {DeleteCounselSessionRes}
@@ -635,6 +671,12 @@ export interface CommonResDeleteCounselSessionRes {
 export interface CommonResDeleteCounseleeConsentRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResDeleteCounseleeConsentRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {DeleteCounseleeConsentRes}
      * @memberof CommonResDeleteCounseleeConsentRes
      */
@@ -646,6 +688,12 @@ export interface CommonResDeleteCounseleeConsentRes {
  * @interface CommonResDeleteMedicationCounselRes
  */
 export interface CommonResDeleteMedicationCounselRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResDeleteMedicationCounselRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {DeleteMedicationCounselRes}
@@ -661,6 +709,12 @@ export interface CommonResDeleteMedicationCounselRes {
 export interface CommonResListAddAndUpdateMedicationRecordHistRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResListAddAndUpdateMedicationRecordHistRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {Array<AddAndUpdateMedicationRecordHistRes>}
      * @memberof CommonResListAddAndUpdateMedicationRecordHistRes
      */
@@ -674,6 +728,12 @@ export interface CommonResListAddAndUpdateMedicationRecordHistRes {
 export interface CommonResListAddAndUpdateWasteMedicationRecordRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResListAddAndUpdateWasteMedicationRecordRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {Array<AddAndUpdateWasteMedicationRecordRes>}
      * @memberof CommonResListAddAndUpdateWasteMedicationRecordRes
      */
@@ -682,9 +742,34 @@ export interface CommonResListAddAndUpdateWasteMedicationRecordRes {
 /**
  * 
  * @export
+ * @interface CommonResListDeleteCounseleeBatchRes
+ */
+export interface CommonResListDeleteCounseleeBatchRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListDeleteCounseleeBatchRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<DeleteCounseleeBatchRes>}
+     * @memberof CommonResListDeleteCounseleeBatchRes
+     */
+    'data'?: Array<DeleteCounseleeBatchRes>;
+}
+/**
+ * 
+ * @export
  * @interface CommonResListSearchMedicationByKeywordRes
  */
 export interface CommonResListSearchMedicationByKeywordRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListSearchMedicationByKeywordRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {Array<SearchMedicationByKeywordRes>}
@@ -700,6 +785,12 @@ export interface CommonResListSearchMedicationByKeywordRes {
 export interface CommonResListSelectCounseleeRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResListSelectCounseleeRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {Array<SelectCounseleeRes>}
      * @memberof CommonResListSelectCounseleeRes
      */
@@ -711,6 +802,12 @@ export interface CommonResListSelectCounseleeRes {
  * @interface CommonResListSelectMedicationRecordHistRes
  */
 export interface CommonResListSelectMedicationRecordHistRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListSelectMedicationRecordHistRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {Array<SelectMedicationRecordHistRes>}
@@ -726,6 +823,12 @@ export interface CommonResListSelectMedicationRecordHistRes {
 export interface CommonResListSelectMedicationRecordListBySessionIdRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResListSelectMedicationRecordListBySessionIdRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {Array<SelectMedicationRecordListBySessionIdRes>}
      * @memberof CommonResListSelectMedicationRecordListBySessionIdRes
      */
@@ -737,6 +840,12 @@ export interface CommonResListSelectMedicationRecordListBySessionIdRes {
  * @interface CommonResListSelectPreviousCounselSessionListRes
  */
 export interface CommonResListSelectPreviousCounselSessionListRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListSelectPreviousCounselSessionListRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {Array<SelectPreviousCounselSessionListRes>}
@@ -752,6 +861,12 @@ export interface CommonResListSelectPreviousCounselSessionListRes {
 export interface CommonResListSelectPreviousItemListByInformationNameAndItemNameRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResListSelectPreviousItemListByInformationNameAndItemNameRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {Array<SelectPreviousItemListByInformationNameAndItemNameRes>}
      * @memberof CommonResListSelectPreviousItemListByInformationNameAndItemNameRes
      */
@@ -763,6 +878,12 @@ export interface CommonResListSelectPreviousItemListByInformationNameAndItemName
  * @interface CommonResSelectCounselCardRes
  */
 export interface CommonResSelectCounselCardRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResSelectCounselCardRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {SelectCounselCardRes}
@@ -778,6 +899,12 @@ export interface CommonResSelectCounselCardRes {
 export interface CommonResSelectCounselSessionRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResSelectCounselSessionRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {SelectCounselSessionRes}
      * @memberof CommonResSelectCounselSessionRes
      */
@@ -789,6 +916,12 @@ export interface CommonResSelectCounselSessionRes {
  * @interface CommonResSelectCounseleeBaseInformationByCounseleeIdRes
  */
 export interface CommonResSelectCounseleeBaseInformationByCounseleeIdRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResSelectCounseleeBaseInformationByCounseleeIdRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {SelectCounseleeBaseInformationByCounseleeIdRes}
@@ -804,6 +937,12 @@ export interface CommonResSelectCounseleeBaseInformationByCounseleeIdRes {
 export interface CommonResSelectCounseleeConsentByCounseleeIdRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResSelectCounseleeConsentByCounseleeIdRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {SelectCounseleeConsentByCounseleeIdRes}
      * @memberof CommonResSelectCounseleeConsentByCounseleeIdRes
      */
@@ -815,6 +954,12 @@ export interface CommonResSelectCounseleeConsentByCounseleeIdRes {
  * @interface CommonResSelectCounseleeRes
  */
 export interface CommonResSelectCounseleeRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResSelectCounseleeRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {SelectCounseleeRes}
@@ -830,6 +975,12 @@ export interface CommonResSelectCounseleeRes {
 export interface CommonResSelectMedicationCounselRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResSelectMedicationCounselRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {SelectMedicationCounselRes}
      * @memberof CommonResSelectMedicationCounselRes
      */
@@ -843,6 +994,12 @@ export interface CommonResSelectMedicationCounselRes {
 export interface CommonResSelectPreviousCounselCardRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResSelectPreviousCounselCardRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {SelectPreviousCounselCardRes}
      * @memberof CommonResSelectPreviousCounselCardRes
      */
@@ -854,6 +1011,12 @@ export interface CommonResSelectPreviousCounselCardRes {
  * @interface CommonResSelectPreviousMedicationCounselRes
  */
 export interface CommonResSelectPreviousMedicationCounselRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResSelectPreviousMedicationCounselRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {SelectPreviousMedicationCounselRes}
@@ -872,6 +1035,12 @@ export interface CommonResString {
      * @type {string}
      * @memberof CommonResString
      */
+    'message'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResString
+     */
     'data'?: string;
 }
 /**
@@ -880,6 +1049,12 @@ export interface CommonResString {
  * @interface CommonResUpdateCounselCardRes
  */
 export interface CommonResUpdateCounselCardRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResUpdateCounselCardRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {UpdateCounselCardRes}
@@ -895,6 +1070,12 @@ export interface CommonResUpdateCounselCardRes {
 export interface CommonResUpdateCounselSessionRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResUpdateCounselSessionRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {UpdateCounselSessionRes}
      * @memberof CommonResUpdateCounselSessionRes
      */
@@ -906,6 +1087,12 @@ export interface CommonResUpdateCounselSessionRes {
  * @interface CommonResUpdateCounseleeConsentRes
  */
 export interface CommonResUpdateCounseleeConsentRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResUpdateCounseleeConsentRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {UpdateCounseleeConsentRes}
@@ -921,6 +1108,12 @@ export interface CommonResUpdateCounseleeConsentRes {
 export interface CommonResUpdateCounselorInCounselSessionRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResUpdateCounselorInCounselSessionRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {UpdateCounselorInCounselSessionRes}
      * @memberof CommonResUpdateCounselorInCounselSessionRes
      */
@@ -932,6 +1125,12 @@ export interface CommonResUpdateCounselorInCounselSessionRes {
  * @interface CommonResUpdateMedicationCounselRes
  */
 export interface CommonResUpdateMedicationCounselRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResUpdateMedicationCounselRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {UpdateMedicationCounselRes}
@@ -947,6 +1146,12 @@ export interface CommonResUpdateMedicationCounselRes {
 export interface CommonResUpdateStatusInCounselSessionRes {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResUpdateStatusInCounselSessionRes
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {UpdateStatusInCounselSessionRes}
      * @memberof CommonResUpdateStatusInCounselSessionRes
      */
@@ -960,6 +1165,12 @@ export interface CommonResUpdateStatusInCounselSessionRes {
 export interface CommonResVoid {
     /**
      * 
+     * @type {string}
+     * @memberof CommonResVoid
+     */
+    'message'?: string;
+    /**
+     * 
      * @type {object}
      * @memberof CommonResVoid
      */
@@ -971,6 +1182,12 @@ export interface CommonResVoid {
  * @interface CommonResWasteMedicationDisposalRes
  */
 export interface CommonResWasteMedicationDisposalRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResWasteMedicationDisposalRes
+     */
+    'message'?: string;
     /**
      * 
      * @type {WasteMedicationDisposalRes}
@@ -1085,6 +1302,32 @@ export interface DeleteCounselSessionRes {
      * @memberof DeleteCounselSessionRes
      */
     'deletedCounselSessionId'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface DeleteCounseleeBatchReq
+ */
+export interface DeleteCounseleeBatchReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof DeleteCounseleeBatchReq
+     */
+    'counseleeId': string;
+}
+/**
+ * 
+ * @export
+ * @interface DeleteCounseleeBatchRes
+ */
+export interface DeleteCounseleeBatchRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof DeleteCounseleeBatchRes
+     */
+    'deletedCounseleeId': string;
 }
 /**
  * 
@@ -3248,6 +3491,46 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary 내담자 삭제(batch)
+         * @param {Array<DeleteCounseleeBatchReq>} deleteCounseleeBatchReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCounseleeBatch: async (deleteCounseleeBatchReq: Array<DeleteCounseleeBatchReq>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deleteCounseleeBatchReq' is not null or undefined
+            assertParamExists('deleteCounseleeBatch', 'deleteCounseleeBatchReq', deleteCounseleeBatchReq)
+            const localVarPath = `/v1/counsel/counselee/batch`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteCounseleeBatchReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary 복약 상담 삭제
          * @param {DeleteMedicationCounselReq} deleteMedicationCounselReq 
          * @param {*} [options] Override http request option.
@@ -4605,6 +4888,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary 내담자 삭제(batch)
+         * @param {Array<DeleteCounseleeBatchReq>} deleteCounseleeBatchReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteCounseleeBatch(deleteCounseleeBatchReq: Array<DeleteCounseleeBatchReq>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListDeleteCounseleeBatchRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCounseleeBatch(deleteCounseleeBatchReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.deleteCounseleeBatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary 복약 상담 삭제
          * @param {DeleteMedicationCounselReq} deleteMedicationCounselReq 
          * @param {*} [options] Override http request option.
@@ -5116,6 +5412,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary 내담자 삭제(batch)
+         * @param {Array<DeleteCounseleeBatchReq>} deleteCounseleeBatchReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCounseleeBatch(deleteCounseleeBatchReq: Array<DeleteCounseleeBatchReq>, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListDeleteCounseleeBatchRes> {
+            return localVarFp.deleteCounseleeBatch(deleteCounseleeBatchReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary 복약 상담 삭제
          * @param {DeleteMedicationCounselReq} deleteMedicationCounselReq 
          * @param {*} [options] Override http request option.
@@ -5553,6 +5859,18 @@ export class DefaultApi extends BaseAPI {
      */
     public deleteCounselee(counseleeId: string, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).deleteCounselee(counseleeId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 내담자 삭제(batch)
+     * @param {Array<DeleteCounseleeBatchReq>} deleteCounseleeBatchReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public deleteCounseleeBatch(deleteCounseleeBatchReq: Array<DeleteCounseleeBatchReq>, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).deleteCounseleeBatch(deleteCounseleeBatchReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7514,6 +7832,46 @@ export const CounseleeControllerApiAxiosParamCreator = function (configuration?:
         },
         /**
          * 
+         * @summary 내담자 삭제(batch)
+         * @param {Array<DeleteCounseleeBatchReq>} deleteCounseleeBatchReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCounseleeBatch: async (deleteCounseleeBatchReq: Array<DeleteCounseleeBatchReq>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deleteCounseleeBatchReq' is not null or undefined
+            assertParamExists('deleteCounseleeBatch', 'deleteCounseleeBatchReq', deleteCounseleeBatchReq)
+            const localVarPath = `/v1/counsel/counselee/batch`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteCounseleeBatchReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary 내담자 상세 정보 조회
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
@@ -7714,6 +8072,19 @@ export const CounseleeControllerApiFp = function(configuration?: Configuration) 
         },
         /**
          * 
+         * @summary 내담자 삭제(batch)
+         * @param {Array<DeleteCounseleeBatchReq>} deleteCounseleeBatchReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteCounseleeBatch(deleteCounseleeBatchReq: Array<DeleteCounseleeBatchReq>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListDeleteCounseleeBatchRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCounseleeBatch(deleteCounseleeBatchReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounseleeControllerApi.deleteCounseleeBatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary 내담자 상세 정보 조회
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
@@ -7797,6 +8168,16 @@ export const CounseleeControllerApiFactory = function (configuration?: Configura
         },
         /**
          * 
+         * @summary 내담자 삭제(batch)
+         * @param {Array<DeleteCounseleeBatchReq>} deleteCounseleeBatchReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCounseleeBatch(deleteCounseleeBatchReq: Array<DeleteCounseleeBatchReq>, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListDeleteCounseleeBatchRes> {
+            return localVarFp.deleteCounseleeBatch(deleteCounseleeBatchReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary 내담자 상세 정보 조회
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
@@ -7868,6 +8249,18 @@ export class CounseleeControllerApi extends BaseAPI {
      */
     public deleteCounselee(counseleeId: string, options?: RawAxiosRequestConfig) {
         return CounseleeControllerApiFp(this.configuration).deleteCounselee(counseleeId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 내담자 삭제(batch)
+     * @param {Array<DeleteCounseleeBatchReq>} deleteCounseleeBatchReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounseleeControllerApi
+     */
+    public deleteCounseleeBatch(deleteCounseleeBatchReq: Array<DeleteCounseleeBatchReq>, options?: RawAxiosRequestConfig) {
+        return CounseleeControllerApiFp(this.configuration).deleteCounseleeBatch(deleteCounseleeBatchReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
