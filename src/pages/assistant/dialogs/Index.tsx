@@ -2,9 +2,9 @@ import arrowForwardIcon from '@/assets/icon/24/arrowback.outlined.black.svg';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogOverlay,
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -74,15 +74,12 @@ const Index = ({ isOpen, handleOpen }: MainDialogTypes) => {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleOpen}>
-        <DialogOverlay />
-        <DialogContent className="w-[480px] h-[350px] flex flex-col justify-between">
-          <DialogHeader className="pt-2 border-none">
-            <DialogTitle className="text-2xl font-bold text-grayscale-100">
-              개인정보 수집 동의서를 작성해주세요.
-            </DialogTitle>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>개인정보 수집 동의서를 작성해주세요.</DialogTitle>
           </DialogHeader>
-
-          <div id="dialog-description" className="p-5 space-y-3 bg-grayscale-3">
+          <div className="h-[1px] bg-grayscale-20" />
+          <DialogDescription>
             <div
               className="flex items-center justify-between cursor-pointer"
               onClick={() => {
@@ -126,7 +123,7 @@ const Index = ({ isOpen, handleOpen }: MainDialogTypes) => {
                 className="rotate-180 cursor-pointer"
               />
             </div>
-          </div>
+          </DialogDescription>
 
           <DialogFooter className="justify-center">
             <Button

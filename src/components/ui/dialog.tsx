@@ -58,8 +58,8 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={clsx(
-        'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
-        'bg-white rounded-xl shadow-md w-[400px] max-w-full p-4',
+        'fixed sm:max-w-md top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
+        'bg-white rounded-[1rem] shadow-md w-[400px] max-w-full',
         'focus:outline-none',
         className,
       )}
@@ -78,7 +78,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex flex-row space-y-1.5 text-center sm:text-left border-b-2',
+      'flex justify-between items-center flex-row space-y-1.5 text-center sm:text-left mx-[1.25rem] pb-[0.75rem] h-[3.625rem] pt-[1.25rem]',
       className,
     )}
     {...props}>
@@ -104,7 +104,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn('text-lg pb-2 font-bold text-grayscale-90', className)}
+    className={'text-subtitle2 font-bold text-grayscale-90' + className}
     {...props}
   />
 ));
@@ -117,7 +117,10 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn('text-sm mt-2 mb-4 text-grayscale-80', className)}
+    className={cn(
+      'text-body1 font-medium mt-[0.75rem] mb-[1.75rem] mx-[1.25rem] text-grayscale-80',
+      className,
+    )}
     {...props}
   />
 ));
@@ -128,7 +131,13 @@ const DialogFooter = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex justify-end space-x-2', className)} {...props} />
+  <div
+    className={cn(
+      'flex justify-end space-x-2 mb-[1rem] mx-[1.25rem]',
+      className,
+    )}
+    {...props}
+  />
 );
 DialogFooter.displayName = 'DialogFooter';
 

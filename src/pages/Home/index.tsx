@@ -1,11 +1,7 @@
-import {
-  AddCounselCardReqCardRecordStatusEnum,
-  SelectCounselSessionListItem,
-} from '@/api/api';
+import { SelectCounselSessionListItem } from '@/api/api';
 import CollegeMessage from '@/components/CollegeMessage';
 import TableComponent from '@/components/common/TableComponent';
 import ConsultCount from '@/components/ConsultCount';
-import { Button } from '@/components/ui/button';
 import { useAuthContext } from '@/context/AuthContext';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
 import AssignDialog from '@/pages/Home/components/AssignDialog';
@@ -17,6 +13,7 @@ import {
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SurveyDialog from './components/SurveyDialog';
 
 function Home() {
   const { user } = useAuthContext();
@@ -35,10 +32,6 @@ function Home() {
     });
   }, [counselList]);
 
-  const handleClickCardRecord = (counselSessionId: string) => {
-    navigate(`/assistant/${counselSessionId}`);
-  };
-
   const handleCellClick: GridEventListener<'cellClick'> = (params) => {
     const navigableFields = [
       'scheduledTime',
@@ -53,22 +46,28 @@ function Home() {
     }
   };
 
-  const columns = getCardColumns({
-    handleClickCardRecord,
-  });
+  const columns = getCardColumns();
   return (
     <>
       <div className="flex flex-col h-full items-center justify-start bg-gray-50">
-        <p className="w-full font-bold text-h3 text-primary-80 pl-20 pt-[148px] pb-6 bg-primary-30">
-          {user?.name ?? ''}님, <br />
+        <div className="w-full font-bold text-h3 text-primary-80 pl-20 pt-[9.25rem] pb-6 bg-primary-30">
+          {`${user?.name ?? ''}님,`.replace(/\s/g, '')}
+          <br />
           오늘도 힘찬 하루를 보내세요!
-        </p>
+        </div>
         <div className="flex w-full gap-8 2xl:items-start mt-8 justify-center 2xl:flex-row flex-col items-center">
           <div className="hidden 2xl:flex 2xl:flex-col gap-5 2xl:items-center 2xl:justify-center w-[278px]">
             <ConsultCount
               messageCount="1,234회"
               patientCount="201명"
-              date="2025-01-01"
+              //반복 제거 필요
+              date={new Date()
+                .toLocaleDateString('ko-KR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })
+                .replace(/\. /g, '.')}
             />
             <CollegeMessage message="" />
           </div>
@@ -77,7 +76,13 @@ function Home() {
             <ConsultCount
               messageCount="1,234회"
               patientCount="201명"
-              date="2025-01-01"
+              date={new Date()
+                .toLocaleDateString('ko-KR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })
+                .replace(/\. /g, '.')}
             />
           </div>
           <div className="flex flex-col items-center justify-center flex-grow w-full max-w-[1020px]">
@@ -99,7 +104,7 @@ function Home() {
             </div>
           </div>
           <div className="flex justify-center 2xl:hidden max-w-[1020px] w-full">
-            <CollegeMessage message="" />
+            <CollegeMessage message="약대 입학 후 얼마 안 되었을 때, 더 나은 사회를 위해 같이 공부하고 행동해 보자는 글귀를 읽고 가입하기로 마음먹었어요." />
           </div>
         </div>
       </div>
@@ -109,15 +114,11 @@ function Home() {
 
 export default Home;
 
-const getCardColumns = ({
-  handleClickCardRecord,
-}: {
-  handleClickCardRecord: (counselSessionId: string) => void;
-}): GridColDef[] => {
+const getCardColumns: () => GridColDef[] = () => {
   const columns: GridColDef[] = [
     {
       field: 'scheduledTime',
-      headerName: '예약시간',
+      headerName: '예약 시각',
       flex: 1,
       maxWidth: 112,
       cellClassName: 'cursor-pointer',
@@ -125,14 +126,14 @@ const getCardColumns = ({
     {
       ...createDefaultDateColumn({
         field: 'scheduledDate',
-        headerName: '상담일자',
+        headerName: '상담 일자',
       }),
       cellClassName: 'cursor-pointer',
     },
     {
       ...createDefaultStatusColumn({
         field: 'status',
-        headerName: '상담진행',
+        headerName: '상담 진행',
       }),
       cellClassName: 'cursor-pointer',
     },
@@ -170,24 +171,11 @@ const getCardColumns = ({
       renderCell: (params) => {
         const recordStatus = params.value;
         const counselSessionId = params.row.counselSessionId;
-        return AddCounselCardReqCardRecordStatusEnum.Recorded ===
-          recordStatus ? (
-          <Button variant={'secondary'} disabled>
-            작성 완료
-          </Button>
-        ) : AddCounselCardReqCardRecordStatusEnum.Unrecorded ===
-          recordStatus ? (
-          <Button
-            variant={'primary'}
-            onClick={() => handleClickCardRecord(counselSessionId)}>
-            카드 작성
-          </Button>
-        ) : (
-          <Button
-            variant={'secondary'}
-            onClick={() => handleClickCardRecord(counselSessionId)}>
-            작성 중
-          </Button>
+        return (
+          <SurveyDialog
+            counselSessionId={counselSessionId}
+            dialogState={recordStatus}
+          />
         );
       },
     },
