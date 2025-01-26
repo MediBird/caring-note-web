@@ -50,10 +50,11 @@ function Home() {
   return (
     <>
       <div className="flex flex-col h-full items-center justify-start bg-gray-50">
-        <p className="w-full font-bold text-h3 text-primary-80 pl-20 pt-[148px] pb-6 bg-primary-30">
-          {user?.name ?? ''}님, <br />
+        <div className="w-full font-bold text-h3 text-primary-80 pl-20 pt-[9.25rem] pb-6 bg-primary-30">
+          {`${user?.name ?? ''}님,`.replace(/\s/g, '')}
+          <br />
           오늘도 힘찬 하루를 보내세요!
-        </p>
+        </div>
         <div className="flex w-full gap-8 2xl:items-start mt-8 justify-center 2xl:flex-row flex-col items-center">
           <div className="hidden 2xl:flex 2xl:flex-col gap-5 2xl:items-center 2xl:justify-center w-[278px]">
             <ConsultCount
