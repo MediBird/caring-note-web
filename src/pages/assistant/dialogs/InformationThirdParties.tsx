@@ -20,8 +20,7 @@ const InformationThirdParties = ({
 }: AgreementDetailDialogTypes) => {
   return (
     <Dialog open={isDetailOpen} onOpenChange={onClose}>
-      <DialogOverlay />
-      <DialogContent className="w-[480px] h-auto flex flex-col justify-between">
+      <DialogContent>
         <DialogHeader>
           <img
             src={arrowForwardIcon}
