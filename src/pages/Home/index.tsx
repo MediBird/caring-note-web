@@ -1,11 +1,7 @@
-import {
-  AddCounselCardReqCardRecordStatusEnum,
-  SelectCounselSessionListItem,
-} from '@/api/api';
+import { SelectCounselSessionListItem } from '@/api/api';
 import CollegeMessage from '@/components/CollegeMessage';
 import TableComponent from '@/components/common/TableComponent';
 import ConsultCount from '@/components/ConsultCount';
-import { Button } from '@/components/ui/button';
 import { useAuthContext } from '@/context/AuthContext';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
 import AssignDialog from '@/pages/Home/components/AssignDialog';
@@ -36,10 +32,6 @@ function Home() {
     });
   }, [counselList]);
 
-  const handleClickCardRecord = (counselSessionId: string) => {
-    navigate(`/assistant/${counselSessionId}`);
-  };
-
   const handleCellClick: GridEventListener<'cellClick'> = (params) => {
     const navigableFields = [
       'scheduledTime',
@@ -54,9 +46,7 @@ function Home() {
     }
   };
 
-  const columns = getCardColumns({
-    handleClickCardRecord,
-  });
+  const columns = getCardColumns();
   return (
     <>
       <div className="flex flex-col h-full items-center justify-start bg-gray-50">
@@ -123,11 +113,7 @@ function Home() {
 
 export default Home;
 
-const getCardColumns = ({
-  handleClickCardRecord,
-}: {
-  handleClickCardRecord: (counselSessionId: string) => void;
-}): GridColDef[] => {
+const getCardColumns = (): GridColDef[] => {
   const columns: GridColDef[] = [
     {
       field: 'scheduledTime',
