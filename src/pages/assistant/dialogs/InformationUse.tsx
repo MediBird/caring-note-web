@@ -3,7 +3,6 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogOverlay,
   DialogTitle,
 } from '@/components/ui/dialog';
 import arrowForwardIcon from '@/assets/icon/24/arrowback.outlined.black.svg';
