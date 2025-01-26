@@ -106,7 +106,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
       );
     }
     return (
-      <Button type="button" variant="secondary" onClick={handleAssign}>
+      <Button type="button" variant="primary" onClick={handleAssign}>
         나에게 할당하기
       </Button>
     );
@@ -115,9 +115,9 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{renderTriggerButton()}</DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="flex justify-between items-center pb-2">
-          <DialogTitle className="pb-0">
+      <DialogContent>
+        <DialogHeader className="flex justify-between items-center">
+          <DialogTitle>
             {dialogState.UNASSIGNED && dialogContent.title.UNASSIGNED}
             {dialogState.ASSIGNED_TO_ME && dialogContent.title.ASSIGNED_TO_ME}
             {dialogState.ASSIGNED_TO_OTHER &&
@@ -129,15 +129,16 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
             <XIcon />
           </DialogClose>
         </DialogHeader>
-        <DialogDescription className="sm:justify-start">
+        <div className="h-[1px] bg-grayscale-20" />
+        <DialogDescription>
           {dialogState.UNASSIGNED && dialogContent.description.UNASSIGNED}
           {dialogState.ASSIGNED_TO_ME &&
             dialogContent.description.ASSIGNED_TO_ME}
           {dialogState.ASSIGNED_TO_OTHER &&
             dialogContent.description.ASSIGNED_TO_OTHER}
         </DialogDescription>
-        <DialogFooter className="sm:justify-end">
-          <DialogDescription>{renderActionButtons()}</DialogDescription>
+        <DialogFooter>
+          <div>{renderActionButtons()}</div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

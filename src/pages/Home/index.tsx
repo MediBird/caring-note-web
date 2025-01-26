@@ -17,6 +17,7 @@ import {
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SurveyDialog from './components/SurveyDialog';
 
 function Home() {
   const { user } = useAuthContext();
@@ -68,7 +69,14 @@ function Home() {
             <ConsultCount
               messageCount="1,234회"
               patientCount="201명"
-              date="2025-01-01"
+              //반복 제거 필요
+              date={new Date()
+                .toLocaleDateString('ko-KR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })
+                .replace(/\. /g, '.')}
             />
             <CollegeMessage message="" />
           </div>
@@ -77,7 +85,13 @@ function Home() {
             <ConsultCount
               messageCount="1,234회"
               patientCount="201명"
-              date="2025-01-01"
+              date={new Date()
+                .toLocaleDateString('ko-KR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })
+                .replace(/\. /g, '.')}
             />
           </div>
           <div className="flex flex-col items-center justify-center flex-grow w-full max-w-[1020px]">
@@ -99,7 +113,7 @@ function Home() {
             </div>
           </div>
           <div className="flex justify-center 2xl:hidden max-w-[1020px] w-full">
-            <CollegeMessage message="" />
+            <CollegeMessage message="약대 입학 후 얼마 안 되었을 때, 더 나은 사회를 위해 같이 공부하고 행동해 보자는 글귀를 읽고 가입하기로 마음먹었어요." />
           </div>
         </div>
       </div>
@@ -117,7 +131,7 @@ const getCardColumns = ({
   const columns: GridColDef[] = [
     {
       field: 'scheduledTime',
-      headerName: '예약시간',
+      headerName: '예약 시각',
       flex: 1,
       maxWidth: 112,
       cellClassName: 'cursor-pointer',
@@ -125,14 +139,14 @@ const getCardColumns = ({
     {
       ...createDefaultDateColumn({
         field: 'scheduledDate',
-        headerName: '상담일자',
+        headerName: '상담 일자',
       }),
       cellClassName: 'cursor-pointer',
     },
     {
       ...createDefaultStatusColumn({
         field: 'status',
-        headerName: '상담진행',
+        headerName: '상담 진행',
       }),
       cellClassName: 'cursor-pointer',
     },
@@ -170,24 +184,11 @@ const getCardColumns = ({
       renderCell: (params) => {
         const recordStatus = params.value;
         const counselSessionId = params.row.counselSessionId;
-        return AddCounselCardReqCardRecordStatusEnum.Recorded ===
-          recordStatus ? (
-          <Button variant={'secondary'} disabled>
-            작성 완료
-          </Button>
-        ) : AddCounselCardReqCardRecordStatusEnum.Unrecorded ===
-          recordStatus ? (
-          <Button
-            variant={'primary'}
-            onClick={() => handleClickCardRecord(counselSessionId)}>
-            카드 작성
-          </Button>
-        ) : (
-          <Button
-            variant={'secondary'}
-            onClick={() => handleClickCardRecord(counselSessionId)}>
-            작성 중
-          </Button>
+        return (
+          <SurveyDialog
+            counselSessionId={counselSessionId}
+            dialogState={recordStatus}
+          />
         );
       },
     },

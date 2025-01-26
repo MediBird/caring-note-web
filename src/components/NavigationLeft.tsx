@@ -94,21 +94,21 @@ const NavigationLeft = () => {
     <div className="relative h-auto py-0 w-52 bg-grayscale-3 z-1000 shadow-nav-left">
       {/* 사용자 정보 */}
       <div className="flex items-end p-5">
-        <span className="mr-3 font-bold text-subtitle2">
-          {user?.name ?? ''}
+        <span className="whitespace-nowrap">
+          <span className="text-subtitle2 font-bold">{user?.name ?? ''}</span>
+          <span className="text-body1 font-medium">{`${(() => {
+            switch (user?.roleType) {
+              case 'ROLE_ADMIN':
+                return '관리자';
+              case 'ROLE_ASSISTANT':
+                return '상담사';
+              case 'ROLE_USER':
+                return '약사';
+              default:
+                return '';
+            }
+          })()}님`}</span>
         </span>
-        <span className="font-medium text-body1">{`${(() => {
-          switch (user?.roleType) {
-            case 'ROLE_ADMIN':
-              return '관리자';
-            case 'ROLE_ASSISTANT':
-              return '상담사';
-            case 'ROLE_USER':
-              return '약사';
-            default:
-              return '';
-          }
-        })()}님`}</span>
       </div>
       <hr className="border-t border-grayscale-10" />
 
