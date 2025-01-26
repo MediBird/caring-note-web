@@ -5,14 +5,14 @@ import useAssistantInfoTabStore, {
 } from '@/store/assistantTabStore';
 import BaseInfo from '@/pages/assistant/tabs/BaseInfo';
 import HealthInfo from '@/pages/assistant/tabs/HealthInfo';
-import LifeInfo from '@/pages/assistant/tabs/LifeInfo';
 import IndependentInfo from '@/pages/assistant/tabs/IndependentInfo';
 import { useEffect, useState } from 'react';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CounselAssistantDialogTypes } from './constants/modal';
-import SaveCounselAsstaint from './dialogs/SaveCounselAsstaint';
+import LivingInfo from './tabs/LivingInfo';
+import CounselAssistantInfo from './dialogs/CounselAssistantInfo';
 
 const TabTitle = ({
   text,
@@ -61,7 +61,7 @@ const TabContent = ({
     case AssistantInfoTab.healthInfo:
       return <HealthInfo />;
     case AssistantInfoTab.lifeInfo:
-      return <LifeInfo />;
+      return <LivingInfo />;
     case AssistantInfoTab.independentInfo:
       return <IndependentInfo />;
     default:
@@ -147,7 +147,7 @@ const Survey = () => {
         activeTab={activeTab}
         openIndependentInfoTab={openIndependentInfoTab}
       />
-      <SaveCounselAsstaint
+      <CounselAssistantInfo
         isOpen={dialogType !== null}
         dialogType={dialogType}
         onClose={closeModal}

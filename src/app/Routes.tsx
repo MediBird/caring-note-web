@@ -8,6 +8,7 @@ import ErrorPage from '@/pages/ErrorPage';
 import Home from '@/pages/Home';
 import Layout from '@/pages/Layout';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
+import Assistant from '@/pages/assistant/Assistant';
 
 type AppRouteObject = RouteObject & {
   children?: AppRouteObject[];
