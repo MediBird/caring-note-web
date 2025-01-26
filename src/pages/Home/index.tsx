@@ -113,7 +113,7 @@ function Home() {
 
 export default Home;
 
-const getCardColumns = (): GridColDef[] => {
+const getCardColumns: () => GridColDef[] = () => {
   const columns: GridColDef[] = [
     {
       field: 'scheduledTime',
