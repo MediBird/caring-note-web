@@ -85,16 +85,15 @@ const Survey = () => {
   const { data } = useSelectCounseleeInfo(
     counselSessionId ? detail?.counselSessionId ?? '' : '',
   );
-  // openModal, closeModal 함수
+
   const openModal = (type: CounselAssistantDialogTypes) => setDialogType(type);
   const closeModal = () => setDialogType(null);
 
   const goBack = () => {
-    navigate(-1); // 이전 페이지로 이동
-    resetDetail(); // detail 초기화
+    navigate(-1);
+    resetDetail();
   };
 
-  // data.isDisability이 true일 경우 openIndependentInfoTab을 true로 변경
   useEffect(() => {
     if (data?.isDisability === true) {
       setOpenIndependentInfoTab(true);

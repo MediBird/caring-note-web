@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogOverlay,
   DialogTitle,
@@ -21,7 +22,7 @@ const ExpiredMedications = ({
   return (
     <Dialog open={isDetailOpen} onOpenChange={onClose}>
       <DialogOverlay />
-      <DialogContent className="w-[480px] h-auto flex flex-col justify-between">
+      <DialogContent>
         <DialogHeader>
           <img
             src={arrowForwardIcon}
@@ -33,13 +34,15 @@ const ExpiredMedications = ({
           />
           <DialogTitle>폐의약품 수거에 관한 동의</DialogTitle>
         </DialogHeader>
-
-        <div className="p-4 mx-auto mt-2 mb-4 rounded-lg shadow-md bg-grayscale-3">
-          <p className="mb-4 text-sm text-grayscale-50">
-            안전한 폐의약품 분리배출을 위해 귀하의 불용의약품을 폐기하시는 것에
-            동의하십니까?
-          </p>
-        </div>
+        <div className="h-[1px] bg-grayscale-20" />
+        <DialogDescription>
+          <div className="p-4 mx-auto mt-2 mb-4 rounded-lg shadow-md bg-grayscale-3">
+            <p className="mb-4 text-sm text-grayscale-50">
+              안전한 폐의약품 분리배출을 위해 귀하의 불용의약품을 폐기하시는
+              것에 동의하십니까?
+            </p>
+          </div>
+        </DialogDescription>
       </DialogContent>
     </Dialog>
   );
