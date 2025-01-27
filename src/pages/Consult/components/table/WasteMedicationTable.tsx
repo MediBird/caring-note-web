@@ -10,7 +10,7 @@ import TabContentTitle from '@/components/consult/TabContentTitle';
 import InfoIcon from '@/assets/icon/20/info.filled.blue.svg?react';
 import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
 import { useWasteMedicationList } from '@/pages/Consult/hooks/query/useWasteMedicationListQuery';
-import { useSearchMedicationByKeyword } from '@/hooks/useSearchMedicationByKeyword';
+import { useSearchMedicationByKeyword } from '@/pages/Consult/hooks/query/useSearchMedicationByKeyword';
 import { WasteMedicationListDTO } from '@/types/WasteMedicationDTO';
 import Badge from '@/components/common/Badge';
 
