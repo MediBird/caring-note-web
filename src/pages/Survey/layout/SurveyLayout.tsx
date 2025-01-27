@@ -3,9 +3,9 @@ import { Outlet } from 'react-router-dom';
 
 const SurveyLayout: React.FC = () => {
   return (
-    <div>
+    <main>
       <Outlet />
-    </div>
+    </main>
   );
 };
 
