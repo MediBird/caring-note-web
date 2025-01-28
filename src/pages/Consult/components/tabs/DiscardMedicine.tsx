@@ -376,14 +376,14 @@ const DiscardMedicine = () => {
                       <RadioGroupItem
                         id="way-to-discard-3"
                         value={
-                          WasteMedicationDisposalDrugRemainActionDetailEnum.Trash
+                          WasteMedicationDisposalDrugRemainActionDetailEnum.Etc
                         }
                         checked={
                           wasteMedicationDisposal.drugRemainActionDetail ===
-                          WasteMedicationDisposalDrugRemainActionDetailEnum.Trash
+                          WasteMedicationDisposalDrugRemainActionDetailEnum.Etc
                         }
                       />
-                      <Label htmlFor="way-to-discard-3">쓰레기통에 버림</Label>
+                      <Label htmlFor="way-to-discard-3">기타</Label>
                     </InputContainer>
                   </div>
                   <div className="space-y-4">
@@ -391,29 +391,29 @@ const DiscardMedicine = () => {
                       <RadioGroupItem
                         id="way-to-discard-4"
                         value={
-                          WasteMedicationDisposalDrugRemainActionDetailEnum.Designated
+                          WasteMedicationDisposalDrugRemainActionDetailEnum.Trash
                         }
                         checked={
                           wasteMedicationDisposal.drugRemainActionDetail ===
-                          WasteMedicationDisposalDrugRemainActionDetailEnum.Designated
+                          WasteMedicationDisposalDrugRemainActionDetailEnum.Trash
                         }
                       />
-                      <Label htmlFor="way-to-discard-4">
-                        폐의약품 수거함 등 지정된 폐기 장소에 버림
-                      </Label>
+                      <Label htmlFor="way-to-discard-4">쓰레기통에 버림</Label>
                     </InputContainer>
                     <InputContainer>
                       <RadioGroupItem
                         id="way-to-discard-5"
                         value={
-                          WasteMedicationDisposalDrugRemainActionDetailEnum.Etc
+                          WasteMedicationDisposalDrugRemainActionDetailEnum.Designated
                         }
                         checked={
                           wasteMedicationDisposal.drugRemainActionDetail ===
-                          WasteMedicationDisposalDrugRemainActionDetailEnum.Etc
+                          WasteMedicationDisposalDrugRemainActionDetailEnum.Designated
                         }
                       />
-                      <Label htmlFor="way-to-discard-5">기타</Label>
+                      <Label htmlFor="way-to-discard-5">
+                        폐의약품 수거함 등 지정된 폐기 장소에 버림
+                      </Label>
                     </InputContainer>
                   </div>
                 </RadioGroup>
