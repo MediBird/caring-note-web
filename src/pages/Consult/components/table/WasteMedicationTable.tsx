@@ -12,6 +12,7 @@ import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWast
 import { useWasteMedicationList } from '@/pages/Consult/hooks/query/useWasteMedicationListQuery';
 import { useSearchMedicationByKeyword } from '@/hooks/useSearchMedicationByKeyword';
 import { WasteMedicationListDTO } from '@/types/WasteMedicationDTO';
+import Badge from '@/components/common/Badge';
 
 interface WasteMedicationTableProps {
   counselSessionId: string;
@@ -135,10 +136,12 @@ const WasteMedicationTable = ({
           {!showTable && (
             <>
               <TabContentTitle text="폐의약품 목록" />
-              <div className="border border-primary-30 bg-primary-10 mt-2 mb-6 h-8 flex items-center justify-center rounded-full text-xs text-primary-60 w-[180px] gap-[2px]">
-                <InfoIcon width={20} height={20} />
+              <Badge
+                className="mt-2 mb-6" // TabContentTitle 의 margin-top, margin-bottom 과 동일하게 맞춤
+                variant="tint"
+                customIcon={<InfoIcon width={20} height={20} />}>
                 상단 선택지를 먼저 골라주세요
-              </div>
+              </Badge>
             </>
           )}
         </div>
