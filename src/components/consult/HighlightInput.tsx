@@ -4,7 +4,7 @@ import eraserBlue from '@/assets/icon/eraserBlue.png';
 import highlightpenBlack from '@/assets/icon/highlightpenBlack.png';
 import highlightpenBlue from '@/assets/icon/highlightpenBlue.png';
 import Tooltip from '@/components/Tooltip';
-import { useSelectMedicineConsult } from '@/hooks/useMedicineConsultQuery';
+import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import useCounselRecordEditorStateStore from '@/store/counselRecordEditorStateStore';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import { CounselRecordHighlights } from '@/types/MedicineConsultDTO';
