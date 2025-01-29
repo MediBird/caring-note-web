@@ -292,12 +292,6 @@ export interface AddCounseleeConsentReq {
      * @type {string}
      * @memberof AddCounseleeConsentReq
      */
-    'counselSessionId': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AddCounseleeConsentReq
-     */
     'counseleeId': string;
     /**
      * 
@@ -2076,12 +2070,6 @@ export interface SelectCounseleeConsentByCounseleeIdRes {
      * @memberof SelectCounseleeConsentByCounseleeIdRes
      */
     'counseleeName'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SelectCounseleeConsentByCounseleeIdRes
-     */
-    'counselSessionId'?: string;
     /**
      * 
      * @type {string}
@@ -4090,18 +4078,15 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary 내담자 개인정보 수집 동의 여부 조회
-         * @param {string} counselSessionId 
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounseleeConsentByCounseleeId: async (counselSessionId: string, counseleeId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'counselSessionId' is not null or undefined
-            assertParamExists('selectCounseleeConsentByCounseleeId', 'counselSessionId', counselSessionId)
+        selectCounseleeConsentByCounseleeId: async (counseleeId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'counseleeId' is not null or undefined
             assertParamExists('selectCounseleeConsentByCounseleeId', 'counseleeId', counseleeId)
-            const localVarPath = `/v1/counselee/consent/{counselSessionId}`
-                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+            const localVarPath = `/v1/counselee/consent/{counseleeId}`
+                .replace(`{${"counseleeId"}}`, encodeURIComponent(String(counseleeId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4116,10 +4101,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             // authentication bearer-jwt required
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            if (counseleeId !== undefined) {
-                localVarQueryParameter['counseleeId'] = counseleeId;
-            }
 
 
     
@@ -5088,13 +5069,12 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary 내담자 개인정보 수집 동의 여부 조회
-         * @param {string} counselSessionId 
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectCounseleeConsentByCounseleeId(counselSessionId: string, counseleeId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounseleeConsentByCounseleeIdRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounseleeConsentByCounseleeId(counselSessionId, counseleeId, options);
+        async selectCounseleeConsentByCounseleeId(counseleeId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounseleeConsentByCounseleeIdRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounseleeConsentByCounseleeId(counseleeId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.selectCounseleeConsentByCounseleeId']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -5567,13 +5547,12 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary 내담자 개인정보 수집 동의 여부 조회
-         * @param {string} counselSessionId 
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounseleeConsentByCounseleeId(counselSessionId: string, counseleeId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounseleeConsentByCounseleeIdRes> {
-            return localVarFp.selectCounseleeConsentByCounseleeId(counselSessionId, counseleeId, options).then((request) => request(axios, basePath));
+        selectCounseleeConsentByCounseleeId(counseleeId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounseleeConsentByCounseleeIdRes> {
+            return localVarFp.selectCounseleeConsentByCounseleeId(counseleeId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -6048,14 +6027,13 @@ export class DefaultApi extends BaseAPI {
     /**
      * 
      * @summary 내담자 개인정보 수집 동의 여부 조회
-     * @param {string} counselSessionId 
      * @param {string} counseleeId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public selectCounseleeConsentByCounseleeId(counselSessionId: string, counseleeId: string, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).selectCounseleeConsentByCounseleeId(counselSessionId, counseleeId, options).then((request) => request(this.axios, this.basePath));
+    public selectCounseleeConsentByCounseleeId(counseleeId: string, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).selectCounseleeConsentByCounseleeId(counseleeId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7488,18 +7466,15 @@ export const CounseleeConsentControllerApiAxiosParamCreator = function (configur
         /**
          * 
          * @summary 내담자 개인정보 수집 동의 여부 조회
-         * @param {string} counselSessionId 
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounseleeConsentByCounseleeId: async (counselSessionId: string, counseleeId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'counselSessionId' is not null or undefined
-            assertParamExists('selectCounseleeConsentByCounseleeId', 'counselSessionId', counselSessionId)
+        selectCounseleeConsentByCounseleeId: async (counseleeId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'counseleeId' is not null or undefined
             assertParamExists('selectCounseleeConsentByCounseleeId', 'counseleeId', counseleeId)
-            const localVarPath = `/v1/counselee/consent/{counselSessionId}`
-                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+            const localVarPath = `/v1/counselee/consent/{counseleeId}`
+                .replace(`{${"counseleeId"}}`, encodeURIComponent(String(counseleeId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -7514,10 +7489,6 @@ export const CounseleeConsentControllerApiAxiosParamCreator = function (configur
             // authentication bearer-jwt required
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            if (counseleeId !== undefined) {
-                localVarQueryParameter['counseleeId'] = counseleeId;
-            }
 
 
     
@@ -7609,13 +7580,12 @@ export const CounseleeConsentControllerApiFp = function(configuration?: Configur
         /**
          * 
          * @summary 내담자 개인정보 수집 동의 여부 조회
-         * @param {string} counselSessionId 
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectCounseleeConsentByCounseleeId(counselSessionId: string, counseleeId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounseleeConsentByCounseleeIdRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounseleeConsentByCounseleeId(counselSessionId, counseleeId, options);
+        async selectCounseleeConsentByCounseleeId(counseleeId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounseleeConsentByCounseleeIdRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounseleeConsentByCounseleeId(counseleeId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounseleeConsentControllerApi.selectCounseleeConsentByCounseleeId']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -7666,13 +7636,12 @@ export const CounseleeConsentControllerApiFactory = function (configuration?: Co
         /**
          * 
          * @summary 내담자 개인정보 수집 동의 여부 조회
-         * @param {string} counselSessionId 
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounseleeConsentByCounseleeId(counselSessionId: string, counseleeId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounseleeConsentByCounseleeIdRes> {
-            return localVarFp.selectCounseleeConsentByCounseleeId(counselSessionId, counseleeId, options).then((request) => request(axios, basePath));
+        selectCounseleeConsentByCounseleeId(counseleeId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounseleeConsentByCounseleeIdRes> {
+            return localVarFp.selectCounseleeConsentByCounseleeId(counseleeId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -7721,14 +7690,13 @@ export class CounseleeConsentControllerApi extends BaseAPI {
     /**
      * 
      * @summary 내담자 개인정보 수집 동의 여부 조회
-     * @param {string} counselSessionId 
      * @param {string} counseleeId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CounseleeConsentControllerApi
      */
-    public selectCounseleeConsentByCounseleeId(counselSessionId: string, counseleeId: string, options?: RawAxiosRequestConfig) {
-        return CounseleeConsentControllerApiFp(this.configuration).selectCounseleeConsentByCounseleeId(counselSessionId, counseleeId, options).then((request) => request(this.axios, this.basePath));
+    public selectCounseleeConsentByCounseleeId(counseleeId: string, options?: RawAxiosRequestConfig) {
+        return CounseleeConsentControllerApiFp(this.configuration).selectCounseleeConsentByCounseleeId(counseleeId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
