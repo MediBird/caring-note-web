@@ -37,6 +37,7 @@ const Index = ({ isOpen, handleOpen }: MainDialogTypes) => {
   );
   // 내담자 개인정보 수집 동의 여부 조회
   const { data } = useCounseleeConsentQueryId(
+    detail?.counselSessionId || undefined,
     detail?.counseleeId || undefined,
     !!detail,
   );
