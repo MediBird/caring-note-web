@@ -13,17 +13,24 @@ import { XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AddCounselCardReqCardRecordStatusEnum } from '@/api/api';
+import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 
 interface SurveyDialogProps {
   dialogState: AddCounselCardReqCardRecordStatusEnum;
   counselSessionId: string;
+  counseleeId: string;
 }
 
-function SurveyDialog({ dialogState, counselSessionId }: SurveyDialogProps) {
+function SurveyDialog({
+  dialogState,
+  counselSessionId,
+  counseleeId,
+}: SurveyDialogProps) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-
+  const { setDetail } = useDetailCounselSessionStore();
   const handleStartSurvey = () => {
+    setDetail({ counseleeId });
     navigate(`/survey/${counselSessionId}`);
   };
 
