@@ -63,8 +63,8 @@ export const sightTypes = [
     value: '잘 보임',
   },
   {
-    label: '잘 안 보인',
-    value: '잘 안 보인',
+    label: '잘 안 보임',
+    value: '잘 안 보임',
   },
   {
     label: '안 보임',
