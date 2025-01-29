@@ -3,14 +3,13 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
 import CloseButton from '@/assets/icon/24/close.outlined.black.svg';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
-import { useCounselAssistantStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
 import {
   useUpdateCounselSurvey,
   usePostCounselSurvey,
@@ -33,7 +32,7 @@ const SaveCounselAssistant = ({
   const navigate = useNavigate();
   const { counselSessionId } = useParams();
   const detail = useDetailCounselSessionStore((state) => state.detail);
-  const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
+  const { counselSurvey } = useCounselSurveyStore();
   const updateCounselSurvey = useUpdateCounselSurvey();
   const addCounselSurvey = usePostCounselSurvey();
 
@@ -45,19 +44,18 @@ const SaveCounselAssistant = ({
 
     const requestBody = {
       cardRecordStatus,
-      baseInformation: counselAssistant?.baseInformation || undefined,
-      healthInformation: counselAssistant?.healthInformation || undefined,
-      livingInformation: counselAssistant?.livingInformation || undefined,
+      baseInformation: counselSurvey?.baseInformation || undefined,
+      healthInformation: counselSurvey?.healthInformation || undefined,
+      livingInformation: counselSurvey?.livingInformation || undefined,
       independentLifeInformation:
-        counselAssistant?.independentLifeInformation || undefined,
-      counselCardId: counselAssistant?.counselCardId || '',
+        counselSurvey?.independentLifeInformation || undefined,
+      counselCardId: counselSurvey?.counselCardId || '',
       counselSessionId: counselSessionId || detail?.counselSessionId || '',
     };
-    if (counselAssistant?.counselCardId) {
+    if (counselSurvey?.counselCardId) {
       updateCounselSurvey.mutate(requestBody, {
         onSuccess: () => {
           if (isTempSave) {
-            setCounselAssistant(requestBody);
             onClose();
           } else {
             navigate('/');
@@ -103,7 +101,7 @@ const SaveCounselAssistant = ({
           </div>
         </DialogHeader>
         <div className="h-[1px] bg-grayscale-20" />
-        <DialogDescription>
+        <div className="text-body1 font-medium mt-[0.75rem] mb-[1.75rem] mx-[1.25rem] text-grayscale-80">
           <div className="bg-white rounded-lg">
             <p className="text-base text-grayscale-80">
               {dialogType === 'REGISTER' && '기초 상담 기록이 저장됩니다.'}
@@ -118,7 +116,7 @@ const SaveCounselAssistant = ({
               )}
             </p>
           </div>
-        </DialogDescription>
+        </div>
 
         <DialogFooter className="flex justify-end">
           <Button
