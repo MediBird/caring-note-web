@@ -2,13 +2,16 @@ import { Button } from '@/components/ui/button';
 import useAssistantInfoTabStore, {
   AssistantInfoTab,
 } from '@/pages/Survey/store/surveyTabStore';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useParams } from 'react-router-dom';
 import { CounselAssistantDialogTypes } from '../constants/modal';
 import CounselAssistantInfo from '../dialogs/counselSurvey/SaveCounselSurvey';
 import { useSelectCounselCard } from '@/pages/Survey/hooks/useCounselAssistantQuery';
-import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
+import {
+  CounselSurveyType,
+  useCounselSurveyStore,
+} from '@/pages/Survey/store/surveyInfoStore';
 import TabTitle from '@/pages/Survey/components/TabTitle';
 import TabContent from '@/pages/Survey/components/TabContent';
 
@@ -43,8 +46,10 @@ const Survey = () => {
         ...prevState, // 기존 상태 유지
         ...survey.data.data, // 상태를 덮어씌우지 않고 병합
       }));
+    } else if (survey?.status === 204) {
+      setCounselSurvey(() => ({} as CounselSurveyType)); // 상담 카드가 없을 때 초기화
     }
-  }, [survey?.data?.data, setCounselSurvey]);
+  }, [survey?.data?.data, setCounselSurvey, survey?.status]);
 
   // **내담자 정보에 따라 "자립생활 역량" 탭 표시 여부 결정**
   useEffect(() => {

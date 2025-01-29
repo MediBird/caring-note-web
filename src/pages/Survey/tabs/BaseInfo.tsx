@@ -250,7 +250,7 @@ const BaseInfo = () => {
   return (
     <>
       <TabContentContainer>
-        {selectCounselCardAssistantInfo?.status === 204 && (
+        {selectCounselCardAssistantInfo?.status === 200 && (
           <div className="flex items-center justify-between">
             <Badge
               variant="tint"

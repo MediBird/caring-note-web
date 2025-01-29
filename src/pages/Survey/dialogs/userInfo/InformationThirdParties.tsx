@@ -33,7 +33,7 @@ const InformationThirdParties = ({
           <DialogTitle>개인정보의 제 3자 제공 동의</DialogTitle>
         </DialogHeader>
 
-        <div className=' <div className="text-body1 font-medium mt-[0.75rem] mb-[1.75rem] mx-[1.25rem] text-grayscale-80">'>
+        <div className='text-body1 font-medium mt-[0.75rem] mb-[1.75rem] mx-[1.25rem] text-grayscale-80">'>
           <div className="p-5 shadow-md mx-autorounded-lg bg-grayscale-3">
             {InformationThirdSections.map((section) => (
               <div key={section.id} className="mb-6">
