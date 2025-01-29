@@ -40,6 +40,23 @@ export const useSelectCounseleeList = (params: FetchParams) => {
   });
 };
 
+// 내담자 상세 정보 조회
+const selectCounseleeInfo = async (counseleeId: string) => {
+  // 내담자 상세 정보 조회 API 호출
+  const response = await counseleeInfoControllerApi.selectCounselee(
+    counseleeId,
+  );
+  return response.data.data as SelectCounseleeRes;
+};
+// 실제 사용하는 커스텀 훅
+export const useSelectCounseleedetailInfo = (counseleeId: string) => {
+  return useQuery({
+    queryKey: ['counseleeInfo', counseleeId],
+    queryFn: () => selectCounseleeInfo(counseleeId),
+    enabled: !!counseleeId,
+  });
+};
+
 // 내담자 기본 정보 생성
 const createCounseleeInfo = async (counseleeInfo: AddCounseleeReq) => {
   // 내담자 기본 정보 생성 API 호출
