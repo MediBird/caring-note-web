@@ -11,33 +11,28 @@ const counseleeConsentControllerApi = new CounseleeConsentControllerApi();
 
 //내담자 개인정보 수집 동의 여부 조회
 const selectCounseleeConsent = async ({
-  paramId,
-  queryId,
+  counseleeId,
 }: {
-  paramId: string;
-  queryId: string;
+  counseleeId: string;
 }) => {
   // 내담자 개인정보 수집 동의 여부 조회 API 호출
   const response =
     await counseleeConsentControllerApi.selectCounseleeConsentByCounseleeId(
-      paramId,
-      queryId || '',
+      counseleeId,
     );
   return response;
 };
 
 //실제 사용하는 커스텀 훅
 export const useCounseleeConsentQueryId = (
-  paramId?: string,
-  queryId?: string,
+  counseleeId?: string,
   enabled?: boolean,
 ) =>
   useQuery({
-    queryKey: ['details', paramId, queryId],
+    queryKey: ['details', counseleeId],
     queryFn: () =>
       selectCounseleeConsent({
-        paramId: paramId || '',
-        queryId: queryId || '',
+        counseleeId: counseleeId || '',
       }),
     enabled,
   });
