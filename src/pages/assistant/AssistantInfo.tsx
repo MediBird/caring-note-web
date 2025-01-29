@@ -5,14 +5,14 @@ import useAssistantInfoTabStore, {
 } from '@/store/assistantTabStore';
 import BaseInfo from '@/pages/assistant/tabs/BaseInfo';
 import HealthInfo from '@/pages/assistant/tabs/HealthInfo';
-import LifeInfo from '@/pages/assistant/tabs/LivingInfo';
+import LifeInfo from '@/pages/assistant/tabs/LifeInfo';
 import IndependentInfo from '@/pages/assistant/tabs/IndependentInfo';
 import { useEffect, useState } from 'react';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CounselAssistantDialogTypes } from './constants/modal';
-import SaveCounselAsstaint from './dialogs/CounselAssistantInfo';
+import SaveCounselAsstaint from './dialogs/SaveCounselAsstaint';
 
 const TabTitle = ({
   text,
@@ -69,31 +69,34 @@ const TabContent = ({
   }
 };
 
-const Survey = () => {
-  const navigate = useNavigate();
-  const { counselSessionId } = useParams();
+const AssistantInfo = () => {
+  const navigate = useNavigate(); // useNavigate()를 통해 navigate 함수를 가져옴
+  const { counselSessionId } = useParams(); //useParams()를 통해 counselSessionId를 가져옴
 
   const [dialogType, setDialogType] =
-    useState<CounselAssistantDialogTypes>(null);
-  const [openIndependentInfoTab, setOpenIndependentInfoTab] = useState(false);
+    useState<CounselAssistantDialogTypes>(null); // modalType을 상태로 관리
+  const [openIndependentInfoTab, setOpenIndependentInfoTab] = useState(false); // openIndependentInfoTab을 상태로 관리
 
-  const { activeTab } = useAssistantInfoTabStore();
-  const detail = useDetailCounselSessionStore((state) => state?.detail);
+  const { activeTab } = useAssistantInfoTabStore(); // activeTab을 상태로 관리
+  const detail = useDetailCounselSessionStore((state) => state?.detail); // 상담 세션 정보 조회
+  // 내담자 정보 초기화
   const resetDetail = useDetailCounselSessionStore(
     (state) => state.resetDetail,
   );
+  // 내담자 정보 조회
   const { data } = useSelectCounseleeInfo(
     counselSessionId ? detail?.counselSessionId ?? '' : '',
   );
-
+  // openModal, closeModal 함수
   const openModal = (type: CounselAssistantDialogTypes) => setDialogType(type);
   const closeModal = () => setDialogType(null);
 
   const goBack = () => {
-    navigate(-1);
-    resetDetail();
+    navigate(-1); // 이전 페이지로 이동
+    resetDetail(); // detail 초기화
   };
 
+  // data.isDisability이 true일 경우 openIndependentInfoTab을 true로 변경
   useEffect(() => {
     if (data?.isDisability === true) {
       setOpenIndependentInfoTab(true);
@@ -155,4 +158,4 @@ const Survey = () => {
   );
 };
 
-export default Survey;
+export default AssistantInfo;
