@@ -1,7 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -34,7 +33,7 @@ const InformationThirdParties = ({
           <DialogTitle>개인정보의 제 3자 제공 동의</DialogTitle>
         </DialogHeader>
 
-        <DialogDescription className="mt-3">
+        <div className=' <div className="text-body1 font-medium mt-[0.75rem] mb-[1.75rem] mx-[1.25rem] text-grayscale-80">'>
           <div className="p-5 shadow-md mx-autorounded-lg bg-grayscale-3">
             {InformationThirdSections.map((section) => (
               <div key={section.id} className="mb-6">
@@ -86,7 +85,7 @@ const InformationThirdParties = ({
               거부하는 경우에는 일부 사업 참여가 불가함을 알려 드립니다.
             </p>
           </div>
-        </DialogDescription>
+        </div>
       </DialogContent>
     </Dialog>
   );

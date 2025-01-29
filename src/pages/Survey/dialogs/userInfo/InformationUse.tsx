@@ -1,7 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -32,7 +31,7 @@ const InformationUse = ({
           />
           <DialogTitle>개인정보 수집 · 이용 내역 동의</DialogTitle>
         </DialogHeader>
-        <DialogDescription className="mt-3 mb-5">
+        <div className=' <div className="text-body1 font-medium mt-[0.75rem] mb-[1.75rem] mx-[1.25rem] text-grayscale-80">'>
           <div className="pt-5 pb-5 pl-3 pr-3 shadow-md mx-autorounded-lg bg-grayscale-3">
             <div className="mb-6 ">
               <h2 className="mb-3 text-base font-bold">수집 항목</h2>
@@ -76,7 +75,7 @@ const InformationUse = ({
               있으며 허가된 이용 목적 외에는 사용하지 않을 것을 약속드립니다.
             </p>
           </div>
-        </DialogDescription>
+        </div>
       </DialogContent>
     </Dialog>
   );
