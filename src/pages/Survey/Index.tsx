@@ -21,16 +21,17 @@ import { useCounselAgreeSessionStore } from '@/store/counselAgreeStore';
 import { useNavigate } from 'react-router-dom';
 
 const SurveyList = () => {
+  // useNavigate를 사용하여 페이지 이동
   const navigate = useNavigate();
+  // isOpen 상태를 관리하는 state
   const [isOpen, setIsOpen] = useState(false);
 
   const { params } = useCounselSessionStore();
   const { data: items } = useSelectCounselSessionList(
     params ? { ...params, size: params.size ?? 15 } : { size: 15 },
   );
-
-  const setDetail = useDetailCounselSessionStore((state) => state.setDetail);
-  const detail = useDetailCounselSessionStore((state) => state.detail);
+  // 상담 세션 상세 정보 조회
+  const { detail, setDetail } = useDetailCounselSessionStore();
   const setCounseleeConsent = useCounselAgreeSessionStore(
     (state) => state.setCounseleeConsent,
   );
@@ -40,6 +41,7 @@ const SurveyList = () => {
     detail?.counseleeId || undefined,
     !!detail,
   );
+  // 카드 작성 버튼 클릭 시
   const handleRegisterCard = (row: SelectCounselSessionListItem) => {
     setDetail(row);
   };
@@ -89,7 +91,7 @@ const SurveyList = () => {
     },
     {
       ...createDefaultTextColumn({
-        field: 'counselorName',
+        field: 'counseleeName',
         headerName: '내담자명',
       }),
     },
@@ -123,7 +125,7 @@ const SurveyList = () => {
       scheduledTime: item.scheduledTime,
       scheduledDate: item.scheduledDate,
       status: item.status,
-      counselorName: item.counselorName,
+      counseleeName: item.counseleeName,
       cardRecordStatus: item.cardRecordStatus,
     })) || [];
 
