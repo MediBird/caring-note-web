@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogOverlay,
@@ -340,7 +341,7 @@ const ItemChange = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogOverlay />
-      <DialogContent className="w-[500px] h-auto p-4">
+      <DialogContent className="w-auto">
         <DialogHeader className="flex items-center justify-between pb-2">
           <DialogTitle>
             {dialogType === 'DELETE'
@@ -360,58 +361,60 @@ const ItemChange = ({
             />
           </DialogClose>
         </DialogHeader>
-        {dialogType === 'DELETE' ? (
-          <div className="pt-5 pb-5 bg-white rounded-lg">
-            삭제된 데이터는 복구하기 어렵습니다.
-          </div>
-        ) : dialogType === 'COUNSELEE' ? (
-          <div className="flex flex-col w-auto pt-4">
-            <div className="flex flex-row w-auto gap-3">
-              {handleInput('성명', '성명', 'name')}
-              {handleInput('생년월일', 'YYYY-MM-DD', 'dateOfBirth')}
+        <div className="h-[1px] bg-grayscale-20" />
+        <DialogDescription className="sm:justify-start">
+          {dialogType === 'DELETE' ? (
+            <div>
+              상남 내역이 모두 삭제되며, 삭제된 데이터는 복구하기 어렵습니다.
             </div>
-            <div className="">
-              {renderButtons('성별', genderTypes, 'genderType')}
+          ) : dialogType === 'COUNSELEE' ? (
+            <div>
+              <div className="flex flex-row w-auto gap-3">
+                {handleInput('성명', '성명', 'name')}
+                {handleInput('생년월일', 'YYYY-MM-DD', 'dateOfBirth')}
+              </div>
+              <div className="">
+                {renderButtons('성별', genderTypes, 'genderType')}
+              </div>
+              <div className="flex flex-row w-auto gap-3">
+                {handleInput('전화번호', '-없이 숫자만 입력', 'phoneNumber')}
+                {handleInput('행정동', 'OO동', 'address')}
+              </div>
+              <div className="flex flex-row w-auto gap-3">
+                {handleInput('생활지원사', '성명', 'careManagerName')}
+                <div>
+                  {handleInput(
+                    '연계기관',
+                    '기관명 (띄어쓰기 생략)',
+                    'affiliatedWelfareInstitution',
+                  )}
+                </div>
+              </div>
+              <div className="">
+                {renderButtons('장애여부', disabilityTypes, 'disability')}
+              </div>
+              <div className="">
+                {handleInput('비고', '전달드릴 사항을 작성해주세요', 'note')}
+              </div>
             </div>
-            <div className="flex flex-row w-auto gap-3">
-              {handleInput('전화번호', '-없이 숫자만 입력', 'phoneNumber')}
-              {handleInput('행정동', 'OO동', 'address')}
-            </div>
-            <div className="flex flex-row w-auto gap-3">
-              {handleInput('생활지원사', '성명', 'careManagerName')}
-              <div>
-                {handleInput(
-                  '연계기관',
-                  '기관명 (띄어쓰기 생략)',
-                  'affiliatedWelfareInstitution',
+          ) : (
+            <div>
+              {handleSearchCounselee('내담자', '내담자 이름', 'counseleeId')}
+              <div className="flex flex-row w-auto gap-3">
+                {handleCalendar(
+                  '상담 일자',
+                  '상담 일자 선택',
+                  'scheduledStartDateTime',
+                )}
+                {handleCalendar(
+                  '예약 시각',
+                  '예약 시각 선택',
+                  'scheduledStartDateTime',
                 )}
               </div>
             </div>
-            <div className="">
-              {renderButtons('장애여부', disabilityTypes, 'disability')}
-            </div>
-            <div className="">
-              {handleInput('비고', '전달드릴 사항을 작성해주세요', 'note')}
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col w-auto pt-4 pb-4">
-            {handleSearchCounselee('내담자', '내담자 이름', 'counseleeId')}
-            <div className="flex flex-row w-auto gap-3">
-              {handleCalendar(
-                '상담 일자',
-                '상담 일자 선택',
-                'scheduledStartDateTime',
-              )}
-              {handleCalendar(
-                '예약 시각',
-                '예약 시각 선택',
-                'scheduledStartDateTime',
-              )}
-            </div>
-          </div>
-        )}
-
+          )}
+        </DialogDescription>
         <DialogFooter>
           {dialogType === 'DELETE' && (
             <Button onClick={onClose} variant={'secondary'}>
