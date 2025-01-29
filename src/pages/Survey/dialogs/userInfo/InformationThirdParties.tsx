@@ -34,7 +34,7 @@ const InformationThirdParties = ({
         </DialogHeader>
 
         <div className='text-body1 font-medium mt-[0.75rem] mb-[1.75rem] mx-[1.25rem] text-grayscale-80">'>
-          <div className="p-5 shadow-md mx-autorounded-lg bg-grayscale-3">
+          <div className="p-5 mx-auto rounded-lg bg-grayscale-3">
             {InformationThirdSections.map((section) => (
               <div key={section.id} className="mb-6">
                 <h2 className="mb-3 text-base font-bold">

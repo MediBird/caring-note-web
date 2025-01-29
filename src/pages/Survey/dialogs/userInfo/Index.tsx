@@ -77,15 +77,15 @@ const Index = ({ isOpen, handleOpen }: MainDialogTypes) => {
     <>
       <Dialog open={isOpen} onOpenChange={handleOpen}>
         <DialogContent className="w-[480px] h-[375px] pt-10 pl-5 pr-5 ">
-          <DialogHeader className="mx-0 leading-9 mb-9 text-grayscale-100">
-            <DialogTitle className="flex pl-3 pr-3 text-3xl font-bold">
+          <DialogHeader className="mx-0 leading-10 mb-9 text-grayscale-100 ">
+            <DialogTitle className="flex pl-3 pr-3 text-[1.75rem] font-bold leading-9">
               개인정보 수집 동의서를
               <br />
               작성해주세요.
             </DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col gap-4 p-5 mb-5 shadow-md mt-9 mx-autorounded-lg bg-grayscale-3">
+          <div className="flex flex-col gap-4 p-5 mx-auto mb-5 rounded-lg mt-9 bg-grayscale-3">
             <div
               className="flex items-center justify-between cursor-pointer "
               onClick={() => {
