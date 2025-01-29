@@ -8,7 +8,7 @@ import {
 import { create } from 'zustand';
 
 // 상담 카드 등록 정보 관련 상태 관리
-export interface counselAssistantType {
+export interface CounselSurveyType {
   counselCardId?: string;
   counselSessionId?: string;
   cardRecordStatus?: AddCounselCardReqCardRecordStatusEnum;
@@ -18,118 +18,97 @@ export interface counselAssistantType {
   independentLifeInformation?: IndependentLifeInformationDTO;
 }
 
-export interface CounselAssistantState {
-  counselAssistant: counselAssistantType;
-  setCounselAssistant: (
-    counselAssistant: CounselAssistantState['counselAssistant'],
+export interface CounselSurveyState {
+  counselSurvey: CounselSurveyType;
+  setCounselSurvey: (
+    updateFn: (prevState: CounselSurveyType) => CounselSurveyType,
   ) => void;
 }
 
-// 실제 사용하는 훅
-export const useCounselAssistantStore = create<CounselAssistantState>()(
-  (set) => ({
-    counselAssistant: {
-      counselCardId: '',
-      counselSessionId: '',
-      cardRecordStatus: AddCounselCardReqCardRecordStatusEnum.Recorded,
-      baseInformation: {
-        version: '1.1',
-        baseInfo: {
-          name: '',
-          birthDate: '',
-          healthInsuranceType: undefined,
-          counselSessionOrder: '',
-          lastCounselDate: '',
-        },
-        counselPurposeAndNote: {
-          counselPurpose: [],
-          SignificantNote: '',
-          MedicationNote: '',
-        },
+// Zustand Store
+export const useCounselSurveyStore = create<CounselSurveyState>()((set) => ({
+  counselSurvey: {
+    counselCardId: '',
+    counselSessionId: '',
+    cardRecordStatus: AddCounselCardReqCardRecordStatusEnum.Recorded,
+    baseInformation: {
+      version: '1.1',
+      baseInfo: {
+        name: '',
+        birthDate: '',
+        healthInsuranceType: undefined,
+        counselSessionOrder: '',
+        lastCounselDate: '',
       },
-      healthInformation: {
-        version: '1.1',
-        diseaseInfo: {
-          diseases: [],
-          historyNote: '',
-          mainInconvenienceNote: '',
-        },
-        allergy: {
-          isAllergy: undefined,
-          allergyNote: '',
-        },
-        medicationSideEffect: {
-          isSideEffect: undefined,
-          suspectedMedicationNote: '',
-          symptomsNote: '',
-        },
-      },
-      livingInformation: {
-        version: '1.1',
-        smoking: {
-          isSmoking: undefined,
-          smokingAmount: '',
-          smokingPeriodNote: '',
-        },
-        drinking: {
-          isDrinking: undefined,
-          drinkingAmount: '',
-        },
-        nutrition: {
-          mealPattern: '',
-          nutritionNote: '',
-        },
-        exercise: {
-          exercisePattern: '',
-          exerciseNote: '',
-        },
-        medicationManagement: {
-          isAlone: undefined,
-          houseMateNote: '',
-          medicationAssistants: [],
-        },
-      },
-      independentLifeInformation: {
-        version: '1.1',
-        walking: {
-          walkingMethods: [],
-          walkingEquipments: [],
-          etcNote: '',
-        },
-        evacuation: {
-          evacuationMethods: [],
-          etcNote: '',
-        },
-        communication: {
-          sights: [],
-          hearings: [],
-          communications: [],
-          usingKoreans: [],
-        },
+      counselPurposeAndNote: {
+        counselPurpose: [],
+        SignificantNote: '',
+        MedicationNote: '',
       },
     },
-    setCounselAssistant: (data) =>
-      set((state) => ({
-        counselAssistant: {
-          ...state.counselAssistant,
-          ...data,
-          baseInformation: {
-            ...state.counselAssistant.baseInformation,
-            ...(data.baseInformation || {}),
-          },
-          healthInformation: {
-            ...state.counselAssistant.healthInformation,
-            ...(data.healthInformation || {}),
-          },
-          livingInformation: {
-            ...state.counselAssistant.livingInformation,
-            ...(data.livingInformation || {}),
-          },
-          independentLifeInformation: {
-            ...state.counselAssistant.independentLifeInformation,
-            ...(data.independentLifeInformation || {}),
-          },
-        },
-      })),
-  }),
-);
+    healthInformation: {
+      version: '1.1',
+      diseaseInfo: {
+        diseases: [],
+        historyNote: '',
+        mainInconvenienceNote: '',
+      },
+      allergy: {
+        isAllergy: undefined,
+        allergyNote: '',
+      },
+      medicationSideEffect: {
+        isSideEffect: undefined,
+        suspectedMedicationNote: '',
+        symptomsNote: '',
+      },
+    },
+    livingInformation: {
+      version: '1.1',
+      smoking: {
+        isSmoking: undefined,
+        smokingAmount: '',
+        smokingPeriodNote: '',
+      },
+      drinking: {
+        isDrinking: undefined,
+        drinkingAmount: '',
+      },
+      nutrition: {
+        mealPattern: '',
+        nutritionNote: '',
+      },
+      exercise: {
+        exercisePattern: '',
+        exerciseNote: '',
+      },
+      medicationManagement: {
+        isAlone: undefined,
+        houseMateNote: '',
+        medicationAssistants: [],
+      },
+    },
+    independentLifeInformation: {
+      version: '1.1',
+      walking: {
+        walkingMethods: [],
+        walkingEquipments: [],
+        etcNote: '',
+      },
+      evacuation: {
+        evacuationMethods: [],
+        etcNote: '',
+      },
+      communication: {
+        sights: [],
+        hearings: [],
+        communications: [],
+        usingKoreans: [],
+      },
+    },
+  },
+  setCounselSurvey: (updateFn) =>
+    set((state) => ({
+      counselSurvey: updateFn(state.counselSurvey),
+    })),
+}));
