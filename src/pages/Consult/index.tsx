@@ -140,14 +140,12 @@ export function Index() {
         age={age}
         diseases={diseases}
       />
-      <TabsContent
-        value="pastConsult"
-        className="pr-[9.5rem] pl-[5.75rem] pt-10">
+      <TabsContent value="pastConsult">
         <Card>
-          <CardHeader className="pb-5">
+          <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>이전 상담 내역</CardTitle>
+                <CardTitle>기초 상담 내역</CardTitle>
               </div>
               <Button
                 variant="secondary"
