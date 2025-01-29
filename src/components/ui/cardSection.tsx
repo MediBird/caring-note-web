@@ -2,7 +2,7 @@ interface CardSectionProps {
   title: React.ReactNode;
   items: Array<{
     label: string;
-    value: string | undefined;
+    value: React.ReactNode | undefined;
   }>;
   variant?: 'primary' | 'secondary' | 'grayscale' | 'error';
 }
