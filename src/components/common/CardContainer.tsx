@@ -204,7 +204,7 @@ const CardContainer = ({
       <div
         className={classNames(
           'py-4 w-full bg-grayscale-3 rounded-md mb-4',
-          variant ? `border-t-4 border-${variant}-30` : '',
+          variant ? `border-t-[6px] border-${variant}-30` : '',
           className,
         )}>
         {title && (
