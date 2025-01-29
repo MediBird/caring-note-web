@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import TabContentContainer from '@/components/consult/TabContentContainer';
-import { useEffect, useState } from 'react';
-import { useCounselAssistantStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCallback, useMemo } from 'react';
+import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
 import {
   IswalkingTypes,
   walkingTools,
@@ -15,8 +15,6 @@ import {
   usingKoreanTypes,
 } from '@/pages/Survey/constants/IndependentInfo';
 import { IndependentLifeInformationDTO } from '@/api';
-import { useParams } from 'react-router-dom';
-import { useSelectCounselCard } from '@/pages/Survey/hooks/useCounselAssistantQuery';
 
 type SectionFields = Record<string, string | undefined>;
 type ButtonOption = {
@@ -25,84 +23,99 @@ type ButtonOption = {
 };
 
 const IndependentInfo = () => {
-  //useParams()를 통해 counselSessionId를 가져옴
-  const { counselSessionId } = useParams();
   //counselAssistantStore에서 counselAssistant와 setCounselAssistant를 가져옴
-  const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
+  const { counselSurvey, setCounselSurvey } = useCounselSurveyStore();
 
-  // 상담 카드 조회
-  const { data: selectCounselCardAssistantInfo } = useSelectCounselCard(
-    counselSessionId ?? '',
+  // `useMemo`를 사용하여 `formData`가 불필요하게 재생성되지 않도록 최적화
+  const formData = useMemo(
+    () => ({
+      ...counselSurvey.independentLifeInformation,
+      version: '1.1',
+      walking: counselSurvey.independentLifeInformation?.walking || {},
+      evacuation: counselSurvey.independentLifeInformation?.evacuation || {},
+      communication:
+        counselSurvey.independentLifeInformation?.communication || {},
+    }),
+    [counselSurvey.independentLifeInformation],
   );
-  const [formData, setFormData] = useState<IndependentLifeInformationDTO>(
-    counselAssistant.independentLifeInformation || {
-      walking: {},
-      evacuation: {},
-      communication: {},
+
+  // `useCallback`으로 `updateFormData` 메모이제이션 (의존성 배열 변화 방지)
+  const updateFormData = useCallback(
+    (
+      section: keyof IndependentLifeInformationDTO,
+      updates: Record<string, string | number | boolean>,
+    ) => {
+      setCounselSurvey((prevState) => ({
+        ...prevState,
+        independentLifeInformation: {
+          ...prevState.independentLifeInformation,
+          [section]: {
+            ...(typeof prevState.independentLifeInformation?.[section] ===
+              'object' &&
+            prevState.independentLifeInformation?.[section] !== null
+              ? prevState.independentLifeInformation?.[section]
+              : {}),
+            ...updates,
+          },
+        },
+      }));
     },
+    [setCounselSurvey],
   );
 
-  useEffect(() => {
-    if (
-      selectCounselCardAssistantInfo?.data?.data?.independentLifeInformation
-    ) {
-      setFormData(
-        selectCounselCardAssistantInfo.data.data.independentLifeInformation,
-      );
-    }
-  }, [selectCounselCardAssistantInfo, setCounselAssistant, counselSessionId]);
-
-  // `formData`가 변경되었을 때 `counselAssistant` 업데이트
-  useEffect(() => {
-    if (
-      JSON.stringify(counselAssistant.independentLifeInformation) !==
-      JSON.stringify(formData)
-    ) {
-      setCounselAssistant({
-        ...counselAssistant,
-        independentLifeInformation: formData,
-      });
-    }
-  }, [formData, setCounselAssistant, counselAssistant]);
+  // 입력값 변경 핸들러
   const handleInputChange = (
     section: keyof IndependentLifeInformationDTO,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: {
-        ...(prev[section] as SectionFields),
-        [e.target.name]: e.target.value,
-      },
-    }));
+    updateFormData(section, { [e.target.name]: e.target.value });
   };
 
-  // 배열 값 토글 함수
+  // 다중 선택 버튼 토글 함수
   const toggleArrayValue = (
     section: keyof IndependentLifeInformationDTO,
     field: string,
     value: string,
   ) => {
-    setFormData((prev) => {
-      const currentValues =
-        (prev[section] as SectionFields)?.[field] || ([] as string[]);
+    setCounselSurvey((prevState) => {
+      // `section`을 안전하게 가져오기 (초기값을 빈 객체로 설정)
+      const sectionData = prevState.independentLifeInformation?.[section] ?? {};
+
+      // 현재 필드의 값을 배열로 변환 (string | string[]만 허용)
+      let currentValues: string[] = [];
+
+      if (Array.isArray((sectionData as Record<string, unknown>)[field])) {
+        currentValues = [...(sectionData as Record<string, string[]>)[field]];
+      } else if (
+        typeof (sectionData as Record<string, unknown>)[field] === 'string'
+      ) {
+        currentValues = (sectionData as Record<string, string>)[field]
+          .split(',')
+          .filter((v) => v.trim() !== '');
+      }
+
+      // 값 추가 또는 제거
       const updatedValues = currentValues.includes(value)
-        ? Array.isArray(currentValues)
-          ? currentValues.filter((v) => v !== value)
-          : []
-        : [...currentValues, value];
+        ? currentValues.filter((v) => v !== value) // 값 제거
+        : [...currentValues, value]; // 값 추가
+
+      // Zustand 상태 업데이트
       return {
-        ...prev,
-        [section]: {
-          ...(prev[section] as SectionFields),
-          [field]: updatedValues,
-          ...(value === '기타' &&
-            !updatedValues.includes('기타') && { etcNote: '' }), // '기타' 해제 시 etcNote 초기화
+        ...prevState,
+        independentLifeInformation: {
+          ...prevState.independentLifeInformation,
+          [section]: {
+            ...(typeof sectionData === 'object' && sectionData !== null
+              ? sectionData
+              : {}),
+            [field]: updatedValues, // 배열 유지
+          },
         },
       };
     });
   };
 
+  // 다중 선택 버튼 렌더링 함수
   const renderMultiSelectButtons = (
     label: string,
     options: ButtonOption[],

@@ -4,9 +4,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import TabContentContainer from '@/components/consult/TabContentContainer';
 import InfoBlueIcon from '@/assets/icon/24/info.filled.blue.svg';
-import { useEffect, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import CardContainer from '@/components/common/CardContainer';
-import { useCounselAssistantStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
 import { BaseInformationDTO } from '@/api';
 import {
   insuranceTypes,
@@ -17,69 +17,236 @@ import { useParams } from 'react-router-dom';
 import { useSelectCounselCard } from '@/pages/Survey/hooks/useCounselAssistantQuery';
 import { Textarea } from '@/components/ui/textarea';
 
+type SectionFields = Record<string, string | undefined>;
+type ButtonOption = {
+  label: string;
+  value: string | number | boolean;
+};
 const BaseInfo = () => {
   //useParams()를 통해 counselSessionId를 가져옴
   const { counselSessionId } = useParams();
-
-  const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
+  // counselAssistantStore에서 counselAssistant와 setCounselAssistant를 가져옴
+  const { counselSurvey, setCounselSurvey } = useCounselSurveyStore();
   // 상담 카드 조회
   const { data: selectCounselCardAssistantInfo } = useSelectCounselCard(
     counselSessionId ?? '',
   );
-  const [formData, setFormData] = useState<BaseInformationDTO>(
-    counselAssistant.baseInformation || {
-      baseInfo: {},
-      counselPurposeAndNote: {},
-    }, //counselAssistant.baseInformation이 null이면 빈 객체를 넣어줌),
+  // `useMemo`를 사용하여 `formData`가 불필요하게 재생성되지 않도록 최적화
+  const formData = useMemo(
+    () => ({
+      ...counselSurvey.baseInformation,
+      version: '1.1',
+      baseInfo: counselSurvey.baseInformation?.baseInfo || {},
+      counselPurposeAndNote:
+        counselSurvey.baseInformation?.counselPurposeAndNote || {},
+    }),
+    [counselSurvey.baseInformation],
   );
 
-  const toggleGoal = (goal: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      counselPurposeAndNote: {
-        ...prev.counselPurposeAndNote,
-        counselPurpose: prev.counselPurposeAndNote?.counselPurpose?.includes(
-          goal,
-        )
-          ? prev.counselPurposeAndNote.counselPurpose.filter(
-              (item) => item !== goal,
-            )
-          : [...(prev.counselPurposeAndNote?.counselPurpose || []), goal],
-      },
-    }));
-  };
+  // `useCallback`으로 `updateFormData` 메모이제이션 (의존성 배열 변화 방지)
+  const updateFormData = useCallback(
+    (
+      section: keyof BaseInformationDTO,
+      updates: Record<string, string | number | boolean>,
+    ) => {
+      setCounselSurvey((prevState) => ({
+        ...prevState,
+        baseInformation: {
+          ...prevState.baseInformation,
+          [section]: {
+            ...(typeof prevState.baseInformation?.[section] === 'object' &&
+            prevState.baseInformation?.[section] !== null
+              ? prevState.baseInformation?.[section]
+              : {}),
+            ...updates,
+          },
+        },
+      }));
+    },
+    [setCounselSurvey],
+  );
 
-  const handleInputChange = (
-    section: 'baseInfo' | 'counselPurposeAndNote',
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  // 입력값 함수
+  const handleInput = (
+    label: string,
+    placeholder: string,
+    section: keyof BaseInformationDTO,
+    fieldName: string,
+    condition?: boolean,
   ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [e.target.name]: e.target.value,
-      },
-    }));
+    if (condition === undefined || condition) {
+      return (
+        <div className="p-4">
+          <Label htmlFor={fieldName} className="font-bold">
+            {label}
+          </Label>
+          <Input
+            id={fieldName}
+            name={fieldName}
+            placeholder={placeholder}
+            value={(formData[section] as SectionFields)?.[fieldName] ?? ''}
+            onChange={(e) =>
+              updateFormData(section, { [e.target.name]: e.target.value })
+            }
+            className="mt-3"
+          />
+        </div>
+      );
+    }
+    return null;
   };
 
-  useEffect(() => {
-    if (selectCounselCardAssistantInfo?.data?.data?.baseInformation) {
-      setFormData(selectCounselCardAssistantInfo?.data?.data?.baseInformation);
+  // 입력값 함수
+  const handleTextarea = (
+    label: string,
+    placeholder: string,
+    section: keyof BaseInformationDTO,
+    fieldName: string,
+    condition?: boolean,
+  ) => {
+    if (condition === undefined || condition) {
+      return (
+        <div className="p-4">
+          <Label htmlFor={fieldName} className="font-bold">
+            {label}
+          </Label>
+          <Textarea
+            id={fieldName}
+            name={fieldName}
+            placeholder={placeholder}
+            value={(formData[section] as SectionFields)?.[fieldName] ?? ''}
+            onChange={(e) =>
+              updateFormData(section, { [e.target.name]: e.target.value })
+            }
+            className="mt-3 pb-36"
+          />
+        </div>
+      );
     }
-  }, [selectCounselCardAssistantInfo, setCounselAssistant, counselSessionId]);
+    return null;
+  };
 
-  // `formData`가 변경되었을 때 `counselAssistant` 업데이트
-  useEffect(() => {
-    if (
-      JSON.stringify(counselAssistant.baseInformation) !==
-      JSON.stringify(formData)
-    ) {
-      setCounselAssistant({
-        ...counselAssistant,
-        baseInformation: formData,
-      });
+  // 버튼 렌더링 함수
+  const renderButtons = (
+    label: string,
+    options: ButtonOption[],
+    section: keyof BaseInformationDTO,
+    field: string,
+    condition?: boolean,
+  ) => {
+    if (condition === undefined || condition) {
+      return (
+        <div className="p-4">
+          <Label htmlFor={field} className="font-bold">
+            {label}
+          </Label>
+          <div className="flex gap-2">
+            {options.map((option) => (
+              <Button
+                key={option.label}
+                type="button"
+                variant={
+                  (formData[section] as SectionFields)?.[field] === option.value
+                    ? 'pressed'
+                    : 'nonpressed'
+                }
+                className="pl-3 pr-3 mt-3 font-medium rounded-lg"
+                size="lg"
+                onClick={() =>
+                  updateFormData(section, { [field]: option.value })
+                }>
+                {option.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+      );
     }
-  }, [formData, setCounselAssistant, counselAssistant]);
+    return null;
+  };
+  // 배열 값 토글 함수
+  const toggleArrayValue = (
+    section: keyof BaseInformationDTO,
+    field: string,
+    value: string,
+  ) => {
+    setCounselSurvey((prevState) => {
+      // `section`을 안전하게 가져오기 (초기값을 빈 객체로 설정)
+      const sectionData = prevState.baseInformation?.[section] ?? {};
+
+      // 현재 필드의 값을 배열로 변환 (string | string[]만 허용)
+      let currentValues: string[] = [];
+
+      if (Array.isArray((sectionData as Record<string, unknown>)[field])) {
+        currentValues = [...(sectionData as Record<string, string[]>)[field]];
+      } else if (
+        typeof (sectionData as Record<string, unknown>)[field] === 'string'
+      ) {
+        currentValues = (sectionData as Record<string, string>)[field]
+          .split(',')
+          .filter((v) => v.trim() !== '');
+      }
+
+      // 값 추가 또는 제거
+      const updatedValues = currentValues.includes(value)
+        ? currentValues.filter((v) => v !== value) // 값 제거
+        : [...currentValues, value]; // 값 추가
+
+      // Zustand 상태 업데이트
+      return {
+        ...prevState,
+        baseInformation: {
+          ...prevState.baseInformation,
+          [section]: {
+            ...(typeof sectionData === 'object' && sectionData !== null
+              ? sectionData
+              : {}),
+            [field]: updatedValues, // 배열 유지
+          },
+        },
+      };
+    });
+  };
+  // 배열 값 토글 함수
+  const renderMultiSelectButtons = (
+    label: string,
+    options: ButtonOption[],
+    section: keyof BaseInformationDTO,
+    field: string,
+  ) => {
+    return (
+      <div className="p-4">
+        <Label htmlFor={field} className="font-bold">
+          {label}
+        </Label>
+        <p className="mt-3 mb-3 text-sm text-gray-500">
+          여러개를 동시에 선택할 수 있어요.
+        </p>
+        <div className="flex gap-2">
+          {options.map((option) => (
+            <Button
+              key={option.label}
+              type="button"
+              variant={
+                (formData[section] as SectionFields)?.[field]?.includes(
+                  option.value.toString(),
+                )
+                  ? 'pressed'
+                  : 'nonpressed'
+              }
+              className="pl-3 pr-3 mt-3 font-medium rounded-lg"
+              size="lg"
+              onClick={() =>
+                toggleArrayValue(section, field, option.value.toString())
+              }>
+              {option.label}
+            </Button>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <TabContentContainer>
@@ -104,114 +271,44 @@ const BaseInfo = () => {
             itemName="baseInfo"
             className="py-7">
             {/* 성명 */}
-            <div className="inline-block w-1/4 pl-4">
-              <Label htmlFor="name" className="font-bold">
-                성명
-              </Label>
-              <Input
-                id="name"
-                name="name"
-                placeholder="이름"
-                value={formData.baseInfo?.name || ''}
-                onChange={(e) => handleInputChange('baseInfo', e)}
-                className="mt-3"
-              />
+            <div className="inline-block w-1/4">
+              {handleInput('성명', '이름을 입력해주세요.', 'baseInfo', 'name')}
             </div>
 
             {/* 생년월일 */}
-            <div className="inline-block w-1/4 p-4">
-              <Label htmlFor="birthDate" className="font-bold">
-                생년월일
-              </Label>
-              <Input
-                id="birthDate"
-                name="birthDate"
-                placeholder="YYYY-MM-DD"
-                value={formData.baseInfo?.birthDate || ''}
-                onChange={(e) => handleInputChange('baseInfo', e)}
-                className="mt-3"
-              />
+            <div className="inline-block w-1/4">
+              {handleInput(
+                '생년월일',
+                'YYYY-MM-DD 형식으로 입력해주세요.',
+                'baseInfo',
+                'birthDate',
+              )}
             </div>
 
             {/* 의료보장형태 */}
-            <div className="p-4">
-              <Label htmlFor="insuranceType" className="font-bold">
-                의료보장형태
-              </Label>
-              <div className="flex gap-2">
-                {insuranceTypes.map((type) => (
-                  <Button
-                    key={type.value}
-                    id="insuranceType"
-                    type="button"
-                    variant={
-                      formData.baseInfo?.healthInsuranceType === type.value
-                        ? 'pressed'
-                        : 'nonpressed'
-                    }
-                    className="pl-2 pr-2 mt-3 font-medium rounded-lg"
-                    size="lg"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        baseInfo: {
-                          ...formData.baseInfo,
-                          healthInsuranceType: type.value,
-                        },
-                      })
-                    }>
-                    {type.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
+            {renderButtons(
+              '의료보장형태',
+              insuranceTypes,
+              'baseInfo',
+              'healthInsuranceType',
+            )}
 
             {/* 상담차수  */}
-            <div className="p-4">
-              <Label htmlFor="consultationCount" className="font-bold">
-                상담차수
-              </Label>
-              <div className="flex gap-2">
-                {consultationCounts.map((count) => (
-                  <Button
-                    key={count}
-                    id="consultationCount"
-                    type="button"
-                    variant={
-                      formData.baseInfo?.counselSessionOrder === count
-                        ? 'pressed'
-                        : 'nonpressed'
-                    }
-                    className="pl-2 pr-2 mt-3 font-medium rounded-lg"
-                    size="lg"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        baseInfo: {
-                          ...formData.baseInfo,
-                          counselSessionOrder: count,
-                        },
-                      })
-                    }>
-                    {count}
-                  </Button>
-                ))}
-              </div>
-            </div>
+            {renderButtons(
+              '상담차수',
+              consultationCounts,
+              'baseInfo',
+              'counselSessionOrder',
+            )}
 
             {/* 최근 상담일 */}
-            <div className="w-1/4 p-4">
-              <Label htmlFor="lastCounselDate" className="font-bold">
-                최근 상담일
-              </Label>
-              <Input
-                id="lastCounselDate"
-                name="lastCounselDate"
-                placeholder="YYYY-MM-DD"
-                value={formData.baseInfo?.lastCounselDate || ''}
-                onChange={(e) => handleInputChange('baseInfo', e)}
-                className="mt-3 focus:border-primary-50 focus:border-2"
-              />
+            <div className="w-1/4">
+              {handleInput(
+                '최근 상담일',
+                'YYYY-MM-DD 형식으로 입력해주세요.',
+                'baseInfo',
+                'lastCounselDate',
+              )}
             </div>
           </CardContainer>
         </div>
@@ -223,64 +320,28 @@ const BaseInfo = () => {
             className="py-7"
             itemName="baseInfo">
             {/* 상담 목적 */}
-            <div className="inline-block p-4">
-              <Label htmlFor="goal" className="font-bold">
-                상담 목적
-              </Label>
-              <p className="mt-1 mb-3 text-sm text-gray-500">
-                여러개를 동시에 선택할 수 있어요.
-              </p>
-              <div className="flex gap-2">
-                {consultationGoals.map((goal) => (
-                  <Button
-                    key={goal}
-                    id="goal"
-                    type="button"
-                    variant={
-                      formData.counselPurposeAndNote?.counselPurpose?.includes(
-                        goal,
-                      )
-                        ? 'pressed'
-                        : 'nonpressed'
-                    }
-                    className="pl-2 pr-2 font-medium rounded-lg"
-                    size="lg"
-                    onClick={() => toggleGoal(goal)}>
-                    {goal}
-                  </Button>
-                ))}
-              </div>
-            </div>
+            {renderMultiSelectButtons(
+              '상담 목적',
+              consultationGoals,
+              'counselPurposeAndNote',
+              'counselPurpose',
+            )}
 
             {/* 특이사항 */}
-            <div className="p-4">
-              <Label htmlFor="SignificantNote" className="font-bold">
-                특이사항
-              </Label>
-              <Textarea
-                id="SignificantNote"
-                name="SignificantNote"
-                placeholder="특이사항 혹은 약사에게 궁금한 점을 작성해주세요."
-                value={formData.counselPurposeAndNote?.SignificantNote || ''}
-                onChange={(e) => handleInputChange('counselPurposeAndNote', e)}
-                className="mt-3 text-base pb-36"
-              />
-            </div>
+            {handleTextarea(
+              '특이사항',
+              '상담사님께 전달해 드릴 특이사항을 작성해 주세요.',
+              'counselPurposeAndNote',
+              'SignificantNote',
+            )}
 
             {/* 의약물 */}
-            <div className="p-4">
-              <Label htmlFor="MedicationNote" className="font-bold">
-                의약물
-              </Label>
-              <Textarea
-                id="MedicationNote"
-                name="MedicationNote"
-                placeholder="약사님께 전달해 드릴 의약물을 작성해 주세요."
-                value={formData.counselPurposeAndNote?.MedicationNote || ''}
-                onChange={(e) => handleInputChange('counselPurposeAndNote', e)}
-                className="mt-3 pb-36"
-              />
-            </div>
+            {handleTextarea(
+              '의약물',
+              '복용 중인 의약품을 작성해 주세요.',
+              'counselPurposeAndNote',
+              'MedicationNote',
+            )}
           </CardContainer>
         </div>
       </TabContentContainer>

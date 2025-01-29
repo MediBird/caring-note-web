@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import TabContentContainer from '@/components/consult/TabContentContainer';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { LivingInformationDTO } from '@/api';
-import { useCounselAssistantStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
 import {
   isAloneTypes,
   isDrinkingTypes,
@@ -16,8 +16,6 @@ import {
   dailyEatingTypes,
   exerciseWeeklyCounts,
 } from '@/pages/Survey/constants/livingInfo';
-import { useParams } from 'react-router-dom';
-import { useSelectCounselCard } from '@/pages/Survey/hooks/useCounselAssistantQuery';
 
 type SectionFields = Record<string, string | undefined>;
 type ButtonOption = {
@@ -26,65 +24,44 @@ type ButtonOption = {
 };
 
 const LivingInfo = () => {
-  const { counselSessionId } = useParams(); //useParams()를 통해 counselSessionId를 가져옴
-  const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
+  const { counselSurvey, setCounselSurvey } = useCounselSurveyStore();
 
-  // 상담 카드 조회
-  const { data: selectCounselCardAssistantInfo } = useSelectCounselCard(
-    counselSessionId ?? '',
+  const formData = useMemo(
+    () => ({
+      ...counselSurvey.livingInformation,
+      version: '1.1',
+      smoking: counselSurvey.livingInformation?.smoking || {},
+      drinking: counselSurvey.livingInformation?.drinking || {},
+      nutrition: counselSurvey.livingInformation?.nutrition || {},
+      exercise: counselSurvey.livingInformation?.exercise || {},
+      medicationManagement:
+        counselSurvey.livingInformation?.medicationManagement || {},
+    }),
+    [counselSurvey.livingInformation],
   );
-  const [formData, setFormData] = useState<LivingInformationDTO>(
-    counselAssistant.livingInformation || {
-      smoking: {},
-      drinking: {},
-      nutrition: {},
-      exercise: {},
-      medicationManagement: {},
-    }, //counselAssistant.livingInformation이 null이면 빈 객체를 넣어줌
+
+  // `useCallback`으로 `updateFormData` 메모이제이션 (의존성 배열 변화 방지)
+  const updateFormData = useCallback(
+    (
+      section: keyof LivingInformationDTO,
+      updates: Record<string, string | number | boolean>,
+    ) => {
+      setCounselSurvey((prevState) => ({
+        ...prevState,
+        livingInformation: {
+          ...prevState.livingInformation,
+          [section]: {
+            ...(typeof prevState.livingInformation?.[section] === 'object' &&
+            prevState.livingInformation?.[section] !== null
+              ? prevState.livingInformation?.[section]
+              : {}),
+            ...updates,
+          },
+        },
+      }));
+    },
+    [setCounselSurvey],
   );
-  // selectCounselCardAssistantInfo가 변경되었을 때 formData 업데이트
-  useEffect(() => {
-    if (selectCounselCardAssistantInfo?.data?.data?.livingInformation) {
-      setFormData(
-        selectCounselCardAssistantInfo?.data?.data?.livingInformation,
-      );
-    }
-  }, [selectCounselCardAssistantInfo, setCounselAssistant, counselSessionId]);
-
-  // `formData`가 변경되었을 때 `counselAssistant` 업데이트
-  useEffect(() => {
-    if (
-      JSON.stringify(counselAssistant.livingInformation) !==
-      JSON.stringify(formData)
-    ) {
-      setCounselAssistant({
-        ...counselAssistant,
-        livingInformation: formData,
-      });
-    }
-  }, [formData, setCounselAssistant, counselAssistant]);
-
-  // 업데이트 하는 함수
-  const updateFormData = (
-    section: keyof LivingInformationDTO,
-    updates: Record<string, string | number | boolean>,
-    isArrayUpdate: boolean = false,
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: {
-        ...(typeof prev[section] === 'object' ? prev[section] : {}),
-        ...(isArrayUpdate
-          ? {
-              ...updates,
-            }
-          : {
-              ...((prev[section] as SectionFields) ?? {}),
-              ...updates,
-            }),
-      },
-    }));
-  };
 
   // 흡연, 음주, 주간 운동패턴, 약복용 관리의 특이사항이 false일 경우 빈 값으로 초기화
   useEffect(() => {
@@ -108,6 +85,7 @@ const LivingInfo = () => {
     formData.drinking?.isDrinking,
     formData.exercise?.exercisePattern,
     formData.medicationManagement?.isAlone,
+    updateFormData,
   ]);
 
   // 입력값 함수
@@ -184,18 +162,39 @@ const LivingInfo = () => {
     field: string,
     value: string,
   ) => {
-    setFormData((prev) => {
-      const currentValues =
-        (prev[section] as SectionFields)?.[field] ?? ([] as string[]);
+    setCounselSurvey((prevState) => {
+      // `section`을 안전하게 가져오기 (초기값을 빈 객체로 설정)
+      const sectionData = prevState.livingInformation?.[section] ?? {};
+
+      // 현재 필드의 값을 배열로 변환 (string | string[]만 허용)
+      let currentValues: string[] = [];
+
+      if (Array.isArray((sectionData as Record<string, unknown>)[field])) {
+        currentValues = [...(sectionData as Record<string, string[]>)[field]];
+      } else if (
+        typeof (sectionData as Record<string, unknown>)[field] === 'string'
+      ) {
+        currentValues = (sectionData as Record<string, string>)[field]
+          .split(',')
+          .filter((v) => v.trim() !== '');
+      }
+
+      // 값 추가 또는 제거
+      const updatedValues = currentValues.includes(value)
+        ? currentValues.filter((v) => v !== value) // 값 제거
+        : [...currentValues, value]; // 값 추가
+
+      // Zustand 상태 업데이트
       return {
-        ...prev,
-        [section]: {
-          ...(typeof prev[section] === 'object' ? prev[section] : {}),
-          [field]: currentValues.includes(value)
-            ? Array.isArray(currentValues)
-              ? currentValues.filter((v) => v !== value)
-              : []
-            : [...currentValues, value],
+        ...prevState,
+        livingInformation: {
+          ...prevState.livingInformation,
+          [section]: {
+            ...(typeof sectionData === 'object' && sectionData !== null
+              ? sectionData
+              : {}),
+            [field]: updatedValues, // 배열 유지
+          },
         },
       };
     });

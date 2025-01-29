@@ -2,56 +2,54 @@ import { Button } from '@/components/ui/button';
 import useAssistantInfoTabStore, {
   AssistantInfoTab,
 } from '@/pages/Survey/store/surveyTabStore';
-import { useEffect, useState } from 'react';
-import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
+import { useEffect, useRef, useState } from 'react';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useParams } from 'react-router-dom';
 import { CounselAssistantDialogTypes } from '../constants/modal';
 import CounselAssistantInfo from '../dialogs/counselSurvey/SaveCounselSurvey';
 import { useSelectCounselCard } from '@/pages/Survey/hooks/useCounselAssistantQuery';
-import { useCounselAssistantStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
 import TabTitle from '@/pages/Survey/components/TabTitle';
 import TabContent from '@/pages/Survey/components/TabContent';
 
 const Survey = () => {
+  // useParams()를 통해 counselSessionId를 가져옴
   const { counselSessionId } = useParams();
-  const { setCounselAssistant } = useCounselAssistantStore();
+  // usecounselSurveyStore에서 counselSurvey, setCounselSurvey 가져옴
+  const { setCounselSurvey } = useCounselSurveyStore();
+  // 다이얼로그 타입 상태
   const [dialogType, setDialogType] =
     useState<CounselAssistantDialogTypes>(null);
+  // 자립생활 역량 탭 열기 상태
   const [openIndependentInfoTab, setOpenIndependentInfoTab] = useState(false);
-
+  // 탭 상태
   const { activeTab } = useAssistantInfoTabStore();
-  const detail = useDetailCounselSessionStore((state) => state?.detail);
-
   // 내담자 기본 정보 조회
-  const { data } = useSelectCounseleeInfo(counselSessionId ?? '');
-  // 상담 카드 조회
-  const { data: selectCounselCardAssistantInfo } = useSelectCounselCard(
+  const { data: counseleeInfo } = useSelectCounseleeInfo(
     counselSessionId ?? '',
   );
+  // 상담 카드 조회
+  const { data: survey, isLoading } = useSelectCounselCard(
+    counselSessionId ?? '',
+  );
+
   const openModal = (type: CounselAssistantDialogTypes) => setDialogType(type);
   const closeModal = () => setDialogType(null);
 
+  // **Zustand 상태가 비어있을 때만 survey 데이터 적용**
   useEffect(() => {
-    if (data?.isDisability === true) {
-      setOpenIndependentInfoTab(true);
-    } else {
-      setOpenIndependentInfoTab(false);
+    if (survey?.data?.data && !Object.keys(setCounselSurvey).length) {
+      setCounselSurvey((prevState) => ({
+        ...prevState, // 기존 상태 유지
+        ...survey.data.data, // 상태를 덮어씌우지 않고 병합
+      }));
     }
-  }, [data, detail, counselSessionId]);
+  }, [survey?.data?.data, setCounselSurvey]);
 
+  // **내담자 정보에 따라 "자립생활 역량" 탭 표시 여부 결정**
   useEffect(() => {
-    if (selectCounselCardAssistantInfo?.status === 200) {
-      if (selectCounselCardAssistantInfo?.data?.data) {
-        setCounselAssistant(selectCounselCardAssistantInfo.data.data);
-      }
-    }
-  }, [
-    selectCounselCardAssistantInfo?.data.data,
-    counselSessionId,
-    setCounselAssistant,
-    selectCounselCardAssistantInfo?.status,
-  ]);
+    setOpenIndependentInfoTab(counseleeInfo?.isDisability ?? false);
+  }, [counseleeInfo]);
 
   // 뒤로가기 버튼 클릭 시 모달 열기
   useEffect(() => {
@@ -73,7 +71,7 @@ const Survey = () => {
 
   return (
     <div>
-      <div className="flex flex-col items-center justify-start w-full px-8 pt-10 pb-3 bg-gray-0">
+      <div className="flex flex-col items-center justify-start w-full px-8 pt-10 pb-3 mb-2 bg-gray-0">
         <div className="flex flex-row items-center justify-start w-full h-auto pl-6">
           <div className="flex flex-row items-center justify-start w-full h-8 ">
             <p className="text-4xl font-black text-black">기초 설문 작성</p>
@@ -104,10 +102,13 @@ const Survey = () => {
           isHidden={!openIndependentInfoTab}
         />
       </div>
-      <TabContent
-        activeTab={activeTab}
-        openIndependentInfoTab={openIndependentInfoTab}
-      />
+      {!isLoading && (
+        <TabContent
+          activeTab={activeTab}
+          openIndependentInfoTab={openIndependentInfoTab}
+        />
+      )}
+
       <CounselAssistantInfo
         isOpen={dialogType !== null}
         dialogType={dialogType}

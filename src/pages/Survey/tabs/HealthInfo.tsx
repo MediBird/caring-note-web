@@ -2,16 +2,14 @@ import CardContainer from '@/components/common/CardContainer';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import TabContentContainer from '@/components/consult/TabContentContainer';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { HealthInformationDTO } from '@/api';
-import { useCounselAssistantStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
 import {
   diseaseList,
   isAllergyTypes,
   isMedicineTypes,
 } from '@/pages/Survey/constants/healthInfo';
-import { useParams } from 'react-router-dom';
-import { useSelectCounselCard } from '@/pages/Survey/hooks/useCounselAssistantQuery';
 import { Textarea } from '@/components/ui/textarea';
 
 type SectionFields = Record<string, string | undefined>;
@@ -20,63 +18,45 @@ type ButtonOption = {
   value: string | number | boolean;
 };
 const HealthInfo = () => {
-  // useParams()를 통해 counselSessionId를 가져옴
-  const { counselSessionId } = useParams();
   // counselAssistantStore에서 counselAssistant와 setCounselAssistant를 가져옴
-  const { counselAssistant, setCounselAssistant } = useCounselAssistantStore();
-  const { data: selectCounselCardAssistantInfo } = useSelectCounselCard(
-    counselSessionId ?? '',
+  const { counselSurvey, setCounselSurvey } = useCounselSurveyStore();
+
+  // `useMemo`를 사용하여 `formData`가 불필요하게 재생성되지 않도록 최적화
+  const formData = useMemo(
+    () => ({
+      ...counselSurvey.healthInformation,
+      version: '1.1',
+      diseaseInfo: counselSurvey.healthInformation?.diseaseInfo || {},
+      allergy: counselSurvey.healthInformation?.allergy || {},
+      medicationSideEffect:
+        counselSurvey.healthInformation?.medicationSideEffect || {},
+    }),
+    [counselSurvey.healthInformation],
   );
 
-  const [formData, setFormData] = useState<HealthInformationDTO>(
-    counselAssistant.healthInformation || {
-      diseaseInfo: {},
-      allergy: {},
-      medicationSideEffect: {},
+  // `useCallback`으로 `updateFormData` 메모이제이션 (의존성 배열 변화 방지)
+  const updateFormData = useCallback(
+    (
+      section: keyof HealthInformationDTO,
+      updates: Record<string, string | number | boolean>,
+    ) => {
+      setCounselSurvey((prevState) => ({
+        ...prevState,
+        healthInformation: {
+          ...prevState.healthInformation,
+          [section]: {
+            ...(typeof prevState.healthInformation?.[section] === 'object' &&
+            prevState.healthInformation?.[section] !== null
+              ? prevState.healthInformation?.[section]
+              : {}),
+            ...updates,
+          },
+        },
+      }));
     },
+    [setCounselSurvey],
   );
 
-  useEffect(() => {
-    if (selectCounselCardAssistantInfo?.data?.data?.healthInformation) {
-      setFormData(
-        selectCounselCardAssistantInfo?.data?.data?.healthInformation,
-      );
-    }
-  }, [selectCounselCardAssistantInfo, setCounselAssistant, counselSessionId]);
-
-  useEffect(() => {
-    if (
-      JSON.stringify(counselAssistant.healthInformation) !==
-      JSON.stringify(formData)
-    ) {
-      setCounselAssistant({
-        ...counselAssistant,
-        healthInformation: formData,
-      });
-    }
-  }, [formData, setCounselAssistant, counselAssistant]);
-
-  // 업데이트 하는 함수
-  const updateFormData = (
-    section: keyof HealthInformationDTO,
-    updates: Record<string, string | number | boolean>,
-    isArrayUpdate: boolean = false,
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: {
-        ...(typeof prev[section] === 'object' ? prev[section] : {}),
-        ...(isArrayUpdate
-          ? {
-              ...updates,
-            }
-          : {
-              ...((prev[section] as SectionFields) ?? {}),
-              ...updates,
-            }),
-      },
-    }));
-  };
   // 알레르기, 약물 부작용 여부가 false일 경우 빈 값으로 초기화
   useEffect(() => {
     if (formData.allergy?.isAllergy === false) {
@@ -92,10 +72,11 @@ const HealthInfo = () => {
   }, [
     formData.allergy?.isAllergy,
     formData.medicationSideEffect?.isSideEffect,
+    updateFormData,
   ]);
 
   // 입력값 함수
-  const handleInput = (
+  const handleTextarea = (
     label: string,
     placeholder: string,
     section: keyof HealthInformationDTO,
@@ -169,19 +150,39 @@ const HealthInfo = () => {
     field: string,
     value: string,
   ) => {
-    setFormData((prev) => {
-      const currentValues =
-        (prev[section] as SectionFields)?.[field] ?? ([] as string[]);
+    setCounselSurvey((prevState) => {
+      // `section`을 안전하게 가져오기 (초기값을 빈 객체로 설정)
+      const sectionData = prevState.healthInformation?.[section] ?? {};
 
+      // 현재 필드의 값을 배열로 변환 (string | string[]만 허용)
+      let currentValues: string[] = [];
+
+      if (Array.isArray((sectionData as Record<string, unknown>)[field])) {
+        currentValues = [...(sectionData as Record<string, string[]>)[field]];
+      } else if (
+        typeof (sectionData as Record<string, unknown>)[field] === 'string'
+      ) {
+        currentValues = (sectionData as Record<string, string>)[field]
+          .split(',')
+          .filter((v) => v.trim() !== '');
+      }
+
+      // 값 추가 또는 제거
+      const updatedValues = currentValues.includes(value)
+        ? currentValues.filter((v) => v !== value) // 값 제거
+        : [...currentValues, value]; // 값 추가
+
+      // Zustand 상태 업데이트
       return {
-        ...prev,
-        [section]: {
-          ...(typeof prev[section] === 'object' ? prev[section] : {}),
-          [field]: currentValues.includes(value)
-            ? Array.isArray(currentValues)
-              ? currentValues.filter((v) => v !== value)
-              : []
-            : [...currentValues, value],
+        ...prevState,
+        healthInformation: {
+          ...prevState.healthInformation,
+          [section]: {
+            ...(typeof sectionData === 'object' && sectionData !== null
+              ? sectionData
+              : {}),
+            [field]: updatedValues, // 배열 유지
+          },
         },
       };
     });
@@ -239,13 +240,13 @@ const HealthInfo = () => {
             'diseaseInfo',
             'diseases',
           )}
-          {handleInput(
+          {handleTextarea(
             '질병 및 수술 이력',
             '과거 질병 및 수술 이력을 작성해주세요.',
             'diseaseInfo',
             'historyNote',
           )}
-          {handleInput(
+          {handleTextarea(
             '주요 불편 증상',
             '건강상 불편한 점을 작성해주세요.',
             'diseaseInfo',
@@ -262,7 +263,7 @@ const HealthInfo = () => {
             'allergy',
             'isAllergy',
           )}
-          {handleInput(
+          {handleTextarea(
             '의심 식품/약물',
             '예: 땅콩, 돼지고기',
             'allergy',
@@ -280,14 +281,14 @@ const HealthInfo = () => {
             'medicationSideEffect',
             'isSideEffect',
           )}
-          {handleInput(
+          {handleTextarea(
             '부작용 의심 약물',
             '예: 항암제',
             'medicationSideEffect',
             'suspectedMedicationNote',
             formData.medicationSideEffect?.isSideEffect,
           )}
-          {handleInput(
+          {handleTextarea(
             '부작용 증상',
             '예: 손발 저림, 오심, 구토, 탈모',
             'medicationSideEffect',
