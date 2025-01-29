@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 
 import { cn } from '@/lib/utils';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const HistoryPopover = PopoverPrimitive.Root;
 
