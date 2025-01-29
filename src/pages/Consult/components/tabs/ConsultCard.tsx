@@ -63,7 +63,7 @@ const ConsultCard: React.FC = () => {
   ]);
 
   const handleNavigate = useCallback(() => {
-    navigate(`/assistant/${counselSessionId}`);
+    navigate(`/survey/${counselSessionId}`);
   }, [navigate, counselSessionId]);
 
   return (

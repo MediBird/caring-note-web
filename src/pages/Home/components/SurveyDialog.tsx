@@ -65,7 +65,7 @@ function SurveyDialog({ dialogState, counselSessionId }: SurveyDialogProps) {
         </DialogHeader>
         <div className="h-[1px] bg-grayscale-20" />
         <DialogDescription className="sm:justify-start">
-          상담 경험이 있는 내담자는 이런 기록이 적혀 있습니다.
+          상담 경험이 있는 내담자는 이전 기록이 적혀 있습니다.
         </DialogDescription>
         <DialogFooter className="sm:justify-end">
           <div>
