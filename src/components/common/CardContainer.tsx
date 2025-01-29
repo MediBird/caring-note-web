@@ -1,5 +1,6 @@
 import { CounselCardControllerApi } from '@/api/api';
 import ClockBlackIcon from '@/assets/icon/24/clock.outlined.black.svg?react';
+import ClockBlueIcon from '@/assets/icon/24/clock.outlined.blue.svg?react';
 import HistoryList from '@/components/common/HistoryList';
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
@@ -46,6 +47,7 @@ const CardContainer = ({
 
   const [modalStyle, setModalStyle] = useState<ReactModal.Styles>({});
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+  const [isHoverTitleIcon, setIsHoverTitleIcon] = useState(false);
 
   useEffect(() => {
     if (isHistoryModalOpen && informationName && itemName) {
@@ -58,8 +60,10 @@ const CardContainer = ({
       return (
         <span
           className="w-6 h-6 text-grayscale-50 ml-3 cursor-pointer"
-          onClick={(e) => openModalAtPosition(e)}>
-          <ClockBlackIcon />
+          onClick={(e) => openModalAtPosition(e)}
+          onMouseEnter={() => setIsHoverTitleIcon(true)}
+          onMouseLeave={() => setIsHoverTitleIcon(false)}>
+          {isHoverTitleIcon ? <ClockBlueIcon /> : <ClockBlackIcon />}
         </span>
       );
     }
