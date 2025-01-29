@@ -1,22 +1,24 @@
 import '@/assets/css/DraftJsCss.css';
+import eraserBlack from '@/assets/icon/eraserBlack.png';
+import eraserBlue from '@/assets/icon/eraserBlue.png';
+import highlightpenBlack from '@/assets/icon/highlightpenBlack.png';
+import highlightpenBlue from '@/assets/icon/highlightpenBlue.png';
 import Tooltip from '@/components/Tooltip';
-import eraserBlack from '@/assets/icon/24/erase.outlined.black.svg';
-import highlightpenBlack from '@/assets/icon/24/highlighter.outlined.black.svg';
+import { useSelectMedicineConsult } from '@/hooks/useMedicineConsultQuery';
+import useCounselRecordEditorStateStore from '@/store/counselRecordEditorStateStore';
+import { useMedicineConsultStore } from '@/store/medicineConsultStore';
+import { CounselRecordHighlights } from '@/types/MedicineConsultDTO';
 import {
+  ContentBlock,
+  ContentState,
   Editor,
   EditorState,
   Modifier,
-  ContentState,
   SelectionState,
-  ContentBlock,
 } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import React, { useCallback, useEffect } from 'react';
-import { useSelectMedicineConsult } from '@/hooks/useMedicineConsultQuery';
-import { useMedicineConsultStore } from '@/store/medicineConsultStore';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CounselRecordHighlights } from '@/types/MedicineConsultDTO';
-import useCounselRecordEditorStateStore from '@/store/counselRecordEditorStateStore';
 
 const HighlightInput: React.FC = () => {
   const { editorState, setEditorState } = useCounselRecordEditorStateStore();
@@ -26,6 +28,9 @@ const HighlightInput: React.FC = () => {
     useMedicineConsultStore();
 
   const { data } = useSelectMedicineConsult(counselSessionId);
+
+  const [isHoverHighlightButton, setIsHoverHighlightButton] = useState(false);
+  const [isHoverEraserButton, setIsHoverEraserButton] = useState(false);
 
   const styleMap = {
     HIGHLIGHT: {
@@ -228,18 +233,22 @@ const HighlightInput: React.FC = () => {
       <div className="flex items-center">
         <img
           className="w-8 h-8 cursor-pointer m-2 inline-block"
-          src={highlightpenBlack}
+          src={isHoverHighlightButton ? highlightpenBlue : highlightpenBlack}
           alt="하이라이트"
           onClick={applyHighlight}
+          onMouseEnter={() => setIsHoverHighlightButton(true)}
+          onMouseLeave={() => setIsHoverHighlightButton(false)}
         />
         <img
           className="w-8 h-8 cursor-pointer inline-block"
-          src={eraserBlack}
+          src={isHoverEraserButton ? eraserBlue : eraserBlack}
           alt="하이라이트 지우기"
           onClick={removeHighlight}
+          onMouseEnter={() => setIsHoverEraserButton(true)}
+          onMouseLeave={() => setIsHoverEraserButton(false)}
         />
         <Tooltip
-          className="ml-2"
+          className="ml-3"
           id="highlight"
           text={`왼쪽 형광펜으로 원하는 내용을 강조하고, 
           오른쪽 지우개로 다시 지울 수 있어요`}

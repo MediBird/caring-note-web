@@ -1,7 +1,6 @@
 import CloseBlackIcon from '@/assets/icon/24/close.outlined.black.svg?react';
 import PencilBlackIcon from '@/assets/icon/24/create.filled.black.svg?react';
 import MicBlackIcon from '@/assets/icon/24/mic.filled.black.svg?react';
-import Badge from '@/components/common/Badge';
 import { useAppDispatch, useAppSelector } from '../app/reduxHooks';
 import { toggleRightNavigation } from '../reducers/navigationReducer';
 import HighlightInput from './consult/HighlightInput';
@@ -21,15 +20,12 @@ const NavigationRight = () => {
       <div
         className={`flex flex-col items-center justify-start h-screen ${
           isOpen ? 'w-20' : ''
-        } py-4`}
+        } py-8`}
         onClick={toggleMenu}>
-        <Badge
-          className="mb-1"
-          variant="outline"
-          size="small"
-          customIcon={<></>}>
+        {/* 2차 스프린트 대상 */}
+        {/* <Badge className="mb-1" variant="outline" size="small">
           녹음중
-        </Badge>
+        </Badge> */}
         <MicBlackIcon width={24} height={24} />
         <div className="h-0.5 w-8 bg-grayscale-10 my-4" />
         <PencilBlackIcon width={24} height={24} />
