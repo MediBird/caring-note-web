@@ -4,9 +4,9 @@ import { Outlet } from 'react-router-dom';
 
 function CounsultLayout() {
   return (
-    <div className="flex justify-start w-full h-auto">
+    <div className="flex w-full h-screen">
       <NavigationLeft />
-      <main className="flex-1 pr-16 min-h-screen overflow-auto">
+      <main className="flex-1 overflow-auto">
         <Outlet />
       </main>
       <NavigationRight />

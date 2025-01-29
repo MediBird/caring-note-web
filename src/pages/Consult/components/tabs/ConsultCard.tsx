@@ -1,6 +1,6 @@
 import { CounselCardControllerApi } from '@/api';
 import CardContent from '@/components/common/CardContent';
-import useConsultCardStore from '@/store/consultCardStore';
+import useConsultCardStore from '@/pages/Consult/hooks/store/consultCardStore';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
