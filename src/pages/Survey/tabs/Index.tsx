@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import useAssistantInfoTabStore, {
   AssistantInfoTab,
 } from '@/pages/Survey/store/surveyTabStore';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useParams } from 'react-router-dom';
 import { CounselAssistantDialogTypes } from '../constants/modal';
@@ -49,7 +49,7 @@ const Survey = () => {
     } else if (survey?.status === 204) {
       setCounselSurvey(() => ({} as CounselSurveyType)); // 상담 카드가 없을 때 초기화
     }
-  }, [survey?.data?.data, setCounselSurvey]);
+  }, [survey?.data?.data, setCounselSurvey, survey?.status]);
 
   // **내담자 정보에 따라 "자립생활 역량" 탭 표시 여부 결정**
   useEffect(() => {
