@@ -32,7 +32,7 @@ const InformationUse = ({
           <DialogTitle>개인정보 수집 · 이용 내역 동의</DialogTitle>
         </DialogHeader>
         <div className=' <div className="text-body1 font-medium mt-[0.75rem] mb-[1.75rem] mx-[1.25rem] text-grayscale-80">'>
-          <div className="pt-5 pb-5 pl-3 pr-3 shadow-md mx-autorounded-lg bg-grayscale-3">
+          <div className="pt-5 pb-5 pl-3 pr-3 mx-autorounded-lg bg-grayscale-3">
             <div className="mb-6 ">
               <h2 className="mb-3 text-base font-bold">수집 항목</h2>
               <div className="mb-3 text-sm text-grayscale-50">

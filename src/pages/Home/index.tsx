@@ -49,13 +49,13 @@ function Home() {
   const columns = getCardColumns();
   return (
     <>
-      <div className="flex flex-col h-full items-center justify-start bg-gray-50">
+      <div className="flex flex-col items-center justify-start h-full bg-gray-50">
         <div className="w-full font-bold text-h3 text-primary-80 pl-20 pt-[9.25rem] pb-6 bg-primary-30">
           {`${user?.name ?? ''}님,`.replace(/\s/g, '')}
           <br />
           오늘도 힘찬 하루를 보내세요!
         </div>
-        <div className="flex w-full gap-8 2xl:items-start mt-8 justify-center 2xl:flex-row flex-col items-center">
+        <div className="flex flex-col items-center justify-center w-full gap-8 mt-8 2xl:items-start 2xl:flex-row">
           <div className="hidden 2xl:flex 2xl:flex-col gap-5 2xl:items-center 2xl:justify-center w-[278px]">
             <ConsultCount
               messageCount="1,234회"
@@ -88,7 +88,7 @@ function Home() {
           <div className="flex flex-col items-center justify-center flex-grow w-full max-w-[1020px]">
             <div className="w-full h-auto p-6 bg-white rounded-xl shadow-container">
               <div className="flex items-center justify-between w-full h-10">
-                <span className="font-bold text-2xl">오늘 일정</span>
+                <span className="text-2xl font-bold">오늘 일정</span>
               </div>
               <div className="mt-5">
                 <TableComponent
@@ -171,10 +171,12 @@ const getCardColumns: () => GridColDef[] = () => {
       renderCell: (params) => {
         const recordStatus = params.value;
         const counselSessionId = params.row.counselSessionId;
+        const counseleeId = params.row.counseleeId;
         return (
           <SurveyDialog
             counselSessionId={counselSessionId}
             dialogState={recordStatus}
+            counseleeId={counseleeId}
           />
         );
       },

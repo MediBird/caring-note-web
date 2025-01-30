@@ -34,7 +34,7 @@ const ExpiredMedications = ({
           <DialogTitle>폐의약품 수거에 관한 동의</DialogTitle>
         </DialogHeader>
         <div className="text-body1 font-medium mt-[0.75rem] mb-[1.75rem] mx-[1.25rem] text-grayscale-80">
-          <div className="p-5 mx-auto rounded-lg shadow-md bg-grayscale-3">
+          <div className="p-5 mx-auto rounded-lg bg-grayscale-3">
             <p className="text-sm text-grayscale-50">
               안전한 폐의약품 분리배출을 위해 귀하의 불용의약품을 폐기하시는
               것에 동의하십니까?
