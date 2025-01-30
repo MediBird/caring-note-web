@@ -1,5 +1,5 @@
 import { CounseleeControllerApi, CounselSessionControllerApi } from '@/api/api';
-import Button from '@/components/Button';
+import { Button } from '@/components/ui/button';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useQuery } from '@tanstack/react-query';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
@@ -120,7 +120,7 @@ function Index() {
             {counseleeBaseInfoQuery.data?.name}
           </p>
           <Button
-            _class="ml-6"
+            className="ml-6"
             variant="secondary"
             onClick={() => {
               handleSaveMedicineConsult();
@@ -128,7 +128,7 @@ function Index() {
             }}>
             임시저장
           </Button>
-          <Button _class="ml-2" variant="primary" onClick={() => {}}>
+          <Button className="ml-2" variant="primary" onClick={() => {}}>
             기록완료
           </Button>
         </div>

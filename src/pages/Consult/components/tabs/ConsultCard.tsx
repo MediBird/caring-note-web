@@ -4,7 +4,7 @@ import useConsultCardStore from '@/store/consultCardStore';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Button from '../../../../components/Button';
+import { Button } from '@/components/ui/button';
 import CardContainer from '../../../../components/common/CardContainer';
 import TabContentContainer from '../../../../components/consult/TabContentContainer';
 import TabContentTitle from '../../../../components/consult/TabContentTitle';
