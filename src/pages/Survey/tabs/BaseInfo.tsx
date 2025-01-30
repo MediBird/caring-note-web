@@ -293,9 +293,9 @@ const BaseInfo = () => {
               'healthInsuranceType',
             )}
 
-            {/* 상담차수  */}
+            {/* 상담경험  */}
             {renderButtons(
-              '상담차수',
+              '상담경험',
               consultationCounts,
               'baseInfo',
               'counselSessionOrder',

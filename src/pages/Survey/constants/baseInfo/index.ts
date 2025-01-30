@@ -20,24 +20,12 @@ export const insuranceTypes = [
 ];
 export const consultationCounts = [
   {
-    value: '1회차',
-    label: '1회차',
+    value: '초기상담',
+    label: '초기상담',
   },
   {
-    value: '2회차',
-    label: '2회차',
-  },
-  {
-    value: '3회차',
-    label: '3회차',
-  },
-  {
-    value: '4회차',
-    label: '4회차',
-  },
-  {
-    value: '5회차 이상',
-    label: '5회차 이상',
+    value: '재상담',
+    label: '재상담',
   },
 ];
 export const consultationGoals = [
