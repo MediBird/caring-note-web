@@ -2,7 +2,6 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogOverlay,
   DialogTitle,
 } from '@/components/ui/dialog';
 import arrowForwardIcon from '@/assets/icon/24/arrowback.outlined.black.svg';
@@ -20,7 +19,6 @@ const ExpiredMedications = ({
 }: AgreementDetailDialogTypes) => {
   return (
     <Dialog open={isDetailOpen} onOpenChange={onClose}>
-      <DialogOverlay />
       <DialogContent className="h-[170px] w-[480px]">
         <DialogHeader className="justify-normal">
           <img
