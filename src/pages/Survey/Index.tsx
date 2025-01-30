@@ -1,67 +1,21 @@
 import TableComponent from '@/components/common/TableComponent';
-import { Button } from '@/components/ui/button';
-
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
-import {
-  useCounselSessionStore,
-  useDetailCounselSessionStore,
-} from '@/store/counselSessionStore';
+import { useCounselSessionStore } from '@/store/counselSessionStore';
 import { createDefaultTextColumn } from '@/utils/TableUtils';
 import { GridColDef } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import {
   SelectCounselSessionListItem,
-  SelectCounselSessionListItemCardRecordStatusEnum,
   SelectCounselSessionListItemStatusEnum,
 } from '@/api/api';
-import { useCounseleeConsentQueryId } from '@/pages/Survey/hooks/useCounselAgreeQuery';
-import Index from '@/pages/Survey/dialogs/userInfo/Index';
-import { useCounselAgreeSessionStore } from '@/store/counselAgreeStore';
-import { useNavigate } from 'react-router-dom';
+import SurveyDialog from '@/pages/Home/components/SurveyDialog';
 
 const SurveyList = () => {
-  // useNavigate를 사용하여 페이지 이동
-  const navigate = useNavigate();
-  // isOpen 상태를 관리하는 state
-  const [isOpen, setIsOpen] = useState(false);
-
   const { params } = useCounselSessionStore();
   const { data: items } = useSelectCounselSessionList(
     params ? { ...params, size: params.size ?? 15 } : { size: 15 },
   );
-  // 상담 세션 상세 정보 조회
-  const { detail, setDetail } = useDetailCounselSessionStore();
-  const setCounseleeConsent = useCounselAgreeSessionStore(
-    (state) => state.setCounseleeConsent,
-  );
-  // 내담자 개인정보 수집 동의 여부 조회
-  const { data, isLoading } = useCounseleeConsentQueryId(
-    detail?.counselSessionId || undefined,
-    detail?.counseleeId || undefined,
-    !!detail,
-  );
-  // 카드 작성 버튼 클릭 시
-  const handleRegisterCard = (row: SelectCounselSessionListItem) => {
-    setDetail(row);
-  };
-
-  useEffect(() => {
-    // data가 있을경우
-    if (!isLoading && data) {
-      // data.status가 200이고 data.data.data?.isConsent가 true일 경우
-      if (data.status === 200 && data.data.data?.isConsent === true) {
-        navigate(`/survey/${detail?.counselSessionId}`);
-      } else {
-        setIsOpen(true);
-      }
-      setCounseleeConsent({
-        counseleeConsentId: data?.data?.data?.counseleeConsentId,
-        consent: data?.data?.data?.isConsent,
-      });
-    }
-  }, [isLoading, data, setCounseleeConsent, navigate, detail]);
-
   const columns: GridColDef[] = [
     {
       ...createDefaultTextColumn({
@@ -97,21 +51,18 @@ const SurveyList = () => {
     },
     {
       field: 'cardRecordStatus',
-      headerName: '기초 상담 카드',
+      headerName: '기초 설문',
       flex: 1,
       renderCell: (params) => {
-        // TODO : 할당 여부에 따라 버튼 diable 처리 (아래는 임시 코드)
-        return params.value !==
-          SelectCounselSessionListItemCardRecordStatusEnum.Recorded ? (
-          <Button
-            variant={'primary'}
-            onClick={() => handleRegisterCard(params.row)}>
-            카드 작성
-          </Button>
-        ) : (
-          <Button variant={'secondary'} disabled>
-            작성 완료
-          </Button>
+        const recordStatus = params.value;
+        const counselSessionId = params.row.counselSessionId;
+        const counseleeId = params.row.counseleeId;
+        return (
+          <SurveyDialog
+            counselSessionId={counselSessionId}
+            dialogState={recordStatus}
+            counseleeId={counseleeId}
+          />
         );
       },
     },
@@ -128,10 +79,6 @@ const SurveyList = () => {
       counseleeName: item.counseleeName,
       cardRecordStatus: item.cardRecordStatus,
     })) || [];
-
-  const handleOpen = () => {
-    setIsOpen(!isOpen);
-  };
 
   useEffect(() => {
     // data-scroll-locked 제거
@@ -204,7 +151,6 @@ const SurveyList = () => {
           </div>
         </div>
       </div>
-      <Index isOpen={isOpen} handleOpen={handleOpen} />
     </div>
   );
 };
