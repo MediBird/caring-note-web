@@ -16,10 +16,6 @@ const ConsultCard: React.FC = () => {
   const navigate = useNavigate();
   const { consultCardData: consultCardData } = useConsultCard(counselSessionId);
 
-  const handleNavigate = useCallback(() => {
-    navigate(`/survey/${counselSessionId}`);
-  }, [navigate, counselSessionId]);
-
   return (
     <Card>
       <CardHeader>
