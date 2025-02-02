@@ -8,50 +8,50 @@ import { create } from 'zustand';
 // store's state
 interface RecordingState {
   recordingStatus: RecordingStatus;
-  updateRecordingStatus: (newStatus: RecordingStatus) => void;
   recordingTime: number;
-  resetRecordingTime: () => void;
   recordingIntervalId: number | null;
-  clearRecordingIntervalId: () => void;
-  addOneSecond: () => void;
   mediaRecorderRef: React.MutableRefObject<MediaRecorder | null>;
   audioChunksRef: React.MutableRefObject<Blob[]>;
 }
 
 // store (ONLY for this hook)
-const useRecordingStore = create<RecordingState>((set) => ({
+const useRecordingStore = create<RecordingState>(() => ({
   recordingStatus: RecordingStatus.Ready,
-  updateRecordingStatus: (newStatus: RecordingStatus) =>
-    set({ recordingStatus: newStatus }),
   recordingTime: 0,
-  resetRecordingTime: () => set({ recordingTime: 0 }),
   recordingIntervalId: null,
-  addOneSecond: () =>
-    set((state) => ({ recordingTime: state.recordingTime + 1 })),
-  clearRecordingIntervalId: () => {
-    const intervalId = useRecordingStore.getState().recordingIntervalId;
-    if (intervalId !== null) {
-      clearInterval(intervalId);
-      set({ recordingIntervalId: null });
-    }
-  },
   mediaRecorderRef: { current: null },
   audioChunksRef: { current: [] },
 }));
 
+// helper functions
+const addRecordingInterval = () => {
+  const intervalId = setInterval(() => {
+    addOneSecond();
+  }, 1000);
+  useRecordingStore.setState({
+    recordingIntervalId: Number(intervalId),
+  });
+};
+const clearRecordingIntervalId = () => {
+  const intervalId = useRecordingStore.getState().recordingIntervalId;
+  if (intervalId !== null) {
+    clearInterval(intervalId);
+    useRecordingStore.setState({ recordingIntervalId: null });
+  }
+};
+const updateRecordingStatus = (newStatus: RecordingStatus) => {
+  useRecordingStore.setState({ recordingStatus: newStatus });
+};
+const addOneSecond = () => {
+  useRecordingStore.setState((state) => ({
+    recordingTime: state.recordingTime + 1,
+  }));
+};
+
 // hook
 export const useRecording = () => {
-  const {
-    recordingStatus,
-    updateRecordingStatus,
-    recordingTime,
-    resetRecordingTime,
-    recordingIntervalId,
-    addOneSecond,
-    clearRecordingIntervalId,
-    mediaRecorderRef,
-    audioChunksRef,
-  } = useRecordingStore();
+  const { recordingStatus, recordingTime, mediaRecorderRef, audioChunksRef } =
+    useRecordingStore();
 
   const startRecording = async () => {
     try {
@@ -74,13 +74,7 @@ export const useRecording = () => {
 
         // 타이머 세팅
         clearRecordingIntervalId();
-        console.log(`recordingIntervalId: ${recordingIntervalId}`);
-        const intervalId = setInterval(() => {
-          addOneSecond();
-        }, 1000);
-        useRecordingStore.setState({
-          recordingIntervalId: Number(intervalId),
-        });
+        addRecordingInterval();
       };
 
       // 일시정지 이벤트 정의
@@ -97,12 +91,7 @@ export const useRecording = () => {
 
         // 타이머 세팅
         clearRecordingIntervalId();
-        const intervalId = setInterval(() => {
-          addOneSecond();
-        }, 1000);
-        useRecordingStore.setState({
-          recordingIntervalId: Number(intervalId),
-        });
+        addRecordingInterval();
       };
 
       // 녹음 정지 이벤트 정의
@@ -111,34 +100,6 @@ export const useRecording = () => {
 
         // 타이머 중지
         clearRecordingIntervalId();
-
-        // 녹음된 데이터(Blob) 생성
-        const audioBlob = new Blob(audioChunksRef.current, {
-          type: RecordingFileInfo.Type,
-        });
-
-        // Blob을 File 객체로 변환
-        const audioFile = new File(
-          [audioBlob],
-          RecordingFileInfo.DownloadName,
-          {
-            type: RecordingFileInfo.Type,
-            lastModified: Date.now(),
-          },
-        );
-
-        // audioFile을 이용하여 파일 업로드, 다운로드 등 원하는 작업을 수행할 수 있음.
-        console.log('audioFile created!!', audioFile);
-
-        // TEST : 만들어진 audioFile 다운로드
-        const audioUrl = URL.createObjectURL(audioFile);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = audioUrl;
-        downloadLink.download = RecordingFileInfo.DownloadName;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        URL.revokeObjectURL(audioUrl);
       };
 
       // 녹음 시작
@@ -171,12 +132,64 @@ export const useRecording = () => {
     mediaRecorderRef.current.stop();
   };
 
+  const resetRecording = () => {
+    clearRecordingIntervalId();
+    updateRecordingStatus(RecordingStatus.Ready);
+    useRecordingStore.setState({ recordingTime: 0 });
+  };
+
+  const submitRecording = () => {
+    updateRecordingStatus(RecordingStatus.Loading);
+    new Promise((resolve) => {
+      // TODO : 여기에 녹음파일을 서버로 전송하는 로직을 작성
+      // FOR TEST : 3초 후에 녹음파일 생성
+      setTimeout(() => {
+        // 녹음된 데이터(Blob) 생성
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: RecordingFileInfo.Type,
+        });
+
+        // Blob을 File 객체로 변환
+        const audioFile = new File(
+          [audioBlob],
+          RecordingFileInfo.DownloadName,
+          {
+            type: RecordingFileInfo.Type,
+            lastModified: Date.now(),
+          },
+        );
+
+        // audioFile을 이용하여 파일 업로드, 다운로드 등 원하는 작업을 수행할 수 있음.
+        console.log('audioFile created!!', audioFile);
+
+        // TEST : 만들어진 audioFile 다운로드
+        const audioUrl = URL.createObjectURL(audioFile);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = audioUrl;
+        downloadLink.download = RecordingFileInfo.DownloadName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(audioUrl);
+
+        resolve('success');
+      }, 3000);
+    }).then((result) => {
+      if (result === 'success') {
+        updateRecordingStatus(RecordingStatus.Completed);
+      } else {
+        updateRecordingStatus(RecordingStatus.Error);
+      }
+    });
+  };
+
   return {
     startRecording,
     pauseRecording,
     stopRecording,
+    resetRecording,
+    submitRecording,
     recordingStatus,
     recordingTime,
-    resetRecordingTime,
   };
 };
