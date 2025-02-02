@@ -1,430 +1,404 @@
-import { CounselCardControllerApi } from '@/api';
-import CardContent from '@/components/common/CardContent';
-import useConsultCardStore from '@/pages/Consult/hooks/store/consultCardStore';
-import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import CardContainer from '../../../../components/common/CardContainer';
-import TabContentContainer from '../../../../components/consult/TabContentContainer';
-import TabContentTitle from '../../../../components/consult/TabContentTitle';
+import CardSection from '@/components/ui/cardSection';
+import { useConsultCard } from '../../hooks/query/useConsultCard';
+import {
+  HistoryPopover,
+  HistoryPopoverContent,
+  HistoryPopoverTrigger,
+} from '@/components/ui/historyPopover';
+import ClockBlackIcon from '@/assets/icon/24/clock.outlined.black.svg?react';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 
 const ConsultCard: React.FC = () => {
   const { counselSessionId } = useParams();
   const navigate = useNavigate();
-
-  // useMemo를 사용하여 counselCardControllerApi를 메모이제이션
-  const counselCardControllerApi = useMemo(
-    () => new CounselCardControllerApi(),
-    [],
-  );
-
-  const selectCounselCard = useCallback(async () => {
-    if (!counselSessionId) return;
-
-    const response = await counselCardControllerApi.selectCounselCard(
-      counselSessionId,
-    );
-    console.log('selectCounselCard', response);
-    return response;
-  }, [counselSessionId, counselCardControllerApi]);
-
-  // TODO: 쿼리 커스텀 훅 분리 및 데이터 store set init 로직 개선 필요
-  // tanstack/react-query 를 사용하여 데이터 fetch
-  const { data: consultCardData, isSuccess: isConsultCardQuerySuccess } =
-    useQuery({
-      queryKey: ['consultCard', counselSessionId],
-      queryFn: selectCounselCard,
-      enabled: !!counselSessionId,
-    });
-
-  // zustand 로 상태관리
-  const { originalData, setOriginalData, setEditedData, setHttpStatus } =
-    useConsultCardStore();
-
-  useEffect(() => {
-    if (isConsultCardQuerySuccess && JSON.stringify(originalData) === '{}') {
-      const status = consultCardData?.status || 0;
-      const data = status === 204 ? {} : consultCardData?.data?.data || {};
-
-      // Zustand 상태 update
-      setHttpStatus(status);
-      setOriginalData(data);
-      setEditedData(data);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    counselSessionId,
-    isConsultCardQuerySuccess,
-    consultCardData,
-    setHttpStatus,
-    setOriginalData,
-    setEditedData,
-  ]);
+  const { consultCardData: consultCardData } = useConsultCard(counselSessionId);
 
   const handleNavigate = useCallback(() => {
     navigate(`/survey/${counselSessionId}`);
   }, [navigate, counselSessionId]);
 
   return (
-    <>
-      <TabContentContainer>
+    <Card>
+      <CardHeader>
         <div className="flex items-center justify-between">
-          <TabContentTitle text="상담카드" />
-          <Button variant="secondary" onClick={handleNavigate}>
+          <div>
+            <CardTitle>기초 상담 내역</CardTitle>
+          </div>
+          <Button
+            variant="secondary"
+            onClick={() => navigate(`/assistant/${counselSessionId}`)}>
             수정하기
           </Button>
         </div>
+      </CardHeader>
 
-        <div className="flex items-start justify-between space-x-4">
-          <div id="consult-card-left" className="w-1/2">
-            <CardContainer
-              title="기본 정보"
-              variant="grayscale"
-              informationName="baseInformation"
-              itemName="baseInfo">
-              <CardContent
-                item="성명"
-                value={originalData?.baseInformation?.baseInfo?.name || ''}
-              />
-              <CardContent
-                item="생년월일"
-                value={originalData?.baseInformation?.baseInfo?.birthDate || ''}
-              />
-              <CardContent
-                item="의료보장형태"
-                value={
-                  originalData?.baseInformation?.baseInfo
-                    ?.counselSessionOrder || ''
-                }
-              />
-            </CardContainer>
+      <div className="flex gap-6">
+        <div className="w-1/2 space-y-2">
+          <CardSection
+            title="기본 정보"
+            variant="grayscale"
+            items={[
+              {
+                label: '성명',
+                value: consultCardData?.baseInformation?.baseInfo?.name,
+              },
+              {
+                label: '생년월일',
+                value: consultCardData?.baseInformation?.baseInfo?.birthDate,
+              },
+              {
+                label: '의료보장형태',
+                value:
+                  consultCardData?.baseInformation?.baseInfo
+                    ?.counselSessionOrder,
+              },
+            ]}
+          />
 
-            <CardContainer
-              title="상담 목적 및 특이사항"
-              informationName="baseInformation"
-              itemName="counselPurposeAndNote">
-              <CardContent
-                item="상담 목적"
-                value={
-                  Array.isArray(
-                    originalData?.baseInformation?.counselPurposeAndNote
+          <CardSection
+            title="상담 목적 및 특이사항"
+            items={[
+              {
+                label: '상담 목적',
+                value: Array.isArray(
+                  consultCardData?.baseInformation?.counselPurposeAndNote
+                    ?.counselPurpose,
+                )
+                  ? consultCardData?.baseInformation?.counselPurposeAndNote.counselPurpose.join(
+                      ', ',
+                    )
+                  : consultCardData?.baseInformation?.counselPurposeAndNote
                       ?.counselPurpose,
-                  )
-                    ? originalData.baseInformation.counselPurposeAndNote.counselPurpose.join(
-                        ', ',
-                      ) // 배열을 문자열로 변환
-                    : originalData?.baseInformation?.counselPurposeAndNote
-                        ?.counselPurpose || '' // string인 경우 그대로 사용
-                }
-              />
-              <CardContent
-                item="특이사항"
-                value={
-                  originalData?.baseInformation?.counselPurposeAndNote
-                    ?.SignificantNote || ''
-                }
-              />
-              <CardContent
-                item="의약품"
-                value={
-                  originalData?.baseInformation?.counselPurposeAndNote
-                    ?.MedicationNote || ''
-                }
-              />
-            </CardContainer>
+              },
+            ]}
+          />
+          <CardSection
+            title="특이사항"
+            items={[
+              {
+                label: '특이사항',
+                value:
+                  consultCardData?.baseInformation?.counselPurposeAndNote
+                    ?.SignificantNote || '',
+              },
+            ]}
+          />
+          <CardSection
+            title="의약품"
+            items={[
+              {
+                label: '의약품',
+                value:
+                  consultCardData?.baseInformation?.counselPurposeAndNote
+                    ?.MedicationNote || '',
+              },
+            ]}
+          />
 
-            <CardContainer
-              title="흡연"
-              variant="secondary"
-              informationName="livingInformation"
-              itemName="smoking">
-              <CardContent
-                item="흡연 여부"
-                value={
-                  originalData?.livingInformation?.smoking?.isSmoking
-                    ? '흡연'
-                    : '비흡연'
-                }
-              />
-              <CardContent
-                item="총 흡연기간"
-                value={
-                  originalData?.livingInformation?.smoking?.smokingPeriodNote ||
-                  ''
-                }
-              />
-              <CardContent
-                item="하루 평균 흡연량"
-                value={
-                  originalData?.livingInformation?.smoking?.smokingAmount || ''
-                }
-              />
-            </CardContainer>
+          <CardSection
+            title={
+              <div className="flex items-center gap-2">
+                흡연
+                <HistoryPopover>
+                  <HistoryPopoverTrigger>
+                    <ClockBlackIcon />
+                  </HistoryPopoverTrigger>
+                  <HistoryPopoverContent
+                    historyGroups={[
+                      {
+                        date: '2024-11-05',
+                        items: [
+                          '고혈압 · 고지혈증 · 뇌혈관질환 · 척추 관절염/신경통 · 호흡기질환 · 당뇨병 · 수면장애',
+                          '3년전 뇌출혈 수술',
+                          '잦은 두통 및 복통 호소',
+                        ],
+                      },
+                      {
+                        date: '2024-11-05',
+                        items: [
+                          '고혈압 · 고지혈증 · 뇌혈관질환 · 척추 관절염/신경통 · 호흡기질환 · 당뇨병 · 수면장애',
+                          '3년전 뇌출혈 수술',
+                          '잦은 두통 및 복통 호소',
+                        ],
+                      },
+                      {
+                        date: '2024-11-05',
+                        items: ['당뇨병 · 수면장애', '3년전 뇌출혈 수술'],
+                      },
+                      {
+                        date: '2024-11-05',
+                        items: ['당뇨병 · 수면장애', '3년전 뇌출혈 수술'],
+                      },
+                      {
+                        date: '2024-11-05',
+                        items: ['당뇨병 · 수면장애', '3년전 뇌출혈 수술'],
+                      },
+                    ]}
+                  />
+                </HistoryPopover>
+              </div>
+            }
+            variant="secondary"
+            items={[
+              {
+                label: '흡연 여부',
+                value: consultCardData?.livingInformation?.smoking?.isSmoking
+                  ? '흡연'
+                  : '비흡연',
+              },
+              {
+                label: '총 흡연기간',
+                value:
+                  consultCardData?.livingInformation?.smoking
+                    ?.smokingPeriodNote || '',
+              },
+              {
+                label: '하루 평균 흡연량',
+                value:
+                  consultCardData?.livingInformation?.smoking?.smokingAmount ||
+                  '',
+              },
+            ]}
+          />
 
-            <CardContainer
-              title="음주"
-              informationName="livingInformation"
-              itemName="drinking">
-              <CardContent
-                item="음주 여부"
-                value={
-                  originalData?.livingInformation?.drinking?.isDrinking
-                    ? '음주'
-                    : '비음주'
-                }
-              />
-              <CardContent
-                item="음주 횟수"
-                value={
-                  originalData?.livingInformation?.drinking?.drinkingAmount ||
-                  ''
-                }
-              />
-            </CardContainer>
+          <CardSection
+            title="음주"
+            items={[
+              {
+                label: '음주 여부',
+                value: consultCardData?.livingInformation?.drinking?.isDrinking
+                  ? '음주'
+                  : '비음주',
+              },
+              {
+                label: '음주 횟수',
+                value:
+                  consultCardData?.livingInformation?.drinking
+                    ?.drinkingAmount || '',
+              },
+            ]}
+          />
 
-            <CardContainer
-              title="영양상태"
-              informationName="livingInformation"
-              itemName="nutrition">
-              <CardContent
-                item="하루 식사 패턴"
-                value={
-                  originalData?.livingInformation?.nutrition?.mealPattern || ''
-                }
-              />
-              <CardContent
-                item="식생활 특이사항"
-                value={
-                  originalData?.livingInformation?.nutrition?.nutritionNote ||
-                  ''
-                }
-              />
-            </CardContainer>
+          <CardSection
+            title="영양상태"
+            items={[
+              {
+                label: '하루 식사 패턴',
+                value:
+                  consultCardData?.livingInformation?.nutrition?.mealPattern ||
+                  '',
+              },
+              {
+                label: '식생활 특이사항',
+                value:
+                  consultCardData?.livingInformation?.nutrition
+                    ?.nutritionNote || '',
+              },
+            ]}
+          />
 
-            <CardContainer
-              title="운동"
-              informationName="livingInformation"
-              itemName="exercise">
-              <CardContent
-                item="주간 운동 패턴"
-                value={
-                  originalData?.livingInformation?.exercise?.exercisePattern ||
-                  ''
-                }
-              />
-              <CardContent
-                item="운동 종류"
-                value={
-                  originalData?.livingInformation?.exercise?.exerciseNote || ''
-                }
-              />
-            </CardContainer>
+          <CardSection
+            title="운동"
+            items={[
+              {
+                label: '주간 운동 패턴',
+                value:
+                  consultCardData?.livingInformation?.exercise
+                    ?.exercisePattern || '',
+              },
+              {
+                label: '운동 종류',
+                value:
+                  consultCardData?.livingInformation?.exercise?.exerciseNote ||
+                  '',
+              },
+            ]}
+          />
 
-            <CardContainer
-              title="약 복용 관리"
-              informationName="livingInformation"
-              itemName="medicationManagement">
-              <CardContent
-                item="독거 여부"
-                value={
-                  originalData?.livingInformation?.medicationManagement?.isAlone
-                    ? '혼자'
-                    : '동거'
-                }
-              />
-              <CardContent
-                item="동거인 구성원"
-                value={
-                  originalData?.livingInformation?.medicationManagement
-                    ?.houseMateNote || ''
-                }
-              />
-              <CardContent
-                item="복용자 및 투약 보조자"
-                value={
-                  originalData?.livingInformation?.medicationManagement?.medicationAssistants?.join(
+          <CardSection
+            title="약 복용 관리"
+            items={[
+              {
+                label: '독거 여부',
+                value: consultCardData?.livingInformation?.medicationManagement
+                  ?.isAlone
+                  ? '혼자'
+                  : '동거',
+              },
+              {
+                label: '동거인 구성원',
+                value:
+                  consultCardData?.livingInformation?.medicationManagement
+                    ?.houseMateNote || '',
+              },
+              {
+                label: '복용자 및 투약 보조자',
+                value:
+                  consultCardData?.livingInformation?.medicationManagement?.medicationAssistants?.join(
                     ', ',
-                  ) || ''
-                }
-              />
-            </CardContainer>
-          </div>
-          <div id="consult-card-right" className="w-1/2">
-            <CardContainer
-              title="앓고 있는 질병"
-              variant="primary"
-              informationName="healthInformation"
-              itemName="diseaseInfo">
-              <CardContent
-                item="질병"
-                value={
-                  originalData?.healthInformation?.diseaseInfo?.diseases?.join(
-                    ' · ',
-                  ) || ''
-                }
-              />
-              <CardContent
-                item="질병 및 수술 이력"
-                value={
-                  originalData?.healthInformation?.diseaseInfo?.historyNote ||
-                  ''
-                }
-              />
-              <CardContent
-                item="주요 불편 증상"
-                value={
-                  originalData?.healthInformation?.diseaseInfo
-                    ?.mainInconvenienceNote || ''
-                }
-              />
-            </CardContainer>
-
-            <CardContainer
-              title="알레르기"
-              informationName="healthInformation"
-              itemName="allergy">
-              <CardContent
-                item="알레르기 여부"
-                value={
-                  originalData?.healthInformation?.allergy?.isAllergy
-                    ? '알레르기 있음'
-                    : '없음'
-                }
-              />
-              <CardContent
-                item="의심 식품/약물"
-                value={
-                  originalData?.healthInformation?.allergy?.allergyNote || ''
-                }
-              />
-            </CardContainer>
-
-            <CardContainer
-              title="약물 부작용"
-              informationName="healthInformation"
-              itemName="medicationSideEffect">
-              <CardContent
-                item="약물 부작용 여부"
-                value={
-                  originalData?.healthInformation?.medicationSideEffect
-                    ?.isSideEffect
-                    ? '약물 부작용 있음'
-                    : '없음'
-                }
-              />
-              <CardContent
-                item="부작용 의심 약물"
-                value={
-                  originalData?.healthInformation?.medicationSideEffect
-                    ?.suspectedMedicationNote || ''
-                }
-              />
-              <CardContent
-                item="부작용 증상"
-                value={
-                  originalData?.healthInformation?.medicationSideEffect
-                    ?.symptomsNote || ''
-                }
-              />
-            </CardContainer>
-
-            {originalData?.independentLifeInformation && (
-              <>
-                <CardContainer
-                  title="보행"
-                  variant="error"
-                  informationName="independentLifeInformation"
-                  itemName="walking">
-                  <CardContent
-                    item="보행 여부"
-                    value={
-                      originalData?.independentLifeInformation?.walking?.walkingMethods?.join(
-                        ', ',
-                      ) || '정보 없음'
-                    }
-                  />
-                  <CardContent
-                    item="이동 장비"
-                    value={
-                      originalData?.independentLifeInformation?.walking?.walkingEquipments?.join(
-                        ', ',
-                      ) || '정보 없음'
-                    }
-                  />
-                  <CardContent
-                    item="기타"
-                    value={
-                      originalData?.independentLifeInformation?.walking
-                        ?.etcNote || '정보 없음'
-                    }
-                  />
-                </CardContainer>
-
-                <CardContainer
-                  title="배변 처리"
-                  informationName="independentLifeInformation"
-                  itemName="evacuation">
-                  <CardContent
-                    item="배변 처리 방식"
-                    value={
-                      originalData?.independentLifeInformation?.evacuation?.evacuationMethods?.join(
-                        ', ',
-                      ) || '정보 없음'
-                    }
-                  />
-                  <CardContent
-                    item="기타"
-                    value={
-                      originalData?.independentLifeInformation?.evacuation
-                        ?.etcNote || '정보 없음'
-                    }
-                  />
-                </CardContainer>
-
-                <CardContainer
-                  title="의사소통 정도"
-                  informationName="independentLifeInformation"
-                  itemName="Communication">
-                  <CardContent
-                    item="시력"
-                    value={
-                      originalData?.independentLifeInformation?.communication?.sights?.join(
-                        ', ',
-                      ) || '정보 없음'
-                    }
-                  />
-                  <CardContent
-                    item="청력"
-                    value={
-                      originalData?.independentLifeInformation?.communication?.hearings?.join(
-                        ', ',
-                      ) || '정보 없음'
-                    }
-                  />
-                  <CardContent
-                    item="언어 소통"
-                    value={
-                      originalData?.independentLifeInformation?.communication?.communications?.join(
-                        ', ',
-                      ) || '정보 없음'
-                    }
-                  />
-                  <CardContent
-                    item="한글 사용"
-                    value={
-                      originalData?.independentLifeInformation?.communication?.usingKoreans?.join(
-                        ', ',
-                      ) || '정보 없음'
-                    }
-                  />
-                </CardContainer>
-              </>
-            )}
-          </div>
+                  ) || '',
+              },
+            ]}
+          />
         </div>
-      </TabContentContainer>
-    </>
+        <div className="w-1/2 space-y-2">
+          <CardSection
+            title="앓고 있는 질병"
+            variant="primary"
+            items={[
+              {
+                label: '질병',
+                value:
+                  consultCardData?.healthInformation?.diseaseInfo?.diseases?.join(
+                    ' · ',
+                  ) || '',
+              },
+              {
+                label: '질병 및 수술 이력',
+                value:
+                  consultCardData?.healthInformation?.diseaseInfo
+                    ?.historyNote || '',
+              },
+              {
+                label: '주요 불편 증상',
+                value:
+                  consultCardData?.healthInformation?.diseaseInfo
+                    ?.mainInconvenienceNote || '',
+              },
+            ]}
+          />
+
+          <CardSection
+            title="알레르기"
+            items={[
+              {
+                label: '알레르기 여부',
+                value: consultCardData?.healthInformation?.allergy?.isAllergy
+                  ? '알레르기 있음'
+                  : '없음',
+              },
+              {
+                label: '의심 식품/약물',
+                value:
+                  consultCardData?.healthInformation?.allergy?.allergyNote ||
+                  '',
+              },
+            ]}
+          />
+          <CardSection
+            title="약물 부작용"
+            items={[
+              {
+                label: '약물 부작용 여부',
+                value: consultCardData?.healthInformation?.medicationSideEffect
+                  ?.isSideEffect
+                  ? '약물 부작용 있음'
+                  : '없음',
+              },
+              {
+                label: '부작용 의심 약물',
+                value:
+                  consultCardData?.healthInformation?.medicationSideEffect
+                    ?.suspectedMedicationNote || '',
+              },
+              {
+                label: '부작용 증상',
+                value:
+                  consultCardData?.healthInformation?.medicationSideEffect
+                    ?.symptomsNote || '',
+              },
+            ]}
+          />
+
+          {consultCardData?.independentLifeInformation && (
+            <>
+              <CardSection
+                title="보행"
+                variant="error"
+                items={[
+                  {
+                    label: '보행 여부',
+                    value:
+                      consultCardData?.independentLifeInformation?.walking?.walkingMethods?.join(
+                        ', ',
+                      ) || '정보 없음',
+                  },
+                  {
+                    label: '이동 장비',
+                    value:
+                      consultCardData?.independentLifeInformation?.walking?.walkingEquipments?.join(
+                        ', ',
+                      ) || '정보 없음',
+                  },
+                  {
+                    label: '기타',
+                    value:
+                      consultCardData?.independentLifeInformation?.walking
+                        ?.etcNote || '정보 없음',
+                  },
+                ]}
+              />
+
+              <CardSection
+                title="배변 처리"
+                items={[
+                  {
+                    label: '배변 처리 방식',
+                    value:
+                      consultCardData?.independentLifeInformation?.evacuation?.evacuationMethods?.join(
+                        ', ',
+                      ) || '정보 없음',
+                  },
+                  {
+                    label: '기타',
+                    value:
+                      consultCardData?.independentLifeInformation?.evacuation
+                        ?.etcNote || '정보 없음',
+                  },
+                ]}
+              />
+
+              <CardSection
+                title="의사소통 정도"
+                items={[
+                  {
+                    label: '시력',
+                    value:
+                      consultCardData?.independentLifeInformation?.communication?.sights?.join(
+                        ', ',
+                      ) || '정보 없음',
+                  },
+                  {
+                    label: '청력',
+                    value:
+                      consultCardData?.independentLifeInformation?.communication?.hearings?.join(
+                        ', ',
+                      ) || '정보 없음',
+                  },
+                  {
+                    label: '언어 소통',
+                    value:
+                      consultCardData?.independentLifeInformation?.communication?.communications?.join(
+                        ', ',
+                      ) || '정보 없음',
+                  },
+                  {
+                    label: '한글 사용',
+                    value:
+                      consultCardData?.independentLifeInformation?.communication?.usingKoreans?.join(
+                        ', ',
+                      ) || '정보 없음',
+                  },
+                ]}
+              />
+            </>
+          )}
+        </div>
+      </div>
+    </Card>
   );
 };
 

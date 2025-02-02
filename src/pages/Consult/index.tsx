@@ -1,26 +1,13 @@
 import { SelectCounseleeBaseInformationByCounseleeIdRes } from '@/api/api';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useConsultCard } from './hooks/query/useConsultCard';
-import CardSection from '../../components/ui/cardSection';
-import {
-  HistoryPopover,
-  HistoryPopoverContent,
-  HistoryPopoverTrigger,
-} from '@/components/ui/historyPopover';
-import ClockBlackIcon from '@/assets/icon/24/clock.outlined.black.svg?react';
+import { useParams } from 'react-router-dom';
+import MedicineMemo from './components/tabs/MedicineMemo';
+import MedicineConsult from './components/tabs/MedicineConsult';
+import ConsultCard from './components/tabs/ConsultCard';
+import PastConsult from './components/tabs/PastConsult';
+import DiscardMedicine from './components/tabs/DiscardMedicine';
 interface InfoItemProps {
   icon: string;
   content: React.ReactNode;
@@ -97,12 +84,10 @@ const ConsultTabs = () => (
 );
 
 export function Index() {
-  const navigate = useNavigate();
   const { counselSessionId } = useParams();
   const { data: counseleeInfo, isLoading } = useSelectCounseleeInfo(
     counselSessionId ?? '',
   );
-  const { consultCardData } = useConsultCard(counselSessionId);
 
   if (isLoading) {
     return <div>로딩 중...</div>;
@@ -141,212 +126,19 @@ export function Index() {
         diseases={diseases}
       />
       <TabsContent value="pastConsult">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>기초 상담 내역</CardTitle>
-              </div>
-              <Button
-                variant="secondary"
-                onClick={() => navigate(`/assistant/${counselSessionId}`)}>
-                수정하기
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="flex gap-6">
-              <div className="w-1/2 space-y-2">
-                <CardSection
-                  title="기본 정보"
-                  variant="grayscale"
-                  items={[
-                    {
-                      label: '성명',
-                      value: consultCardData?.baseInformation?.baseInfo?.name,
-                    },
-                    {
-                      label: '생년월일',
-                      value:
-                        consultCardData?.baseInformation?.baseInfo?.birthDate,
-                    },
-                    {
-                      label: '의료보장형태',
-                      value:
-                        consultCardData?.baseInformation?.baseInfo
-                          ?.counselSessionOrder,
-                    },
-                  ]}
-                />
-
-                <CardSection
-                  title="상담 목적 및 특이사항"
-                  items={[
-                    {
-                      label: '상담 목적',
-                      value: Array.isArray(
-                        consultCardData?.baseInformation?.counselPurposeAndNote
-                          ?.counselPurpose,
-                      )
-                        ? consultCardData?.baseInformation?.counselPurposeAndNote.counselPurpose.join(
-                            ', ',
-                          )
-                        : consultCardData?.baseInformation
-                            ?.counselPurposeAndNote?.counselPurpose,
-                    },
-                    {
-                      label: '특이사항',
-                      value:
-                        consultCardData?.baseInformation?.counselPurposeAndNote
-                          ?.SignificantNote,
-                    },
-                    {
-                      label: '의약품',
-                      value:
-                        consultCardData?.baseInformation?.counselPurposeAndNote
-                          ?.MedicationNote,
-                    },
-                  ]}
-                />
-                <CardSection
-                  title={
-                    <div className="flex items-center gap-2">
-                      흡연
-                      <HistoryPopover>
-                        <HistoryPopoverTrigger>
-                          <ClockBlackIcon />
-                        </HistoryPopoverTrigger>
-                        <HistoryPopoverContent
-                          historyGroups={[
-                            {
-                              date: '2024-11-05',
-                              items: [
-                                '고혈압 · 고지혈증 · 뇌혈관질환 · 척추 관절염/신경통 · 호흡기질환 · 당뇨병 · 수면장애',
-                                '3년전 뇌출혈 수술',
-                                '잦은 두통 및 복통 호소',
-                              ],
-                            },
-                            {
-                              date: '2024-11-05',
-                              items: [
-                                '고혈압 · 고지혈증 · 뇌혈관질환 · 척추 관절염/신경통 · 호흡기질환 · 당뇨병 · 수면장애',
-                                '3년전 뇌출혈 수술',
-                                '잦은 두통 및 복통 호소',
-                              ],
-                            },
-                            {
-                              date: '2024-11-05',
-                              items: ['당뇨병 · 수면장애', '3년전 뇌출혈 수술'],
-                            },
-                            {
-                              date: '2024-11-05',
-                              items: ['당뇨병 · 수면장애', '3년전 뇌출혈 수술'],
-                            },
-                            {
-                              date: '2024-11-05',
-                              items: ['당뇨병 · 수면장애', '3년전 뇌출혈 수술'],
-                            },
-                          ]}
-                        />
-                      </HistoryPopover>
-                    </div>
-                  }
-                  variant="secondary"
-                  items={[
-                    {
-                      label: '흡연 여부',
-                      value: consultCardData?.livingInformation?.smoking
-                        ?.isSmoking
-                        ? '흡연'
-                        : '비흡연',
-                    },
-                    {
-                      label: '총 흡연기간',
-                      value:
-                        consultCardData?.livingInformation?.smoking
-                          ?.smokingPeriodNote,
-                    },
-                    {
-                      label: '하루 평균 흡연량',
-                      value:
-                        consultCardData?.livingInformation?.smoking
-                          ?.smokingAmount,
-                    },
-                  ]}
-                />
-              </div>
-              <div className="w-1/2">
-                <CardSection
-                  title="앓고 있는 질병"
-                  variant="primary"
-                  items={[{ label: '질병', value: '질병' }]}
-                />
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button>Save changes</Button>
-          </CardFooter>
-        </Card>
+        <PastConsult />
       </TabsContent>
       <TabsContent value="survey">
-        <Card>
-          <CardHeader>
-            <CardTitle>기초 설문 내역</CardTitle>
-            <CardDescription>
-              Change your password here. After saving, you'll be logged out.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="space-y-1">
-              <Label htmlFor="current">Current password</Label>
-              <Input id="current" type="password" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="new">New password</Label>
-              <Input id="new" type="password" />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button>Save password</Button>
-          </CardFooter>
-        </Card>
+        <ConsultCard />
       </TabsContent>
       <TabsContent value="medicine">
-        <Card>
-          <CardHeader>
-            <CardTitle>의약물 기록</CardTitle>
-            <CardDescription>
-              Change your password here. After saving, you'll be logged out.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="space-y-1">
-              <Label htmlFor="current">Current password</Label>
-              <Input id="current" type="password" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="new">New password</Label>
-              <Input id="new" type="password" />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button>Save password</Button>
-          </CardFooter>
-        </Card>
+        <MedicineMemo />
       </TabsContent>
       <TabsContent value="note">
-        <Card>
-          <CardHeader>
-            <CardTitle>중재 기록 작성</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-1">
-              <Label htmlFor="current">Current password</Label>
-              <Input id="current" type="password" />
-            </div>
-          </CardContent>
-        </Card>
+        <MedicineConsult />
+      </TabsContent>
+      <TabsContent value="wasteMedication">
+        <DiscardMedicine />
       </TabsContent>
     </Tabs>
   );
