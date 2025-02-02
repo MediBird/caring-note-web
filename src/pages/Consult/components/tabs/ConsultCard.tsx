@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import CardSection from '@/components/ui/cardSection';
@@ -20,9 +19,7 @@ const ConsultCard: React.FC = () => {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>기초 상담 내역</CardTitle>
-          </div>
+          <CardTitle>기초 상담 내역</CardTitle>
           <Button
             variant="secondary"
             onClick={() => navigate(`/assistant/${counselSessionId}`)}>

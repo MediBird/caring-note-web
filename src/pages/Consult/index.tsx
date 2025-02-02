@@ -51,25 +51,27 @@ const ConsultHeader = ({
   age: string;
   diseases: React.ReactNode;
 }) => (
-  <div className="sticky top-0 bg-white h-[167px]">
-    <div className="pl-[5.75rem] pr-[9.5rem] pt-12 pb-1 border-b border-grayscale-05 flex justify-between">
-      <div>
-        <div className="text-h3 font-bold">
-          {counseleeInfo?.name}
-          <span className="text-subtitle2 font-bold"> 님</span>
+  <div>
+    <div className=" bg-white h-[167px]">
+      <div className="pl-[5.75rem] pr-[9.5rem] pt-12 pb-1 border-b border-grayscale-05 flex justify-between">
+        <div>
+          <div className="text-h3 font-bold">
+            {counseleeInfo?.name}
+            <span className="text-subtitle2 font-bold"> 님</span>
+          </div>
+          <div className="mt-2 flex items-center text-body1 font-medium text-grayscale-60">
+            <InfoItem icon="📍" content={consultStatus} />
+            <InfoItem icon="🎂" content={age} />
+            <InfoItem icon="💊" content={diseases} showBorder={false} />
+          </div>
         </div>
-        <div className="mt-2 flex items-center text-body1 font-medium text-grayscale-60">
-          <InfoItem icon="📍" content={consultStatus} />
-          <InfoItem icon="🎂" content={age} />
-          <InfoItem icon="💊" content={diseases} showBorder={false} />
-        </div>
+        <HeaderButtons
+          onSave={() => console.log('임시 저장')}
+          onComplete={() => console.log('설문 완료')}
+        />
       </div>
-      <HeaderButtons
-        onSave={() => console.log('임시 저장')}
-        onComplete={() => console.log('설문 완료')}
-      />
+      <ConsultTabs />
     </div>
-    <ConsultTabs />
   </div>
 );
 
@@ -116,30 +118,36 @@ export function Index() {
   const diseases = formatDiseases(counseleeInfo?.diseases);
 
   return (
-    <Tabs defaultValue="pastConsult" className="w-full h-full">
-      <ConsultHeader
-        counseleeInfo={
-          counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes
-        }
-        consultStatus={consultStatus}
-        age={age}
-        diseases={diseases}
-      />
-      <TabsContent value="pastConsult">
-        <PastConsult />
-      </TabsContent>
-      <TabsContent value="survey">
-        <ConsultCard />
-      </TabsContent>
-      <TabsContent value="medicine">
-        <MedicineMemo />
-      </TabsContent>
-      <TabsContent value="note">
-        <MedicineConsult />
-      </TabsContent>
-      <TabsContent value="wasteMedication">
-        <DiscardMedicine />
-      </TabsContent>
+    <Tabs
+      defaultValue="pastConsult"
+      className="w-full h-full overflow-y-hidden">
+      <div className="sticky top-0 z-1">
+        <ConsultHeader
+          counseleeInfo={
+            counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes
+          }
+          consultStatus={consultStatus}
+          age={age}
+          diseases={diseases}
+        />
+      </div>
+      <div className="w-full h-full overflow-y-auto">
+        <TabsContent value="pastConsult">
+          <PastConsult />
+        </TabsContent>
+        <TabsContent value="survey">
+          <ConsultCard />
+        </TabsContent>
+        <TabsContent value="medicine">
+          <MedicineMemo />
+        </TabsContent>
+        <TabsContent value="note">
+          <MedicineConsult />
+        </TabsContent>
+        <TabsContent value="wasteMedication">
+          <DiscardMedicine />
+        </TabsContent>
+      </div>
     </Tabs>
   );
 }
