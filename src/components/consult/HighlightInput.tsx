@@ -5,6 +5,7 @@ import highlightpenBlack from '@/assets/icon/highlightpenBlack.png';
 import highlightpenBlue from '@/assets/icon/highlightpenBlue.png';
 import Tooltip from '@/components/Tooltip';
 import { useSelectMedicineConsult } from '@/hooks/useMedicineConsultQuery';
+import { cn } from '@/lib/utils';
 import useCounselRecordEditorStateStore from '@/store/counselRecordEditorStateStore';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import { CounselRecordHighlights } from '@/types/MedicineConsultDTO';
@@ -20,7 +21,11 @@ import 'draft-js/dist/Draft.css';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-const HighlightInput: React.FC = () => {
+interface HighlightInputProps {
+  className?: string;
+}
+
+const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
   const { editorState, setEditorState } = useCounselRecordEditorStateStore();
 
   const { counselSessionId } = useParams();
@@ -216,7 +221,11 @@ const HighlightInput: React.FC = () => {
   }, [setCounselRecordHighlights, getHighlightedText]);
 
   return (
-    <div className="p-0 rounded-lg bg-white border-2 border-gray-300">
+    <div
+      className={cn(
+        'p-0 rounded-lg bg-white border-2 border-gray-300',
+        className,
+      )}>
       <div
         className="border-b p-2 min-h-64"
         onClick={() => getHighlightedText()}>

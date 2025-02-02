@@ -6,6 +6,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSaveMedicineConsultWithState } from '@/hooks/useSaveMedicineConsultWithState';
 import { useSaveWasteMedication } from '@/hooks/useSaveWasteMedication';
+import Spinner from '@/components/common/Spinner';
 
 const PastConsult = lazy(
   () => import('@/pages/Consult/components/tabs/PastConsult'),
@@ -162,16 +163,7 @@ function Index() {
       <Suspense
         fallback={
           <div className="flex items-center justify-center w-full min-h-[800px]">
-            <div
-              className="animate-spin rounded-full border-2 border-solid border-primary-50"
-              style={{
-                borderTopColor: 'transparent',
-                borderRightColor: 'transparent',
-                width: '40px',
-                height: '40px',
-                animation: 'spin 1s linear infinite',
-              }}
-            />
+            <Spinner />
           </div>
         }>
         <TabContent
