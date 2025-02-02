@@ -5,14 +5,13 @@ import SearchComponent from '@/components/common/SearchComponent';
 import { GridColDef, GridRowModel } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useDeleteMedicationList } from '../../hooks/query/useDeleteMedicationList';
-
-import TabContentTitle from '@/components/consult/TabContentTitle';
 import InfoIcon from '@/assets/icon/20/info.filled.blue.svg?react';
 import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
 import { useWasteMedicationList } from '@/pages/Consult/hooks/query/useWasteMedicationListQuery';
 import { useSearchMedicationByKeyword } from '@/pages/Consult/hooks/query/useSearchMedicationByKeyword';
 import { WasteMedicationListDTO } from '@/types/WasteMedicationDTO';
 import Badge from '@/components/common/Badge';
+import { CardHeader, CardTitle } from '@/components/ui/card';
 
 interface WasteMedicationTableProps {
   counselSessionId: string;
@@ -121,28 +120,33 @@ const WasteMedicationTable = ({
     <div className="mt-8">
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2">
-          {showTable && !isNone && <TabContentTitle text="폐의약품 목록" />}
+          {showTable && !isNone && (
+            <CardHeader className="flex flex-row items-center gap-2">
+              <CardTitle>폐의약품 목록</CardTitle>
+            </CardHeader>
+          )}
 
           {showTable && isNone && (
-            <>
-              <TabContentTitle
-                className="!text-grayscale-40"
-                text="폐의약품 목록"
-              />
-              <span className="mt-2 mb-4 text-grayscale-40">(해당 없음)</span>
-            </>
+            <CardHeader className="flex flex-row items-center gap-2">
+              <CardTitle className="!text-grayscale-40">
+                폐의약품 목록
+              </CardTitle>
+              <span className="text-grayscale-40 !mt-0">(해당 없음)</span>
+            </CardHeader>
           )}
 
           {!showTable && (
-            <>
-              <TabContentTitle text="폐의약품 목록" />
+            <CardHeader className="flex items-center justify-center gap-3 flex-row">
+              <CardTitle className="!text-grayscale-40 leading-1">
+                폐의약품 목록
+              </CardTitle>
               <Badge
-                className="mt-2 mb-6" // TabContentTitle 의 margin-top, margin-bottom 과 동일하게 맞춤
+                className="!mt-0 px-[6px] py-[6px] gap-[2px]"
                 variant="tint"
                 customIcon={<InfoIcon width={20} height={20} />}>
                 상단 선택지를 먼저 골라주세요
               </Badge>
-            </>
+            </CardHeader>
           )}
         </div>
         <Button

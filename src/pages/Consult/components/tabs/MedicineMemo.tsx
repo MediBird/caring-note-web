@@ -8,7 +8,6 @@ import {
 import NulpeumImg from '@/assets/temp-nulpeum.png';
 import SearchComponent from '@/components/common/SearchComponent';
 import TableComponent from '@/components/common/TableComponent';
-import TabContentContainer from '@/components/consult/TabContentContainer';
 import { Button } from '@/components/ui/button';
 import DatePickerComponent from '@/components/ui/datepicker';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
@@ -23,6 +22,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import GrayContainer from '../GrayContainer';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
 
 const MedicineMemo: React.FC = () => {
   const { counselSessionId } = useParams();
@@ -339,110 +340,113 @@ const MedicineMemo: React.FC = () => {
 
   return (
     <>
-      <TabContentContainer>
-        <GrayContainer
-          title="처방 의약품"
-          subTitle="최근 3개월 이내 복용 기준 약물 이용 내역"
-          titleButton={
-            <div className="inline-block">
-              <Button
-                variant="secondaryError"
-                onClick={() =>
-                  deletePrescribedMedicineRowById(
-                    selectedPrescribedMedicineRowIds,
-                  )
-                }
-                disabled={selectedPrescribedMedicineRowIds.length == 0}>
-                선택항목 삭제
-              </Button>
-            </div>
-          }>
-          <div className="h-auto">
-            <TableComponent
-              tableKey="prescribedMedicineTable"
-              rows={prescribedMedicineRows}
-              columns={columns}
-              checkboxSelection={true}
-              onUpdateCell={updatePrescribedMedicineRowById}
-              onRowSelectionModelChange={setSelectedPrescribedMedicineRowIds}
-              withAddButton
-              onClickAddButton={() => {
-                addPrescribedMedicineRow({
-                  col1: '',
-                  col2: '',
-                  col3: '',
-                  col4: '',
-                  col5: null,
-                });
-              }}
-            />
-          </div>
-        </GrayContainer>
-
-        <GrayContainer
-          title="일반 의약품"
-          subTitle="가정 내 보관중인 모든 식품"
-          titleButton={
-            <div className="inline-block">
-              <Button
-                variant="secondaryError"
-                onClick={() =>
-                  deletePrescribedMedicineRowById(
-                    selectedPrescribedMedicineRowIds,
-                  )
-                }
-                disabled={selectedPrescribedMedicineRowIds.length == 0}>
-                선택항목 삭제
-              </Button>
-            </div>
-          }>
-          <div className="h-auto">
-            <TableComponent
-              tableKey="nomalMedicineTable"
-              rows={normalMedicineRows}
-              columns={columns}
-              checkboxSelection={true}
-              onUpdateCell={updateNormalMedicineRowById}
-              onRowSelectionModelChange={setSelectedNormalMedicineRowIds}
-              withAddButton
-              onClickAddButton={() => {
-                addNormalMedicineRow({
-                  col1: '',
-                  col2: '',
-                  col3: '',
-                  col4: '',
-                  col5: null,
-                });
-              }}
-            />
-          </div>
-        </GrayContainer>
-
-        <div>
-          <p
-            className="mt-8 font-bold text-subtitle2 text-grayscale-90"
-            onClick={test}>
-            유용한 사이트 (TEST : 여기를 클릭하여 의약물 등록 API 호출)
-          </p>
-          <div className="mt-6">
-            <img
-              src={NulpeumImg}
-              alt="늘픔가치"
-              className="inline-block mr-4 w-60 h-60"
-            />
-            <img
-              src={NulpeumImg}
-              alt="늘픔가치"
-              className="inline-block mr-4 w-60 h-60"
-            />
-            <img
-              src={NulpeumImg}
-              alt="늘픔가치"
-              className="inline-block mr-4 w-60 h-60"
-            />
-          </div>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>의약물 기록</CardTitle>
         </div>
-      </TabContentContainer>
+      </CardHeader>
+      <GrayContainer
+        title="처방 의약품"
+        subTitle="최근 3개월 이내 복용 기준 약물 이용 내역"
+        titleButton={
+          <div className="inline-block">
+            <Button
+              variant="secondaryError"
+              onClick={() =>
+                deletePrescribedMedicineRowById(
+                  selectedPrescribedMedicineRowIds,
+                )
+              }
+              disabled={selectedPrescribedMedicineRowIds.length == 0}>
+              선택항목 삭제
+            </Button>
+          </div>
+        }>
+        <div className="h-auto">
+          <TableComponent
+            tableKey="prescribedMedicineTable"
+            rows={prescribedMedicineRows}
+            columns={columns}
+            checkboxSelection={true}
+            onUpdateCell={updatePrescribedMedicineRowById}
+            onRowSelectionModelChange={setSelectedPrescribedMedicineRowIds}
+            withAddButton
+            onClickAddButton={() => {
+              addPrescribedMedicineRow({
+                col1: '',
+                col2: '',
+                col3: '',
+                col4: '',
+                col5: null,
+              });
+            }}
+          />
+        </div>
+      </GrayContainer>
+
+      <GrayContainer
+        title="일반 의약품"
+        subTitle="가정 내 보관중인 모든 식품"
+        titleButton={
+          <div className="inline-block">
+            <Button
+              variant="secondaryError"
+              onClick={() =>
+                deletePrescribedMedicineRowById(
+                  selectedPrescribedMedicineRowIds,
+                )
+              }
+              disabled={selectedPrescribedMedicineRowIds.length == 0}>
+              선택항목 삭제
+            </Button>
+          </div>
+        }>
+        <div className="h-auto">
+          <TableComponent
+            tableKey="nomalMedicineTable"
+            rows={normalMedicineRows}
+            columns={columns}
+            checkboxSelection={true}
+            onUpdateCell={updateNormalMedicineRowById}
+            onRowSelectionModelChange={setSelectedNormalMedicineRowIds}
+            withAddButton
+            onClickAddButton={() => {
+              addNormalMedicineRow({
+                col1: '',
+                col2: '',
+                col3: '',
+                col4: '',
+                col5: null,
+              });
+            }}
+          />
+        </div>
+      </GrayContainer>
+
+      <div>
+        <p
+          className="mt-8 font-bold text-subtitle2 text-grayscale-90"
+          onClick={test}>
+          유용한 사이트 (TEST : 여기를 클릭하여 의약물 등록 API 호출)
+        </p>
+        <div className="mt-6">
+          <img
+            src={NulpeumImg}
+            alt="늘픔가치"
+            className="inline-block mr-4 w-60 h-60"
+          />
+          <img
+            src={NulpeumImg}
+            alt="늘픔가치"
+            className="inline-block mr-4 w-60 h-60"
+          />
+          <img
+            src={NulpeumImg}
+            alt="늘픔가치"
+            className="inline-block mr-4 w-60 h-60"
+          />
+        </div>
+      </div>
     </>
   );
 };
