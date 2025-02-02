@@ -4,6 +4,7 @@ import MicBlackIcon from '@/assets/icon/24/mic.filled.black.svg?react';
 import { useAppDispatch, useAppSelector } from '../app/reduxHooks';
 import { toggleRightNavigation } from '../reducers/navigationReducer';
 import HighlightInput from './consult/HighlightInput';
+import Recording from './Recording';
 
 const NavigationRight = () => {
   const isOpen = useAppSelector(
@@ -51,8 +52,9 @@ const NavigationRight = () => {
               </span>
               <CloseBlackIcon width={24} height={24} onClick={toggleMenu} />
             </div>
-            <div className="bg-red-000 pt-4 px-2">
-              <HighlightInput />
+            <div className="flex flex-col items-center justify-between w-full gap-4 px-2 py-4">
+              <HighlightInput className="w-full" />
+              <Recording />
             </div>
           </div>
         </div>

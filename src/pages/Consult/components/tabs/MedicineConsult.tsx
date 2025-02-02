@@ -1,8 +1,9 @@
-import { useAppSelector } from "@/app/reduxHooks";
-import logoBlack from "@/assets/logoBlack.png";
-import HighlightInput from "@/components/consult/HighlightInput";
-import TabContentContainer from "@/components/consult/TabContentContainer";
-import GrayContainer from "@/pages/Consult/components/GrayContainer";
+import { useAppSelector } from '@/app/reduxHooks';
+import logoBlack from '@/assets/logoBlack.png';
+import HighlightInput from '@/components/consult/HighlightInput';
+import TabContentContainer from '@/components/consult/TabContentContainer';
+import Recording from '@/components/Recording';
+import GrayContainer from '@/pages/Consult/components/GrayContainer';
 
 const MedicineConsult: React.FC = () => {
   const isRightNavigationOpen = useAppSelector(
@@ -34,6 +35,8 @@ const MedicineConsult: React.FC = () => {
           subTitle="하이라이트 시, 다음 지속 상담에 해당 내용을 가장 먼저 확인할 수 있어요">
           {isRightNavigationOpen ? <ViewWarningImage /> : <HighlightInput />}
         </GrayContainer>
+
+        <Recording />
       </TabContentContainer>
     </div>
   );

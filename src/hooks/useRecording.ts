@@ -3,30 +3,55 @@ import {
   RecordingFileInfo,
   RecordingStatus,
 } from '@/types/Recording.enum';
-import { useRef } from 'react';
 import { create } from 'zustand';
+
+// store's state
+interface RecordingState {
+  recordingStatus: RecordingStatus;
+  updateRecordingStatus: (newStatus: RecordingStatus) => void;
+  recordingTime: number;
+  resetRecordingTime: () => void;
+  recordingIntervalId: number | null;
+  clearRecordingIntervalId: () => void;
+  addOneSecond: () => void;
+  mediaRecorderRef: React.MutableRefObject<MediaRecorder | null>;
+  audioChunksRef: React.MutableRefObject<Blob[]>;
+}
 
 // store (ONLY for this hook)
 const useRecordingStore = create<RecordingState>((set) => ({
   recordingStatus: RecordingStatus.Ready,
   updateRecordingStatus: (newStatus: RecordingStatus) =>
     set({ recordingStatus: newStatus }),
+  recordingTime: 0,
+  resetRecordingTime: () => set({ recordingTime: 0 }),
+  recordingIntervalId: null,
+  addOneSecond: () =>
+    set((state) => ({ recordingTime: state.recordingTime + 1 })),
+  clearRecordingIntervalId: () => {
+    const intervalId = useRecordingStore.getState().recordingIntervalId;
+    if (intervalId !== null) {
+      clearInterval(intervalId);
+      set({ recordingIntervalId: null });
+    }
+  },
+  mediaRecorderRef: { current: null },
+  audioChunksRef: { current: [] },
 }));
-
-// hook's state
-interface RecordingState {
-  recordingStatus: RecordingStatus;
-  updateRecordingStatus: (newStatus: RecordingStatus) => void;
-}
 
 // hook
 export const useRecording = () => {
-  const { recordingStatus, updateRecordingStatus } = useRecordingStore();
-
-  // MediaRecorder 인스턴스를 저장하는 ref
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  // 녹음된 데이터(청크)를 저장하는 ref
-  const audioChunksRef = useRef<Blob[]>([]);
+  const {
+    recordingStatus,
+    updateRecordingStatus,
+    recordingTime,
+    resetRecordingTime,
+    recordingIntervalId,
+    addOneSecond,
+    clearRecordingIntervalId,
+    mediaRecorderRef,
+    audioChunksRef,
+  } = useRecordingStore();
 
   const startRecording = async () => {
     try {
@@ -46,21 +71,46 @@ export const useRecording = () => {
       // 녹음 시작 이벤트 정의
       mediaRecorder.onstart = () => {
         updateRecordingStatus(RecordingStatus.Recording);
+
+        // 타이머 세팅
+        clearRecordingIntervalId();
+        console.log(`recordingIntervalId: ${recordingIntervalId}`);
+        const intervalId = setInterval(() => {
+          addOneSecond();
+        }, 1000);
+        useRecordingStore.setState({
+          recordingIntervalId: Number(intervalId),
+        });
       };
 
       // 일시정지 이벤트 정의
       mediaRecorder.onpause = () => {
         updateRecordingStatus(RecordingStatus.Paused);
+
+        // 타이머 중지
+        clearRecordingIntervalId();
       };
 
       // 재개 이벤트 정의
       mediaRecorder.onresume = () => {
         updateRecordingStatus(RecordingStatus.Recording);
+
+        // 타이머 세팅
+        clearRecordingIntervalId();
+        const intervalId = setInterval(() => {
+          addOneSecond();
+        }, 1000);
+        useRecordingStore.setState({
+          recordingIntervalId: Number(intervalId),
+        });
       };
 
       // 녹음 정지 이벤트 정의
       mediaRecorder.onstop = () => {
         updateRecordingStatus(RecordingStatus.Stopped);
+
+        // 타이머 중지
+        clearRecordingIntervalId();
 
         // 녹음된 데이터(Blob) 생성
         const audioBlob = new Blob(audioChunksRef.current, {
@@ -121,12 +171,12 @@ export const useRecording = () => {
     mediaRecorderRef.current.stop();
   };
 
-  const getRecordingStatus: RecordingStatus = recordingStatus;
-
   return {
     startRecording,
     pauseRecording,
     stopRecording,
-    getRecordingStatus,
+    recordingStatus,
+    recordingTime,
+    resetRecordingTime,
   };
 };
