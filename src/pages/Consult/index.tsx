@@ -1,203 +1,147 @@
-import { CounseleeControllerApi, CounselSessionControllerApi } from '@/api/api';
+import { SelectCounseleeBaseInformationByCounseleeIdRes } from '@/api/api';
 import { Button } from '@/components/ui/button';
-import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
-import { useQuery } from '@tanstack/react-query';
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useParams } from 'react-router-dom';
-import { useSaveMedicineConsultWithState } from '@/hooks/useSaveMedicineConsultWithState';
-import { useSaveWasteMedication } from '@/hooks/useSaveWasteMedication';
-import Spinner from '@/components/common/Spinner';
+import MedicineMemo from './components/tabs/MedicineMemo';
+import MedicineConsult from './components/tabs/MedicineConsult';
+import ConsultCard from './components/tabs/ConsultCard';
+import PastConsult from './components/tabs/PastConsult';
+import DiscardMedicine from './components/tabs/DiscardMedicine';
+interface InfoItemProps {
+  icon: string;
+  content: React.ReactNode;
+  showBorder?: boolean;
+}
 
-const PastConsult = lazy(
-  () => import('@/pages/Consult/components/tabs/PastConsult'),
-);
-const ConsultCard = lazy(
-  () => import('@/pages/Consult/components/tabs/ConsultCard'),
-);
-const MedicineMemo = lazy(
-  () => import('@/pages/Consult/components/tabs/MedicineMemo'),
-);
-const MedicineConsult = lazy(
-  () => import('@/pages/Consult/components/tabs/MedicineConsult'),
-);
-const DiscardMedicine = lazy(
-  () => import('@/pages/Consult/components/tabs/DiscardMedicine'),
+const InfoItem = ({ icon, content, showBorder = true }: InfoItemProps) => (
+  <div
+    className={`flex items-center px-[0.375rem] text-grayscale-70 ${
+      showBorder ? 'border-r border-grayscale-10' : ''
+    }`}>
+    <span className="text-subtitle-2 pr-[0.25rem]">{icon}</span>
+    <span>{content}</span>
+  </div>
 );
 
-const TabTitle = ({
-  text,
-  goPage,
-  isHidden,
+interface HeaderButtonsProps {
+  onSave: () => void;
+  onComplete: () => void;
+}
+
+const HeaderButtons = ({ onSave, onComplete }: HeaderButtonsProps) => (
+  <div className="flex gap-3">
+    <Button variant="tertiary" size="xl" onClick={onSave}>
+      임시 저장
+    </Button>
+    <Button variant="primary" size="xl" onClick={onComplete}>
+      설문 완료
+    </Button>
+  </div>
+);
+
+const ConsultHeader = ({
+  counseleeInfo,
+  consultStatus,
+  age,
+  diseases,
 }: {
-  text: string;
-  goPage: ConsultTab;
-  isHidden?: boolean;
-}) => {
-  const { activeTab, setActiveTab } = useConsultTabStore();
-
-  return (
-    <p
-      className={`${
-        activeTab === goPage
-          ? 'text-body2 font-bold text-primary-50 border-b-2 border-primary-50'
-          : 'text-body2 font-medium text-grayscale-50'
-      } ${
-        isHidden ? 'hidden' : ''
-      } mr-10 py-3 h-full flex items-center hover:text-primary-50 hover:border-b-2 border-primary-50 cursor-pointer`}
-      onClick={() => {
-        setActiveTab(goPage);
-      }}>
-      {text}
-    </p>
-  );
-};
-
-function Index() {
-  const { activeTab, setActiveTab } = useConsultTabStore();
-  const { counselSessionId } = useParams();
-
-  const [hidePastConsultTab, setHidePastConsultTab] = useState(true);
-  const diseasesLengthRef = useRef(0);
-  const SHOW_DISEASE_COUNT = 5;
-
-  const counselSessionControllerApi = new CounselSessionControllerApi();
-  const counseleeControllerApi = new CounseleeControllerApi();
-
-  const selectPreviousCounselSessionList = async () => {
-    if (!counselSessionId) return;
-    const response =
-      await counselSessionControllerApi.selectPreviousCounselSessionList(
-        counselSessionId,
-      );
-
-    return response;
-  };
-
-  const selectCounseleeBaseInformation = async () => {
-    if (!counselSessionId) return;
-    const response =
-      await counseleeControllerApi.selectCounseleeBaseInformation(
-        counselSessionId,
-      );
-
-    return response.data.data;
-  };
-
-  const previousCounselQuery = useQuery({
-    queryKey: ['previousCounsel'],
-    queryFn: selectPreviousCounselSessionList,
-    enabled: !!counselSessionId,
-  });
-
-  const counseleeBaseInfoQuery = useQuery({
-    queryKey: ['counseleeBaseInfo', counselSessionId],
-    queryFn: selectCounseleeBaseInformation,
-  });
-
-  const { handleSaveMedicineConsult } = useSaveMedicineConsultWithState();
-  const { handleSaveWasteMedication } = useSaveWasteMedication(
-    counselSessionId as string,
-  );
-
-  useEffect(() => {
-    if (previousCounselQuery.data?.status !== 204) {
-      setHidePastConsultTab(false);
-    } else {
-      setHidePastConsultTab(true);
-      setActiveTab(ConsultTab.consultCard);
-    }
-  }, [previousCounselQuery.data, setActiveTab]);
-
-  useEffect(() => {
-    diseasesLengthRef.current =
-      counseleeBaseInfoQuery.data?.diseases?.length || 0;
-  }, [counseleeBaseInfoQuery.data]);
-
-  return (
-    <div>
-      <div className="flex flex-col items-center justify-start w-full h-fit px-8 py-10">
-        <div className="flex flex-row items-center justify-start w-full h-8 mt-4 pl-6">
-          <p className="text-h2 font-bold text-grayscale-100">
-            {counseleeBaseInfoQuery.data?.name}
-          </p>
-          <Button
-            className="ml-6"
-            variant="secondary"
-            onClick={() => {
-              handleSaveMedicineConsult();
-              handleSaveWasteMedication();
-            }}>
-            임시저장
-          </Button>
-          <Button className="ml-2" variant="primary" onClick={() => {}}>
-            기록완료
-          </Button>
+  counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
+  consultStatus: string;
+  age: string;
+  diseases: React.ReactNode;
+}) => (
+  <div className="sticky top-0 bg-white h-[167px]">
+    <div className="pl-[5.75rem] pr-[9.5rem] pt-12 pb-1 border-b border-grayscale-05 flex justify-between">
+      <div>
+        <div className="text-h3 font-bold">
+          {counseleeInfo?.name}
+          <span className="text-subtitle2 font-bold"> 님</span>
         </div>
-        <div className="flex flex-row items-center justify-start w-full h-8 mt-4 pl-6">
-          <p className="text-body1 font-medium text-grayscale-70">
-            만 {counseleeBaseInfoQuery.data?.age}세
-          </p>
-          <div className="w-0.5 h-6 bg-grayscale-10 mx-2" />
-          <p className="text-body1 font-medium text-grayscale-70">
-            {counseleeBaseInfoQuery.data?.diseases
-              ?.slice(0, SHOW_DISEASE_COUNT)
-              .join(' · ')}
-          </p>
-          {diseasesLengthRef.current > SHOW_DISEASE_COUNT ? (
-            <p className="text-body1 font-medium text-grayscale-30 px-2">
-              외 {diseasesLengthRef.current - SHOW_DISEASE_COUNT}개의 질병
-            </p>
-          ) : null}
+        <div className="mt-2 flex items-center text-body1 font-medium text-grayscale-60">
+          <InfoItem icon="📍" content={consultStatus} />
+          <InfoItem icon="🎂" content={age} />
+          <InfoItem icon="💊" content={diseases} showBorder={false} />
         </div>
       </div>
-      <div className="flex flex-row items-center justify-start w-full h-auto pl-14 my-0 border-t-2 border-b-2 border-grayscale-5 ">
-        {hidePastConsultTab ? null : (
-          <TabTitle text="이전 상담 내역" goPage={ConsultTab.pastConsult} />
-        )}
-        <TabTitle text="상담카드" goPage={ConsultTab.consultCard} />
-        <TabTitle text="의약물 기록" goPage={ConsultTab.medicineMemo} />
-        <TabTitle text="복약 상담" goPage={ConsultTab.medicineConsult} />
-        <TabTitle text="폐의약품 처리" goPage={ConsultTab.discardMedicine} />
-      </div>
-      {/* @TODO: skeleton 추가 or loading 인디케이터 추가  */}
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center w-full min-h-[800px]">
-            <Spinner />
-          </div>
-        }>
-        <TabContent
-          activeTab={activeTab}
-          hidePastConsultTab={hidePastConsultTab}
-        />
-      </Suspense>
+      <HeaderButtons
+        onSave={() => console.log('임시 저장')}
+        onComplete={() => console.log('설문 완료')}
+      />
     </div>
+    <ConsultTabs />
+  </div>
+);
+
+const ConsultTabs = () => (
+  <TabsList className="w-full flex justify-start pl-[5.75rem] gap-5 border-b border-grayscale-10">
+    <TabsTrigger value="pastConsult">이전 상담 내역</TabsTrigger>
+    <TabsTrigger value="survey">기초 설문 내역</TabsTrigger>
+    <TabsTrigger value="medicine">의약물 기록</TabsTrigger>
+    <TabsTrigger value="note">중재 기록 작성</TabsTrigger>
+    <TabsTrigger value="wasteMedication">폐의약물 기록</TabsTrigger>
+  </TabsList>
+);
+
+export function Index() {
+  const { counselSessionId } = useParams();
+  const { data: counseleeInfo, isLoading } = useSelectCounseleeInfo(
+    counselSessionId ?? '',
+  );
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
+
+  const formatDiseases = (diseases: string[] | undefined) => {
+    if (!diseases?.length) return '';
+
+    if (diseases.length <= 3) {
+      return diseases.join(' · ');
+    }
+
+    return (
+      <>
+        {diseases.slice(0, 3).join(' · ')}
+        <span className="text-grayscale-30">
+          {` 외 ${diseases.length - 3}개의 질병`}
+        </span>
+      </>
+    );
+  };
+
+  const consultStatus =
+    counseleeInfo?.counselCount === 0 ? '초기 상담' : '재상담';
+  const age = `만 ${counseleeInfo?.age}세`;
+  const diseases = formatDiseases(counseleeInfo?.diseases);
+
+  return (
+    <Tabs defaultValue="pastConsult" className="w-full h-full">
+      <ConsultHeader
+        counseleeInfo={
+          counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes
+        }
+        consultStatus={consultStatus}
+        age={age}
+        diseases={diseases}
+      />
+      <TabsContent value="pastConsult">
+        <PastConsult />
+      </TabsContent>
+      <TabsContent value="survey">
+        <ConsultCard />
+      </TabsContent>
+      <TabsContent value="medicine">
+        <MedicineMemo />
+      </TabsContent>
+      <TabsContent value="note">
+        <MedicineConsult />
+      </TabsContent>
+      <TabsContent value="wasteMedication">
+        <DiscardMedicine />
+      </TabsContent>
+    </Tabs>
   );
 }
 
 export default Index;
-
-function TabContent({
-  activeTab,
-  hidePastConsultTab,
-}: {
-  activeTab: ConsultTab;
-  hidePastConsultTab: boolean;
-}) {
-  const defaultTab = hidePastConsultTab ? <ConsultCard /> : <PastConsult />;
-
-  switch (activeTab) {
-    case ConsultTab.pastConsult:
-      return <PastConsult />;
-    case ConsultTab.consultCard:
-      return <ConsultCard />;
-    case ConsultTab.medicineMemo:
-      return <MedicineMemo />;
-    case ConsultTab.medicineConsult:
-      return <MedicineConsult />;
-    case ConsultTab.discardMedicine:
-      return <DiscardMedicine />;
-    default:
-      return defaultTab;
-  }
-}
