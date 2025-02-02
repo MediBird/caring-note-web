@@ -22,8 +22,8 @@ export const onKeycloakEvent = (
   event: AuthClientEvent,
   // error?: AuthClientError,
 ) => {
-  console.log('keycloak', keycloak);
-  console.log('keycloak.token:', keycloak.token);
+  // console.log('keycloak', keycloak);
+  // console.log('keycloak.token:', keycloak.token);
   switch (event) {
     case 'onAuthLogout':
       keycloak.logout();
