@@ -118,9 +118,7 @@ export function Index() {
   const diseases = formatDiseases(counseleeInfo?.diseases);
 
   return (
-    <Tabs
-      defaultValue="pastConsult"
-      className="w-full h-full overflow-y-hidden">
+    <Tabs defaultValue="pastConsult" className="w-full h-full">
       <div className="sticky top-0 z-1">
         <ConsultHeader
           counseleeInfo={
@@ -131,7 +129,7 @@ export function Index() {
           diseases={diseases}
         />
       </div>
-      <div className="w-full h-full overflow-y-auto">
+      <div className="w-full h-full overflow-y-auto mb-100">
         <TabsContent value="pastConsult">
           <PastConsult />
         </TabsContent>

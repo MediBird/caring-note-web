@@ -22,7 +22,7 @@ import { CheckedState } from '@radix-ui/react-checkbox';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import WasteMedicationTable from '../table/WasteMedicationTable';
-import { CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 
 const DiscardMedicine = () => {
   const { counselSessionId } = useParams();
@@ -92,7 +92,7 @@ const DiscardMedicine = () => {
   console.log(wasteMedicationDisposal);
 
   return (
-    <>
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>폐의약품의 처리</CardTitle>
@@ -493,7 +493,7 @@ const DiscardMedicine = () => {
           WasteMedicationDisposalDrugRemainActionTypeEnum.None
         }
       />
-    </>
+    </Card>
   );
 };
 
