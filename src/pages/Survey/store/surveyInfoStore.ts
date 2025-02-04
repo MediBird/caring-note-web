@@ -26,7 +26,7 @@ export interface CounselSurveyState {
 }
 
 // Zustand Store
-export const useCounselSurveyStore = create<CounselSurveyState>()((set) => ({
+export const useCounselSurveyStore = create<CounselSurveyState>((set) => ({
   counselSurvey: {
     counselCardId: '',
     counselSessionId: '',
@@ -107,7 +107,9 @@ export const useCounselSurveyStore = create<CounselSurveyState>()((set) => ({
       },
     },
   },
-  setCounselSurvey: (updateFn) =>
+  setCounselSurvey: (
+    updateFn: (prevState: CounselSurveyType) => CounselSurveyType,
+  ) =>
     set((state) => ({
       counselSurvey: updateFn(state.counselSurvey),
     })),
