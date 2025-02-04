@@ -34,3 +34,30 @@ export const useSelectCounselSessionList = (params: FetchParams) =>
     queryFn: () => selectCounselSessionList(params),
     enabled: !!params,
   });
+
+// 이전 상담 내역 조회
+const selectPreviousCounselSessionList = async (counselSessionId: string) => {
+  const response =
+    await counselSessionControllerApi.selectPreviousCounselSessionList(
+      counselSessionId,
+    );
+
+  return response?.data?.data;
+};
+
+export const COUNSEL_SESSION_PREVIOUS_KEYS = {
+  all: ['previousCounselSession'] as const,
+  list: (counselSessionId: string) =>
+    [...COUNSEL_SESSION_PREVIOUS_KEYS.all, 'list', counselSessionId] as const,
+} as const;
+
+// 이전 상담 내역 조회 쿼리 훅
+export const useSelectPreviousCounselSessionList = (counselSessionId: string) =>
+  useQuery({
+    queryKey: COUNSEL_SESSION_PREVIOUS_KEYS.list(counselSessionId),
+    queryFn: async () => {
+      const data = await selectPreviousCounselSessionList(counselSessionId);
+      return data ?? []; // undefined 방지 (빈 배열 반환)
+    },
+    enabled: !!counselSessionId,
+  });
