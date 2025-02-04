@@ -46,7 +46,7 @@ const SurveyList = () => {
     {
       ...createDefaultTextColumn({
         field: 'counseleeName',
-        headerName: '내담자명',
+        headerName: '내담자',
       }),
     },
     {
@@ -86,44 +86,40 @@ const SurveyList = () => {
   });
   return (
     <div>
-      <div className="flex flex-col items-center justify-center pt-20 pb-20 bg-primary-30">
-        <p className="w-full font-bold text-h2 text-primary-70 pl-28">
-          박진완님, <br />
+      <div className="flex flex-col items-center justify-center pt-24 pb-8 bg-primary-30">
+        <p className="w-full pl-12 font-bold text-h2 text-primary-70">
           오늘도 힘찬 하루를 보내세요!{' '}
         </p>
       </div>
-      <div className="flex flex-col items-center justify-center pt-20 bg-grayscale-3">
-        <div className="flex flex-row items-center justify-center w-full px-24 mt-10 space-x-5">
-          <div className="grid w-full grid-cols-2 p-6 bg-white rounded-lg shadow-lg">
-            <div className="w-full p-4 text-center">
+      <div className="flex flex-col items-center justify-center py-8 bg-grayscale-3">
+        <div className="flex flex-col items-center justify-center w-full px-8">
+          <div className="flex flex-row justify-between w-full p-6 bg-white shadow-lg rounded-3xl">
+            <div className="flex flex-col p-4 md:w-1/3">
               <h1 className="text-xl font-bold text-secondary-50">
                 약으로 이어지는 건강한 변화들
               </h1>
               <p className="text-sm text-gray-500">2025.03.01 기준</p>
             </div>
-            <div className="flex grid-cols-2 gap-4">
-              <div className="w-1/2 p-4 text-center rounded-lg bg-secondary-5">
-                <h2 className="font-semibold text-grayscale-90">
+            <div className="flex flex-row w-full gap-4">
+              <div className="px-6 py-6 text-left rounded-lg md:w-1/2 bg-secondary-5">
+                <h2 className="text-sm font-medium text-grayscale-90">
                   복약상담소 방문자
                 </h2>
-                <p className="text-2xl font-bold text-secondary-50">
-                  000,000명
-                </p>
+                <p className="text-xl font-bold text-secondary-50">000,000명</p>
               </div>
-              <div className="w-1/2 p-4 text-center rounded-lg bg-secondary-5">
-                <h2 className="font-semibold text-grayscale-90">
+              <div className="px-6 py-6 text-left rounded-lg md:w-1/2 bg-secondary-5">
+                <h2 className="text-sm font-medium text-grayscale-90">
                   케어링 메시지 연계
                 </h2>
-                <p className="text-2xl font-bold text-secondary-50">
-                  000,000회
-                </p>
+                <p className="text-xl font-bold text-secondary-50">000,000회</p>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center w-full px-24 pt-10">
-          <div className="w-full h-auto p-10 bg-white rounded-xl">
-            <div className="mt-10">
+        <div className="flex flex-col items-center justify-center w-full px-8 pt-6">
+          <div className="w-full h-auto px-6 py-6 bg-white rounded-3xl">
+            <h1 className="text-2xl font-bold text-grayscale-90">오늘 일정</h1>
+            <div className="mt-5">
               <TableComponent
                 tableKey="home-table"
                 rows={testRows}
@@ -135,14 +131,14 @@ const SurveyList = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center w-full px-24 pt-10 pb-10">
-          <div className="grid items-center w-full h-auto grid-cols-2 gap-4 p-10 bg-white rounded-xl">
-            <div className="w-1/2 text-left">
-              <h1 className="text-2xl font-bold text-primary-60">
+        <div className="flex flex-col items-center justify-center w-full px-8 pt-10">
+          <div className="flex flex-row justify-between w-full p-4 bg-white shadow-lg rounded-3xl">
+            <div className="flex p-3 md:w-1/5 md:min-h-[52px] ">
+              <h1 className="text-xl font-bold text-left text-primary-50">
                 동료약사의 따뜻한 마음
               </h1>
             </div>
-            <div className="w-full p-4 rounded-lg bg-primary-5">
+            <div className="flex p-3 rounded-lg md:w-2/3 bg-primary-5">
               <p className="text-gray-700">
                 약대 입학 후 얼마 안 되었을 때, 더 나은 사회를 위해 같이
                 공부하고 행동해 보자는 글귀를 읽고 가입하기로 마음먹었어요.
