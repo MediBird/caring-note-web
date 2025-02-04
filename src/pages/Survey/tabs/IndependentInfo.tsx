@@ -45,20 +45,24 @@ const IndependentInfo = () => {
       section: keyof IndependentLifeInformationDTO,
       updates: Record<string, string | number | boolean>,
     ) => {
-      setCounselSurvey((prevState) => ({
-        ...prevState,
-        independentLifeInformation: {
-          ...prevState.independentLifeInformation,
-          [section]: {
-            ...(typeof prevState.independentLifeInformation?.[section] ===
-              'object' &&
-            prevState.independentLifeInformation?.[section] !== null
-              ? prevState.independentLifeInformation?.[section]
-              : {}),
-            ...updates,
+      setCounselSurvey(
+        (prevState: {
+          independentLifeInformation?: IndependentLifeInformationDTO;
+        }) => ({
+          ...prevState,
+          independentLifeInformation: {
+            ...prevState.independentLifeInformation,
+            [section]: {
+              ...(typeof prevState.independentLifeInformation?.[section] ===
+                'object' &&
+              prevState.independentLifeInformation?.[section] !== null
+                ? prevState.independentLifeInformation?.[section]
+                : {}),
+              ...updates,
+            },
           },
-        },
-      }));
+        }),
+      );
     },
     [setCounselSurvey],
   );
@@ -77,42 +81,47 @@ const IndependentInfo = () => {
     field: string,
     value: string,
   ) => {
-    setCounselSurvey((prevState) => {
-      // `section`을 안전하게 가져오기 (초기값을 빈 객체로 설정)
-      const sectionData = prevState.independentLifeInformation?.[section] ?? {};
+    setCounselSurvey(
+      (prevState: {
+        independentLifeInformation?: IndependentLifeInformationDTO;
+      }) => {
+        // `section`을 안전하게 가져오기 (초기값을 빈 객체로 설정)
+        const sectionData =
+          prevState.independentLifeInformation?.[section] ?? {};
 
-      // 현재 필드의 값을 배열로 변환 (string | string[]만 허용)
-      let currentValues: string[] = [];
+        // 현재 필드의 값을 배열로 변환 (string | string[]만 허용)
+        let currentValues: string[] = [];
 
-      if (Array.isArray((sectionData as Record<string, unknown>)[field])) {
-        currentValues = [...(sectionData as Record<string, string[]>)[field]];
-      } else if (
-        typeof (sectionData as Record<string, unknown>)[field] === 'string'
-      ) {
-        currentValues = (sectionData as Record<string, string>)[field]
-          .split(',')
-          .filter((v) => v.trim() !== '');
-      }
+        if (Array.isArray((sectionData as Record<string, unknown>)[field])) {
+          currentValues = [...(sectionData as Record<string, string[]>)[field]];
+        } else if (
+          typeof (sectionData as Record<string, unknown>)[field] === 'string'
+        ) {
+          currentValues = (sectionData as Record<string, string>)[field]
+            .split(',')
+            .filter((v) => v.trim() !== '');
+        }
 
-      // 값 추가 또는 제거
-      const updatedValues = currentValues.includes(value)
-        ? currentValues.filter((v) => v !== value) // 값 제거
-        : [...currentValues, value]; // 값 추가
+        // 값 추가 또는 제거
+        const updatedValues = currentValues.includes(value)
+          ? currentValues.filter((v) => v !== value) // 값 제거
+          : [...currentValues, value]; // 값 추가
 
-      // Zustand 상태 업데이트
-      return {
-        ...prevState,
-        independentLifeInformation: {
-          ...prevState.independentLifeInformation,
-          [section]: {
-            ...(typeof sectionData === 'object' && sectionData !== null
-              ? sectionData
-              : {}),
-            [field]: updatedValues, // 배열 유지
+        // Zustand 상태 업데이트
+        return {
+          ...prevState,
+          independentLifeInformation: {
+            ...prevState.independentLifeInformation,
+            [section]: {
+              ...(typeof sectionData === 'object' && sectionData !== null
+                ? sectionData
+                : {}),
+              [field]: updatedValues, // 배열 유지
+            },
           },
-        },
-      };
-    });
+        };
+      },
+    );
   };
 
   // 다중 선택 버튼 렌더링 함수

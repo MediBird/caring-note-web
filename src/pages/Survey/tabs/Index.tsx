@@ -14,7 +14,7 @@ import {
 import TabTitle from '@/pages/Survey/components/TabTitle';
 import TabContent from '@/pages/Survey/components/TabContent';
 import { useSelectCounseleedetailInfo } from '@/pages/Counselee/hooks/query/useCounseleeInfoQuery';
-import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
+import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 
 const Survey = () => {
   // useParams()를 통해 counselSessionId를 가져옴
@@ -28,12 +28,13 @@ const Survey = () => {
   const [openIndependentInfoTab, setOpenIndependentInfoTab] = useState(false);
   // 탭 상태 가져오기
   const { activeTab } = useAssistantInfoTabStore();
-  // 상담 세션 상세 정보 조회
-  const { detail } = useDetailCounselSessionStore();
-
+  // 내담자 기본 정보 조회
+  const { data: counseleeBasicInfo } = useSelectCounseleeInfo(
+    counselSessionId ?? '',
+  );
   // 내담자 상세 정보 조회
   const { data: counseleeDetailInfo } = useSelectCounseleedetailInfo(
-    detail?.counseleeId ?? '',
+    counseleeBasicInfo?.counseleeId ?? '',
   );
   // 상담 카드 조회
   const { data: survey, isLoading } = useSelectCounselCard(
@@ -46,7 +47,7 @@ const Survey = () => {
   // **Zustand 상태가 비어있을 때만 survey 데이터 적용**
   useEffect(() => {
     if (survey?.data?.data && !Object.keys(setCounselSurvey).length) {
-      setCounselSurvey((prevState) => ({
+      setCounselSurvey((prevState: CounselSurveyType) => ({
         ...prevState, // 기존 상태 유지
         ...survey.data.data, // 상태를 덮어씌우지 않고 병합
       }));
