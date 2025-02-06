@@ -2,6 +2,7 @@ import { CounselCardControllerApi } from '@/api/api';
 import ClockBlackIcon from '@/assets/icon/24/clock.outlined.black.svg?react';
 import ClockBlueIcon from '@/assets/icon/24/clock.outlined.blue.svg?react';
 import HistoryList from '@/components/common/HistoryList';
+import Spinner from '@/components/common/Spinner';
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
@@ -225,7 +226,11 @@ const CardContainer = ({
         onRequestClose={() => setIsHistoryModalOpen(false)}>
         <div>
           <p className="text-subtitle2 font-bold mb-4">히스토리</p>
-          {previousHistoryItemQuery.isLoading && <p>Loading...</p>}
+          {previousHistoryItemQuery.isLoading && (
+            <div className="flex justify-center items-center h-full">
+              <Spinner />
+            </div>
+          )}
           {previousHistoryItemQuery.isError && <p>Error!</p>}
           {previousHistoryItemQuery.isSuccess && (
             <div>
