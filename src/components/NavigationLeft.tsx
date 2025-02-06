@@ -91,7 +91,7 @@ const NavigationLeft = () => {
   };
 
   return (
-    <div className="relative h-auto py-0 w-52 bg-grayscale-3 z-10 shadow-nav-left">
+    <div className="relative h-auto py-0 w-52 bg-grayscale-3 z-50 shadow-nav-left">
       {/* 사용자 정보 */}
       <div className="flex items-end p-5">
         <span className="whitespace-nowrap">
