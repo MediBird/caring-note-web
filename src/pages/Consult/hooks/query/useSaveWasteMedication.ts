@@ -15,7 +15,7 @@ export const useSaveWasteMedication = (counselSessionId: string) => {
     ({ id, ...rest }) => rest,
   );
 
-  const handleSaveWasteMedication = () => {
+  const saveWasteMedication = () => {
     mutateWasteMedicationList({
       counselSessionId,
       wasteMedicationList: wasteMedicationListWithoutId,
@@ -27,6 +27,6 @@ export const useSaveWasteMedication = (counselSessionId: string) => {
   };
 
   return {
-    handleSaveWasteMedication,
+    saveWasteMedication,
   };
 };
