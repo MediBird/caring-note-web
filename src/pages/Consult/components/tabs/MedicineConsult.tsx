@@ -41,7 +41,9 @@ const MedicineConsult: React.FC = () => {
         {isRightNavigationOpen ? <ViewWarningImage /> : <HighlightInput />}
       </GrayContainer>
 
-      <Recording />
+      <div className="flex items-center justify-center mt-8">
+        {isRightNavigationOpen ? <></> : <Recording />}
+      </div>
     </div>
   );
 };

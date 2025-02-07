@@ -8,6 +8,7 @@ import MedicineConsult from './components/tabs/MedicineConsult';
 import ConsultCard from './components/tabs/ConsultCard';
 import PastConsult from './components/tabs/PastConsult';
 import DiscardMedicine from './components/tabs/DiscardMedicine';
+import RecordingDialog from './components/RecordingDialog';
 interface InfoItemProps {
   icon: string;
   content: React.ReactNode;
@@ -118,35 +119,40 @@ export function Index() {
   const diseases = formatDiseases(counseleeInfo?.diseases);
 
   return (
-    <Tabs defaultValue="pastConsult" className="w-full h-full">
-      <div className="sticky top-0 z-1">
-        <ConsultHeader
-          counseleeInfo={
-            counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes
-          }
-          consultStatus={consultStatus}
-          age={age}
-          diseases={diseases}
-        />
-      </div>
-      <div className="w-full h-full overflow-y-auto mb-100">
-        <TabsContent value="pastConsult">
-          <PastConsult />
-        </TabsContent>
-        <TabsContent value="survey">
-          <ConsultCard />
-        </TabsContent>
-        <TabsContent value="medicine">
-          <MedicineMemo />
-        </TabsContent>
-        <TabsContent value="note">
-          <MedicineConsult />
-        </TabsContent>
-        <TabsContent value="wasteMedication">
-          <DiscardMedicine />
-        </TabsContent>
-      </div>
-    </Tabs>
+    <>
+      <Tabs defaultValue="pastConsult" className="w-full h-full">
+        <div className="sticky top-0 z-1">
+          <ConsultHeader
+            counseleeInfo={
+              counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes
+            }
+            consultStatus={consultStatus}
+            age={age}
+            diseases={diseases}
+          />
+        </div>
+        <div className="w-full h-full overflow-y-auto mb-100">
+          <TabsContent value="pastConsult">
+            <PastConsult />
+          </TabsContent>
+          <TabsContent value="survey">
+            <ConsultCard />
+          </TabsContent>
+          <TabsContent value="medicine">
+            <MedicineMemo />
+          </TabsContent>
+          <TabsContent value="note">
+            <MedicineConsult />
+          </TabsContent>
+          <TabsContent value="wasteMedication">
+            <DiscardMedicine />
+          </TabsContent>
+        </div>
+      </Tabs>
+
+      {/* 녹음 진행 여부 Dialog */}
+      <RecordingDialog />
+    </>
   );
 }
 

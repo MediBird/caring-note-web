@@ -32,20 +32,39 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+interface DialogCloseProps
+  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Close> {
+  asChild?: boolean;
+  /**
+   * 기본 크기 클래스를 오버라이드할 수 있는 props
+   * 아무 값도 지정하지 않으면 asChild가 false인 경우 기본값 'w-14 h-8 rounded' 적용
+   * asChild를 사용하는 경우에는 Button의 스타일에 맡기고 싶다면 빈 문자열('') 또는 원하는 값을 전달
+   */
+  sizeClasses?: string;
+}
+
 // DialogClose 컴포넌트
 const DialogClose = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Close>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Close>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Close
-    ref={ref}
-    className={cn(
-      'px-3 py-1 text-primary-50 border-2 border-primary-50 rounded font-bold hover:bg-blue-100 w-14 h-8 text-sm',
-      className,
-    )}
-    {...props}
-  />
-));
+  DialogCloseProps
+>(({ asChild, sizeClasses, className, ...props }, ref) => {
+  // asChild가 true이면 Button의 사이즈가 적용되도록 기본 크기 클래스를 제외
+  // asChild일 경우 기본 크기 클래스를 빈 문자열로 처리하거나, 혹은 sizeClasses prop을 통해 사용자 정의 클래스를 적용
+  const defaultSizeClasses = asChild ? '' : 'w-14 h-8 rounded';
+  return (
+    <DialogPrimitive.Close
+      asChild={asChild}
+      ref={ref}
+      className={cn(
+        'px-3 py-1 text-primary-50 border-2 border-primary-50  font-bold hover:bg-blue-100 text-sm',
+        // sizeClasses prop이 있으면 그것을 우선 사용하고, 없으면 defaultSizeClasses 사용
+        sizeClasses ?? defaultSizeClasses,
+        className,
+      )}
+      {...props}
+    />
+  );
+});
 DialogClose.displayName = DialogPrimitive.Close.displayName;
 
 // DialogContent 컴포넌트
@@ -110,12 +129,19 @@ const DialogTitle = React.forwardRef<
 ));
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
+// DialogDescriptionProps 인터페이스
+interface DialogDescriptionProps
+  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description> {
+  asChild?: boolean;
+}
+
 // DialogDescription 컴포넌트
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => (
+  DialogDescriptionProps
+>(({ asChild, className, ...props }, ref) => (
   <DialogPrimitive.Description
+    asChild={asChild}
     ref={ref}
     className={cn(
       'text-body1 font-medium mt-[0.75rem] mb-[1.75rem] mx-[1.25rem] text-grayscale-80',
