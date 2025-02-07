@@ -1,6 +1,6 @@
 export enum RecordingFileInfo {
-  Type = 'audio/webm',
-  DownloadName = 'TEST_YOUR_RECORDING.webm',
+  Type = 'audio/wav',
+  DownloadName = 'TEST_YOUR_RECORDING.wav',
 }
 export enum RecordingStatus {
   Ready = '녹음 시작하기',

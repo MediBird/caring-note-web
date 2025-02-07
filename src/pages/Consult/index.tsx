@@ -2,13 +2,15 @@ import { SelectCounseleeBaseInformationByCounseleeIdRes } from '@/api/api';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
+import { useRecording } from '@/hooks/useRecording';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import MedicineMemo from './components/tabs/MedicineMemo';
-import MedicineConsult from './components/tabs/MedicineConsult';
-import ConsultCard from './components/tabs/ConsultCard';
-import PastConsult from './components/tabs/PastConsult';
-import DiscardMedicine from './components/tabs/DiscardMedicine';
 import RecordingDialog from './components/RecordingDialog';
+import ConsultCard from './components/tabs/ConsultCard';
+import DiscardMedicine from './components/tabs/DiscardMedicine';
+import MedicineConsult from './components/tabs/MedicineConsult';
+import MedicineMemo from './components/tabs/MedicineMemo';
+import PastConsult from './components/tabs/PastConsult';
 interface InfoItemProps {
   icon: string;
   content: React.ReactNode;
@@ -91,6 +93,11 @@ export function Index() {
   const { data: counseleeInfo, isLoading } = useSelectCounseleeInfo(
     counselSessionId ?? '',
   );
+  const { resetRecording } = useRecording();
+
+  useEffect(() => {
+    resetRecording();
+  }, [resetRecording]);
 
   if (isLoading) {
     return <div>로딩 중...</div>;
