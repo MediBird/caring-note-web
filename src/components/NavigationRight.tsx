@@ -1,9 +1,8 @@
 import CloseBlackIcon from '@/assets/icon/24/close.outlined.black.svg?react';
-import PencilBlackIcon from '@/assets/icon/24/create.filled.black.svg?react';
-import MicBlackIcon from '@/assets/icon/24/mic.filled.black.svg?react';
 import { useAppDispatch, useAppSelector } from '../app/reduxHooks';
 import { toggleRightNavigation } from '../reducers/navigationReducer';
 import HighlightInput from './consult/HighlightInput';
+import PencilIcon from './PencilIcon';
 import Recording from './Recording';
 
 const NavigationRight = () => {
@@ -23,13 +22,7 @@ const NavigationRight = () => {
           isOpen ? 'w-20' : ''
         } py-8`}
         onClick={toggleMenu}>
-        {/* 2차 스프린트 대상 */}
-        {/* <Badge className="mb-1" variant="outline" size="small">
-          녹음중
-        </Badge> */}
-        <MicBlackIcon width={24} height={24} />
-        <div className="h-0.5 w-8 bg-grayscale-10 my-4" />
-        <PencilBlackIcon width={24} height={24} />
+        <PencilIcon />
       </div>
     );
   };
@@ -54,7 +47,7 @@ const NavigationRight = () => {
             </div>
             <div className="flex flex-col items-center justify-between w-full gap-4 px-2 py-4">
               <HighlightInput className="w-full" />
-              <Recording />
+              <Recording className="w-full" />
             </div>
           </div>
         </div>
