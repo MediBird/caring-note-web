@@ -3,6 +3,7 @@ import {
   RecordingFileInfo,
   RecordingStatus,
 } from '@/types/Recording.enum';
+import { useCallback } from 'react';
 import { create } from 'zustand';
 
 // store's state
@@ -132,11 +133,11 @@ export const useRecording = () => {
     mediaRecorderRef.current.stop();
   };
 
-  const resetRecording = () => {
+  const resetRecording = useCallback(() => {
     clearRecordingIntervalId();
     updateRecordingStatus(RecordingStatus.Ready);
     useRecordingStore.setState({ recordingTime: 0 });
-  };
+  }, []);
 
   const submitRecording = () => {
     updateRecordingStatus(RecordingStatus.Loading);
