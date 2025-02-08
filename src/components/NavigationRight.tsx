@@ -1,9 +1,9 @@
 import CloseBlackIcon from '@/assets/icon/24/close.outlined.black.svg?react';
+import PencilIcon from '@/components/consult/PencilIcon';
+import Recording from '@/components/consult/Recording';
 import { useAppDispatch, useAppSelector } from '../app/reduxHooks';
 import { toggleRightNavigation } from '../reducers/navigationReducer';
 import HighlightInput from './consult/HighlightInput';
-import PencilIcon from './PencilIcon';
-import Recording from './Recording';
 
 const NavigationRight = () => {
   const isOpen = useAppSelector(

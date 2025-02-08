@@ -22,12 +22,6 @@ function RecordingDialog() {
     setOpen(true);
   }, []);
 
-  // refactoring . . .
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleClickLater = () => {
-    setOpen(false);
-  };
-
   const handleClickSaveRecording = () => {
     startRecording();
     setOpen(false);
