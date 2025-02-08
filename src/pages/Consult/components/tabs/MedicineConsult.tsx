@@ -1,10 +1,10 @@
 import { useAppSelector } from '@/app/reduxHooks';
 import logoBlack from '@/assets/logoBlack.png';
 import HighlightInput from '@/components/consult/HighlightInput';
-import Recording from '@/components/Recording';
+import Recording from '@/components/consult/Recording';
 import { CardHeader, CardTitle } from '@/components/ui/card';
 import GrayContainer from '@/pages/Consult/components/GrayContainer';
-import RecordingResult from '../RecordingResult';
+import RecordingResult from '@/pages/Consult/components/recording/RecordingResult';
 
 const MedicineConsult: React.FC = () => {
   const isRightNavigationOpen = useAppSelector(
@@ -46,8 +46,8 @@ const MedicineConsult: React.FC = () => {
         </div>
       </div>
 
-      {/* 우측 AI요약, 전체녹음 탭 */}
-      <RecordingResult />
+      {/* 우측 [AI요약, 전체녹음] 탭 */}
+      <RecordingResult className="w-full" />
     </div>
   );
 };

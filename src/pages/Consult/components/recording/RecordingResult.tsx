@@ -4,6 +4,7 @@ import { RecordingStatus } from '@/types/Recording.enum';
 import React from 'react';
 import AiSummary from './AiSummary';
 import TotalRecordings from './TotalRecordings';
+import { cn } from '@/lib/utils';
 
 const RecordingResultTabLists = () => {
   return (
@@ -30,11 +31,11 @@ const RecordingResult: React.FC<RecordingResultProps> = ({ className }) => {
   const { recordingStatus } = useRecording();
 
   return (
-    <>
+    <div className={cn('ml-4', className)}>
       {/* 아래 코드가 맞음 FOR TEST */}
       {/* {recordingStatus === RecordingStatus.AICompleted && ( */}
       {recordingStatus !== RecordingStatus.AICompleted && (
-        <Tabs defaultValue="aiSummary" className="w-full h-full ml-4">
+        <Tabs defaultValue="aiSummary">
           <RecordingResultTabLists />
           <TabsContent value="aiSummary" className="m-0 p-0">
             <AiSummary />
@@ -44,7 +45,7 @@ const RecordingResult: React.FC<RecordingResultProps> = ({ className }) => {
           </TabsContent>
         </Tabs>
       )}
-    </>
+    </div>
   );
 };
 

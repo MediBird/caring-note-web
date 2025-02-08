@@ -5,7 +5,7 @@ import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useRecording } from '@/hooks/useRecording';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import RecordingDialog from './components/RecordingDialog';
+import RecordingDialog from './components/recording/RecordingDialog';
 import ConsultCard from './components/tabs/ConsultCard';
 import DiscardMedicine from './components/tabs/DiscardMedicine';
 import MedicineConsult from './components/tabs/MedicineConsult';

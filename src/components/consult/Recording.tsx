@@ -2,12 +2,12 @@ import PauseIcon from '@/assets/icon/24/pause.fill.black.svg?react';
 import PlayIcon from '@/assets/icon/24/play.fill.black.svg?react';
 import StopIcon from '@/assets/icon/24/stop.fill.black.svg?react';
 import Spinner from '@/components/common/Spinner';
+import { Button } from '@/components/ui/button';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import { RecordingStatus } from '@/types/Recording.enum';
 import { Circle } from 'lucide-react';
 import React from 'react';
-import { Button } from './ui/button';
 
 interface RecordingProps {
   className?: string;

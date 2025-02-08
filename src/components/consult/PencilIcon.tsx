@@ -1,9 +1,9 @@
-import React from 'react';
 import PencilBlackIcon from '@/assets/icon/24/create.filled.black.svg?react';
 import PencilBlueIcon from '@/assets/icon/24/create.filled.blue.svg?react';
-import { cn } from '@/lib/utils';
 import { useRecording } from '@/hooks/useRecording';
+import { cn } from '@/lib/utils';
 import { RecordingStatus } from '@/types/Recording.enum';
+import React from 'react';
 
 const PencilIcon: React.FC = () => {
   const { recordingStatus } = useRecording();
