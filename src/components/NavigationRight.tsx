@@ -29,7 +29,7 @@ const NavigationRight = () => {
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full ${
+      className={`fixed top-0 right-0 h-full z-50 ${
         isOpen ? 'w-96' : 'w-16'
       } bg-white ${
         isOpen ? '' : 'hover:bg-primary-5'

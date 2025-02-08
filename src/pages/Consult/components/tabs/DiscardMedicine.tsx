@@ -17,12 +17,15 @@ import {
   AddAndUpdateWasteMedicationDisposalDTO,
   WasteMedicationDisposalDrugRemainActionDetailEnum,
 } from '@/types/WasteMedicationDTO';
-import { Input } from '@mui/material';
+import Badge from '@/components/common/Badge';
 import { CheckedState } from '@radix-ui/react-checkbox';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import WasteMedicationTable from '../table/WasteMedicationTable';
+
+import WasteMedicationTable from '@/pages/Consult/components/table/WasteMedicationTable';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { InfoIcon } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
 const DiscardMedicine = () => {
   const { counselSessionId } = useParams();
@@ -59,6 +62,17 @@ const DiscardMedicine = () => {
     }
   };
 
+  const showTable = useMemo(
+    () => !!wasteMedicationDisposal.drugRemainActionType,
+    [wasteMedicationDisposal.drugRemainActionType],
+  );
+  const isNone = useMemo(
+    () =>
+      wasteMedicationDisposal.drugRemainActionType ===
+      WasteMedicationDisposalDrugRemainActionTypeEnum.None,
+    [wasteMedicationDisposal.drugRemainActionType],
+  );
+
   // 초기 로딩시 폐의약품 설문 저장
   useEffect(() => {
     if (isSuccessWasteMedicationDisposal && wasteMedicationDisposalData) {
@@ -89,7 +103,6 @@ const DiscardMedicine = () => {
     setWasteMedicationDisposal,
     counselSessionId,
   ]);
-  console.log(wasteMedicationDisposal);
 
   return (
     <Card>
@@ -463,36 +476,59 @@ const DiscardMedicine = () => {
             </div>
             <div>
               <p className="text-body1 font-bold mb-4">폐의약품 무게</p>
-              <Input
-                type="number"
-                placeholder="00"
-                className="w-24"
-                value={wasteMedicationDisposal.wasteMedicationGram}
-                inputProps={{
-                  style: {
-                    textAlign: 'right',
-                    paddingRight: '0.5rem',
-                  },
-                }}
-                onChange={(e) => {
-                  setWasteMedicationDisposal({
-                    ...wasteMedicationDisposal,
-                    wasteMedicationGram: Number(e.target.value),
-                  });
-                }}
-              />
-              <span className="text-body1">g</span>
+              <span className="flex flex-row justify-start items-center gap-1">
+                <Input
+                  placeholder="00"
+                  className="w-24 text-right pr-[2px] bg-transparent border-b border-grayscale-30 p-0 h-[26px]"
+                  value={wasteMedicationDisposal.wasteMedicationGram}
+                  onChange={(e) => {
+                    setWasteMedicationDisposal({
+                      ...wasteMedicationDisposal,
+                      wasteMedicationGram: Number(e.target.value),
+                    });
+                  }}
+                />
+                <span className="text-body1">g</span>
+              </span>
             </div>
           </div>
         )}
-      <WasteMedicationTable
-        counselSessionId={counselSessionId as string}
-        showTable={!!wasteMedicationDisposal.drugRemainActionType}
-        isNone={
-          wasteMedicationDisposal.drugRemainActionType ===
-          WasteMedicationDisposalDrugRemainActionTypeEnum.None
-        }
-      />
+
+      <div className="mt-10">
+        <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-row items-center gap-2">
+            {showTable && !isNone && (
+              <CardHeader className="flex flex-row items-center gap-2">
+                <CardTitle>폐의약품 목록</CardTitle>
+              </CardHeader>
+            )}
+
+            {showTable && isNone && (
+              <CardHeader className="flex flex-row items-center gap-2">
+                <CardTitle className="!text-grayscale-40">
+                  폐의약품 목록
+                </CardTitle>
+                <span className="text-grayscale-40 !mt-0">(해당 없음)</span>
+              </CardHeader>
+            )}
+
+            {!showTable && (
+              <CardHeader className="flex items-center justify-center gap-3 flex-row">
+                <CardTitle className="!text-grayscale-40 leading-1">
+                  폐의약품 목록
+                </CardTitle>
+                <Badge
+                  className="!mt-0 px-[6px] py-[6px] gap-[2px]"
+                  variant="tint"
+                  customIcon={<InfoIcon width={20} height={20} />}>
+                  상단 선택지를 먼저 골라주세요
+                </Badge>
+              </CardHeader>
+            )}
+          </div>
+        </div>
+        <WasteMedicationTable counselSessionId={counselSessionId as string} />
+      </div>
     </Card>
   );
 };

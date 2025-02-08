@@ -11,6 +11,11 @@ import DiscardMedicine from './components/tabs/DiscardMedicine';
 import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
 import PastConsult from './components/tabs/PastConsult';
+import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
+import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/useSaveWasteMedication';
+import { useMedicineConsultStore } from '@/store/medicineConsultStore';
+import Spinner from '@/components/common/Spinner';
+
 interface InfoItemProps {
   icon: string;
   content: React.ReactNode;
@@ -48,14 +53,16 @@ const ConsultHeader = ({
   consultStatus,
   age,
   diseases,
+  saveConsult,
 }: {
   counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
   consultStatus: string;
   age: string;
   diseases: React.ReactNode;
+  saveConsult: () => void;
 }) => (
   <div>
-    <div className=" bg-white h-[167px]">
+    <div className=" bg-white h-fit">
       <div className="pl-[5.75rem] pr-[9.5rem] pt-12 pb-1 border-b border-grayscale-05 flex justify-between">
         <div>
           <div className="text-h3 font-bold">
@@ -69,7 +76,7 @@ const ConsultHeader = ({
           </div>
         </div>
         <HeaderButtons
-          onSave={() => console.log('임시 저장')}
+          onSave={saveConsult}
           onComplete={() => console.log('설문 완료')}
         />
       </div>
@@ -93,6 +100,11 @@ export function Index() {
   const { data: counseleeInfo, isLoading } = useSelectCounseleeInfo(
     counselSessionId ?? '',
   );
+  const { saveWasteMedication } = useSaveWasteMedication(
+    counselSessionId ?? '',
+  );
+  const { mutate: saveMedicationCounsel } = useSaveMedicineConsult();
+  const { medicineConsult } = useMedicineConsultStore();
   const { resetRecording } = useRecording();
 
   useEffect(() => {
@@ -100,7 +112,11 @@ export function Index() {
   }, [resetRecording]);
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Spinner />
+      </div>
+    );
   }
 
   const formatDiseases = (diseases: string[] | undefined) => {
@@ -125,10 +141,15 @@ export function Index() {
   const age = `만 ${counseleeInfo?.age}세`;
   const diseases = formatDiseases(counseleeInfo?.diseases);
 
+  const saveConsult = () => {
+    saveWasteMedication();
+    saveMedicationCounsel(medicineConsult);
+  };
+
   return (
     <>
       <Tabs defaultValue="pastConsult" className="w-full h-full">
-        <div className="sticky top-0 z-1">
+        <div className="sticky top-0 z-10">
           <ConsultHeader
             counseleeInfo={
               counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes
@@ -136,6 +157,7 @@ export function Index() {
             consultStatus={consultStatus}
             age={age}
             diseases={diseases}
+            saveConsult={saveConsult}
           />
         </div>
         <div className="w-full h-full overflow-y-auto mb-100">

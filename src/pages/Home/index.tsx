@@ -55,7 +55,7 @@ function Home() {
           <br />
           오늘도 힘찬 하루를 보내세요!
         </div>
-        <div className="flex flex-col items-center justify-center w-full gap-8 mt-8 2xl:items-start 2xl:flex-row">
+        <div className="flex flex-col items-center justify-center w-full gap-8 mt-8 2xl:items-start 2xl:flex-row px-10 pb-10">
           <div className="hidden 2xl:flex 2xl:flex-col gap-5 2xl:items-center 2xl:justify-center w-[278px]">
             <ConsultCount
               messageCount="1,234회"
