@@ -1,11 +1,10 @@
 import { useAppSelector } from '@/app/reduxHooks';
 import logoBlack from '@/assets/logoBlack.png';
 import HighlightInput from '@/components/consult/HighlightInput';
-
 import Recording from '@/components/Recording';
-import { CardTitle } from '@/components/ui/card';
-import { CardHeader } from '@/components/ui/card';
+import { CardHeader, CardTitle } from '@/components/ui/card';
 import GrayContainer from '@/pages/Consult/components/GrayContainer';
+import RecordingResult from '../RecordingResult';
 
 const MedicineConsult: React.FC = () => {
   const isRightNavigationOpen = useAppSelector(
@@ -30,20 +29,25 @@ const MedicineConsult: React.FC = () => {
   };
 
   return (
-    <div>
-      <CardHeader>
-        <CardTitle>중재 기록 작성</CardTitle>
-      </CardHeader>
+    <div className="flex flex-row">
+      <div className="w-full">
+        <CardHeader>
+          <CardTitle>중재 기록 작성</CardTitle>
+        </CardHeader>
 
-      <GrayContainer
-        title="상담 기록"
-        subTitle="하이라이트 시, 다음 지속 상담에 해당 내용을 가장 먼저 확인할 수 있어요">
-        {isRightNavigationOpen ? <ViewWarningImage /> : <HighlightInput />}
-      </GrayContainer>
+        <GrayContainer
+          title="상담 기록"
+          subTitle="하이라이트 시, 다음 지속 상담에 해당 내용을 가장 먼저 확인할 수 있어요">
+          {isRightNavigationOpen ? <ViewWarningImage /> : <HighlightInput />}
+        </GrayContainer>
 
-      <div className="flex items-center justify-center mt-8">
-        {isRightNavigationOpen ? <></> : <Recording />}
+        <div className="flex items-center justify-center mt-8">
+          {isRightNavigationOpen ? <></> : <Recording />}
+        </div>
       </div>
+
+      {/* 우측 AI요약, 전체녹음 탭 */}
+      <RecordingResult />
     </div>
   );
 };
