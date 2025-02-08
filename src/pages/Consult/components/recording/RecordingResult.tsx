@@ -31,21 +31,23 @@ const RecordingResult: React.FC<RecordingResultProps> = ({ className }) => {
   const { recordingStatus } = useRecording();
 
   return (
-    <div className={cn('ml-4', className)}>
+    <>
       {/* 아래 코드가 맞음 FOR TEST */}
       {/* {recordingStatus === RecordingStatus.AICompleted && ( */}
       {recordingStatus !== RecordingStatus.AICompleted && (
-        <Tabs defaultValue="aiSummary">
-          <RecordingResultTabLists />
-          <TabsContent value="aiSummary" className="m-0 p-0">
-            <AiSummary />
-          </TabsContent>
-          <TabsContent value="totalRecordings" className="m-0 p-0">
-            <TotalRecordings />
-          </TabsContent>
-        </Tabs>
+        <div className={cn('ml-4', className)}>
+          <Tabs defaultValue="aiSummary">
+            <RecordingResultTabLists />
+            <TabsContent value="aiSummary" className="m-0 p-0">
+              <AiSummary />
+            </TabsContent>
+            <TabsContent value="totalRecordings" className="m-0 p-0">
+              <TotalRecordings />
+            </TabsContent>
+          </Tabs>
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
