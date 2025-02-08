@@ -19,6 +19,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     stopRecording,
     resetRecording,
     submitRecording,
+    submitSpeakers,
     recordingStatus,
     recordingTime,
   } = useRecording();
@@ -63,88 +64,101 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     )}`;
   };
 
-  const handleClickSaveRecording = async () => {
-    // TODO: 저장 버튼 클릭
-    // 화자 선택 dialog 띄우기
-    // 화자 선택 마무리 후 submitRecording 호출
-    submitRecording();
-  };
-
   return (
-    <div
-      className={cn(
-        'flex flex-col items-center justify-center rounded-xl gap-1 w-[260px] h-[166px] bg-grayscale-3 border-[1px] border-grayscale-10 shadow',
-        className,
-      )}>
-      {recordingStatus === RecordingStatus.Loading ? (
-        <div className="flex flex-col items-center">
-          <p
-            className="text-body1 font-medium text-grayscale-50"
-            onClick={resetRecording}>
-            녹음 스크립트 생성 중...
-          </p>
-          <Spinner />
+    <>
+      {recordingStatus !== RecordingStatus.AICompleted && (
+        <div
+          className={cn(
+            'flex flex-col items-center justify-center rounded-xl gap-1 w-[260px] h-[166px] bg-grayscale-3 border-[1px] border-grayscale-10 shadow',
+            className,
+          )}>
+          {recordingStatus === RecordingStatus.STTLoading ? (
+            <div className="flex flex-col items-center">
+              <p
+                className="text-body1 font-medium text-grayscale-50"
+                onClick={resetRecording}>
+                녹음 저장 중...
+              </p>
+              <Spinner />
+              <p className="text-caption1 font-refular text-grayscale-50 mt-6">
+                평균 1분 내 저장됩니다. 조금만 기다려 주세요.
+              </p>
+            </div>
+          ) : recordingStatus === RecordingStatus.STTCompleted ? (
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-body1 font-bold text-grayscale-80">
+                녹음 저장 완료!
+              </p>
+              {/* 아래 버튼이 화자선택 Dialog 트리거가 될 듯 */}
+              <Button onClick={submitSpeakers}>내용 확인</Button>
+            </div>
+          ) : recordingStatus === RecordingStatus.AILoading ? (
+            <div className="flex flex-col items-center">
+              <p
+                className="text-body1 font-medium text-grayscale-50"
+                onClick={resetRecording}>
+                녹음 스크립트 생성 중...
+              </p>
+              <Spinner />
+            </div>
+          ) : recordingStatus === RecordingStatus.PermissionDenied ? (
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-body1 font-medium text-grayscale-50">
+                마이크 권한이 필요합니다
+              </p>
+              <Button onClick={startRecording} variant={'secondary'} size="md">
+                다시 시도
+              </Button>
+            </div>
+          ) : recordingStatus === RecordingStatus.Error ? (
+            <div>
+              <p className="text-body1 font-medium text-grayscale-50">
+                녹음 중 에러 발생
+              </p>
+              <Button onClick={resetRecording}>다시 시도</Button>
+            </div>
+          ) : (
+            <>
+              <p className="text-body1 font-medium">{recordingStatus}</p>
+              <div className="flex items-center space-x-2">
+                {recordingStatus !== RecordingStatus.Stopped && (
+                  <Circle
+                    className={`w-2 h-2 ${circleColorClass}`}
+                    fill="currentColor"
+                  />
+                )}
+                <span className="text-subtitle1 font-medium text-grayscale-50">
+                  {formatTime(recordingTime)}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2 mt-3">
+                {recordingStatus === RecordingStatus.Ready && <>{playIcon}</>}
+                {recordingStatus === RecordingStatus.Recording && (
+                  <>
+                    {pauseIcon}
+                    {stopIcon}
+                  </>
+                )}
+                {recordingStatus === RecordingStatus.Paused && (
+                  <>
+                    {playIcon}
+                    {stopIcon}
+                  </>
+                )}
+                {recordingStatus === RecordingStatus.Stopped && (
+                  <>
+                    <Button variant={'secondary'} onClick={resetRecording}>
+                      삭제
+                    </Button>
+                    <Button onClick={submitRecording}>저장</Button>
+                  </>
+                )}
+              </div>
+            </>
+          )}
         </div>
-      ) : recordingStatus === RecordingStatus.Completed ? (
-        <div>
-          <Button onClick={resetRecording}>TODO 성공화면</Button>
-        </div>
-      ) : recordingStatus === RecordingStatus.PermissionDenied ? (
-        <div className="flex flex-col items-center gap-4">
-          <p className="text-body1 font-medium text-grayscale-50">
-            마이크 권한이 필요합니다
-          </p>
-          <Button onClick={startRecording} variant={'secondary'} size="md">
-            다시 시도
-          </Button>
-        </div>
-      ) : recordingStatus === RecordingStatus.Error ? (
-        <div>
-          <p className="text-body1 font-medium text-grayscale-50">
-            녹음 중 에러 발생
-          </p>
-          <Button onClick={resetRecording}>다시 시도</Button>
-        </div>
-      ) : (
-        <>
-          <p className="text-body1 font-medium">{recordingStatus}</p>
-          <div className="flex items-center space-x-2">
-            {recordingStatus !== RecordingStatus.Stopped && (
-              <Circle
-                className={`w-2 h-2 ${circleColorClass}`}
-                fill="currentColor"
-              />
-            )}
-            <span className="text-subtitle1 font-medium text-grayscale-50">
-              {formatTime(recordingTime)}
-            </span>
-          </div>
-          <div className="flex items-center space-x-2 mt-3">
-            {recordingStatus === RecordingStatus.Ready && <>{playIcon}</>}
-            {recordingStatus === RecordingStatus.Recording && (
-              <>
-                {pauseIcon}
-                {stopIcon}
-              </>
-            )}
-            {recordingStatus === RecordingStatus.Paused && (
-              <>
-                {playIcon}
-                {stopIcon}
-              </>
-            )}
-            {recordingStatus === RecordingStatus.Stopped && (
-              <>
-                <Button variant={'secondary'} onClick={resetRecording}>
-                  삭제
-                </Button>
-                <Button onClick={handleClickSaveRecording}>저장</Button>
-              </>
-            )}
-          </div>
-        </>
       )}
-    </div>
+    </>
   );
 };
 

@@ -140,9 +140,10 @@ export const useRecording = () => {
   }, []);
 
   const submitRecording = () => {
-    updateRecordingStatus(RecordingStatus.Loading);
+    updateRecordingStatus(RecordingStatus.STTLoading);
     new Promise((resolve) => {
       // TODO : 여기에 녹음파일을 서버로 전송하는 로직을 작성
+      // 이후 1초마다 n초까지 polling하여 변환 완료 여부 확인
       // FOR TEST : 3초 후에 녹음파일 생성
       setTimeout(() => {
         // 녹음된 데이터(Blob) 생성
@@ -177,11 +178,20 @@ export const useRecording = () => {
       }, 3000);
     }).then((result) => {
       if (result === 'success') {
-        updateRecordingStatus(RecordingStatus.Completed);
+        updateRecordingStatus(RecordingStatus.STTCompleted);
       } else {
         updateRecordingStatus(RecordingStatus.Error);
       }
     });
+  };
+
+  const submitSpeakers = () => {
+    // 발화자를 선택하여 AI 분석 요청
+    setTimeout(() => {
+      // polling 하여 AI 분석 완료 여부 확인 후 완료되면 상태를 변경
+      updateRecordingStatus(RecordingStatus.AICompleted);
+    }, 3000);
+    updateRecordingStatus(RecordingStatus.AILoading);
   };
 
   return {
@@ -190,6 +200,7 @@ export const useRecording = () => {
     stopRecording,
     resetRecording,
     submitRecording,
+    submitSpeakers,
     recordingStatus,
     recordingTime,
   };
