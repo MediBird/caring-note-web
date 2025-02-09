@@ -19,16 +19,18 @@ import Spinner from '@/components/common/Spinner';
 interface InfoItemProps {
   icon: string;
   content: React.ReactNode;
-  showBorder?: boolean;
+  showDivider?: boolean;
 }
 
-const InfoItem = ({ icon, content, showBorder = true }: InfoItemProps) => (
-  <div
-    className={`flex items-center px-[0.375rem] text-grayscale-70 ${
-      showBorder ? 'border-r border-grayscale-10' : ''
-    }`}>
-    <span className="text-subtitle-2 pr-[0.25rem]">{icon}</span>
-    <span>{content}</span>
+const InfoItem = ({ icon, content, showDivider = true }: InfoItemProps) => (
+  <div className="flex items-center gap-[6px]">
+    <div className="flex items-center">
+      <span className="text-subtitle-2 pr-[0.25rem]">{icon}</span>
+      <span className="text-grayscale-70">{content}</span>
+    </div>
+    {showDivider && (
+      <div className="w-[1px] h-[16px] bg-grayscale-10 mr-[6px]" />
+    )}
   </div>
 );
 
@@ -69,10 +71,10 @@ const ConsultHeader = ({
             {counseleeInfo?.name}
             <span className="text-subtitle2 font-bold"> 님</span>
           </div>
-          <div className="mt-2 flex items-center text-body1 font-medium text-grayscale-60">
+          <div className="mt-3 pl-[7px] flex items-center text-body1 font-medium text-grayscale-60">
             <InfoItem icon="📍" content={consultStatus} />
             <InfoItem icon="🎂" content={age} />
-            <InfoItem icon="💊" content={diseases} showBorder={false} />
+            <InfoItem icon="💊" content={diseases} showDivider={false} />
           </div>
         </div>
         <HeaderButtons
