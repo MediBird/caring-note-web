@@ -5,6 +5,7 @@ import Spinner from '@/components/common/Spinner';
 import { Button } from '@/components/ui/button';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
+import SelectSpeakerDialog from '@/pages/Consult/components/recording/SelectSpeakerDialog';
 import { RecordingStatus } from '@/types/Recording.enum';
 import { Circle } from 'lucide-react';
 import React from 'react';
@@ -19,7 +20,6 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     stopRecording,
     resetRecording,
     submitRecording,
-    submitSpeakers,
     recordingStatus,
     recordingTime,
   } = useRecording();
@@ -89,8 +89,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
               <p className="text-body1 font-bold text-grayscale-80">
                 녹음 저장 완료!
               </p>
-              {/* 아래 버튼이 화자선택 Dialog 트리거가 될 듯 */}
-              <Button onClick={submitSpeakers}>내용 확인</Button>
+              <SelectSpeakerDialog />
             </div>
           ) : recordingStatus === RecordingStatus.AILoading ? (
             <div className="flex flex-col items-center">

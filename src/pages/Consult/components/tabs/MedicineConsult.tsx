@@ -23,7 +23,6 @@ const MedicineConsult: React.FC = () => {
             이 곳을 이용하고 싶으시다면 우측 창을 닫아주세요!
           </p>
         </div>
-        <div className="min-w-60"></div>
       </div>
     );
   };

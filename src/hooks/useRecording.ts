@@ -175,7 +175,7 @@ export const useRecording = () => {
         URL.revokeObjectURL(audioUrl);
 
         resolve('success');
-      }, 3000);
+      }, 1500);
     }).then((result) => {
       if (result === 'success') {
         updateRecordingStatus(RecordingStatus.STTCompleted);
@@ -185,12 +185,14 @@ export const useRecording = () => {
     });
   };
 
-  const submitSpeakers = () => {
+  const submitSpeakers = (speakers: string[]) => {
+    console.log(speakers);
+
     // 발화자를 선택하여 AI 분석 요청
     setTimeout(() => {
       // polling 하여 AI 분석 완료 여부 확인 후 완료되면 상태를 변경
       updateRecordingStatus(RecordingStatus.AICompleted);
-    }, 3000);
+    }, 1500);
     updateRecordingStatus(RecordingStatus.AILoading);
   };
 
