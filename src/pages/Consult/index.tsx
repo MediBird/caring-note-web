@@ -149,7 +149,7 @@ export function Index() {
   return (
     <>
       <Tabs defaultValue="pastConsult" className="w-full h-full">
-        <div className="sticky top-0 z-10">
+        <div className="sticky top-0 z-1">
           <ConsultHeader
             counseleeInfo={
               counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes
