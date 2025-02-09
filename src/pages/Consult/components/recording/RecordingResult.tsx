@@ -32,9 +32,7 @@ const RecordingResult: React.FC<RecordingResultProps> = ({ className }) => {
 
   return (
     <>
-      {/* 아래 코드가 맞음 FOR TEST */}
-      {/* {recordingStatus === RecordingStatus.AICompleted && ( */}
-      {recordingStatus !== RecordingStatus.AICompleted && (
+      {recordingStatus === RecordingStatus.AICompleted && (
         <div className={cn('ml-4', className)}>
           <Tabs defaultValue="aiSummary">
             <RecordingResultTabLists />
