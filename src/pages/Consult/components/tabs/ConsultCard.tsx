@@ -22,7 +22,7 @@ const ConsultCard: React.FC = () => {
           <CardTitle>기초 상담 내역</CardTitle>
           <Button
             variant="secondary"
-            onClick={() => navigate(`/assistant/${counselSessionId}`)}>
+            onClick={() => navigate(`/survey/${counselSessionId}`)}>
             수정하기
           </Button>
         </div>
