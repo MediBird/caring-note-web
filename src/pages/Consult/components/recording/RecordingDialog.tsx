@@ -11,7 +11,7 @@ import {
 import { useRecording } from '@/hooks/useRecording';
 import { useEffect, useState } from 'react';
 
-import logoBlack from '@/assets/logoBlack.png';
+import recordingDialog from '@/assets/recordingDialog.png';
 
 function RecordingDialog() {
   const { startRecording } = useRecording();
@@ -37,11 +37,7 @@ function RecordingDialog() {
         </DialogHeader>
         <DialogDescription asChild className="flex flex-col items-center m-0">
           <div>
-            <img
-              className="w-[240px] h-[240px] border-2 border-grayscale-50 mb-4"
-              src={logoBlack}
-              alt="test-image"
-            />
+            <img className="mb-4" src={recordingDialog} alt="recordingDialog" />
             <p className="font-medium text-center text-body1 text-grayscale-100">
               상담 녹음 시 모든 내용을 빠짐없이 기록 가능합니다. <br />
               목소리를 정확하게 인식할 수 있도록 마이크를 가까이 두세요.
