@@ -164,16 +164,6 @@ export const useRecording = () => {
         // audioFile을 이용하여 파일 업로드, 다운로드 등 원하는 작업을 수행할 수 있음.
         console.log('audioFile created!!', audioFile);
 
-        // TEST : 만들어진 audioFile 다운로드
-        const audioUrl = URL.createObjectURL(audioFile);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = audioUrl;
-        downloadLink.download = RecordingFileInfo.DownloadName;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        URL.revokeObjectURL(audioUrl);
-
         resolve('success');
       }, 1500);
     }).then((result) => {

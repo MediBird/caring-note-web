@@ -43,6 +43,14 @@ function SelectSpeakerDialog() {
     },
   ];
 
+  // TODO: 기디에서 색상 정의한 후 수정
+  const speakerColors = [
+    'text-purple-90 bg-purple-10',
+    'text-blue-90 bg-blue-10',
+    'text-red-90 bg-red-10',
+    'text-green-90 bg-green-10',
+  ];
+
   const handleClickSpeaker = (speaker: string) => () => {
     if (selectedSpeakers.includes(speaker)) {
       setSelectedSpeakers(
@@ -81,14 +89,14 @@ function SelectSpeakerDialog() {
               return (
                 <div
                   key={index}
-                  className="flex items-center w-full cursor-pointer"
+                  className="flex items-center w-full cursor-pointer mt-6"
                   onClick={handleClickSpeaker(data.speaker)}>
                   <div
                     className={cn(
-                      'flex items-center justify-center font-bold w-[36px] h-[36px] p-4 m-4 rounded-full',
+                      'flex items-center justify-center font-medium w-[36px] h-[36px] p-4 mx-4 rounded-full',
                       selectedSpeakers.includes(data.speaker)
                         ? 'text-white bg-primary-50'
-                        : 'text-error-90 bg-error-10', // TODO : 글자색과 배경색 - 기디에서 정의하면 변경
+                        : speakerColors[index % 4],
                     )}>
                     {data.speaker}
                   </div>
