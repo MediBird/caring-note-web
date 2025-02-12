@@ -3,6 +3,7 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  SortingFn,
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
@@ -16,43 +17,47 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   footer?: React.ReactNode;
   sorting?: SortingState;
+  SortingFns?: Record<string, SortingFn<TData>>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   footer,
-  sorting,
+  sorting: initialSorting,
+  SortingFns,
 }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = useState<SortingState>(initialSorting || []);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
     state: {
       sorting,
     },
-    initialState: {
-      sorting,
-    },
+    sortingFns: SortingFns ?? {},
   });
 
   return (
     <div className="w-full">
-      <Table>
+      <Table className="w-full">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
+              {headerGroup.headers.map((header, index) => {
                 return (
                   <TableHead
-                    key={header.id}
+                    key={header.id + index}
                     style={{
                       width: header.column.columnDef.size,
                     }}>
@@ -70,9 +75,9 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map((row, index) => (
               <TableRow
-                key={row.id}
+                key={row.id + index}
                 data-state={row.getIsSelected() && 'selected'}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell

@@ -1,5 +1,5 @@
 import { DataTable } from '@/components/common/DataTable/DataTable';
-import { createColumns } from './wasteMedicationColums';
+import { createColumns } from './wasteMedicationColumns';
 import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
 import { useEffect } from 'react';
 import { useDeleteMedicationList } from '@/pages/Consult/hooks/query/useDeleteMedicationList';
@@ -99,8 +99,6 @@ const WasteMedicationTable = ({
     handleUpdateCell,
     handleSearchEnter,
   });
-
-  console.log(wasteMedicationList);
 
   return (
     <DataTable
