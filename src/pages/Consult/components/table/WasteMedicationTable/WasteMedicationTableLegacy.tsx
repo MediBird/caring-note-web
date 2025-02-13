@@ -5,7 +5,7 @@ import TableComponent from '@/components/common/TableComponent';
 import SearchComponent from '@/components/common/SearchComponent';
 import { GridColDef, GridRowModel } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { useDeleteMedicationList } from '../../hooks/query/useDeleteMedicationList';
+import { useDeleteMedicationList } from '../../../hooks/query/useDeleteMedicationList';
 import InfoIcon from '@/assets/icon/20/info.filled.blue.svg?react';
 import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
 import { useWasteMedicationList } from '@/pages/Consult/hooks/query/useWasteMedicationListQuery';
