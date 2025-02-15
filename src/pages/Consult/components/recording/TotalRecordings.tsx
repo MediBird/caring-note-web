@@ -63,7 +63,6 @@ const tempData = [
   },
 ];
 
-// TODO: 기디에서 색상 정의한 후 수정
 const speakerColors = [
   'text-purple-100 bg-purple-10',
   'text-blue-100 bg-blue-10',

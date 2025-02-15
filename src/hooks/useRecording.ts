@@ -65,25 +65,22 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
   );
 
   useEffect(() => {
-    if (!isSuccessGetRecordingStatus) {
+    if (
+      !isSuccessGetRecordingStatus ||
+      !getRecordingStatusData?.aiCounselSummaryStatus
+    ) {
       return;
     }
 
-    if (getRecordingStatusData?.aiCounselSummaryStatus === 'STT_COMPLETE') {
-      updateRecordingStatus(RecordingStatus.STTCompleted);
-    } else if (
-      getRecordingStatusData?.aiCounselSummaryStatus === 'STT_FAILED'
-    ) {
-      updateRecordingStatus(RecordingStatus.Error);
-    } else if (
-      getRecordingStatusData?.aiCounselSummaryStatus === 'GPT_COMPLETE'
-    ) {
-      updateRecordingStatus(RecordingStatus.AICompleted);
-    } else if (
-      getRecordingStatusData?.aiCounselSummaryStatus === 'GPT_FAILED'
-    ) {
-      updateRecordingStatus(RecordingStatus.Error);
-    }
+    const statusMapping: { [key: string]: RecordingStatus } = {
+      STT_COMPLETE: RecordingStatus.STTCompleted,
+      STT_FAILED: RecordingStatus.Error,
+      GPT_COMPLETE: RecordingStatus.AICompleted,
+      GPT_FAILED: RecordingStatus.Error,
+    };
+
+    const status = statusMapping[getRecordingStatusData.aiCounselSummaryStatus];
+    updateRecordingStatus(status);
   }, [isSuccessGetRecordingStatus, getRecordingStatusData]);
 
   useEffect(() => {
