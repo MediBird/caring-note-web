@@ -99,6 +99,60 @@ export interface AddAndUpdateMedicationRecordHistReq {
    * @memberof AddAndUpdateMedicationRecordHistReq
    */
   usageStatusCode?: AddAndUpdateMedicationRecordHistReqUsageStatusCodeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateMedicationRecordHistReq
+     */
+    'rowId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateMedicationRecordHistReq
+     */
+    'medicationId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateMedicationRecordHistReq
+     */
+    'divisionCode'?: AddAndUpdateMedicationRecordHistReqDivisionCodeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateMedicationRecordHistReq
+     */
+    'prescriptionDate': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof AddAndUpdateMedicationRecordHistReq
+     */
+    'prescriptionDays': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateMedicationRecordHistReq
+     */
+    'medicationName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateMedicationRecordHistReq
+     */
+    'usageObject': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateMedicationRecordHistReq
+     */
+    'unit': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateMedicationRecordHistReq
+     */
+    'usageStatusCode'?: AddAndUpdateMedicationRecordHistReqUsageStatusCodeEnum;
 }
 
 export const AddAndUpdateMedicationRecordHistReqDivisionCodeEnum = {
@@ -166,6 +220,36 @@ export interface AddAndUpdateWasteMedicationRecordReq {
    * @memberof AddAndUpdateWasteMedicationRecordReq
    */
   medicationName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateWasteMedicationRecordReq
+     */
+    'rowId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateWasteMedicationRecordReq
+     */
+    'medicationId': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof AddAndUpdateWasteMedicationRecordReq
+     */
+    'unit'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateWasteMedicationRecordReq
+     */
+    'disposalReason': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddAndUpdateWasteMedicationRecordReq
+     */
+    'medicationName': string;
 }
 /**
  *
@@ -399,6 +483,66 @@ export interface AddCounseleeReq {
    * @memberof AddCounseleeReq
    */
   disability?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddCounseleeReq
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddCounseleeReq
+     */
+    'phoneNumber'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddCounseleeReq
+     */
+    'dateOfBirth': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddCounseleeReq
+     */
+    'genderType'?: AddCounseleeReqGenderTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddCounseleeReq
+     */
+    'address'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddCounseleeReq
+     */
+    'note'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddCounseleeReq
+     */
+    'careManagerName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddCounseleeReq
+     */
+    'affiliatedWelfareInstitution'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddCounseleeReq
+     */
+    'scheduledStartDateTime': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AddCounseleeReq
+     */
+    'disability'?: boolean;
 }
 
 export const AddCounseleeReqGenderTypeEnum = {
@@ -434,6 +578,24 @@ export interface AddMedicationCounselReq {
    * @memberof AddMedicationCounselReq
    */
   counselRecordHighlights?: Array<MedicationCounselHighlightDTO>;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddMedicationCounselReq
+     */
+    'counselSessionId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddMedicationCounselReq
+     */
+    'counselRecord': string;
+    /**
+     * 
+     * @type {Array<MedicationCounselHighlightDTO>}
+     * @memberof AddMedicationCounselReq
+     */
+    'counselRecordHighlights'?: Array<MedicationCounselHighlightDTO>;
 }
 /**
  *
@@ -454,18 +616,37 @@ export interface AddMedicationCounselRes {
  * @interface AllergyDTO
  */
 export interface AllergyDTO {
-  /**
-   *
-   * @type {boolean}
-   * @memberof AllergyDTO
-   */
-  isAllergy?: boolean;
-  /**
-   *
-   * @type {string}
-   * @memberof AllergyDTO
-   */
-  allergyNote?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AllergyDTO
+     */
+    'isAllergy'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof AllergyDTO
+     */
+    'allergyNote'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AnalyseTextReq
+ */
+export interface AnalyseTextReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof AnalyseTextReq
+     */
+    'counselSessionId': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AnalyseTextReq
+     */
+    'speakers'?: Array<string>;
 }
 /**
  *
@@ -634,18 +815,37 @@ export interface CommonResAddCounseleeConsentRes {
  * @interface CommonResAddMedicationCounselRes
  */
 export interface CommonResAddMedicationCounselRes {
-  /**
-   *
-   * @type {string}
-   * @memberof CommonResAddMedicationCounselRes
-   */
-  message?: string;
-  /**
-   *
-   * @type {AddMedicationCounselRes}
-   * @memberof CommonResAddMedicationCounselRes
-   */
-  data?: AddMedicationCounselRes;
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResAddMedicationCounselRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {AddMedicationCounselRes}
+     * @memberof CommonResAddMedicationCounselRes
+     */
+    'data'?: AddMedicationCounselRes;
+}
+/**
+ * 
+ * @export
+ * @interface CommonResCounselSessionStatRes
+ */
+export interface CommonResCounselSessionStatRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResCounselSessionStatRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {CounselSessionStatRes}
+     * @memberof CommonResCounselSessionStatRes
+     */
+    'data'?: CounselSessionStatRes;
 }
 /**
  *
@@ -767,18 +967,37 @@ export interface CommonResListAddAndUpdateWasteMedicationRecordRes {
  * @interface CommonResListDeleteCounseleeBatchRes
  */
 export interface CommonResListDeleteCounseleeBatchRes {
-  /**
-   *
-   * @type {string}
-   * @memberof CommonResListDeleteCounseleeBatchRes
-   */
-  message?: string;
-  /**
-   *
-   * @type {Array<DeleteCounseleeBatchRes>}
-   * @memberof CommonResListDeleteCounseleeBatchRes
-   */
-  data?: Array<DeleteCounseleeBatchRes>;
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListDeleteCounseleeBatchRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<DeleteCounseleeBatchRes>}
+     * @memberof CommonResListDeleteCounseleeBatchRes
+     */
+    'data'?: Array<DeleteCounseleeBatchRes>;
+}
+/**
+ * 
+ * @export
+ * @interface CommonResListLocalDate
+ */
+export interface CommonResListLocalDate {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListLocalDate
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CommonResListLocalDate
+     */
+    'data'?: Array<string>;
 }
 /**
  *
@@ -881,75 +1100,94 @@ export interface CommonResListSelectPreviousCounselSessionListRes {
  * @interface CommonResListSelectPreviousItemListByInformationNameAndItemNameRes
  */
 export interface CommonResListSelectPreviousItemListByInformationNameAndItemNameRes {
-  /**
-   *
-   * @type {string}
-   * @memberof CommonResListSelectPreviousItemListByInformationNameAndItemNameRes
-   */
-  message?: string;
-  /**
-   *
-   * @type {Array<SelectPreviousItemListByInformationNameAndItemNameRes>}
-   * @memberof CommonResListSelectPreviousItemListByInformationNameAndItemNameRes
-   */
-  data?: Array<SelectPreviousItemListByInformationNameAndItemNameRes>;
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListSelectPreviousItemListByInformationNameAndItemNameRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<SelectPreviousItemListByInformationNameAndItemNameRes>}
+     * @memberof CommonResListSelectPreviousItemListByInformationNameAndItemNameRes
+     */
+    'data'?: Array<SelectPreviousItemListByInformationNameAndItemNameRes>;
 }
 /**
- *
+ * 
  * @export
  * @interface CommonResListSelectSpeakerListRes
  */
 export interface CommonResListSelectSpeakerListRes {
-  /**
-   *
-   * @type {string}
-   * @memberof CommonResListSelectSpeakerListRes
-   */
-  message?: string;
-  /**
-   *
-   * @type {Array<SelectSpeakerListRes>}
-   * @memberof CommonResListSelectSpeakerListRes
-   */
-  data?: Array<SelectSpeakerListRes>;
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListSelectSpeakerListRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<SelectSpeakerListRes>}
+     * @memberof CommonResListSelectSpeakerListRes
+     */
+    'data'?: Array<SelectSpeakerListRes>;
 }
 /**
- *
+ * 
  * @export
  * @interface CommonResListSelectSpeechToTextRes
  */
 export interface CommonResListSelectSpeechToTextRes {
-  /**
-   *
-   * @type {string}
-   * @memberof CommonResListSelectSpeechToTextRes
-   */
-  message?: string;
-  /**
-   *
-   * @type {Array<SelectSpeechToTextRes>}
-   * @memberof CommonResListSelectSpeechToTextRes
-   */
-  data?: Array<SelectSpeechToTextRes>;
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListSelectSpeechToTextRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<SelectSpeechToTextRes>}
+     * @memberof CommonResListSelectSpeechToTextRes
+     */
+    'data'?: Array<SelectSpeechToTextRes>;
 }
 /**
- *
+ * 
  * @export
- * @interface CommonResSelectAICounselSummaryStatusRes
+ * @interface CommonResSelectAICounselSummaryPopUpRes
  */
-export interface CommonResSelectAICounselSummaryStatusRes {
-  /**
-   *
-   * @type {string}
-   * @memberof CommonResSelectAICounselSummaryStatusRes
-   */
-  message?: string;
-  /**
-   *
-   * @type {SelectAICounselSummaryStatusRes}
-   * @memberof CommonResSelectAICounselSummaryStatusRes
-   */
-  data?: SelectAICounselSummaryStatusRes;
+export interface CommonResSelectAICounselSummaryPopUpRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResSelectAICounselSummaryPopUpRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {SelectAICounselSummaryPopUpRes}
+     * @memberof CommonResSelectAICounselSummaryPopUpRes
+     */
+    'data'?: SelectAICounselSummaryPopUpRes;
+}
+/**
+ * 
+ * @export
+ * @interface CommonResSelectAnalysedTextRes
+ */
+export interface CommonResSelectAnalysedTextRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResSelectAnalysedTextRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {SelectAnalysedTextRes}
+     * @memberof CommonResSelectAnalysedTextRes
+     */
+    'data'?: SelectAnalysedTextRes;
 }
 /**
  *
@@ -1280,43 +1518,43 @@ export interface CommonResWasteMedicationDisposalRes {
  * @interface CommunicationDTO
  */
 export interface CommunicationDTO {
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof CommunicationDTO
-   */
-  sights?: Array<string>;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof CommunicationDTO
-   */
-  hearings?: Array<string>;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof CommunicationDTO
-   */
-  communications?: Array<string>;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof CommunicationDTO
-   */
-  usingKoreans?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CommunicationDTO
+     */
+    'sights'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CommunicationDTO
+     */
+    'hearings'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CommunicationDTO
+     */
+    'communications'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CommunicationDTO
+     */
+    'usingKoreans'?: Array<string>;
 }
 /**
- *
+ * 
  * @export
  * @interface ConvertSpeechToTextReq
  */
 export interface ConvertSpeechToTextReq {
-  /**
-   *
-   * @type {string}
-   * @memberof ConvertSpeechToTextReq
-   */
-  counselSessionId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConvertSpeechToTextReq
+     */
+    'counselSessionId': string;
 }
 /**
  *
@@ -1324,24 +1562,68 @@ export interface ConvertSpeechToTextReq {
  * @interface CounselPurposeAndNoteDTO
  */
 export interface CounselPurposeAndNoteDTO {
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof CounselPurposeAndNoteDTO
-   */
-  counselPurpose?: Array<string>;
-  /**
-   *
-   * @type {string}
-   * @memberof CounselPurposeAndNoteDTO
-   */
-  SignificantNote?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof CounselPurposeAndNoteDTO
-   */
-  MedicationNote?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CounselPurposeAndNoteDTO
+     */
+    'counselPurpose'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof CounselPurposeAndNoteDTO
+     */
+    'SignificantNote'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CounselPurposeAndNoteDTO
+     */
+    'MedicationNote'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface CounselSessionStatRes
+ */
+export interface CounselSessionStatRes {
+    /**
+     * 
+     * @type {number}
+     * @memberof CounselSessionStatRes
+     */
+    'totalSessionCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CounselSessionStatRes
+     */
+    'counseleeCountForThisMonth'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CounselSessionStatRes
+     */
+    'totalCaringMessageCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CounselSessionStatRes
+     */
+    'counselHoursForThisMonth'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface DeleteAICounselSummaryReq
+ */
+export interface DeleteAICounselSummaryReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof DeleteAICounselSummaryReq
+     */
+    'counselSessionId': string;
 }
 /**
  *
@@ -1433,6 +1715,12 @@ export interface DeleteCounseleeConsentReq {
    * @memberof DeleteCounseleeConsentReq
    */
   counseleeConsentId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeleteCounseleeConsentReq
+     */
+    'counseleeConsentId': string;
 }
 /**
  *
@@ -1625,10 +1913,10 @@ export interface GetCounselorRes {
 }
 
 export const GetCounselorResRoleTypeEnum = {
-  Admin: 'ROLE_ADMIN',
-  User: 'ROLE_USER',
-  Assistant: 'ROLE_ASSISTANT',
-  None: 'ROLE_NONE',
+    Admin: 'ROLE_ADMIN',
+    User: 'ROLE_USER',
+    Assistant: 'ROLE_ASSISTANT',
+    None: 'ROLE_NONE'
 } as const;
 
 export type GetCounselorResRoleTypeEnum =
@@ -1839,51 +2127,51 @@ export interface NutritionDTO {
  * @interface SearchMedicationByKeywordRes
  */
 export interface SearchMedicationByKeywordRes {
-  /**
-   *
-   * @type {string}
-   * @memberof SearchMedicationByKeywordRes
-   */
-  id?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof SearchMedicationByKeywordRes
-   */
-  itemName?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof SearchMedicationByKeywordRes
-   */
-  itemImage?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SearchMedicationByKeywordRes
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SearchMedicationByKeywordRes
+     */
+    'itemName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SearchMedicationByKeywordRes
+     */
+    'itemImage'?: string;
 }
 /**
- *
+ * 
  * @export
- * @interface SelectAICounselSummaryStatusRes
+ * @interface SelectAICounselSummaryPopUpRes
  */
-export interface SelectAICounselSummaryStatusRes {
-  /**
-   *
-   * @type {string}
-   * @memberof SelectAICounselSummaryStatusRes
-   */
-  aiCounselSummaryStatus?: SelectAICounselSummaryStatusResAiCounselSummaryStatusEnum;
+export interface SelectAICounselSummaryPopUpRes {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SelectAICounselSummaryPopUpRes
+     */
+    'isPopup'?: boolean;
 }
-
-export const SelectAICounselSummaryStatusResAiCounselSummaryStatusEnum = {
-  SttProgress: 'STT_PROGRESS',
-  SttFailed: 'STT_FAILED',
-  SttComplete: 'STT_COMPLETE',
-  GptProgress: 'GPT_PROGRESS',
-  GptComplete: 'GPT_COMPLETE',
-  GptFailed: 'GPT_FAILED',
-} as const;
-
-export type SelectAICounselSummaryStatusResAiCounselSummaryStatusEnum =
-  (typeof SelectAICounselSummaryStatusResAiCounselSummaryStatusEnum)[keyof typeof SelectAICounselSummaryStatusResAiCounselSummaryStatusEnum];
-
+/**
+ * 
+ * @export
+ * @interface SelectAnalysedTextRes
+ */
+export interface SelectAnalysedTextRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof SelectAnalysedTextRes
+     */
+    'analysedText'?: string;
+}
 /**
  *
  * @export
@@ -2620,74 +2908,74 @@ export interface SelectPreviousItemListByInformationNameAndItemNameRes {
  * @interface SelectPreviousMedicationCounselRes
  */
 export interface SelectPreviousMedicationCounselRes {
-  /**
-   *
-   * @type {string}
-   * @memberof SelectPreviousMedicationCounselRes
-   */
-  previousCounselSessionId?: string;
-  /**
-   *
-   * @type {Array<MedicationCounselHighlightDTO>}
-   * @memberof SelectPreviousMedicationCounselRes
-   */
-  counselRecordHighlights?: Array<MedicationCounselHighlightDTO>;
-  /**
-   *
-   * @type {string}
-   * @memberof SelectPreviousMedicationCounselRes
-   */
-  counselNoteSummary?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SelectPreviousMedicationCounselRes
+     */
+    'previousCounselSessionId'?: string;
+    /**
+     * 
+     * @type {Array<MedicationCounselHighlightDTO>}
+     * @memberof SelectPreviousMedicationCounselRes
+     */
+    'counselRecordHighlights'?: Array<MedicationCounselHighlightDTO>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SelectPreviousMedicationCounselRes
+     */
+    'counselNoteSummary'?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface SelectSpeakerListRes
  */
 export interface SelectSpeakerListRes {
-  /**
-   *
-   * @type {string}
-   * @memberof SelectSpeakerListRes
-   */
-  speaker?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof SelectSpeakerListRes
-   */
-  text?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SelectSpeakerListRes
+     */
+    'speaker'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SelectSpeakerListRes
+     */
+    'text'?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface SelectSpeechToTextRes
  */
 export interface SelectSpeechToTextRes {
-  /**
-   *
-   * @type {string}
-   * @memberof SelectSpeechToTextRes
-   */
-  name?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof SelectSpeechToTextRes
-   */
-  text?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof SelectSpeechToTextRes
-   */
-  startTime?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof SelectSpeechToTextRes
-   */
-  endTime?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SelectSpeechToTextRes
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SelectSpeechToTextRes
+     */
+    'text'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SelectSpeechToTextRes
+     */
+    'startTime'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SelectSpeechToTextRes
+     */
+    'endTime'?: string;
 }
 /**
  *
@@ -2695,37 +2983,37 @@ export interface SelectSpeechToTextRes {
  * @interface SmokingDTO
  */
 export interface SmokingDTO {
-  /**
-   *
-   * @type {boolean}
-   * @memberof SmokingDTO
-   */
-  isSmoking?: boolean;
-  /**
-   *
-   * @type {string}
-   * @memberof SmokingDTO
-   */
-  smokingPeriodNote?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof SmokingDTO
-   */
-  smokingAmount?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SmokingDTO
+     */
+    'isSmoking'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof SmokingDTO
+     */
+    'smokingPeriodNote'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SmokingDTO
+     */
+    'smokingAmount'?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface SuccessRes
  */
 export interface SuccessRes {
-  /**
-   *
-   * @type {string}
-   * @memberof SuccessRes
-   */
-  message?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SuccessRes
+     */
+    'message'?: string;
 }
 /**
  *
@@ -2872,6 +3160,18 @@ export interface UpdateCounseleeConsentReq {
    * @memberof UpdateCounseleeConsentReq
    */
   consent?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeConsentReq
+     */
+    'counseleeConsentId': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateCounseleeConsentReq
+     */
+    'consent'?: boolean;
 }
 /**
  *
@@ -2952,6 +3252,66 @@ export interface UpdateCounseleeReq {
    * @memberof UpdateCounseleeReq
    */
   disability?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'counseleeId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'phoneNumber': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'dateOfBirth': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'genderType'?: UpdateCounseleeReqGenderTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'address'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'note'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'careManagerName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'affiliatedWelfareInstitution'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateCounseleeReq
+     */
+    'disability'?: boolean;
 }
 
 export const UpdateCounseleeReqGenderTypeEnum = {
@@ -2981,6 +3341,18 @@ export interface UpdateCounselorInCounselSessionReq {
    * @memberof UpdateCounselorInCounselSessionReq
    */
   counselorId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounselorInCounselSessionReq
+     */
+    'counselSessionId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounselorInCounselSessionReq
+     */
+    'counselorId': string;
 }
 /**
  *
@@ -3019,6 +3391,24 @@ export interface UpdateMedicationCounselReq {
    * @memberof UpdateMedicationCounselReq
    */
   counselRecordHighlights?: Array<MedicationCounselHighlightDTO>;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateMedicationCounselReq
+     */
+    'medicationCounselId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateMedicationCounselReq
+     */
+    'counselRecord': string;
+    /**
+     * 
+     * @type {Array<MedicationCounselHighlightDTO>}
+     * @memberof UpdateMedicationCounselReq
+     */
+    'counselRecordHighlights'?: Array<MedicationCounselHighlightDTO>;
 }
 /**
  *
@@ -8518,484 +8908,504 @@ export class DefaultApi extends BaseAPI {
       .then((request) => request(this.axios, this.basePath));
   }
 
-  /**
-   *
-   * @summary 상담 상태 수정
-   * @param {UpdateStatusInCounselSessionReq} updateStatusInCounselSessionReq
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof DefaultApi
-   */
-  public updateStatusInCounselSession(
-    updateStatusInCounselSessionReq: UpdateStatusInCounselSessionReq,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return DefaultApiFp(this.configuration)
-      .updateStatusInCounselSession(updateStatusInCounselSessionReq, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    /**
+     * 
+     * @summary 상담 상태 수정
+     * @param {UpdateStatusInCounselSessionReq} updateStatusInCounselSessionReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public updateStatusInCounselSession(updateStatusInCounselSessionReq: UpdateStatusInCounselSessionReq, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).updateStatusInCounselSession(updateStatusInCounselSessionReq, options).then((request) => request(this.axios, this.basePath));
+    }
 }
+
+
 
 /**
  * AIApi - axios parameter creator
  * @export
  */
 export const AIApiAxiosParamCreator = function (configuration?: Configuration) {
-  return {
-    /**
-     *
-     * @summary convert Speech to Text
-     * @param {File} audio
-     * @param {ConvertSpeechToTextReq} body
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    convertSpeechToText: async (
-      audio: File,
-      body: ConvertSpeechToTextReq,
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'audio' is not null or undefined
-      assertParamExists('convertSpeechToText', 'audio', audio);
-      // verify required parameter 'body' is not null or undefined
-      assertParamExists('convertSpeechToText', 'body', body);
-      const localVarPath = `/v1/counsel/ai/stt`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+    return {
+        /**
+         * 
+         * @summary 선택 발화자 기준 TA
+         * @param {AnalyseTextReq} analyseTextReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        analyseText: async (analyseTextReq: AnalyseTextReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'analyseTextReq' is not null or undefined
+            assertParamExists('analyseText', 'analyseTextReq', analyseTextReq)
+            const localVarPath = `/v1/counsel/ai/ta`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      const localVarRequestOptions = {
-        method: 'POST',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-      const localVarFormParams = new ((configuration &&
-        configuration.formDataCtor) ||
-        FormData)();
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      // authentication bearer-jwt required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      if (audio !== undefined) {
-        localVarFormParams.append('audio', audio as any);
-      }
 
-      if (body !== undefined) {
-        localVarFormParams.append(
-          'body',
-          new Blob([JSON.stringify(body)], { type: 'application/json' }),
-        );
-      }
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
-      localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(analyseTextReq, localVarRequestOptions, configuration)
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = localVarFormParams;
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary convert Speech to Text
+         * @param {File} audio 
+         * @param {ConvertSpeechToTextReq} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        convertSpeechToText: async (audio: File, body: ConvertSpeechToTextReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'audio' is not null or undefined
+            assertParamExists('convertSpeechToText', 'audio', audio)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('convertSpeechToText', 'body', body)
+            const localVarPath = `/v1/counsel/ai/stt`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @summary AI 요약 상태 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectAICounselSummaryStatus: async (
-      counselSessionId: string,
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'counselSessionId' is not null or undefined
-      assertParamExists(
-        'selectAICounselSummaryStatus',
-        'counselSessionId',
-        counselSessionId,
-      );
-      const localVarPath = `/v1/counsel/ai/{counselSessionId}/status`.replace(
-        `{${'counselSessionId'}}`,
-        encodeURIComponent(String(counselSessionId)),
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
-      const localVarRequestOptions = {
-        method: 'GET',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      // authentication bearer-jwt required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            if (audio !== undefined) { 
+                localVarFormParams.append('audio', audio as any);
+            }
+    
+            if (body !== undefined) { 
+                localVarFormParams.append('body', new Blob([JSON.stringify(body)], { type: "application/json", }));
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @summary 발화자 별 발화 내용 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectSpeakerList: async (
-      counselSessionId: string,
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'counselSessionId' is not null or undefined
-      assertParamExists(
-        'selectSpeakerList',
-        'counselSessionId',
-        counselSessionId,
-      );
-      const localVarPath =
-        `/v1/counsel/ai/{counselSessionId}/stt/speaker/list`.replace(
-          `{${'counselSessionId'}}`,
-          encodeURIComponent(String(counselSessionId)),
-        );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {DeleteAICounselSummaryReq} deleteAICounselSummaryReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteAICounselSummary: async (deleteAICounselSummaryReq: DeleteAICounselSummaryReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deleteAICounselSummaryReq' is not null or undefined
+            assertParamExists('deleteAICounselSummary', 'deleteAICounselSummaryReq', deleteAICounselSummaryReq)
+            const localVarPath = `/v1/counsel/ai`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      const localVarRequestOptions = {
-        method: 'GET',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      // authentication bearer-jwt required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @summary stt 결과 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectSpeechToText: async (
-      counselSessionId: string,
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'counselSessionId' is not null or undefined
-      assertParamExists(
-        'selectSpeechToText',
-        'counselSessionId',
-        counselSessionId,
-      );
-      const localVarPath = `/v1/counsel/ai/{counselSessionId}/stt`.replace(
-        `{${'counselSessionId'}}`,
-        encodeURIComponent(String(counselSessionId)),
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
-      const localVarRequestOptions = {
-        method: 'GET',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteAICounselSummaryReq, localVarRequestOptions, configuration)
 
-      // authentication bearer-jwt required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {string} counselSessionId 
+         * @param {string} [baseDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectAICounselSummaryPopUp: async (counselSessionId: string, baseDate?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselSessionId' is not null or undefined
+            assertParamExists('selectAICounselSummaryPopUp', 'counselSessionId', counselSessionId)
+            const localVarPath = `/v1/counsel/ai/{counselSessionId}/popup`
+                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-  };
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (baseDate !== undefined) {
+                localVarQueryParameter['baseDate'] = (baseDate as any instanceof Date) ?
+                    (baseDate as any).toISOString().substring(0,10) :
+                    baseDate;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary ta 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectAnalysedText: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselSessionId' is not null or undefined
+            assertParamExists('selectAnalysedText', 'counselSessionId', counselSessionId)
+            const localVarPath = `/v1/counsel/ai/{counselSessionId}/ta`
+                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 발화자 별 발화 내용 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectSpeakerList: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselSessionId' is not null or undefined
+            assertParamExists('selectSpeakerList', 'counselSessionId', counselSessionId)
+            const localVarPath = `/v1/counsel/ai/{counselSessionId}/stt/speaker/list`
+                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary stt 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectSpeechToText: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselSessionId' is not null or undefined
+            assertParamExists('selectSpeechToText', 'counselSessionId', counselSessionId)
+            const localVarPath = `/v1/counsel/ai/{counselSessionId}/stt`
+                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
 };
 
 /**
  * AIApi - functional programming interface
  * @export
  */
-export const AIApiFp = function (configuration?: Configuration) {
-  const localVarAxiosParamCreator = AIApiAxiosParamCreator(configuration);
-  return {
-    /**
-     *
-     * @summary convert Speech to Text
-     * @param {File} audio
-     * @param {ConvertSpeechToTextReq} body
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async convertSpeechToText(
-      audio: File,
-      body: ConvertSpeechToTextReq,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessRes>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.convertSpeechToText(
-          audio,
-          body,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AIApi.convertSpeechToText']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary AI 요약 상태 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async selectAICounselSummaryStatus(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<CommonResSelectAICounselSummaryStatusRes>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.selectAICounselSummaryStatus(
-          counselSessionId,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AIApi.selectAICounselSummaryStatus']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary 발화자 별 발화 내용 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async selectSpeakerList(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<CommonResListSelectSpeakerListRes>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.selectSpeakerList(
-          counselSessionId,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AIApi.selectSpeakerList']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary stt 결과 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async selectSpeechToText(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<CommonResListSelectSpeechToTextRes>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.selectSpeechToText(
-          counselSessionId,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AIApi.selectSpeechToText']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-  };
+export const AIApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AIApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary 선택 발화자 기준 TA
+         * @param {AnalyseTextReq} analyseTextReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async analyseText(analyseTextReq: AnalyseTextReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.analyseText(analyseTextReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AIApi.analyseText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary convert Speech to Text
+         * @param {File} audio 
+         * @param {ConvertSpeechToTextReq} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async convertSpeechToText(audio: File, body: ConvertSpeechToTextReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.convertSpeechToText(audio, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AIApi.convertSpeechToText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {DeleteAICounselSummaryReq} deleteAICounselSummaryReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteAICounselSummary(deleteAICounselSummaryReq: DeleteAICounselSummaryReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAICounselSummary(deleteAICounselSummaryReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AIApi.deleteAICounselSummary']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {string} counselSessionId 
+         * @param {string} [baseDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectAICounselSummaryPopUp(counselSessionId: string, baseDate?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectAICounselSummaryPopUpRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectAICounselSummaryPopUp(counselSessionId, baseDate, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AIApi.selectAICounselSummaryPopUp']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary ta 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectAnalysedText(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectAnalysedTextRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectAnalysedText(counselSessionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AIApi.selectAnalysedText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 발화자 별 발화 내용 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectSpeakerList(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListSelectSpeakerListRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectSpeakerList(counselSessionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AIApi.selectSpeakerList']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary stt 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectSpeechToText(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListSelectSpeechToTextRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectSpeechToText(counselSessionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AIApi.selectSpeechToText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
 };
 
 /**
  * AIApi - factory interface
  * @export
  */
-export const AIApiFactory = function (
-  configuration?: Configuration,
-  basePath?: string,
-  axios?: AxiosInstance,
-) {
-  const localVarFp = AIApiFp(configuration);
-  return {
-    /**
-     *
-     * @summary convert Speech to Text
-     * @param {File} audio
-     * @param {ConvertSpeechToTextReq} body
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    convertSpeechToText(
-      audio: File,
-      body: ConvertSpeechToTextReq,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<SuccessRes> {
-      return localVarFp
-        .convertSpeechToText(audio, body, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary AI 요약 상태 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectAICounselSummaryStatus(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<CommonResSelectAICounselSummaryStatusRes> {
-      return localVarFp
-        .selectAICounselSummaryStatus(counselSessionId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary 발화자 별 발화 내용 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectSpeakerList(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<CommonResListSelectSpeakerListRes> {
-      return localVarFp
-        .selectSpeakerList(counselSessionId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary stt 결과 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectSpeechToText(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<CommonResListSelectSpeechToTextRes> {
-      return localVarFp
-        .selectSpeechToText(counselSessionId, options)
-        .then((request) => request(axios, basePath));
-    },
-  };
+export const AIApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AIApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary 선택 발화자 기준 TA
+         * @param {AnalyseTextReq} analyseTextReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        analyseText(analyseTextReq: AnalyseTextReq, options?: RawAxiosRequestConfig): AxiosPromise<SuccessRes> {
+            return localVarFp.analyseText(analyseTextReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary convert Speech to Text
+         * @param {File} audio 
+         * @param {ConvertSpeechToTextReq} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        convertSpeechToText(audio: File, body: ConvertSpeechToTextReq, options?: RawAxiosRequestConfig): AxiosPromise<SuccessRes> {
+            return localVarFp.convertSpeechToText(audio, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {DeleteAICounselSummaryReq} deleteAICounselSummaryReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteAICounselSummary(deleteAICounselSummaryReq: DeleteAICounselSummaryReq, options?: RawAxiosRequestConfig): AxiosPromise<SuccessRes> {
+            return localVarFp.deleteAICounselSummary(deleteAICounselSummaryReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {string} counselSessionId 
+         * @param {string} [baseDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectAICounselSummaryPopUp(counselSessionId: string, baseDate?: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectAICounselSummaryPopUpRes> {
+            return localVarFp.selectAICounselSummaryPopUp(counselSessionId, baseDate, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary ta 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectAnalysedText(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectAnalysedTextRes> {
+            return localVarFp.selectAnalysedText(counselSessionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 발화자 별 발화 내용 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectSpeakerList(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListSelectSpeakerListRes> {
+            return localVarFp.selectSpeakerList(counselSessionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary stt 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectSpeechToText(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListSelectSpeechToTextRes> {
+            return localVarFp.selectSpeechToText(counselSessionId, options).then((request) => request(axios, basePath));
+        },
+    };
 };
 
 /**
@@ -9005,542 +9415,578 @@ export const AIApiFactory = function (
  * @extends {BaseAPI}
  */
 export class AIApi extends BaseAPI {
-  /**
-   *
-   * @summary convert Speech to Text
-   * @param {File} audio
-   * @param {ConvertSpeechToTextReq} body
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AIApi
-   */
-  public convertSpeechToText(
-    audio: File,
-    body: ConvertSpeechToTextReq,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return AIApiFp(this.configuration)
-      .convertSpeechToText(audio, body, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    /**
+     * 
+     * @summary 선택 발화자 기준 TA
+     * @param {AnalyseTextReq} analyseTextReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AIApi
+     */
+    public analyseText(analyseTextReq: AnalyseTextReq, options?: RawAxiosRequestConfig) {
+        return AIApiFp(this.configuration).analyseText(analyseTextReq, options).then((request) => request(this.axios, this.basePath));
+    }
 
-  /**
-   *
-   * @summary AI 요약 상태 조회
-   * @param {string} counselSessionId
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AIApi
-   */
-  public selectAICounselSummaryStatus(
-    counselSessionId: string,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return AIApiFp(this.configuration)
-      .selectAICounselSummaryStatus(counselSessionId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    /**
+     * 
+     * @summary convert Speech to Text
+     * @param {File} audio 
+     * @param {ConvertSpeechToTextReq} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AIApi
+     */
+    public convertSpeechToText(audio: File, body: ConvertSpeechToTextReq, options?: RawAxiosRequestConfig) {
+        return AIApiFp(this.configuration).convertSpeechToText(audio, body, options).then((request) => request(this.axios, this.basePath));
+    }
 
-  /**
-   *
-   * @summary 발화자 별 발화 내용 조회
-   * @param {string} counselSessionId
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AIApi
-   */
-  public selectSpeakerList(
-    counselSessionId: string,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return AIApiFp(this.configuration)
-      .selectSpeakerList(counselSessionId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    /**
+     * 
+     * @summary counselSessionId 기준 AI요약 삭제
+     * @param {DeleteAICounselSummaryReq} deleteAICounselSummaryReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AIApi
+     */
+    public deleteAICounselSummary(deleteAICounselSummaryReq: DeleteAICounselSummaryReq, options?: RawAxiosRequestConfig) {
+        return AIApiFp(this.configuration).deleteAICounselSummary(deleteAICounselSummaryReq, options).then((request) => request(this.axios, this.basePath));
+    }
 
-  /**
-   *
-   * @summary stt 결과 조회
-   * @param {string} counselSessionId
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AIApi
-   */
-  public selectSpeechToText(
-    counselSessionId: string,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return AIApiFp(this.configuration)
-      .selectSpeechToText(counselSessionId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    /**
+     * 
+     * @summary counselSessionId 기준 AI요약 삭제
+     * @param {string} counselSessionId 
+     * @param {string} [baseDate] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AIApi
+     */
+    public selectAICounselSummaryPopUp(counselSessionId: string, baseDate?: string, options?: RawAxiosRequestConfig) {
+        return AIApiFp(this.configuration).selectAICounselSummaryPopUp(counselSessionId, baseDate, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary ta 결과 조회
+     * @param {string} counselSessionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AIApi
+     */
+    public selectAnalysedText(counselSessionId: string, options?: RawAxiosRequestConfig) {
+        return AIApiFp(this.configuration).selectAnalysedText(counselSessionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 발화자 별 발화 내용 조회
+     * @param {string} counselSessionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AIApi
+     */
+    public selectSpeakerList(counselSessionId: string, options?: RawAxiosRequestConfig) {
+        return AIApiFp(this.configuration).selectSpeakerList(counselSessionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary stt 결과 조회
+     * @param {string} counselSessionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AIApi
+     */
+    public selectSpeechToText(counselSessionId: string, options?: RawAxiosRequestConfig) {
+        return AIApiFp(this.configuration).selectSpeechToText(counselSessionId, options).then((request) => request(this.axios, this.basePath));
+    }
 }
+
+
 
 /**
  * AICounselSummaryControllerApi - axios parameter creator
  * @export
  */
-export const AICounselSummaryControllerApiAxiosParamCreator = function (
-  configuration?: Configuration,
-) {
-  return {
-    /**
-     *
-     * @summary convert Speech to Text
-     * @param {File} audio
-     * @param {ConvertSpeechToTextReq} body
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    convertSpeechToText: async (
-      audio: File,
-      body: ConvertSpeechToTextReq,
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'audio' is not null or undefined
-      assertParamExists('convertSpeechToText', 'audio', audio);
-      // verify required parameter 'body' is not null or undefined
-      assertParamExists('convertSpeechToText', 'body', body);
-      const localVarPath = `/v1/counsel/ai/stt`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+export const AICounselSummaryControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary 선택 발화자 기준 TA
+         * @param {AnalyseTextReq} analyseTextReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        analyseText: async (analyseTextReq: AnalyseTextReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'analyseTextReq' is not null or undefined
+            assertParamExists('analyseText', 'analyseTextReq', analyseTextReq)
+            const localVarPath = `/v1/counsel/ai/ta`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      const localVarRequestOptions = {
-        method: 'POST',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-      const localVarFormParams = new ((configuration &&
-        configuration.formDataCtor) ||
-        FormData)();
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      // authentication bearer-jwt required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      if (audio !== undefined) {
-        localVarFormParams.append('audio', audio as any);
-      }
 
-      if (body !== undefined) {
-        localVarFormParams.append(
-          'body',
-          new Blob([JSON.stringify(body)], { type: 'application/json' }),
-        );
-      }
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
-      localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(analyseTextReq, localVarRequestOptions, configuration)
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = localVarFormParams;
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary convert Speech to Text
+         * @param {File} audio 
+         * @param {ConvertSpeechToTextReq} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        convertSpeechToText: async (audio: File, body: ConvertSpeechToTextReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'audio' is not null or undefined
+            assertParamExists('convertSpeechToText', 'audio', audio)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('convertSpeechToText', 'body', body)
+            const localVarPath = `/v1/counsel/ai/stt`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @summary AI 요약 상태 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectAICounselSummaryStatus: async (
-      counselSessionId: string,
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'counselSessionId' is not null or undefined
-      assertParamExists(
-        'selectAICounselSummaryStatus',
-        'counselSessionId',
-        counselSessionId,
-      );
-      const localVarPath = `/v1/counsel/ai/{counselSessionId}/status`.replace(
-        `{${'counselSessionId'}}`,
-        encodeURIComponent(String(counselSessionId)),
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
-      const localVarRequestOptions = {
-        method: 'GET',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      // authentication bearer-jwt required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            if (audio !== undefined) { 
+                localVarFormParams.append('audio', audio as any);
+            }
+    
+            if (body !== undefined) { 
+                localVarFormParams.append('body', new Blob([JSON.stringify(body)], { type: "application/json", }));
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @summary 발화자 별 발화 내용 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectSpeakerList: async (
-      counselSessionId: string,
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'counselSessionId' is not null or undefined
-      assertParamExists(
-        'selectSpeakerList',
-        'counselSessionId',
-        counselSessionId,
-      );
-      const localVarPath =
-        `/v1/counsel/ai/{counselSessionId}/stt/speaker/list`.replace(
-          `{${'counselSessionId'}}`,
-          encodeURIComponent(String(counselSessionId)),
-        );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {DeleteAICounselSummaryReq} deleteAICounselSummaryReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteAICounselSummary: async (deleteAICounselSummaryReq: DeleteAICounselSummaryReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deleteAICounselSummaryReq' is not null or undefined
+            assertParamExists('deleteAICounselSummary', 'deleteAICounselSummaryReq', deleteAICounselSummaryReq)
+            const localVarPath = `/v1/counsel/ai`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      const localVarRequestOptions = {
-        method: 'GET',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      // authentication bearer-jwt required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @summary stt 결과 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectSpeechToText: async (
-      counselSessionId: string,
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'counselSessionId' is not null or undefined
-      assertParamExists(
-        'selectSpeechToText',
-        'counselSessionId',
-        counselSessionId,
-      );
-      const localVarPath = `/v1/counsel/ai/{counselSessionId}/stt`.replace(
-        `{${'counselSessionId'}}`,
-        encodeURIComponent(String(counselSessionId)),
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
-      const localVarRequestOptions = {
-        method: 'GET',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteAICounselSummaryReq, localVarRequestOptions, configuration)
 
-      // authentication bearer-jwt required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {string} counselSessionId 
+         * @param {string} [baseDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectAICounselSummaryPopUp: async (counselSessionId: string, baseDate?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselSessionId' is not null or undefined
+            assertParamExists('selectAICounselSummaryPopUp', 'counselSessionId', counselSessionId)
+            const localVarPath = `/v1/counsel/ai/{counselSessionId}/popup`
+                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
 
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-  };
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (baseDate !== undefined) {
+                localVarQueryParameter['baseDate'] = (baseDate as any instanceof Date) ?
+                    (baseDate as any).toISOString().substring(0,10) :
+                    baseDate;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary ta 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectAnalysedText: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselSessionId' is not null or undefined
+            assertParamExists('selectAnalysedText', 'counselSessionId', counselSessionId)
+            const localVarPath = `/v1/counsel/ai/{counselSessionId}/ta`
+                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 발화자 별 발화 내용 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectSpeakerList: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselSessionId' is not null or undefined
+            assertParamExists('selectSpeakerList', 'counselSessionId', counselSessionId)
+            const localVarPath = `/v1/counsel/ai/{counselSessionId}/stt/speaker/list`
+                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary stt 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectSpeechToText: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselSessionId' is not null or undefined
+            assertParamExists('selectSpeechToText', 'counselSessionId', counselSessionId)
+            const localVarPath = `/v1/counsel/ai/{counselSessionId}/stt`
+                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
 };
 
 /**
  * AICounselSummaryControllerApi - functional programming interface
  * @export
  */
-export const AICounselSummaryControllerApiFp = function (
-  configuration?: Configuration,
-) {
-  const localVarAxiosParamCreator =
-    AICounselSummaryControllerApiAxiosParamCreator(configuration);
-  return {
-    /**
-     *
-     * @summary convert Speech to Text
-     * @param {File} audio
-     * @param {ConvertSpeechToTextReq} body
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async convertSpeechToText(
-      audio: File,
-      body: ConvertSpeechToTextReq,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessRes>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.convertSpeechToText(
-          audio,
-          body,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap[
-          'AICounselSummaryControllerApi.convertSpeechToText'
-        ]?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary AI 요약 상태 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async selectAICounselSummaryStatus(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<CommonResSelectAICounselSummaryStatusRes>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.selectAICounselSummaryStatus(
-          counselSessionId,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap[
-          'AICounselSummaryControllerApi.selectAICounselSummaryStatus'
-        ]?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary 발화자 별 발화 내용 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async selectSpeakerList(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<CommonResListSelectSpeakerListRes>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.selectSpeakerList(
-          counselSessionId,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap['AICounselSummaryControllerApi.selectSpeakerList']?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary stt 결과 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async selectSpeechToText(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<CommonResListSelectSpeechToTextRes>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.selectSpeechToText(
-          counselSessionId,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap[
-          'AICounselSummaryControllerApi.selectSpeechToText'
-        ]?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-  };
+export const AICounselSummaryControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AICounselSummaryControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary 선택 발화자 기준 TA
+         * @param {AnalyseTextReq} analyseTextReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async analyseText(analyseTextReq: AnalyseTextReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.analyseText(analyseTextReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AICounselSummaryControllerApi.analyseText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary convert Speech to Text
+         * @param {File} audio 
+         * @param {ConvertSpeechToTextReq} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async convertSpeechToText(audio: File, body: ConvertSpeechToTextReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.convertSpeechToText(audio, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AICounselSummaryControllerApi.convertSpeechToText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {DeleteAICounselSummaryReq} deleteAICounselSummaryReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteAICounselSummary(deleteAICounselSummaryReq: DeleteAICounselSummaryReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAICounselSummary(deleteAICounselSummaryReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AICounselSummaryControllerApi.deleteAICounselSummary']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {string} counselSessionId 
+         * @param {string} [baseDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectAICounselSummaryPopUp(counselSessionId: string, baseDate?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectAICounselSummaryPopUpRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectAICounselSummaryPopUp(counselSessionId, baseDate, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AICounselSummaryControllerApi.selectAICounselSummaryPopUp']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary ta 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectAnalysedText(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectAnalysedTextRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectAnalysedText(counselSessionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AICounselSummaryControllerApi.selectAnalysedText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 발화자 별 발화 내용 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectSpeakerList(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListSelectSpeakerListRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectSpeakerList(counselSessionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AICounselSummaryControllerApi.selectSpeakerList']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary stt 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectSpeechToText(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListSelectSpeechToTextRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectSpeechToText(counselSessionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AICounselSummaryControllerApi.selectSpeechToText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
 };
 
 /**
  * AICounselSummaryControllerApi - factory interface
  * @export
  */
-export const AICounselSummaryControllerApiFactory = function (
-  configuration?: Configuration,
-  basePath?: string,
-  axios?: AxiosInstance,
-) {
-  const localVarFp = AICounselSummaryControllerApiFp(configuration);
-  return {
-    /**
-     *
-     * @summary convert Speech to Text
-     * @param {File} audio
-     * @param {ConvertSpeechToTextReq} body
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    convertSpeechToText(
-      audio: File,
-      body: ConvertSpeechToTextReq,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<SuccessRes> {
-      return localVarFp
-        .convertSpeechToText(audio, body, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary AI 요약 상태 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectAICounselSummaryStatus(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<CommonResSelectAICounselSummaryStatusRes> {
-      return localVarFp
-        .selectAICounselSummaryStatus(counselSessionId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary 발화자 별 발화 내용 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectSpeakerList(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<CommonResListSelectSpeakerListRes> {
-      return localVarFp
-        .selectSpeakerList(counselSessionId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary stt 결과 조회
-     * @param {string} counselSessionId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    selectSpeechToText(
-      counselSessionId: string,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<CommonResListSelectSpeechToTextRes> {
-      return localVarFp
-        .selectSpeechToText(counselSessionId, options)
-        .then((request) => request(axios, basePath));
-    },
-  };
+export const AICounselSummaryControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AICounselSummaryControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary 선택 발화자 기준 TA
+         * @param {AnalyseTextReq} analyseTextReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        analyseText(analyseTextReq: AnalyseTextReq, options?: RawAxiosRequestConfig): AxiosPromise<SuccessRes> {
+            return localVarFp.analyseText(analyseTextReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary convert Speech to Text
+         * @param {File} audio 
+         * @param {ConvertSpeechToTextReq} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        convertSpeechToText(audio: File, body: ConvertSpeechToTextReq, options?: RawAxiosRequestConfig): AxiosPromise<SuccessRes> {
+            return localVarFp.convertSpeechToText(audio, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {DeleteAICounselSummaryReq} deleteAICounselSummaryReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteAICounselSummary(deleteAICounselSummaryReq: DeleteAICounselSummaryReq, options?: RawAxiosRequestConfig): AxiosPromise<SuccessRes> {
+            return localVarFp.deleteAICounselSummary(deleteAICounselSummaryReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary counselSessionId 기준 AI요약 삭제
+         * @param {string} counselSessionId 
+         * @param {string} [baseDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectAICounselSummaryPopUp(counselSessionId: string, baseDate?: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectAICounselSummaryPopUpRes> {
+            return localVarFp.selectAICounselSummaryPopUp(counselSessionId, baseDate, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary ta 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectAnalysedText(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectAnalysedTextRes> {
+            return localVarFp.selectAnalysedText(counselSessionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 발화자 별 발화 내용 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectSpeakerList(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListSelectSpeakerListRes> {
+            return localVarFp.selectSpeakerList(counselSessionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary stt 결과 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectSpeechToText(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListSelectSpeechToTextRes> {
+            return localVarFp.selectSpeechToText(counselSessionId, options).then((request) => request(axios, basePath));
+        },
+    };
 };
 
 /**
@@ -9550,76 +9996,94 @@ export const AICounselSummaryControllerApiFactory = function (
  * @extends {BaseAPI}
  */
 export class AICounselSummaryControllerApi extends BaseAPI {
-  /**
-   *
-   * @summary convert Speech to Text
-   * @param {File} audio
-   * @param {ConvertSpeechToTextReq} body
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AICounselSummaryControllerApi
-   */
-  public convertSpeechToText(
-    audio: File,
-    body: ConvertSpeechToTextReq,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return AICounselSummaryControllerApiFp(this.configuration)
-      .convertSpeechToText(audio, body, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    /**
+     * 
+     * @summary 선택 발화자 기준 TA
+     * @param {AnalyseTextReq} analyseTextReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AICounselSummaryControllerApi
+     */
+    public analyseText(analyseTextReq: AnalyseTextReq, options?: RawAxiosRequestConfig) {
+        return AICounselSummaryControllerApiFp(this.configuration).analyseText(analyseTextReq, options).then((request) => request(this.axios, this.basePath));
+    }
 
-  /**
-   *
-   * @summary AI 요약 상태 조회
-   * @param {string} counselSessionId
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AICounselSummaryControllerApi
-   */
-  public selectAICounselSummaryStatus(
-    counselSessionId: string,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return AICounselSummaryControllerApiFp(this.configuration)
-      .selectAICounselSummaryStatus(counselSessionId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    /**
+     * 
+     * @summary convert Speech to Text
+     * @param {File} audio 
+     * @param {ConvertSpeechToTextReq} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AICounselSummaryControllerApi
+     */
+    public convertSpeechToText(audio: File, body: ConvertSpeechToTextReq, options?: RawAxiosRequestConfig) {
+        return AICounselSummaryControllerApiFp(this.configuration).convertSpeechToText(audio, body, options).then((request) => request(this.axios, this.basePath));
+    }
 
-  /**
-   *
-   * @summary 발화자 별 발화 내용 조회
-   * @param {string} counselSessionId
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AICounselSummaryControllerApi
-   */
-  public selectSpeakerList(
-    counselSessionId: string,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return AICounselSummaryControllerApiFp(this.configuration)
-      .selectSpeakerList(counselSessionId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    /**
+     * 
+     * @summary counselSessionId 기준 AI요약 삭제
+     * @param {DeleteAICounselSummaryReq} deleteAICounselSummaryReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AICounselSummaryControllerApi
+     */
+    public deleteAICounselSummary(deleteAICounselSummaryReq: DeleteAICounselSummaryReq, options?: RawAxiosRequestConfig) {
+        return AICounselSummaryControllerApiFp(this.configuration).deleteAICounselSummary(deleteAICounselSummaryReq, options).then((request) => request(this.axios, this.basePath));
+    }
 
-  /**
-   *
-   * @summary stt 결과 조회
-   * @param {string} counselSessionId
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AICounselSummaryControllerApi
-   */
-  public selectSpeechToText(
-    counselSessionId: string,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return AICounselSummaryControllerApiFp(this.configuration)
-      .selectSpeechToText(counselSessionId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
+    /**
+     * 
+     * @summary counselSessionId 기준 AI요약 삭제
+     * @param {string} counselSessionId 
+     * @param {string} [baseDate] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AICounselSummaryControllerApi
+     */
+    public selectAICounselSummaryPopUp(counselSessionId: string, baseDate?: string, options?: RawAxiosRequestConfig) {
+        return AICounselSummaryControllerApiFp(this.configuration).selectAICounselSummaryPopUp(counselSessionId, baseDate, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary ta 결과 조회
+     * @param {string} counselSessionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AICounselSummaryControllerApi
+     */
+    public selectAnalysedText(counselSessionId: string, options?: RawAxiosRequestConfig) {
+        return AICounselSummaryControllerApiFp(this.configuration).selectAnalysedText(counselSessionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 발화자 별 발화 내용 조회
+     * @param {string} counselSessionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AICounselSummaryControllerApi
+     */
+    public selectSpeakerList(counselSessionId: string, options?: RawAxiosRequestConfig) {
+        return AICounselSummaryControllerApiFp(this.configuration).selectSpeakerList(counselSessionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary stt 결과 조회
+     * @param {string} counselSessionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AICounselSummaryControllerApi
+     */
+    public selectSpeechToText(counselSessionId: string, options?: RawAxiosRequestConfig) {
+        return AICounselSummaryControllerApiFp(this.configuration).selectSpeechToText(counselSessionId, options).then((request) => request(this.axios, this.basePath));
+    }
 }
+
+
 
 /**
  * CounselCardControllerApi - axios parameter creator
@@ -10566,6 +11030,92 @@ export const CounselSessionControllerApiAxiosParamCreator = function (
         localVarRequestOptions,
         configuration,
       );
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteCounselSessionReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 특정 연월의 상담 세션이 있는 날짜 목록 조회
+         * @param {number} year 
+         * @param {number} month 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSessionDatesByYearAndMonth: async (year: number, month: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'year' is not null or undefined
+            assertParamExists('getSessionDatesByYearAndMonth', 'year', year)
+            // verify required parameter 'month' is not null or undefined
+            assertParamExists('getSessionDatesByYearAndMonth', 'month', month)
+            const localVarPath = `/v1/counsel/session/sessions/dates`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (year !== undefined) {
+                localVarQueryParameter['year'] = year;
+            }
+
+            if (month !== undefined) {
+                localVarQueryParameter['month'] = month;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 상담 세션 통계 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSessionStats: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/counsel/session/sessions/stats`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
       return {
         url: toPathString(localVarUrlObj),
@@ -11211,6 +11761,142 @@ export const CounselSessionControllerApiFp = function (
         )(axios, localVarOperationServerBasePath || basePath);
     },
   };
+export const CounselSessionControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = CounselSessionControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary 상담세션(일정) 추가
+         * @param {AddCounselSessionReq} addCounselSessionReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addCounselSession(addCounselSessionReq: AddCounselSessionReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResAddCounselSessionRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addCounselSession(addCounselSessionReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.addCounselSession']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 상담일정 삭제
+         * @param {DeleteCounselSessionReq} deleteCounselSessionReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteCounselSession(deleteCounselSessionReq: DeleteCounselSessionReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResDeleteCounselSessionRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCounselSession(deleteCounselSessionReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.deleteCounselSession']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 특정 연월의 상담 세션이 있는 날짜 목록 조회
+         * @param {number} year 
+         * @param {number} month 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSessionDatesByYearAndMonth(year: number, month: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListLocalDate>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSessionDatesByYearAndMonth(year, month, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.getSessionDatesByYearAndMonth']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 상담 세션 통계 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSessionStats(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCounselSessionStatRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSessionStats(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.getSessionStats']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 상담일정 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectCounselSession(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounselSessionRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselSession(counselSessionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.selectCounselSession']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 상담일정 목록 조회
+         * @param {string} [baseDate] 
+         * @param {string} [cursor] 
+         * @param {number} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectCounselSessionListByBaseDateAndCursorAndSize(baseDate?: string, cursor?: string, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonCursorResListSelectCounselSessionListItem>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselSessionListByBaseDateAndCursorAndSize(baseDate, cursor, size, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.selectCounselSessionListByBaseDateAndCursorAndSize']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 이전 상담 내역 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectPreviousCounselSessionList(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListSelectPreviousCounselSessionListRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectPreviousCounselSessionList(counselSessionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.selectPreviousCounselSessionList']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 상담일정 수정
+         * @param {UpdateCounselSessionReq} updateCounselSessionReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResUpdateCounselSessionRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCounselSession(updateCounselSessionReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.updateCounselSession']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨. 
+         * @summary 상담일정 담당 약사 수정
+         * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateCounselorInCounselSession(updateCounselorInCounselSessionReq: UpdateCounselorInCounselSessionReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResUpdateCounselorInCounselSessionRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCounselorInCounselSession(updateCounselorInCounselSessionReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.updateCounselorInCounselSession']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 상담 상태 수정
+         * @param {UpdateStatusInCounselSessionReq} updateStatusInCounselSessionReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateStatusInCounselSession(updateStatusInCounselSessionReq: UpdateStatusInCounselSessionReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResUpdateStatusInCounselSessionRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateStatusInCounselSession(updateStatusInCounselSessionReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.updateStatusInCounselSession']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
 };
 
 /**
@@ -11357,6 +12043,112 @@ export const CounselSessionControllerApiFactory = function (
         .then((request) => request(axios, basePath));
     },
   };
+export const CounselSessionControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = CounselSessionControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary 상담세션(일정) 추가
+         * @param {AddCounselSessionReq} addCounselSessionReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addCounselSession(addCounselSessionReq: AddCounselSessionReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResAddCounselSessionRes> {
+            return localVarFp.addCounselSession(addCounselSessionReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 상담일정 삭제
+         * @param {DeleteCounselSessionReq} deleteCounselSessionReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCounselSession(deleteCounselSessionReq: DeleteCounselSessionReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResDeleteCounselSessionRes> {
+            return localVarFp.deleteCounselSession(deleteCounselSessionReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 특정 연월의 상담 세션이 있는 날짜 목록 조회
+         * @param {number} year 
+         * @param {number} month 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSessionDatesByYearAndMonth(year: number, month: number, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListLocalDate> {
+            return localVarFp.getSessionDatesByYearAndMonth(year, month, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 상담 세션 통계 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSessionStats(options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselSessionStatRes> {
+            return localVarFp.getSessionStats(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 상담일정 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectCounselSession(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounselSessionRes> {
+            return localVarFp.selectCounselSession(counselSessionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 상담일정 목록 조회
+         * @param {string} [baseDate] 
+         * @param {string} [cursor] 
+         * @param {number} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectCounselSessionListByBaseDateAndCursorAndSize(baseDate?: string, cursor?: string, size?: number, options?: RawAxiosRequestConfig): AxiosPromise<CommonCursorResListSelectCounselSessionListItem> {
+            return localVarFp.selectCounselSessionListByBaseDateAndCursorAndSize(baseDate, cursor, size, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 이전 상담 내역 조회
+         * @param {string} counselSessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectPreviousCounselSessionList(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListSelectPreviousCounselSessionListRes> {
+            return localVarFp.selectPreviousCounselSessionList(counselSessionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 상담일정 수정
+         * @param {UpdateCounselSessionReq} updateCounselSessionReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResUpdateCounselSessionRes> {
+            return localVarFp.updateCounselSession(updateCounselSessionReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨. 
+         * @summary 상담일정 담당 약사 수정
+         * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCounselorInCounselSession(updateCounselorInCounselSessionReq: UpdateCounselorInCounselSessionReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResUpdateCounselorInCounselSessionRes> {
+            return localVarFp.updateCounselorInCounselSession(updateCounselorInCounselSessionReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 상담 상태 수정
+         * @param {UpdateStatusInCounselSessionReq} updateStatusInCounselSessionReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateStatusInCounselSession(updateStatusInCounselSessionReq: UpdateStatusInCounselSessionReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResUpdateStatusInCounselSessionRes> {
+            return localVarFp.updateStatusInCounselSession(updateStatusInCounselSessionReq, options).then((request) => request(axios, basePath));
+        },
+    };
 };
 
 /**
@@ -11399,6 +12191,41 @@ export class CounselSessionControllerApi extends BaseAPI {
       .deleteCounselSession(deleteCounselSessionReq, options)
       .then((request) => request(this.axios, this.basePath));
   }
+    /**
+     * 
+     * @summary 상담일정 삭제
+     * @param {DeleteCounselSessionReq} deleteCounselSessionReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselSessionControllerApi
+     */
+    public deleteCounselSession(deleteCounselSessionReq: DeleteCounselSessionReq, options?: RawAxiosRequestConfig) {
+        return CounselSessionControllerApiFp(this.configuration).deleteCounselSession(deleteCounselSessionReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 특정 연월의 상담 세션이 있는 날짜 목록 조회
+     * @param {number} year 
+     * @param {number} month 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselSessionControllerApi
+     */
+    public getSessionDatesByYearAndMonth(year: number, month: number, options?: RawAxiosRequestConfig) {
+        return CounselSessionControllerApiFp(this.configuration).getSessionDatesByYearAndMonth(year, month, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 상담 세션 통계 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselSessionControllerApi
+     */
+    public getSessionStats(options?: RawAxiosRequestConfig) {
+        return CounselSessionControllerApiFp(this.configuration).getSessionStats(options).then((request) => request(this.axios, this.basePath));
+    }
 
   /**
    *
