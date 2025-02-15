@@ -377,7 +377,7 @@ const ItemChange = ({
                 {renderButtons('성별', genderTypes, 'genderType')}
               </div>
               <div className="flex flex-row w-auto gap-3">
-                {handleInput('전화번호', '-없이 숫자만 입력', 'phoneNumber')}
+                {handleInput('전화번호', '010-1234-5678', 'phoneNumber')}
                 {handleInput('행정동', 'OO동', 'address')}
               </div>
               <div className="flex flex-row w-auto gap-3">

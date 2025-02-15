@@ -42,9 +42,7 @@ const CounseleeManagement = () => {
       headerName: '연락처',
       flex: 1,
       valueFormatter: (params: string) => {
-        return params
-          ? `${params.slice(0, 3)}-${params.slice(3, 7)}-${params.slice(7)}`
-          : '연락처 없음';
+        return params ? params : '연락처 없음';
       },
     },
     { field: 'affiliatedWelfareInstitution', headerName: '연계 기관', flex: 1 },
