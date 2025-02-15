@@ -9,7 +9,7 @@ const counselSessionStatus = {
   COMPLETED: '완료',
   SCHEDULED: '예정',
   PROGRESS: '진행',
-  CANCELLED: '취소',
+  CANCELED: '취소',
 };
 
 const CounselStatusCell = ({ status }: CounselStatusCellProps) => {
@@ -28,9 +28,12 @@ const CounselStatusCell = ({ status }: CounselStatusCellProps) => {
     }
   };
 
+  const statusLabel =
+    counselSessionStatus[status as keyof typeof counselSessionStatus];
+
   return (
-    <span className={cn(getCounselSessionStatusColor(status))}>
-      {counselSessionStatus[status as keyof typeof counselSessionStatus]}
+    <span className={cn('px-3', getCounselSessionStatusColor(status))}>
+      {statusLabel}
     </span>
   );
 };
