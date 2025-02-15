@@ -88,7 +88,7 @@ function MedicineSearchCell<T extends { id: string }>({
               onChange={handleChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
-              className="bg-transparent h-full px-3"
+              className="bg-transparent h-full truncate"
             />
           </div>
         </PopoverTrigger>
@@ -112,7 +112,7 @@ function MedicineSearchCell<T extends { id: string }>({
                   }}
                   key={item.id}
                   className={cn(
-                    'hover:bg-grayscale-5 p-1 rounded-sm flex justify-between items-center cursor-pointer',
+                    'hover:bg-grayscale-5 p-1 rounded-sm flex justify-between items-center cursor-pointer line-clamp-1',
                     item.itemName === value && 'text-primary-50',
                   )}>
                   {item.itemName}
