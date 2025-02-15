@@ -7,7 +7,7 @@ interface EditableCellTextInputProps<T extends { id: string }> {
   value: string | number;
   row: Row<T>;
   unit?: number | string;
-  handleUpdateCell: (id: string, field: string, value: string) => void;
+  handleUpdateCell: (id: string, field: string, value: string | number) => void;
   placeholder?: string;
 }
 
@@ -20,9 +20,9 @@ function TextInputCell<T extends { id: string }>({
   placeholder,
 }: EditableCellTextInputProps<T>) {
   const [isEditing, setIsEditing] = useState(false);
-  const [inputValue, setInputValue] = useState(value.toString());
+  const [inputValue, setInputValue] = useState(value);
 
-  const handleUpdate = (id: string, field: string, value: string) => {
+  const handleUpdate = (id: string, field: string, value: string | number) => {
     setInputValue(value);
     handleUpdateCell(id, field, value);
   };

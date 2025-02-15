@@ -19,7 +19,7 @@ export const defaultColumnSizing = {
 
 interface WasteMedicationColumnsProps {
   onDelete: (id: string) => void;
-  handleUpdateCell: (id: string, field: string, value: string) => void;
+  handleUpdateCell: (id: string, field: string, value: string | number) => void;
   handleSearchEnter: (
     id: string,
     medicationId: string,
