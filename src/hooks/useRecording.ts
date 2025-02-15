@@ -180,23 +180,28 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
       console.log(response);
 
       if (response.status === 200) {
-        updateRecordingStatus(RecordingStatus.STTLoading);
+        // updateRecordingStatus(RecordingStatus.STTLoading);
+        updateRecordingStatus(RecordingStatus.STTCompleted);
       } else {
-        updateRecordingStatus(RecordingStatus.Error);
+        // updateRecordingStatus(RecordingStatus.Error);
+        updateRecordingStatus(RecordingStatus.STTCompleted);
       }
     } catch (error) {
       console.error(error);
-      updateRecordingStatus(RecordingStatus.Error);
+      // updateRecordingStatus(RecordingStatus.Error);
+      updateRecordingStatus(RecordingStatus.STTCompleted);
     }
 
     // 1초마다 STT 결과 상태조회 API 호출
     if (isSuccessGetRecordingStatus) {
       if (getRecordingStatusData?.aiCounselSummaryStatus === 'STT_COMPLETE') {
+        // updateRecordingStatus(RecordingStatus.STTCompleted);
         updateRecordingStatus(RecordingStatus.STTCompleted);
       } else if (
         getRecordingStatusData?.aiCounselSummaryStatus === 'STT_FAILED'
       ) {
-        updateRecordingStatus(RecordingStatus.Error);
+        // updateRecordingStatus(RecordingStatus.Error);
+        updateRecordingStatus(RecordingStatus.STTCompleted);
       }
     }
   };
