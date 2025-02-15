@@ -1,9 +1,11 @@
+import { AICounselSummaryControllerApi } from '@/api';
+import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/useGetRecordingStatusQuery';
 import {
   MediaRecorderStatus,
   RecordingFileInfo,
   RecordingStatus,
 } from '@/types/Recording.enum';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { create } from 'zustand';
 
 // store's state
@@ -50,9 +52,17 @@ const addOneSecond = () => {
 };
 
 // hook
-export const useRecording = () => {
+export const useRecording = (counselSessionId: string | undefined = '') => {
   const { recordingStatus, recordingTime, mediaRecorderRef, audioChunksRef } =
     useRecordingStore();
+  const {
+    data: getRecordingStatusData,
+    isSuccess: isSuccessGetRecordingStatus,
+  } = useGetRecordingStatusQuery(counselSessionId, recordingStatus);
+  const aiCounselSummaryControllerApi = useMemo(
+    () => new AICounselSummaryControllerApi(),
+    [],
+  );
 
   const startRecording = async () => {
     try {
@@ -139,50 +149,56 @@ export const useRecording = () => {
     useRecordingStore.setState({ recordingTime: 0 });
   }, []);
 
-  const submitRecording = () => {
-    updateRecordingStatus(RecordingStatus.STTLoading);
-    new Promise((resolve) => {
-      // TODO : 여기에 녹음파일을 서버로 전송하는 로직을 작성
-      // 이후 1초마다 n초까지 polling하여 변환 완료 여부 확인
-      // FOR TEST : 3초 후에 녹음파일 생성
-      setTimeout(() => {
-        // 녹음된 데이터(Blob) 생성
-        const audioBlob = new Blob(audioChunksRef.current, {
-          type: RecordingFileInfo.Type,
-        });
+  const submitRecording = async () => {
+    // 녹음된 데이터(Blob) 생성
+    const audioBlob = new Blob(audioChunksRef.current, {
+      type: RecordingFileInfo.Type,
+    });
 
-        // Blob을 File 객체로 변환
-        const audioFile = new File(
-          [audioBlob],
-          RecordingFileInfo.DownloadName,
-          {
-            type: RecordingFileInfo.Type,
-            lastModified: Date.now(),
-          },
-        );
+    // Blob을 File 객체로 변환
+    const audioFile = new File([audioBlob], RecordingFileInfo.DownloadName, {
+      type: RecordingFileInfo.Type,
+      lastModified: Date.now(),
+    });
 
-        // audioFile을 이용하여 파일 업로드, 다운로드 등 원하는 작업을 수행할 수 있음.
-        console.log('audioFile created!!', audioFile);
+    // TEST : 만들어진 audioFile 다운로드
+    const audioUrl = URL.createObjectURL(audioFile);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = audioUrl;
+    downloadLink.download = RecordingFileInfo.DownloadName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(audioUrl);
+    console.log(audioFile);
 
-        // TEST : 만들어진 audioFile 다운로드
-        const audioUrl = URL.createObjectURL(audioFile);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = audioUrl;
-        downloadLink.download = RecordingFileInfo.DownloadName;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        URL.revokeObjectURL(audioUrl);
+    try {
+      const response = await aiCounselSummaryControllerApi.convertSpeechToText(
+        audioFile,
+        { counselSessionId },
+      );
+      console.log(response);
 
-        resolve('success');
-      }, 1500);
-    }).then((result) => {
-      if (result === 'success') {
-        updateRecordingStatus(RecordingStatus.STTCompleted);
+      if (response.status === 200) {
+        updateRecordingStatus(RecordingStatus.STTLoading);
       } else {
         updateRecordingStatus(RecordingStatus.Error);
       }
-    });
+    } catch (error) {
+      console.error(error);
+      updateRecordingStatus(RecordingStatus.Error);
+    }
+
+    // 1초마다 STT 결과 상태조회 API 호출
+    if (isSuccessGetRecordingStatus) {
+      if (getRecordingStatusData?.aiCounselSummaryStatus === 'STT_COMPLETE') {
+        updateRecordingStatus(RecordingStatus.STTCompleted);
+      } else if (
+        getRecordingStatusData?.aiCounselSummaryStatus === 'STT_FAILED'
+      ) {
+        updateRecordingStatus(RecordingStatus.Error);
+      }
+    }
   };
 
   const submitSpeakers = (speakers: string[]) => {
