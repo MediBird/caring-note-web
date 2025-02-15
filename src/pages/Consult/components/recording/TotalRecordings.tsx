@@ -65,10 +65,10 @@ const tempData = [
 
 // TODO: 기디에서 색상 정의한 후 수정
 const speakerColors = [
-  'text-purple-90 bg-purple-10',
-  'text-blue-90 bg-blue-10',
-  'text-red-90 bg-red-10',
-  'text-green-90 bg-green-10',
+  'text-purple-100 bg-purple-10',
+  'text-blue-100 bg-blue-10',
+  'text-pink-100 bg-pink-10',
+  'text-green-100 bg-green-10',
 ];
 
 const getColorForSpeaker = (speaker: string) => {
