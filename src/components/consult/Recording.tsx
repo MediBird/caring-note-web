@@ -9,11 +9,13 @@ import SelectSpeakerDialog from '@/pages/Consult/components/recording/SelectSpea
 import { RecordingStatus } from '@/types/Recording.enum';
 import { Circle } from 'lucide-react';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 
 interface RecordingProps {
   className?: string;
 }
 const Recording: React.FC<RecordingProps> = ({ className }) => {
+  const { counselSessionId } = useParams();
   const {
     startRecording,
     pauseRecording,
@@ -22,7 +24,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     submitRecording,
     recordingStatus,
     recordingTime,
-  } = useRecording();
+  } = useRecording(counselSessionId);
 
   const circleColorClass =
     recordingStatus === RecordingStatus.Recording
@@ -110,7 +112,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
               </Button>
             </div>
           ) : recordingStatus === RecordingStatus.Error ? (
-            <div>
+            <div className="flex flex-col items-center gap-4">
               <p className="text-body1 font-medium text-grayscale-50">
                 녹음 중 에러 발생
               </p>

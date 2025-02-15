@@ -79,6 +79,22 @@ export default {
           90: '#303031',
           100: '#121212',
         },
+        purple: {
+          10: '#ECDDFF',
+          100: '#8A68E7',
+        },
+        blue: {
+          10: '#CEEFF8',
+          100: '#00A0BD',
+        },
+        pink: {
+          10: '#FFD8E4',
+          100: '#DD5984',
+        },
+        green: {
+          10: '#D7F7CF',
+          100: '#1BB200',
+        },
         white: '#FFFFFF',
       },
       borderRadius: {

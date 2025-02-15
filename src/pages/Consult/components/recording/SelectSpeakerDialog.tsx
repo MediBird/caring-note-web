@@ -13,45 +13,35 @@ import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useGetRecordingSpeakersQuery } from '../../hooks/query/useGetRecordingSpeakersQuery';
 
 function SelectSpeakerDialog() {
-  const { submitSpeakers } = useRecording();
+  const { submitSpeakers, recordingStatus } = useRecording();
   const [open, setOpen] = useState(false);
   const [selectedSpeakers, setSelectedSpeakers] = useState<string[]>([]);
+  const { counselSessionId } = useParams();
+  const { data: speakerList, isSuccess: isSuccessGetSpeakerList } =
+    useGetRecordingSpeakersQuery(counselSessionId, recordingStatus);
 
-  // FOR TEST
-  const tempData = [
-    {
-      speaker: 'A',
-      text: '안녕하세요 저는 첫번째 발화자입니다. 안녕하세요 저는 첫번째 발화자입니다.안녕하세요 저는 첫번째 발화자입니다.안녕하세요 저는 첫번째 발화자입니다.안녕하세요 저는 첫번째 발화자입니다.안녕하세요 저는 첫번째 발화자입니다.안녕하세요 저는 첫번째 발화자입니다.',
-    },
-    {
-      speaker: 'B',
-      text: '안녕하세요 저는 두번째 발화자입니다.',
-    },
-    {
-      speaker: 'C',
-      text: '안녕하세요 저는 세번째 발화자입니다.',
-    },
-    {
-      speaker: 'D',
-      text: '안녕하세요 저는 네번째 발화자입니다.',
-    },
-    {
-      speaker: 'E',
-      text: '안녕하세요 저는 다섯번째 발화자입니다.',
-    },
+  const speakerColors = [
+    'text-purple-100 bg-purple-10',
+    'text-blue-100 bg-blue-10',
+    'text-pink-100 bg-pink-10',
+    'text-green-100 bg-green-10',
   ];
 
-  const handleClickSpeaker = (speaker: string) => () => {
-    if (selectedSpeakers.includes(speaker)) {
-      setSelectedSpeakers(
-        selectedSpeakers.filter((selected) => selected !== speaker),
-      );
-    } else {
-      setSelectedSpeakers([...selectedSpeakers, speaker]);
-    }
-  };
+  const handleClickSpeaker =
+    (speaker: string = '') =>
+    () => {
+      if (selectedSpeakers.includes(speaker)) {
+        setSelectedSpeakers(
+          selectedSpeakers.filter((selected) => selected !== speaker),
+        );
+      } else {
+        setSelectedSpeakers([...selectedSpeakers, speaker]);
+      }
+    };
 
   const handleClickConfirm = () => {
     submitSpeakers(selectedSpeakers);
@@ -77,33 +67,34 @@ function SelectSpeakerDialog() {
           asChild
           className="flex flex-col items-center m-0 p-0">
           <>
-            {tempData.map((data, index) => {
-              return (
-                <div
-                  key={index}
-                  className="flex items-center w-full cursor-pointer"
-                  onClick={handleClickSpeaker(data.speaker)}>
+            {isSuccessGetSpeakerList &&
+              speakerList?.map((data, index) => {
+                return (
                   <div
-                    className={cn(
-                      'flex items-center justify-center font-bold w-[36px] h-[36px] p-4 m-4 rounded-full',
-                      selectedSpeakers.includes(data.speaker)
-                        ? 'text-white bg-primary-50'
-                        : 'text-error-90 bg-error-10', // TODO : 글자색과 배경색 - 기디에서 정의하면 변경
-                    )}>
-                    {data.speaker}
+                    key={index}
+                    className="flex items-center w-full cursor-pointer mt-6"
+                    onClick={handleClickSpeaker(data.speaker)}>
+                    <div
+                      className={cn(
+                        'flex items-center justify-center font-medium w-[36px] h-[36px] p-4 mx-4 rounded-full',
+                        selectedSpeakers.includes(data?.speaker || '')
+                          ? 'text-white bg-primary-50'
+                          : speakerColors[index % 4],
+                      )}>
+                      {data.speaker}
+                    </div>
+                    <p
+                      className={cn(
+                        'w-full pr-4',
+                        selectedSpeakers.includes(data?.speaker || '')
+                          ? 'text-primary-50 font-bold'
+                          : 'text-grayscale-90',
+                      )}>
+                      {data.text}
+                    </p>
                   </div>
-                  <p
-                    className={cn(
-                      'w-full pr-4',
-                      selectedSpeakers.includes(data.speaker)
-                        ? 'text-primary-50 font-bold'
-                        : 'text-grayscale-90',
-                    )}>
-                    {data.text}
-                  </p>
-                </div>
-              );
-            })}
+                );
+              })}
           </>
         </DialogDescription>
         <DialogFooter className="flex items-center justify-end m-0 p-5">
