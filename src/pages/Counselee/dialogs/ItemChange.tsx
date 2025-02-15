@@ -289,6 +289,7 @@ const ItemChange = ({
       addCounseleeInfo.mutate(
         {
           ...counseleeInfoData,
+          scheduledStartDateTime: counseleeCalendarData.scheduledStartDateTime,
         },
         {
           onSuccess: () => {

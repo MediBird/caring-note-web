@@ -24,7 +24,7 @@ export const createColumns = ({
       const counselSessionId = row.original.counselSessionId;
       return (
         <span
-          className="cursor-pointer w-full h-full inline-block content-center"
+          className="cursor-pointer w-full h-full inline-block content-center px-3"
           onClick={() => {
             onCellClick(counselSessionId ?? '');
           }}>
@@ -38,13 +38,17 @@ export const createColumns = ({
     accessorKey: 'scheduledDate',
     header: '상담 일자',
     enableSorting: true,
+    cell: ({ row }) => {
+      const scheduledDate = row.original.scheduledDate ?? '-';
+      return <span className="px-3">{scheduledDate}</span>;
+    },
   },
   {
     id: 'status',
     accessorKey: 'status',
     header: '상담 진행',
     cell: ({ row }) => {
-      const status = row.original.status ?? '';
+      const status = row.original.status ?? '-';
       return (
         <CounselStatusCell status={status as AddCounselSessionReqStatusEnum} />
       );
@@ -54,11 +58,19 @@ export const createColumns = ({
     id: 'counseleeName',
     accessorKey: 'counseleeName',
     header: '내담자',
+    cell: ({ row }) => {
+      const counseleeName = row.original.counseleeName ?? '-';
+      return <span className="px-3">{counseleeName}</span>;
+    },
   },
   {
     id: 'counselorName',
     accessorKey: 'counselorName',
     header: '담당약사',
+    cell: ({ row }) => {
+      const counselorName = row.original.counselorName ?? '-';
+      return <span className="px-3">{counselorName}</span>;
+    },
   },
   {
     id: 'counselorAssign',
@@ -81,10 +93,12 @@ export const createColumns = ({
       const counselSessionId = row.original.counselSessionId ?? '';
       const counselorId = row.original.counselorId ?? '';
       return (
-        <AssignDialog
-          counselSessionId={counselSessionId}
-          counselorId={counselorId}
-        />
+        <div className="px-3">
+          <AssignDialog
+            counselSessionId={counselSessionId}
+            counselorId={counselorId}
+          />
+        </div>
       );
     },
   },
@@ -97,11 +111,13 @@ export const createColumns = ({
       const counseleeId = row.original.counseleeId ?? '';
       const dialogState = row.original.cardRecordStatus ?? '';
       return (
-        <SurveyDialog
-          counselSessionId={counselSessionId}
-          counseleeId={counseleeId}
-          dialogState={dialogState as AddCounselCardReqCardRecordStatusEnum}
-        />
+        <div className="px-3">
+          <SurveyDialog
+            counselSessionId={counselSessionId}
+            counseleeId={counseleeId}
+            dialogState={dialogState as AddCounselCardReqCardRecordStatusEnum}
+          />
+        </div>
       );
     },
   },

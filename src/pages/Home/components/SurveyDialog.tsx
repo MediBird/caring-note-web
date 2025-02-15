@@ -73,6 +73,7 @@ function SurveyDialog({
 
   const renderTriggerButton = () => (
     <Button
+      className="w-full"
       type="button"
       variant={buttonConfig[dialogState].variant}
       disabled={dialogState === AddCounselCardReqCardRecordStatusEnum.Recorded}>

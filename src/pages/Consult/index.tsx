@@ -1,4 +1,7 @@
-import { SelectCounseleeBaseInformationByCounseleeIdRes } from '@/api/api';
+import {
+  AddAndUpdateMedicationRecordHistReq,
+  SelectCounseleeBaseInformationByCounseleeIdRes,
+} from '@/api/api';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
@@ -12,9 +15,11 @@ import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
 import PastConsult from './components/tabs/PastConsult';
 import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
-import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/useSaveWasteMedication';
+import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import Spinner from '@/components/common/Spinner';
+import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
+import useMedicineMemoStore from '@/store/medicineMemoStore';
 
 interface InfoItemProps {
   icon: string;
@@ -107,7 +112,9 @@ export function Index() {
   );
   const { mutate: saveMedicationCounsel } = useSaveMedicineConsult();
   const { medicineConsult } = useMedicineConsultStore();
+  const { medicationRecordList } = useMedicineMemoStore();
   const { resetRecording } = useRecording();
+  const { saveMedicationRecordList } = useMedicationRecordSave();
 
   useEffect(() => {
     resetRecording();
@@ -146,12 +153,17 @@ export function Index() {
   const saveConsult = () => {
     saveWasteMedication();
     saveMedicationCounsel(medicineConsult);
+    saveMedicationRecordList({
+      counselSessionId: counselSessionId ?? '',
+      medicationRecordHistList:
+        medicationRecordList as unknown as AddAndUpdateMedicationRecordHistReq[],
+    });
   };
 
   return (
     <>
       <Tabs defaultValue="pastConsult" className="w-full h-full">
-        <div className="sticky top-0 z-1">
+        <div className="sticky top-0 z-10">
           <ConsultHeader
             counseleeInfo={
               counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes

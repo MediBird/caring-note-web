@@ -1,17 +1,17 @@
-import { AICounselSummaryControllerApi } from '@/api';
+// import { AICounselSummaryControllerApi } from '@/api/api';
 import { RecordingStatus } from '@/types/Recording.enum';
 import { useQuery } from '@tanstack/react-query';
 
-const aiCounselSummaryControllerApi = new AICounselSummaryControllerApi();
+// const aiCounselSummaryControllerApi = new AICounselSummaryControllerApi();
 
-const selectAICounselSummaryStatus = async (counselSessionId: string) => {
-  const response =
-    await aiCounselSummaryControllerApi.selectAICounselSummaryStatus(
-      counselSessionId,
-    );
+// const selectAICounselSummaryStatus = async (counselSessionId: string) => {
+//   const response =
+//     await aiCounselSummaryControllerApi.selectAICounselSummaryStatus(
+//       counselSessionId,
+//     );
 
-  return response.data.data;
-};
+//   return response.data.data;
+// };
 
 export const useGetRecordingStatusQuery = (
   counselSessionId: string | undefined = '',
@@ -19,11 +19,13 @@ export const useGetRecordingStatusQuery = (
 ) => {
   const { data, isSuccess } = useQuery({
     queryKey: ['selectAICounselSummaryStatus', counselSessionId],
-    queryFn: () => selectAICounselSummaryStatus(counselSessionId),
-    enabled:
-      !!counselSessionId &&
-      recordingStatus ===
-        (RecordingStatus.STTLoading || RecordingStatus.AILoading),
+    // queryFn: () => selectAICounselSummaryStatus(counselSessionId),
+    queryFn: () => {},
+    // enabled:
+    //   !!counselSessionId &&
+    //   recordingStatus ===
+    //     (RecordingStatus.STTLoading || RecordingStatus.AILoading),
+    enabled: false,
     refetchInterval:
       recordingStatus ===
       (RecordingStatus.STTLoading || RecordingStatus.AILoading)

@@ -29,7 +29,7 @@ export interface AddAndUpdateWasteMedicationDisposalSaveDTO {
 export interface WasteMedicationListDTO {
   id: string;
   rowId?: string;
-  medicationId?: string;
+  medicationId: string;
   medicationName: string;
   unit: number;
   disposalReason: string;

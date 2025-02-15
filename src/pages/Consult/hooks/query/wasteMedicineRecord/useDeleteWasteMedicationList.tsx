@@ -3,7 +3,7 @@ import { WasteMedicationControllerApi } from '@/api/api';
 
 const wasteMedicationControllerApi = new WasteMedicationControllerApi();
 
-const deleteMedicationList = async (
+const deleteWasteMedicationList = async (
   counselSessionId: string,
   wasteMedicationRecordIds: string[],
 ) => {
@@ -20,14 +20,14 @@ const deleteMedicationList = async (
 export const useDeleteMedicationList = () => {
   const queryClient = useQueryClient();
 
-  const deleteMedicationListMutation = useMutation({
+  const deleteWasteMedicationListMutation = useMutation({
     mutationFn: ({
       counselSessionId,
       wasteMedicationRecordIds,
     }: {
       counselSessionId: string;
       wasteMedicationRecordIds: string[];
-    }) => deleteMedicationList(counselSessionId, wasteMedicationRecordIds),
+    }) => deleteWasteMedicationList(counselSessionId, wasteMedicationRecordIds),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['wasteMedicationList'],
@@ -35,5 +35,5 @@ export const useDeleteMedicationList = () => {
     },
   });
 
-  return { deleteMedicationListMutation };
+  return { deleteWasteMedicationListMutation };
 };

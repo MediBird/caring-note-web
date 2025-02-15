@@ -10,7 +10,7 @@ const counselSessionControllerApi = new CounselSessionControllerApi();
 
 const updateCounselorInCounselSession = async (
   counselSessionId: string,
-  counselorId?: string,
+  counselorId: string,
 ) => {
   const response =
     await counselSessionControllerApi.updateCounselorInCounselSession({

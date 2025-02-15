@@ -1,29 +1,25 @@
-import {
-  AddAndUpdateMedicationRecordHistReq,
-  SelectMedicationRecordHistRes,
-} from "@/api";
-import { create } from "zustand";
+import { MedicationRecordListDTO } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordList';
+import { create } from 'zustand';
 
 interface MedicineMemoState {
-  httpStatus?: number;
-  originalData?: SelectMedicationRecordHistRes[];
-  editedData?: AddAndUpdateMedicationRecordHistReq[];
-  setHttpStatus?: (status: number) => void;
-  setOriginalData?: (data: SelectMedicationRecordHistRes[]) => void;
-  setEditedData?: (data: AddAndUpdateMedicationRecordHistReq[]) => void;
-  resetEditedData?: () => void;
+  medicationRecordList: MedicationRecordListDTO[];
+  setMedicationRecordList: (data: MedicationRecordListDTO[]) => void;
+  updateMedicationRecordListById: (
+    id: string,
+    data: MedicationRecordListDTO,
+  ) => void;
 }
 
-const useMedicineMemoStore = create<MedicineMemoState>((set, get) => ({
-  originalData: [],
-  editedData: [],
-  setHttpStatus: (status: number) => set({ httpStatus: status }),
-  setOriginalData: (data: SelectMedicationRecordHistRes[]) =>
-    set({ originalData: [...data] }),
-  setEditedData: (data: AddAndUpdateMedicationRecordHistReq[]) =>
-    set({ editedData: [...data] }),
-  resetEditedData: () =>
-    set({ editedData: JSON.parse(JSON.stringify(get().originalData)) }),
+const useMedicineMemoStore = create<MedicineMemoState>((set) => ({
+  medicationRecordList: [],
+  setMedicationRecordList: (data: MedicationRecordListDTO[]) =>
+    set({ medicationRecordList: [...data] }),
+  updateMedicationRecordListById: (id: string, data: MedicationRecordListDTO) =>
+    set((state) => ({
+      medicationRecordList: state.medicationRecordList.map((item) =>
+        item.id === id ? { ...item, ...data } : item,
+      ),
+    })),
 }));
 
 export default useMedicineMemoStore;

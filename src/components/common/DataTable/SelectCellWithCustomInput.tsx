@@ -15,7 +15,7 @@ interface SelectCellProps {
   onValueChange: (value: string) => void;
 }
 
-function SelectCell({
+function SelectCellWithCustomInput({
   initialValue,
   options,
   placeholder,
@@ -29,8 +29,6 @@ function SelectCell({
   const [customValue, setCustomValue] = useState(
     hasCustomInitialValue ? initialValue : '',
   );
-
-  console.log(initialValue);
 
   return (
     <div className="flex flex-col gap-1">
@@ -88,4 +86,4 @@ function SelectCell({
   );
 }
 
-export default SelectCell;
+export default SelectCellWithCustomInput;
