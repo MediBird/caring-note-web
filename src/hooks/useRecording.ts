@@ -1,5 +1,5 @@
 import { AICounselSummaryControllerApi } from '@/api';
-import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/useGetRecordingStatusQuery';
+// import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/useGetRecordingStatusQuery';
 import {
   MediaRecorderStatus,
   RecordingFileInfo,
@@ -55,33 +55,35 @@ const addOneSecond = () => {
 export const useRecording = (counselSessionId: string | undefined = '') => {
   const { recordingStatus, recordingTime, mediaRecorderRef, audioChunksRef } =
     useRecordingStore();
-  const {
-    data: getRecordingStatusData,
-    isSuccess: isSuccessGetRecordingStatus,
-  } = useGetRecordingStatusQuery(counselSessionId, recordingStatus);
+
+  // const {
+  //   data: getRecordingStatusData,
+  //   isSuccess: isSuccessGetRecordingStatus,
+  // } = useGetRecordingStatusQuery(counselSessionId, recordingStatus);
+
   const aiCounselSummaryControllerApi = useMemo(
     () => new AICounselSummaryControllerApi(),
     [],
   );
 
-  useEffect(() => {
-    if (
-      !isSuccessGetRecordingStatus ||
-      !getRecordingStatusData?.aiCounselSummaryStatus
-    ) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (
+  //     !isSuccessGetRecordingStatus ||
+  //     !getRecordingStatusData?.aiCounselSummaryStatus
+  //   ) {
+  //     return;
+  //   }
 
-    const statusMapping: { [key: string]: RecordingStatus } = {
-      STT_COMPLETE: RecordingStatus.STTCompleted,
-      STT_FAILED: RecordingStatus.Error,
-      GPT_COMPLETE: RecordingStatus.AICompleted,
-      GPT_FAILED: RecordingStatus.Error,
-    };
+  //   const statusMapping: { [key: string]: RecordingStatus } = {
+  //     STT_COMPLETE: RecordingStatus.STTCompleted,
+  //     STT_FAILED: RecordingStatus.Error,
+  //     GPT_COMPLETE: RecordingStatus.AICompleted,
+  //     GPT_FAILED: RecordingStatus.Error,
+  //   };
 
-    const status = statusMapping[getRecordingStatusData.aiCounselSummaryStatus];
-    updateRecordingStatus(status);
-  }, [isSuccessGetRecordingStatus, getRecordingStatusData]);
+  //   const status = statusMapping[getRecordingStatusData.aiCounselSummaryStatus];
+  //   updateRecordingStatus(status);
+  // }, [isSuccessGetRecordingStatus, getRecordingStatusData]);
 
   useEffect(() => {
     console.log('=== useEffect recordingStatus :', recordingStatus);
