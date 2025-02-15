@@ -1,5 +1,4 @@
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
 import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { useEffect } from 'react';
 
 export interface DatePickerProps {
   placeholder?: string;
@@ -28,10 +26,15 @@ export function DatePickerComponent({
   const [date, setDate] = React.useState<Date | undefined>(initialDate);
   const [isOpen, setIsOpen] = React.useState(false); // Popover 열림 상태 관리
 
-  useEffect(() => {
-    handleClicked?.(date);
-    setIsOpen(false);
-  }, [date, handleClicked]);
+  // date가 변경될 때만 handleClicked를 호출하도록 수정
+  const handleDateSelect = React.useCallback(
+    (newDate: Date | undefined) => {
+      setDate(newDate);
+      handleClicked?.(newDate);
+      setIsOpen(false);
+    },
+    [handleClicked],
+  );
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -39,11 +42,10 @@ export function DatePickerComponent({
         <Button
           variant={'outline'}
           className={cn(
-            'w-[280px] h-[2.25rem] justify-start items-center text-left font-normal',
+            'w-[280px] h-[2.25rem] justify-start border-none items-center text-left font-normal bg-transparent hover:bg-transparent text-base',
             !date && 'text-muted-foreground',
             className,
           )}>
-          <CalendarIcon className="w-4 h-4 mr-0" />
           {date ? (
             format(date, 'yyyy-MM-dd')
           ) : (
@@ -57,7 +59,7 @@ export function DatePickerComponent({
           captionLayout="dropdown-buttons"
           showOutsideDays={true}
           selected={date}
-          onSelect={setDate}
+          onSelect={handleDateSelect}
           fromYear={1960}
           toYear={2050}
           initialFocus
