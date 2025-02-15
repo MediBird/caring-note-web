@@ -55,7 +55,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
     mutate(
       {
         counselSessionId,
-        counselorId: user?.id,
+        counselorId: user?.id as string,
       },
       {
         onSuccess: () => {
@@ -69,7 +69,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
   const handleAssign = () => {
     mutate({
       counselSessionId,
-      counselorId: user?.id,
+      counselorId: user?.id as string,
     });
     setOpen(false);
   };
