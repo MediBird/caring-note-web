@@ -1,3 +1,4 @@
+import { SelectMedicationRecordHistRes } from '@/api/api';
 import { WasteMedicationListDTO } from '@/types/WasteMedicationDTO';
 import { create } from 'zustand';
 
@@ -20,3 +21,20 @@ export const useWasteMedicationListStore = create<{
       ),
     })),
 }));
+
+export const initSelectMedicationRecordHistRes: SelectMedicationRecordHistRes =
+  {
+    rowId: '',
+    medicationId: '',
+    medicationName: '',
+    divisionCode: 'PRESCRIPTION',
+    usageObject: '',
+    prescriptionDate: new Date().toISOString().split('T')[0],
+    prescriptionDays: 0,
+    unit: '일',
+    usageStatusCode: undefined,
+    updatedDatetime: new Date().toISOString().split('T')[0],
+    createdDatetime: new Date().toISOString().split('T')[0],
+    createdBy: '',
+    updatedBy: '',
+  };

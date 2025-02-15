@@ -21,6 +21,10 @@ const selectMedicationCounsel = async (counselSessionId: string) => {
 const saveMedicationCounsel = async (
   medicineConsultDTO: MedicineConsultDTO,
 ) => {
+  if (medicineConsultDTO.counselRecord === '') {
+    return;
+  }
+
   if (medicineConsultDTO.medicationCounselId === '') {
     await medicationCounselControllerApi.addMedicationCounsel({
       counselSessionId: medicineConsultDTO.counselSessionId,

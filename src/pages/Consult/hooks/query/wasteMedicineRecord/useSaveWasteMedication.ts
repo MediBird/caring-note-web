@@ -1,24 +1,27 @@
-import { useWasteMedicationSave } from '@/pages/Consult/hooks/query/useWasteMedicationSave';
+import { useWasteMedicationMutate } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useWasteMedicationMutate';
 import { useWasteMedicationDisposalStore } from '@/pages/Consult/hooks/store/useWasteMedicationDisposalStore';
 import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
 
 export const useSaveWasteMedication = (counselSessionId: string) => {
   const { mutateWasteMedicationList, mutateWasteMedicationDisposal } =
-    useWasteMedicationSave();
+    useWasteMedicationMutate();
 
   const { wasteMedicationDisposal } = useWasteMedicationDisposalStore();
   const { wasteMedicationList } = useWasteMedicationListStore();
 
-  //wasteMedicationList에서 id필드를 제거
-  const wasteMedicationListWithoutId = wasteMedicationList.map(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    ({ id, ...rest }) => rest,
-  );
+  // export interface WasteMedicationListDTO {
+  //   id: string;
+  //   rowId?: string;
+  //   medicationId: string;
+  //   medicationName: string;
+  //   unit: number;
+  //   disposalReason: string;
+  // }
 
   const saveWasteMedication = () => {
     mutateWasteMedicationList({
       counselSessionId,
-      wasteMedicationList: wasteMedicationListWithoutId,
+      wasteMedicationList: wasteMedicationList,
     });
     mutateWasteMedicationDisposal({
       counselSessionId,

@@ -11,8 +11,6 @@ const wasteMedicationControllerApi = new WasteMedicationControllerApi();
 const saveWasteMedicationList = async (
   wasteMedicationListSaveDTO: WasteMedicationListSaveDTO,
 ) => {
-  console.log(wasteMedicationListSaveDTO);
-
   const response =
     await wasteMedicationControllerApi.addAndUpdateWasteMedicationRecord(
       wasteMedicationListSaveDTO.counselSessionId,
@@ -35,7 +33,7 @@ const saveWasteMedicationDisposal = async (
   return response.data;
 };
 
-export const useWasteMedicationSave = () => {
+export const useWasteMedicationMutate = () => {
   const queryClient = useQueryClient();
 
   const { mutate: mutateWasteMedicationList } = useMutation({
