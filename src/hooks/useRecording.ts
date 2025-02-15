@@ -5,7 +5,7 @@ import {
   RecordingFileInfo,
   RecordingStatus,
 } from '@/types/Recording.enum';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { create } from 'zustand';
 
 // store's state
@@ -63,6 +63,32 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     () => new AICounselSummaryControllerApi(),
     [],
   );
+
+  useEffect(() => {
+    if (!isSuccessGetRecordingStatus) {
+      return;
+    }
+
+    if (getRecordingStatusData?.aiCounselSummaryStatus === 'STT_COMPLETE') {
+      updateRecordingStatus(RecordingStatus.STTCompleted);
+    } else if (
+      getRecordingStatusData?.aiCounselSummaryStatus === 'STT_FAILED'
+    ) {
+      updateRecordingStatus(RecordingStatus.Error);
+    } else if (
+      getRecordingStatusData?.aiCounselSummaryStatus === 'GPT_COMPLETE'
+    ) {
+      updateRecordingStatus(RecordingStatus.AICompleted);
+    } else if (
+      getRecordingStatusData?.aiCounselSummaryStatus === 'GPT_FAILED'
+    ) {
+      updateRecordingStatus(RecordingStatus.Error);
+    }
+  }, [isSuccessGetRecordingStatus, getRecordingStatusData]);
+
+  useEffect(() => {
+    console.log('=== useEffect recordingStatus :', recordingStatus);
+  }, [recordingStatus]);
 
   const startRecording = async () => {
     try {
@@ -170,39 +196,23 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     downloadLink.click();
     document.body.removeChild(downloadLink);
     URL.revokeObjectURL(audioUrl);
-    console.log(audioFile);
+    console.log('=== audioFile ===', audioFile);
 
     try {
       const response = await aiCounselSummaryControllerApi.convertSpeechToText(
         audioFile,
         { counselSessionId },
       );
-      console.log(response);
+      console.log('=== convertSpeechToText ===', response);
 
       if (response.status === 200) {
-        // updateRecordingStatus(RecordingStatus.STTLoading);
-        updateRecordingStatus(RecordingStatus.STTCompleted);
+        updateRecordingStatus(RecordingStatus.STTLoading);
       } else {
-        // updateRecordingStatus(RecordingStatus.Error);
-        updateRecordingStatus(RecordingStatus.STTCompleted);
+        updateRecordingStatus(RecordingStatus.Error);
       }
     } catch (error) {
       console.error(error);
-      // updateRecordingStatus(RecordingStatus.Error);
-      updateRecordingStatus(RecordingStatus.STTCompleted);
-    }
-
-    // 1초마다 STT 결과 상태조회 API 호출
-    if (isSuccessGetRecordingStatus) {
-      if (getRecordingStatusData?.aiCounselSummaryStatus === 'STT_COMPLETE') {
-        // updateRecordingStatus(RecordingStatus.STTCompleted);
-        updateRecordingStatus(RecordingStatus.STTCompleted);
-      } else if (
-        getRecordingStatusData?.aiCounselSummaryStatus === 'STT_FAILED'
-      ) {
-        // updateRecordingStatus(RecordingStatus.Error);
-        updateRecordingStatus(RecordingStatus.STTCompleted);
-      }
+      updateRecordingStatus(RecordingStatus.Error);
     }
   };
 

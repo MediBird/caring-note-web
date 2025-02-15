@@ -19,7 +19,8 @@ export const useGetRecordingSpeakersQuery = (
   const { data, isSuccess } = useQuery({
     queryKey: ['selectSpeakerList', counselSessionId],
     queryFn: () => selectSpeakerList(counselSessionId),
-    enabled: recordingStatus === RecordingStatus.STTCompleted,
+    enabled:
+      !!counselSessionId && recordingStatus === RecordingStatus.STTCompleted,
   });
 
   return { data, isSuccess };

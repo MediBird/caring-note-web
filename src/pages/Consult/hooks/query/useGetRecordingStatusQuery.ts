@@ -21,9 +21,14 @@ export const useGetRecordingStatusQuery = (
     queryKey: ['selectAICounselSummaryStatus', counselSessionId],
     queryFn: () => selectAICounselSummaryStatus(counselSessionId),
     enabled:
+      !!counselSessionId &&
       recordingStatus ===
-      (RecordingStatus.STTLoading || RecordingStatus.AILoading),
-    refetchInterval: 1000,
+        (RecordingStatus.STTLoading || RecordingStatus.AILoading),
+    refetchInterval:
+      recordingStatus ===
+      (RecordingStatus.STTLoading || RecordingStatus.AILoading)
+        ? 1000
+        : false,
   });
 
   return { data, isSuccess };
