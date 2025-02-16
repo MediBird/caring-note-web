@@ -11,25 +11,19 @@ import {
 } from '@/components/ui/dialog';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
+import { SPEAKER_COLOR_LIST } from '@/types/Recording.enum';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useGetRecordingSpeakersQuery } from '../../hooks/query/useGetRecordingSpeakersQuery';
+import { useGetRecordingSpeakersQuery } from '../../hooks/query/counselRecording/useGetRecordingSpeakersQuery';
 
 function SelectSpeakerDialog() {
-  const { submitSpeakers, recordingStatus } = useRecording();
+  const { counselSessionId } = useParams();
+  const { submitSpeakers, recordingStatus } = useRecording(counselSessionId);
   const [open, setOpen] = useState(false);
   const [selectedSpeakers, setSelectedSpeakers] = useState<string[]>([]);
-  const { counselSessionId } = useParams();
   const { data: speakerList, isSuccess: isSuccessGetSpeakerList } =
     useGetRecordingSpeakersQuery(counselSessionId, recordingStatus);
-
-  const speakerColors = [
-    'text-purple-100 bg-purple-10',
-    'text-blue-100 bg-blue-10',
-    'text-pink-100 bg-pink-10',
-    'text-green-100 bg-green-10',
-  ];
 
   const handleClickSpeaker =
     (speaker: string = '') =>
@@ -62,11 +56,11 @@ function SelectSpeakerDialog() {
             <XIcon />
           </DialogClose>
         </DialogHeader>
-        <div className="h-[1px] bg-grayscale-20 mb-4" />
+        <div className="h-[1px] bg-grayscale-20" />
         <DialogDescription
           asChild
           className="flex flex-col items-center m-0 p-0">
-          <>
+          <div>
             {isSuccessGetSpeakerList &&
               speakerList?.map((data, index) => {
                 return (
@@ -79,7 +73,7 @@ function SelectSpeakerDialog() {
                         'flex items-center justify-center font-medium w-[36px] h-[36px] p-4 mx-4 rounded-full',
                         selectedSpeakers.includes(data?.speaker || '')
                           ? 'text-white bg-primary-50'
-                          : speakerColors[index % 4],
+                          : SPEAKER_COLOR_LIST[index % 4],
                       )}>
                       {data.speaker}
                     </div>
@@ -95,7 +89,7 @@ function SelectSpeakerDialog() {
                   </div>
                 );
               })}
-          </>
+          </div>
         </DialogDescription>
         <DialogFooter className="flex items-center justify-end m-0 p-5">
           <Button variant="primary" size="md" onClick={handleClickConfirm}>

@@ -2,6 +2,7 @@ export enum RecordingFileInfo {
   Type = 'audio/webm',
   DownloadName = 'TEST_YOUR_RECORDING.webm',
 }
+
 export enum RecordingStatus {
   Ready = '녹음 시작하기',
   Recording = '녹음 중',
@@ -21,3 +22,12 @@ export enum MediaRecorderStatus {
   Recording = 'recording',
   Paused = 'paused',
 }
+
+// 기획에서 정의한 여러 발화자의 랜덤 색상 리스트
+export enum SpeakersColor {
+  Purple = 'text-purple-100 bg-purple-10',
+  Blue = 'text-blue-100 bg-blue-10',
+  Pink = 'text-pink-100 bg-pink-10',
+  Green = 'text-green-100 bg-green-10',
+}
+export const SPEAKER_COLOR_LIST = Object.values(SpeakersColor);
