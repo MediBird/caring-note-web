@@ -1,5 +1,6 @@
 import { AICounselSummaryControllerApi } from '@/api';
-import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/useGetRecordingStatusQuery';
+import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetRecordingStatusQuery';
+import { useSendSpeakersQuery } from '@/pages/Consult/hooks/query/counselRecording/useSendSpeakersQuery';
 import {
   MediaRecorderStatus,
   RecordingFileInfo,
@@ -56,15 +57,16 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
   const { recordingStatus, recordingTime, mediaRecorderRef, audioChunksRef } =
     useRecordingStore();
 
-  const {
-    data: getRecordingStatusData,
-    isSuccess: isSuccessGetRecordingStatus,
-  } = useGetRecordingStatusQuery(counselSessionId, recordingStatus);
-
+  // api
   const aiCounselSummaryControllerApi = useMemo(
     () => new AICounselSummaryControllerApi(),
     [],
   );
+  const {
+    data: getRecordingStatusData,
+    isSuccess: isSuccessGetRecordingStatus,
+  } = useGetRecordingStatusQuery(counselSessionId, recordingStatus);
+  const { sendSpeakers } = useSendSpeakersQuery();
 
   useEffect(() => {
     if (
@@ -82,7 +84,8 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     };
 
     const status = statusMapping[getRecordingStatusData.aiCounselSummaryStatus];
-    updateRecordingStatus(status);
+
+    if (status) updateRecordingStatus(status);
   }, [isSuccessGetRecordingStatus, getRecordingStatusData]);
 
   useEffect(() => {
@@ -187,43 +190,39 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     });
 
     // TEST : 만들어진 audioFile 다운로드
-    const audioUrl = URL.createObjectURL(audioFile);
-    const downloadLink = document.createElement('a');
-    downloadLink.href = audioUrl;
-    downloadLink.download = RecordingFileInfo.DownloadName;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-    URL.revokeObjectURL(audioUrl);
-    console.log('=== audioFile ===', audioFile);
+    // const audioUrl = URL.createObjectURL(audioFile);
+    // const downloadLink = document.createElement('a');
+    // downloadLink.href = audioUrl;
+    // downloadLink.download = RecordingFileInfo.DownloadName;
+    // document.body.appendChild(downloadLink);
+    // downloadLink.click();
+    // document.body.removeChild(downloadLink);
+    // URL.revokeObjectURL(audioUrl);
+    // console.log('=== audioFile ===', audioFile);
 
-    try {
-      const response = await aiCounselSummaryControllerApi.convertSpeechToText(
-        audioFile,
-        { counselSessionId },
-      );
-      console.log('=== convertSpeechToText ===', response);
+    updateRecordingStatus(RecordingStatus.STTCompleted);
+    // BE에서 음성파일 확장자 변환 작업중,, 아래가 맞는 코드
+    // try {
+    //   const response = await aiCounselSummaryControllerApi.convertSpeechToText(
+    //     audioFile,
+    //     { counselSessionId },
+    //   );
+    //   console.log('=== convertSpeechToText ===', response);
 
-      if (response.status === 200) {
-        updateRecordingStatus(RecordingStatus.STTLoading);
-      } else {
-        updateRecordingStatus(RecordingStatus.Error);
-      }
-    } catch (error) {
-      console.error(error);
-      updateRecordingStatus(RecordingStatus.Error);
-    }
+    //   if (response.status === 200) {
+    //     updateRecordingStatus(RecordingStatus.STTLoading);
+    //   } else {
+    //     updateRecordingStatus(RecordingStatus.Error);
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    //   updateRecordingStatus(RecordingStatus.Error);
+    // }
   };
 
   const submitSpeakers = (speakers: string[]) => {
-    console.log(speakers);
-
-    // 발화자를 선택하여 AI 분석 요청
-    setTimeout(() => {
-      // polling 하여 AI 분석 완료 여부 확인 후 완료되면 상태를 변경
-      updateRecordingStatus(RecordingStatus.AICompleted);
-    }, 1500);
     updateRecordingStatus(RecordingStatus.AILoading);
+    sendSpeakers({ counselSessionId, speakers });
   };
 
   return {
