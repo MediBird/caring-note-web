@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
+import { SPEAKER_COLOR_LIST } from '@/types/Recording.enum';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -23,13 +24,6 @@ function SelectSpeakerDialog() {
   const [selectedSpeakers, setSelectedSpeakers] = useState<string[]>([]);
   const { data: speakerList, isSuccess: isSuccessGetSpeakerList } =
     useGetRecordingSpeakersQuery(counselSessionId, recordingStatus);
-
-  const speakerColors = [
-    'text-purple-100 bg-purple-10',
-    'text-blue-100 bg-blue-10',
-    'text-pink-100 bg-pink-10',
-    'text-green-100 bg-green-10',
-  ];
 
   const handleClickSpeaker =
     (speaker: string = '') =>
@@ -79,7 +73,7 @@ function SelectSpeakerDialog() {
                         'flex items-center justify-center font-medium w-[36px] h-[36px] p-4 mx-4 rounded-full',
                         selectedSpeakers.includes(data?.speaker || '')
                           ? 'text-white bg-primary-50'
-                          : speakerColors[index % 4],
+                          : SPEAKER_COLOR_LIST[index % 4],
                       )}>
                       {data.speaker}
                     </div>
