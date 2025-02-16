@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useGetRecordingSpeakersQuery } from '../../hooks/query/useGetRecordingSpeakersQuery';
+import { useGetRecordingSpeakersQuery } from '../../hooks/query/counselRecording/useGetRecordingSpeakersQuery';
 
 function SelectSpeakerDialog() {
   const { submitSpeakers, recordingStatus } = useRecording();
