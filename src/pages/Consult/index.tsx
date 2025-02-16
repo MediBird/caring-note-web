@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useRecording } from '@/hooks/useRecording';
-import { useGetIsRecordingPopup } from '@/pages/Consult/hooks/query/counselRecording/useGetIsRecordingPopup';
+import { useGetIsRecordingPopupQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetIsRecordingPopupQuery';
 import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
 import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
@@ -117,7 +117,7 @@ export function Index() {
   const { resetRecording } = useRecording();
   const { saveMedicationRecordList } = useMedicationRecordSave();
   const { isSuccess: isSuccessGetIsRecordingPopup, data: isPopup } =
-    useGetIsRecordingPopup(counselSessionId);
+    useGetIsRecordingPopupQuery(counselSessionId);
 
   useEffect(() => {
     resetRecording();

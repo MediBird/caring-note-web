@@ -12,7 +12,7 @@ const selectAICounselSummaryPopUp = async (counselSessionId: string) => {
   return response.data.data?.isPopup || false;
 };
 
-export const useGetIsRecordingPopup = (
+export const useGetIsRecordingPopupQuery = (
   counselSessionId: string | undefined = '',
 ) => {
   const { data, isSuccess } = useQuery({

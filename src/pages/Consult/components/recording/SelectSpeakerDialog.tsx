@@ -17,10 +17,10 @@ import { useParams } from 'react-router-dom';
 import { useGetRecordingSpeakersQuery } from '../../hooks/query/counselRecording/useGetRecordingSpeakersQuery';
 
 function SelectSpeakerDialog() {
-  const { submitSpeakers, recordingStatus } = useRecording();
+  const { counselSessionId } = useParams();
+  const { submitSpeakers, recordingStatus } = useRecording(counselSessionId);
   const [open, setOpen] = useState(false);
   const [selectedSpeakers, setSelectedSpeakers] = useState<string[]>([]);
-  const { counselSessionId } = useParams();
   const { data: speakerList, isSuccess: isSuccessGetSpeakerList } =
     useGetRecordingSpeakersQuery(counselSessionId, recordingStatus);
 
@@ -62,11 +62,11 @@ function SelectSpeakerDialog() {
             <XIcon />
           </DialogClose>
         </DialogHeader>
-        <div className="h-[1px] bg-grayscale-20 mb-4" />
+        <div className="h-[1px] bg-grayscale-20" />
         <DialogDescription
           asChild
           className="flex flex-col items-center m-0 p-0">
-          <>
+          <div>
             {isSuccessGetSpeakerList &&
               speakerList?.map((data, index) => {
                 return (
@@ -95,7 +95,7 @@ function SelectSpeakerDialog() {
                   </div>
                 );
               })}
-          </>
+          </div>
         </DialogDescription>
         <DialogFooter className="flex items-center justify-end m-0 p-5">
           <Button variant="primary" size="md" onClick={handleClickConfirm}>
