@@ -2,10 +2,17 @@ import {
   AddAndUpdateMedicationRecordHistReq,
   SelectCounseleeBaseInformationByCounseleeIdRes,
 } from '@/api/api';
+import Spinner from '@/components/common/Spinner';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useRecording } from '@/hooks/useRecording';
+import { useGetIsRecordingPopup } from '@/pages/Consult/hooks/query/counselRecording/useGetIsRecordingPopup';
+import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
+import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
+import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
+import { useMedicineConsultStore } from '@/store/medicineConsultStore';
+import useMedicineMemoStore from '@/store/medicineMemoStore';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import RecordingDialog from './components/recording/RecordingDialog';
@@ -14,12 +21,6 @@ import DiscardMedicine from './components/tabs/DiscardMedicine';
 import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
 import PastConsult from './components/tabs/PastConsult';
-import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
-import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
-import { useMedicineConsultStore } from '@/store/medicineConsultStore';
-import Spinner from '@/components/common/Spinner';
-import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
-import useMedicineMemoStore from '@/store/medicineMemoStore';
 
 interface InfoItemProps {
   icon: string;
@@ -115,6 +116,8 @@ export function Index() {
   const { medicationRecordList } = useMedicineMemoStore();
   const { resetRecording } = useRecording();
   const { saveMedicationRecordList } = useMedicationRecordSave();
+  const { isSuccess: isSuccessGetIsRecordingPopup, data: isPopup } =
+    useGetIsRecordingPopup(counselSessionId);
 
   useEffect(() => {
     resetRecording();
@@ -194,7 +197,7 @@ export function Index() {
       </Tabs>
 
       {/* 녹음 진행 여부 Dialog */}
-      <RecordingDialog />
+      {isSuccessGetIsRecordingPopup && isPopup && <RecordingDialog />}
     </>
   );
 }
