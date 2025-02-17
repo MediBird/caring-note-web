@@ -77,7 +77,7 @@ export const createColumns = ({
     accessorKey: 'counselorAssign',
     header: () => {
       return (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 relative">
           상담 할당
           <Tooltip
             className="text-grayscale-40"
