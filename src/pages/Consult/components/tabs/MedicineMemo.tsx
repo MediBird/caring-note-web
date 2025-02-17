@@ -93,9 +93,11 @@ const MedicineMemo: React.FC = () => {
 
   const handleDelete = (id: string) => {
     if (id.includes('temp')) {
-      setMedicationRecordList(
-        medicationRecordList.filter((item) => !item.id.includes('temp')),
+      const filteredList = medicationRecordList.filter(
+        (item) => item.id !== id,
       );
+
+      setMedicationRecordList(filteredList);
     } else {
       deleteMedicationRecordListMutation.mutate({
         id,
@@ -103,7 +105,7 @@ const MedicineMemo: React.FC = () => {
       });
     }
   };
-  console.log(medicationRecordList);
+
   return (
     <div className="flex flex-col gap-10">
       <div>
