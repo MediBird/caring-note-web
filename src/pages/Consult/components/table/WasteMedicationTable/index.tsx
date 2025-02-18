@@ -89,9 +89,9 @@ const WasteMedicationTable = ({
 
   const handleDelete = (id: string) => {
     if (id.includes('temp')) {
-      setWasteMedicationList(
-        wasteMedicationList.filter((item) => !item.id.includes('temp')),
-      );
+      const filteredList = wasteMedicationList.filter((item) => item.id !== id);
+
+      setWasteMedicationList(filteredList);
     } else {
       deleteWasteMedicationListMutation.mutate({
         counselSessionId: counselSessionId as string,
@@ -106,14 +106,12 @@ const WasteMedicationTable = ({
     handleSearchEnter,
   });
 
-  const isShowAddTableRowButton = !showTable || !isNone;
-
   return (
     <DataTable
       columns={columns}
       data={wasteMedicationList}
       footer={
-        isShowAddTableRowButton ? (
+        showTable && !isNone ? (
           <AddTableRowButton
             onClickAddButton={() => {
               setWasteMedicationList([

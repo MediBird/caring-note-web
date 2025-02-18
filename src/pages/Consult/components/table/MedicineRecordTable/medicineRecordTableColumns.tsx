@@ -140,7 +140,7 @@ export const createColumns = ({
           <DropdownMenuContent align="end">
             <DropdownMenuItem
               onClick={() => {
-                onDelete(row.original.rowId as string);
+                onDelete(row.original.id as string);
               }}>
               삭제하기
             </DropdownMenuItem>
