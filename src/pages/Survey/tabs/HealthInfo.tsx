@@ -1,4 +1,3 @@
-import CardContainer from '@/components/common/CardContainer';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import TabContentContainer from '@/components/consult/TabContentContainer';

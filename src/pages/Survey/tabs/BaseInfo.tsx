@@ -5,7 +5,6 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import Badge from '@/components/common/Badge';
-import CardContainer from '@/components/common/CardContainer';
 import TabContentContainer from '@/components/consult/TabContentContainer';
 import InfoBlueIcon from '@/assets/icon/24/info.filled.blue.svg';
 import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
@@ -20,6 +19,7 @@ import { useSelectCounselCard } from '@/pages/Survey/hooks/useCounselAssistantQu
 import { BaseInfoDTOHealthInsuranceTypeEnum } from '@/api/api';
 import { useSelectPreviousCounselSessionList } from '@/hooks/useCounselSessionQuery';
 import { formatDate } from '@/function/formatDate';
+import { Card } from '@mui/material';
 
 const BaseInfo = () => {
   //useParams()를 통해 counselSessionId를 가져옴
@@ -304,7 +304,7 @@ const BaseInfo = () => {
       )}
 
       {/* 기본 정보 카드 */}
-      <CardContainer
+      <Card
         title="기본정보"
         variant="grayscale"
         itemName="baseInfo"
@@ -327,7 +327,7 @@ const BaseInfo = () => {
           'lastCounselDate',
           'YYYY-MM-DD 형식으로 입력해주세요.',
         )}
-      </CardContainer>
+      </Card>
 
       {/* 상담 목적 및 특이사항 */}
       <CardContainer
