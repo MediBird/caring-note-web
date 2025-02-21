@@ -1,4 +1,4 @@
-import { CounselAssistantDialogTypes } from '@/pages/Survey/constants/modal';
+import { CounselAssistantDialogTypes } from '@/pages/Survey/{counselsession_id}/constants/modal';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -9,11 +9,11 @@ import {
 } from '@/components/ui/dialog';
 import CloseButton from '@/assets/icon/24/close.outlined.black.svg';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
-import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCounselSurveyStore } from '@/pages/Survey/{counselsession_id}/store/surveyInfoStore';
 import {
   useUpdateCounselSurvey,
   usePostCounselSurvey,
-} from '@/pages/Survey/hooks/useCounselAssistantQuery';
+} from '@/pages/Survey/{counselsession_id}/hooks/useCounselAssistantQuery';
 import {
   AddCounselCardReqCardRecordStatusEnum,
   UpdateCounselCardReqCardRecordStatusEnum,

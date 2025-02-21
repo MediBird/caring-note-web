@@ -13,8 +13,8 @@ import { XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AddCounselCardReqCardRecordStatusEnum } from '@/api/api';
-import { useCounseleeConsentQueryId } from '@/pages/Survey/hooks/useCounselAgreeQuery';
-import UserInfoDialog from '@/pages/Survey/dialogs/userInfo/Index';
+import { useCounseleeConsentQueryId } from '@/pages/Survey/{counselsession_id}/hooks/useCounselAgreeQuery';
+import UserInfoDialog from '@/pages/Survey/{counselsession_id}/dialogs/userInfo/Index';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 
 interface SurveyDialogProps {

@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import TabContentContainer from '@/components/consult/TabContentContainer';
 import { useCallback, useEffect, useMemo } from 'react';
 import { LivingInformationDTO } from '@/api';
-import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCounselSurveyStore } from '@/pages/Survey/{counselsession_id}/store/surveyInfoStore';
 import {
   isAloneTypes,
   isDrinkingTypes,
@@ -14,7 +14,7 @@ import {
   drkingWeeklyCounts,
   dailyEatingTypes,
   exerciseWeeklyCounts,
-} from '@/pages/Survey/constants/livingInfo';
+} from '@/pages/Survey/{counselsession_id}/constants/livingInfo';
 
 type SectionFields = Record<string, string | undefined>;
 type ButtonOption = {

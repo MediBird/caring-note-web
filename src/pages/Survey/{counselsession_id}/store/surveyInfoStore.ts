@@ -7,7 +7,6 @@ import {
 } from '@/api/api';
 import { create } from 'zustand';
 
-// 상담 카드 등록 정보 관련 상태 관리
 export interface CounselSurveyType {
   counselCardId?: string;
   counselSessionId?: string;

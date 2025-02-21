@@ -1,33 +1,59 @@
 import { Button } from '@/components/ui/button';
-import useAssistantInfoTabStore, {
-  AssistantInfoTab,
-} from '@/pages/Survey/store/surveyTabStore';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CounselAssistantDialogTypes } from '../constants/modal';
-import CounselAssistantInfo from '../dialogs/counselSurvey/SaveCounselSurvey';
-import { useSelectCounselCard } from '@/pages/Survey/hooks/useCounselAssistantQuery';
+import { CounselAssistantDialogTypes } from './constants/modal';
 import {
   CounselSurveyType,
   useCounselSurveyStore,
-} from '@/pages/Survey/store/surveyInfoStore';
-import TabTitle from '@/pages/Survey/components/TabTitle';
-import TabContent from '@/pages/Survey/components/TabContent';
+} from '@/pages/Survey/{counselsession_id}/store/surveyInfoStore';
 import { useSelectCounseleedetailInfo } from '@/pages/Counselee/hooks/query/useCounseleeInfoQuery';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
+import HealthInfo from './tabs/HealthInfo';
+import BaseInfo from './tabs/BaseInfo';
+import IndependentInfo from './tabs/IndependentInfo';
+import LivingInfo from './tabs/LivingInfo';
+import { useSelectCounselCard } from './hooks/useCounselAssistantQuery';
+
+
+const SurveyHeader = ({
+  counseleeInfo,
+  isFirstConsult,
+  onTempSave,
+  onComplete,
+}: {
+  counseleeInfo: any;
+  isFirstConsult: boolean;
+  onTempSave: () => void;
+  onComplete: () => void;
+}) => (
+  <div className="bg-white h-fit">
+    <div className="pl-[5.75rem] pr-[9.5rem] pt-12 pb-1 border-b border-grayscale-05 flex justify-between">
+      <div>
+        <div className="text-h3 font-bold">
+          {counseleeInfo?.name}
+          <span className="text-subtitle2 font-bold"> 님</span>
+        </div>
+      </div>
+      <div className="flex gap-3">
+        <Button variant="tertiary" size="xl" onClick={onTempSave}>
+          임시 저장
+        </Button>
+        <Button variant="primary" size="xl" onClick={onComplete}>
+          기록 완료
+        </Button>
+      </div>
+    </div>
+  </div>
+);
 
 const Survey = () => {
-  // useParams()를 통해 counselSessionId를 가져옴
   const { counselSessionId } = useParams();
-  // usecounselSurveyStore에서 counselSurvey, setCounselSurvey 가져옴
   const { setCounselSurvey } = useCounselSurveyStore();
-  // 다이얼로그 타입 상태
   const [dialogType, setDialogType] =
     useState<CounselAssistantDialogTypes>(null);
   // 자립생활 역량 탭 열기 상태
   const [openIndependentInfoTab, setOpenIndependentInfoTab] = useState(false);
-  // 탭 상태 가져오기
-  const { activeTab } = useAssistantInfoTabStore();
   // 내담자 기본 정보 조회
   const { data: counseleeBasicInfo } = useSelectCounseleeInfo(
     counselSessionId ?? '',
@@ -81,52 +107,35 @@ const Survey = () => {
     };
   }, []);
 
-  return (
-    <div>
-      <div className="flex flex-col items-center justify-start w-full px-8 pt-10 pb-3 mb-2 bg-gray-0">
-        <div className="flex flex-row items-center justify-start w-full h-auto pl-6">
-          <div className="flex flex-row items-center justify-start w-full h-8 ">
-            <p className="text-4xl font-black text-black">기초 설문 작성</p>
-          </div>
-          <div className="flex flex-row items-center justify-end w-full h-8 gap-3 pl-6">
-            <Button
-              variant="primary"
-              className="h-12 p-5 bg-primary-10 text-primary-50"
-              onClick={() => openModal('TEMP_SAVE')}>
-              임시저장
-            </Button>
-            <Button
-              variant="primary"
-              className="h-12 p-5"
-              onClick={() => openModal('REGISTER')}>
-              기록완료
-            </Button>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-row items-center justify-start w-full my-0 border-t-2 border-b-2 border-gray-200 h-14 pl-14 border-b-gray-300">
-        <TabTitle text="기본 정보" goPage={AssistantInfoTab.basicInfo} />
-        <TabTitle text="건강 정보" goPage={AssistantInfoTab.healthInfo} />
-        <TabTitle text="생활 정보" goPage={AssistantInfoTab.lifeInfo} />
-        <TabTitle
-          text="자립생활 역량"
-          goPage={AssistantInfoTab.independentInfo}
-          isHidden={!openIndependentInfoTab}
-        />
-      </div>
-      {!isLoading && (
-        <TabContent
-          activeTab={activeTab}
-          openIndependentInfoTab={openIndependentInfoTab}
-        />
-      )}
+  const isFirstConsult = counseleeBasicInfo?.counselCount === 0;
+  const age = `만 ${counseleeBasicInfo?.age}세`;
 
-      <CounselAssistantInfo
-        isOpen={dialogType !== null}
-        dialogType={dialogType}
-        onClose={closeModal}
-      />
-    </div>
+  return (
+    <Tabs defaultValue="baseInfo" className="w-full h-full">
+      <div className="sticky top-0 z-10">
+        <SurveyHeader
+          counseleeInfo={counseleeBasicInfo}
+          isFirstConsult={isFirstConsult}
+          onTempSave={() => openModal('TEMP_SAVE')}
+          onComplete={() => openModal('REGISTER')}
+        />
+      </div>
+
+       <div className="w-full h-full overflow-y-auto mb-100">
+          <TabsContent value="baseInfo">
+            <BaseInfo />
+          </TabsContent>
+          <TabsContent value="healthInfo">
+            <HealthInfo />
+          </TabsContent>
+          <TabsContent value="independentInfo">
+            <IndependentInfo />
+          </TabsContent>
+          <TabsContent value="livingInfo">
+            <LivingInfo />
+          </TabsContent>
+        </div>
+      </Tabs>
   );
 };
 

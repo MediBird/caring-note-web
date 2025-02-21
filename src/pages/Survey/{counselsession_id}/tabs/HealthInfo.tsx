@@ -3,12 +3,12 @@ import { Label } from '@/components/ui/label';
 import TabContentContainer from '@/components/consult/TabContentContainer';
 import { useCallback, useEffect, useMemo } from 'react';
 import { HealthInformationDTO } from '@/api';
-import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCounselSurveyStore } from '@/pages/Survey/{counselsession_id}/store/surveyInfoStore';
 import {
   diseaseList,
   isAllergyTypes,
   isMedicineTypes,
-} from '@/pages/Survey/constants/healthInfo';
+} from '@/pages/Survey/{counselsession_id}/constants/healthInfo';
 import { Textarea } from '@/components/ui/textarea';
 
 type SectionFields = Record<string, string | undefined>;

@@ -9,13 +9,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import InformationUse from '@/pages/Survey/dialogs/userInfo/InformationUse';
-import InformationThirdParties from '@/pages/Survey/dialogs/userInfo/InformationThirdParties';
-import ExpiredMedications from '@/pages/Survey/dialogs/userInfo/ExpiredMedications';
+import InformationUse from '@/pages/Survey/{counselsession_id}/dialogs/userInfo/InformationUse';
+import InformationThirdParties from '@/pages/Survey/{counselsession_id}/dialogs/userInfo/InformationThirdParties';
+import ExpiredMedications from '@/pages/Survey/{counselsession_id}/dialogs/userInfo/ExpiredMedications';
 import {
   useCounseleeConsentQueryId,
   usePostCounselAgree,
-} from '@/pages/Survey/hooks/useCounselAgreeQuery';
+} from '@/pages/Survey/{counselsession_id}/hooks/useCounselAgreeQuery';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 
 type MainDialogTypes = {

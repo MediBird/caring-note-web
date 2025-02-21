@@ -1,6 +1,6 @@
 import useAssistantInfoTabStore, {
   AssistantInfoTab,
-} from '@/pages/Survey/store/surveyTabStore';
+} from '@/pages/Survey/{counselsession_id}/store/surveyTabStore';
 
 const TabTitle = ({
   text,

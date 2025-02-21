@@ -7,15 +7,15 @@ import { Button } from '@/components/ui/button';
 import Badge from '@/components/common/Badge';
 import TabContentContainer from '@/components/consult/TabContentContainer';
 import InfoBlueIcon from '@/assets/icon/24/info.filled.blue.svg';
-import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCounselSurveyStore } from '@/pages/Survey/{counselsession_id}/store/surveyInfoStore';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useSelectCounseleedetailInfo } from '@/pages/Counselee/hooks/query/useCounseleeInfoQuery';
 import {
   insuranceTypes,
   consultationCounts,
   consultationGoals,
-} from '@/pages/Survey/constants/baseInfo';
-import { useSelectCounselCard } from '@/pages/Survey/hooks/useCounselAssistantQuery';
+} from '@/pages/Survey/{counselsession_id}/constants/baseInfo';
+import { useSelectCounselCard } from '@/pages/Survey/{counselsession_id}/hooks/useCounselAssistantQuery';
 import { BaseInfoDTOHealthInsuranceTypeEnum } from '@/api/api';
 import { useSelectPreviousCounselSessionList } from '@/hooks/useCounselSessionQuery';
 import { formatDate } from '@/function/formatDate';

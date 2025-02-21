@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import SurveyNavigationLeft from '@/pages/Survey/components/SurveyNavigationLeft';
+import SurveyNavigationLeft from '@/pages/Survey/{counselsession_id}/components/SurveyNavigationLeft';
 
 const SurveyLayout: React.FC = () => {
   return (

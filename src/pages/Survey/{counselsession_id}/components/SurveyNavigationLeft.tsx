@@ -9,7 +9,7 @@ import HomeBlackIcon from '@/assets/icon/24/home.filled.black.svg?react';
 import HomeBlueIcon from '@/assets/icon/24/home.filled.blue.svg?react';
 import LogoutBlackIcon from '@/assets/icon/24/logout.outline.black.svg?react';
 import logoBlack from '@/assets/logoBlack.png';
-import SurveyNavigationLeftMenu from '@/pages/Survey/components/SurveyNavigationLeftMenu';
+import SurveyNavigationLeftMenu from '@/pages/Survey/{counselsession_id}/components/SurveyNavigationLeftMenu';
 
 const SurveyNavigationLeft = () => {
   const navigate = useNavigate();

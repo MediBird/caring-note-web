@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import TabContentContainer from '@/components/consult/TabContentContainer';
 import { useCallback, useMemo } from 'react';
-import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCounselSurveyStore } from '@/pages/Survey/{counselsession_id}/store/surveyInfoStore';
 import {
   IswalkingTypes,
   walkingTools,
@@ -12,7 +12,7 @@ import {
   hearingTypes,
   communicationTypes,
   usingKoreanTypes,
-} from '@/pages/Survey/constants/IndependentInfo';
+} from '@/pages/Survey/{counselsession_id}/constants/IndependentInfo';
 import { IndependentLifeInformationDTO } from '@/api';
 
 type SectionFields = Record<string, string | undefined>;

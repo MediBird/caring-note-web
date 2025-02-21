@@ -1,8 +1,8 @@
-import { AssistantInfoTab } from '@/pages/Survey/store/surveyTabStore';
-import BaseInfo from '@/pages/Survey/tabs/BaseInfo';
-import IndependentInfo from '@/pages/Survey/tabs/IndependentInfo';
-import HealthInfo from '@/pages/Survey/tabs/HealthInfo';
-import LivingInfo from '@/pages/Survey/tabs/LivingInfo';
+import { AssistantInfoTab } from '@/pages/Survey/{counselsession_id}/store/surveyTabStore';
+import BaseInfo from '@/pages/Survey/{counselsession_id}/tabs/BaseInfo';
+import IndependentInfo from '@/pages/Survey/{counselsession_id}/tabs/IndependentInfo';
+import HealthInfo from '@/pages/Survey/{counselsession_id}/tabs/HealthInfo';
+import LivingInfo from '@/pages/Survey/{counselsession_id}/tabs/LivingInfo';
 
 const TabContent = ({
   activeTab,
