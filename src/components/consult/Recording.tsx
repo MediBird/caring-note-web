@@ -149,9 +149,6 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
                 )}
                 {recordingStatus === RecordingStatus.Stopped && (
                   <>
-                    {/* <Button variant={'secondary'} onClick={resetRecording}>
-                      삭제
-                    </Button> */}
                     <DeleteRecordingDialog />
                     <Button onClick={submitRecording}>저장</Button>
                   </>
