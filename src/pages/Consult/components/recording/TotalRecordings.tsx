@@ -1,3 +1,4 @@
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import { useGetSpeechToTextQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetSpeechToTextQuery';
@@ -21,7 +22,7 @@ const TotalRecordings: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 px-3 py-4 mt-2 max-h-[600px] border-[1px] border-grayscale-30 rounded-[4px] overflow-y-auto ">
+    <ScrollArea className="flex flex-col gap-4 px-3 py-4 mt-2 max-h-[600px] border-[1px] border-grayscale-30 rounded-[4px] overflow-y-auto ">
       {isSuccess &&
         speechToTextList?.map((data, index) => (
           <div
@@ -42,7 +43,7 @@ const TotalRecordings: React.FC = () => {
             </p>
           </div>
         ))}
-    </div>
+    </ScrollArea>
   );
 };
 
