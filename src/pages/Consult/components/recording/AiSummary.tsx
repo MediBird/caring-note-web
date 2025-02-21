@@ -1,3 +1,4 @@
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRecording } from '@/hooks/useRecording';
 import { useGetAiSummaryQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetAiSummaryQuery';
 import React from 'react';
@@ -13,9 +14,9 @@ const AiSummary: React.FC = () => {
   );
 
   return (
-    <div className="mt-2 p-4 h-[600px] border-[1px] border-grayscale-30 rounded-[4px] overflow-y-auto">
+    <ScrollArea className="mt-2 p-4 h-[600px] border-[1px] border-grayscale-30 rounded-[4px]">
       {isSuccess && <ReactMarkDown>{aiSummary?.analysedText}</ReactMarkDown>}
-    </div>
+    </ScrollArea>
   );
 };
 

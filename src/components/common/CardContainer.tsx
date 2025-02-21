@@ -24,10 +24,10 @@ const CardContainer = ({
   title,
   informationName = '',
   itemName,
-  titleIcon = itemName !== 'baseInfo' ? 'clock' : undefined, // 모든 cardContainer에 clock 아이콘이 추가되도록 기획이 수정됨 -> 기본정보에선 없음..
+  titleIcon = itemName !== 'baseInfo' ? 'clock' : undefined,
   children,
 }: CardContainerProps) => {
-  const counselSessionId = 'TEST-COUNSEL-SESSION-01'; // TODO : 다른 곳에서 전달받아야됨
+  const counselSessionId = 'TEST-COUNSEL-SESSION-01';
   const counselCardControllerApi = new CounselCardControllerApi();
 
   const selectPreviousHistoryItemList = async () => {
@@ -97,10 +97,6 @@ const CardContainer = ({
     setIsHistoryModalOpen(true);
   };
 
-  /**
-   * 으아....정녕 이 방법뿐이 없을까...
-   * 근데 방법이 없어...boolean 때문에...
-   */
   const extractItemToString = (item: unknown): string[] => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let itemDto: any;

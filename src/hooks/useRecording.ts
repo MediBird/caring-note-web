@@ -1,12 +1,12 @@
-// import { AICounselSummaryControllerApi } from '@/api';
+import { AICounselSummaryControllerApi } from '@/api';
 import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetRecordingStatusQuery';
 import { useSendSpeakersQuery } from '@/pages/Consult/hooks/query/counselRecording/useSendSpeakersQuery';
 import {
   MediaRecorderStatus,
-  // RecordingFileInfo,
+  RecordingFileInfo,
   RecordingStatus,
 } from '@/types/Recording.enum';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { create } from 'zustand';
 
 // store's state
@@ -58,10 +58,10 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     useRecordingStore();
 
   // api
-  // const aiCounselSummaryControllerApi = useMemo(
-  //   () => new AICounselSummaryControllerApi(),
-  //   [],
-  // );
+  const aiCounselSummaryControllerApi = useMemo(
+    () => new AICounselSummaryControllerApi(),
+    [],
+  );
   const {
     data: getRecordingStatusData,
     isSuccess: isSuccessGetRecordingStatus,
@@ -178,18 +178,16 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
   }, []);
 
   const submitRecording = async () => {
-    // 녹음된 데이터(Blob) 생성
-    // const audioBlob = new Blob(audioChunksRef.current, {
-    //   type: RecordingFileInfo.Type,
-    // });
+    const audioBlob = new Blob(audioChunksRef.current, {
+      type: RecordingFileInfo.Type,
+    });
 
-    // Blob을 File 객체로 변환
-    // const audioFile = new File([audioBlob], RecordingFileInfo.DownloadName, {
-    //   type: RecordingFileInfo.Type,
-    //   lastModified: Date.now(),
-    // });
+    const audioFile = new File([audioBlob], RecordingFileInfo.DownloadName, {
+      type: RecordingFileInfo.Type,
+      lastModified: Date.now(),
+    });
 
-    // TEST : 만들어진 audioFile 다운로드
+    // FOR TEST : 만들어진 audioFile 다운로드
     // const audioUrl = URL.createObjectURL(audioFile);
     // const downloadLink = document.createElement('a');
     // downloadLink.href = audioUrl;
@@ -198,26 +196,22 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     // downloadLink.click();
     // document.body.removeChild(downloadLink);
     // URL.revokeObjectURL(audioUrl);
-    // console.log('=== audioFile ===', audioFile);
 
-    updateRecordingStatus(RecordingStatus.STTCompleted);
-    // BE에서 음성파일 확장자 변환 작업중,, 아래가 맞는 코드
-    // try {
-    //   const response = await aiCounselSummaryControllerApi.convertSpeechToText(
-    //     audioFile,
-    //     { counselSessionId },
-    //   );
-    //   console.log('=== convertSpeechToText ===', response);
+    try {
+      const response = await aiCounselSummaryControllerApi.convertSpeechToText(
+        audioFile,
+        { counselSessionId },
+      );
 
-    //   if (response.status === 200) {
-    //     updateRecordingStatus(RecordingStatus.STTLoading);
-    //   } else {
-    //     updateRecordingStatus(RecordingStatus.Error);
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   updateRecordingStatus(RecordingStatus.Error);
-    // }
+      if (response.status === 200) {
+        updateRecordingStatus(RecordingStatus.STTLoading);
+      } else {
+        updateRecordingStatus(RecordingStatus.Error);
+      }
+    } catch (error) {
+      console.error(error);
+      updateRecordingStatus(RecordingStatus.Error);
+    }
   };
 
   const submitSpeakers = (speakers: string[]) => {

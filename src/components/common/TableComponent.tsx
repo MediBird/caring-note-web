@@ -1,4 +1,4 @@
-import PlusBlueIcon from '@/assets/icon/24/add.outlined.blue.svg?react'; // TODO : Figma에 Blue 아이콘 추가되면 해당 파일로 교체 필요
+import PlusBlueIcon from '@/assets/icon/24/add.outlined.blue.svg?react';
 import { cn } from '@/lib/utils';
 import {
   DataGrid,

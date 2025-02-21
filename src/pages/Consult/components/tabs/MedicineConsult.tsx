@@ -28,25 +28,24 @@ const MedicineConsult: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row">
-      <div className="w-full">
-        <CardHeader>
-          <CardTitle>중재 기록 작성</CardTitle>
-        </CardHeader>
+    <div className="flex flex-col">
+      <CardHeader>
+        <CardTitle>중재 기록 작성</CardTitle>
+      </CardHeader>
+      <div className="flex flex-row w-full space-x-4">
+        <div className="min-w-[600px] flex-1">
+          <GrayContainer
+            title="상담 기록"
+            subTitle="하이라이트 시, 다음 지속 상담에 해당 내용을 가장 먼저 확인할 수 있어요">
+            {isRightNavigationOpen ? <ViewWarningImage /> : <HighlightInput />}
+          </GrayContainer>
+        </div>
 
-        <GrayContainer
-          title="상담 기록"
-          subTitle="하이라이트 시, 다음 지속 상담에 해당 내용을 가장 먼저 확인할 수 있어요">
-          {isRightNavigationOpen ? <ViewWarningImage /> : <HighlightInput />}
-        </GrayContainer>
-
-        <div className="flex items-center justify-center mt-8">
-          {isRightNavigationOpen ? <></> : <Recording />}
+        <div className="flex flex-1 justify-center">
+          {!isRightNavigationOpen && <Recording />}
+          <RecordingResult />
         </div>
       </div>
-
-      {/* 우측 [AI요약, 전체녹음] 탭 */}
-      <RecordingResult className="w-full" />
     </div>
   );
 };

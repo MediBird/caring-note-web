@@ -5,6 +5,7 @@ import Spinner from '@/components/common/Spinner';
 import { Button } from '@/components/ui/button';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
+import DeleteRecordingDialog from '@/pages/Consult/components/recording/DeleteRecordingDialog';
 import SelectSpeakerDialog from '@/pages/Consult/components/recording/SelectSpeakerDialog';
 import { RecordingStatus } from '@/types/Recording.enum';
 import { Circle } from 'lucide-react';
@@ -148,9 +149,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
                 )}
                 {recordingStatus === RecordingStatus.Stopped && (
                   <>
-                    <Button variant={'secondary'} onClick={resetRecording}>
-                      삭제
-                    </Button>
+                    <DeleteRecordingDialog />
                     <Button onClick={submitRecording}>저장</Button>
                   </>
                 )}
