@@ -32,8 +32,8 @@ const MedicineConsult: React.FC = () => {
       <CardHeader>
         <CardTitle>중재 기록 작성</CardTitle>
       </CardHeader>
-      <div className="flex flex-row w-full">
-        <div className="min-w-[600px]">
+      <div className="flex flex-row w-full space-x-4">
+        <div className="min-w-[600px] flex-1">
           <GrayContainer
             title="상담 기록"
             subTitle="하이라이트 시, 다음 지속 상담에 해당 내용을 가장 먼저 확인할 수 있어요">
@@ -41,7 +41,7 @@ const MedicineConsult: React.FC = () => {
           </GrayContainer>
         </div>
 
-        <div className="flex w-full justify-center">
+        <div className="flex flex-1 justify-center">
           {!isRightNavigationOpen && <Recording />}
           <RecordingResult />
         </div>
