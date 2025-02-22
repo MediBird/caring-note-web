@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { AddCounseleeFormData } from '../../components/dialog/CounseleeDialog';
 import { useCounseleeStore } from '../store/counseleeInfoStore';
 import {
   useCreateCounseleeInfo,
