@@ -12,6 +12,7 @@ import {
   AddCounseleeFormData,
   CounseleeDialog,
 } from './dialog/CounseleeDialog';
+import { CounseleeTable } from './table/CounseleeTable';
 
 interface PaginationInfo {
   currentPage: number;
