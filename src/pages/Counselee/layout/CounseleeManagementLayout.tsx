@@ -7,7 +7,7 @@ function CounseleeManagementLayout() {
     <div className="flex justify-start w-full h-auto">
       <NavigationLeft />
 
-      <div className="w-full min-h-screen pr-16">
+      <div className="w-full min-h-screen">
         <Outlet />
       </div>
     </div>
