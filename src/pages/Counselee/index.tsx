@@ -6,8 +6,6 @@ import { CounseleeTableSection } from './components/CounseleeTableSection';
 
 const CounseleeManagement = () => {
   const {
-    page,
-    size,
     data,
     filter,
     filterOptions,
@@ -16,7 +14,7 @@ const CounseleeManagement = () => {
     handleBirthDatesClick,
     handleInstitutionsClick,
     handleDelete,
-    handleEdit,
+    handleUpdate,
     handleCreate,
     setFilter,
   } = useCounseleeManagement();
@@ -60,10 +58,8 @@ const CounseleeManagement = () => {
                   hasNext: data?.pagination?.hasNext ?? false,
                 }}
                 onDelete={handleDelete}
-                onEdit={handleEdit}
+                onUpdate={handleUpdate}
                 onPageChange={handlePageChange}
-                page={page}
-                size={size}
               />
             </div>
           </div>

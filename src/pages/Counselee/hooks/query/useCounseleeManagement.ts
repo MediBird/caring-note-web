@@ -68,18 +68,26 @@ export const useCounseleeManagement = () => {
     [deleteCounseleeInfo, refetch],
   );
 
-  const handleEdit = useCallback((counselee: SelectCounseleeRes) => {
-    // 편집 다이얼로그는 상위 컴포넌트에서 처리
-    return counselee;
-  }, []);
-
   const handleUpdate = useCallback(
     async (formData: AddCounseleeFormData) => {
+      if (!formData.id) {
+        console.error('내담자 ID가 없습니다.');
+        return;
+      }
+
       try {
         await updateCounselee.mutateAsync(
           {
-            counseleeId: formData.id as string,
-            ...formData,
+            counseleeId: formData.id,
+            name: formData.name,
+            phoneNumber: formData.phoneNumber,
+            dateOfBirth: formData.dateOfBirth,
+            genderType: formData.genderType,
+            address: formData.address,
+            note: formData.note,
+            careManagerName: formData.careManagerName,
+            affiliatedWelfareInstitution: formData.affiliatedWelfareInstitution,
+            disability: formData.disability,
           },
           {
             onSuccess: () => {
@@ -122,7 +130,6 @@ export const useCounseleeManagement = () => {
     handleBirthDatesClick,
     handleInstitutionsClick,
     handleDelete,
-    handleEdit,
     handleUpdate,
     handleCreate,
     setFilter,

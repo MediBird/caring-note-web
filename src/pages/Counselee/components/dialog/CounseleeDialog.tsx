@@ -57,6 +57,7 @@ export const CounseleeDialog = ({
   const [formData, setFormData] = useState<AddCounseleeFormData>(() => {
     if (initialData) {
       return {
+        id: initialData.id ?? '',
         name: initialData.name || '',
         dateOfBirth: initialData.dateOfBirth || '',
         genderType: initialData.gender || AddCounseleeReqGenderTypeEnum.Female,
