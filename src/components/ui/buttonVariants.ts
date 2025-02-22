@@ -6,7 +6,7 @@ const buttonVariants = cva(
     variants: {
       size: {
         sm: 'h-6 rounded-md px-3 py-[10px] text-caption1 font-medium',
-        md: 'h-8 rounded-md px-2.5 text-body1 font-bold',
+        md: 'h-8 rounded-md px-2 text-body2 font-bold',
         lg: 'h-10 rounded-md px-5 py-3 text-body1 font-bold',
         xl: 'h-12 rounded-md px-4 text-body1 font-bold',
         icon: 'h-5 w-5',
@@ -28,9 +28,9 @@ const buttonVariants = cva(
         pressed:
           'bg-primary-20 border-primary-40 text-primary-60 hover:bg-primary-10 active:bg-primary-20 active:border-primary-60 disabled:bg-grayscale-10 disabled:border-grayscale-40 disabled:text-grayscale-30 dark:bg-neutral-800 dark:text-neutral-50 dark:hover:bg-neutral-800/80',
         nonpressed:
-          'border border-grayscale-30 bg-grayscale-03 hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:hover:text-neutral-50',
-
-        tertiary: 'bg-primary-10 text-primary-50',
+          'border border-grayscale-30 bg-grayscale-03 text-grayscale-60 hover:border-grayscale-50 hover:bg-grayscale-10 hover:text-grayscale-70',
+        tertiary:
+          'bg-primary-10 border border-primary-40 text-primary-60 hover:bg-primary-30 hover:border-primary-50',
       },
     },
     defaultVariants: {

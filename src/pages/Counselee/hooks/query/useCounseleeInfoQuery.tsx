@@ -4,6 +4,7 @@ import {
   DeleteCounseleeBatchReq,
   DeleteCounseleeBatchRes,
   SelectCounseleeRes,
+  UpdateCounseleeReq,
 } from '@/api/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
@@ -13,6 +14,9 @@ const counseleeInfoControllerApi = new CounseleeControllerApi();
 interface FetchParams {
   page: number;
   size: number;
+  name?: string;
+  birthDates?: string[];
+  affiliatedWelfareInstitutions?: string[];
 }
 // 내담자 목록 조회
 const selectCounseleeList = async (params: FetchParams) => {
@@ -20,6 +24,9 @@ const selectCounseleeList = async (params: FetchParams) => {
   const response = await counseleeInfoControllerApi.selectCounselees(
     params.page,
     params.size,
+    params.name,
+    params.birthDates,
+    params.affiliatedWelfareInstitutions,
   );
   return {
     content: response.data.data?.content as SelectCounseleeRes[],
@@ -43,9 +50,9 @@ export const COUNSEL_SESSION_KEYS = {
 // 실제 사용하는 커스텀 훅
 export const useSelectCounseleeList = (params: FetchParams) => {
   return useQuery({
-    queryKey: COUNSEL_SESSION_KEYS.list(params),
+    queryKey: ['counseleeList', params],
     queryFn: () => selectCounseleeList(params),
-    enabled: !!params,
+    enabled: true,
   });
 };
 
@@ -76,6 +83,20 @@ const createCounseleeInfo = async (counseleeInfo: AddCounseleeReq) => {
 export const useCreateCounseleeInfo = () => {
   return useMutation({
     mutationFn: createCounseleeInfo,
+  });
+};
+
+const updateCounseleeInfo = async (counseleeInfo: UpdateCounseleeReq) => {
+  // 내담자 기본 정보 수정 API 호출
+  const response = await counseleeInfoControllerApi.updateCounselee(
+    counseleeInfo,
+  );
+  return response.data.data as string;
+};
+// 실제 사용하는 커스텀 훅
+export const useUpdateCounseleeInfo = () => {
+  return useMutation({
+    mutationFn: updateCounseleeInfo,
   });
 };
 
