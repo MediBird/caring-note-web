@@ -23,7 +23,6 @@ import { XIcon } from 'lucide-react';
 import { InfoIcon } from '@/components/icon/InfoIcon';
 import { SelectCounseleeRes } from '@/api/api';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { PlusCircle } from 'lucide-react';
 interface AddCounseleeDialogProps {
   onSubmit: (data: AddCounseleeFormData) => void;
   initialData?: SelectCounseleeRes;
