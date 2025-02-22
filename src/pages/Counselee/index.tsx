@@ -3,29 +3,30 @@ import {
   useDeleteCounseleeInfo,
 } from './hooks/query/useCounseleeInfoQuery';
 import { SelectCounseleeRes } from '@/api/api';
-import { CounseleeTable } from './components/table/CounseleeTable';
-import { useEffect, useState } from 'react';
+import { CounseleeTable } from './components/table/counseleeTable';
+import { useState } from 'react';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
+import { Button } from '@/components/ui/button';
 
 const CounseleeManagement = () => {
-  // 페이징 사이즈 상태
+  const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
-  // 내담자 목록 조회
-  const { data: selectCounseleeInfoList, refetch } = useSelectCounseleeList({
-    page: 0,
-    size: 10,
+
+  const { data, refetch } = useSelectCounseleeList({
+    page,
+    size,
   });
 
-  useEffect(() => {
-    if (selectCounseleeInfoList) {
-      // 내담자 목록 사이즈 변경
-      setSize(selectCounseleeInfoList.length);
-    }
-  }, [selectCounseleeInfoList]);
-
-  // page 또는 size 변경 시 데이터 다시 조회
-  useEffect(() => {
-    refetch();
-  }, [size, refetch]);
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
 
   const SurveyHeader = () => (
     <div>
@@ -44,44 +45,88 @@ const CounseleeManagement = () => {
 
   // 메인 컨텐츠 영역
   const MainContent = ({
-    selectCounseleeInfoList,
+    data,
   }: {
-    selectCounseleeInfoList: SelectCounseleeRes[];
+    data: {
+      content: SelectCounseleeRes[];
+      pagination: {
+        totalPages: number;
+        totalElements: number;
+        currentPage: number;
+        hasNext: boolean;
+        hasPrevious: boolean;
+      };
+    };
   }) => {
     const deleteCounseleeInfo = useDeleteCounseleeInfo();
 
     const onDelete = (id: string) => {
-      if (id) {
-        if (window.confirm('정말로 이 내담자를 삭제하시겠습니까?')) {
-          deleteCounseleeInfo.mutate([{ counseleeId: id }], {
-            onSuccess: () => {
-              refetch();
-            },
-            onError: () => {
-              window.alert('내담자 삭제에 실패했습니다.');
-            },
-          });
-        }
+      if (id && window.confirm('정말로 이 내담자를 삭제하시겠습니까?')) {
+        deleteCounseleeInfo.mutate([{ counseleeId: id }], {
+          onSuccess: () => refetch(),
+          onError: () => window.alert('내담자 삭제에 실패했습니다.'),
+        });
       }
     };
 
     return (
-      <div className="w-full h-full bg-grayscale-3 rounded-[0.5rem] items-center flex flex-col p-5">
-        <div className="w-full h-full rounded-[0.5rem] flex justify-between mb-5">
-          <div className="w-full h-[3.125rem]">
-            <div className="text-xl font-bold text-subtitle-2 text-grayscale-90">
-              내담자 정보
-            </div>
-            <div className="text-sm text-body-2 font-medium text-grayscale-60 h-[1.25rem]">
-              복약 상담소를 방문한 내담자의 인적 정보
-            </div>
-          </div>
+      <div className="w-full h-fullrounded-[0.5rem] items-center flex flex-col p-5">
+        <div className="w-full h-full rounded-[0.5rem] flex justify-between pb-5">
+          <div className="w-full"></div>
+          <Button variant="secondary" size="lg">
+            <img
+              src="/src/assets/icon/20/personadd.svg"
+              alt="plus"
+              className="h-5 w-5"
+            />
+            내담자 등록
+          </Button>
         </div>
         <div className="flex flex-col w-full h-full">
-          <CounseleeTable
-            data={selectCounseleeInfoList || []}
-            onDelete={onDelete}
-          />
+          <CounseleeTable data={data.content || []} onDelete={onDelete} />
+          <div className="flex flex-col items-center gap-4 mt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() =>
+                      handlePageChange(data.pagination.currentPage - 1)
+                    }
+                    className={
+                      !data.pagination.hasPrevious
+                        ? 'pointer-events-none opacity-50'
+                        : ''
+                    }
+                  />
+                </PaginationItem>
+                {Array.from({ length: data.pagination.totalPages }).map(
+                  (_, i) => (
+                    <PaginationItem key={i}>
+                      <PaginationLink
+                        onClick={() => handlePageChange(i)}
+                        isActive={data.pagination.currentPage === i}
+                        className="rounded-full w-[30px] h-[30px] font-light flex items-center justify-center"
+                        size="md">
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ),
+                )}
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() =>
+                      handlePageChange(data.pagination.currentPage + 1)
+                    }
+                    className={
+                      !data.pagination.hasNext
+                        ? 'pointer-events-none opacity-50'
+                        : ''
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </div>
       </div>
     );
@@ -96,7 +141,16 @@ const CounseleeManagement = () => {
         <div className="max-w-[120rem]">
           <div className="h-full px-25">
             <MainContent
-              selectCounseleeInfoList={selectCounseleeInfoList || []}
+              data={{
+                content: data?.content || [],
+                pagination: {
+                  totalPages: data?.pagination?.totalPages || 0,
+                  totalElements: data?.pagination?.totalElements || 0,
+                  currentPage: data?.pagination?.currentPage || 0,
+                  hasNext: data?.pagination?.hasNext || false,
+                  hasPrevious: data?.pagination?.hasPrevious || false,
+                },
+              }}
             />
           </div>
         </div>

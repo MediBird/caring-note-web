@@ -21,7 +21,16 @@ const selectCounseleeList = async (params: FetchParams) => {
     params.page,
     params.size,
   );
-  return response.data.data as SelectCounseleeRes[];
+  return {
+    content: response.data.data?.content as SelectCounseleeRes[],
+    pagination: {
+      totalPages: response.data.data?.totalPages,
+      totalElements: response.data.data?.totalElements,
+      currentPage: response.data.data?.currentPage,
+      hasNext: response.data.data?.hasNext,
+      hasPrevious: response.data.data?.hasPrevious,
+    },
+  };
 };
 
 // 쿼리키를 상수로 정의
