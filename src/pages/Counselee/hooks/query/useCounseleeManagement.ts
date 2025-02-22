@@ -11,7 +11,7 @@ import { AddCounseleeFormData } from '../../components/dialog/CounseleeDialog';
 
 export const useCounseleeManagement = () => {
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10);
+  const [size] = useState(10);
   const [searchKeyword, setSearchKeyword] = useState('');
 
   const {

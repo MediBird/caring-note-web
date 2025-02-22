@@ -1,6 +1,5 @@
 import { SelectCounseleeRes } from '@/api/api';
 import { CounseleeTable } from './table/CounseleeTable';
-import { AddCounseleeFormData } from './dialog/CounseleeDialog';
 import {
   Pagination,
   PaginationContent,
