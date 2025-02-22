@@ -951,6 +951,25 @@ export interface CommonResListSelectSpeechToTextRes {
 /**
  * 
  * @export
+ * @interface CommonResListString
+ */
+export interface CommonResListString {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListString
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CommonResListString
+     */
+    'data'?: Array<string>;
+}
+/**
+ * 
+ * @export
  * @interface CommonResSelectAICounselSummaryPopUpRes
  */
 export interface CommonResSelectAICounselSummaryPopUpRes {
@@ -4123,6 +4142,74 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary 연계 기관 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAffiliatedWelfareInstitutions: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/counsel/counselee/affiliated-welfare-institutions`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 등록된 생년월일 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBirthDates: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/counsel/counselee/birth-dates`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary 폐의약품 폐기 정보 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -4529,10 +4616,13 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @summary 내담자 목록 조회
          * @param {number} page 
          * @param {number} size 
+         * @param {string} [name] 
+         * @param {Array<string>} [birthDates] 
+         * @param {Array<string>} [affiliatedWelfareInstitutions] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounselees: async (page: number, size: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        selectCounselees: async (page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'page' is not null or undefined
             assertParamExists('selectCounselees', 'page', page)
             // verify required parameter 'size' is not null or undefined
@@ -4559,6 +4649,18 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 
             if (size !== undefined) {
                 localVarQueryParameter['size'] = size;
+            }
+
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
+
+            if (birthDates) {
+                localVarQueryParameter['birthDates'] = birthDates;
+            }
+
+            if (affiliatedWelfareInstitutions) {
+                localVarQueryParameter['affiliatedWelfareInstitutions'] = affiliatedWelfareInstitutions;
             }
 
 
@@ -5373,6 +5475,30 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary 연계 기관 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAffiliatedWelfareInstitutions(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListString>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAffiliatedWelfareInstitutions(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getAffiliatedWelfareInstitutions']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 등록된 생년월일 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getBirthDates(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListLocalDate>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getBirthDates(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getBirthDates']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary 폐의약품 폐기 정보 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -5509,11 +5635,14 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @summary 내담자 목록 조회
          * @param {number} page 
          * @param {number} size 
+         * @param {string} [name] 
+         * @param {Array<string>} [birthDates] 
+         * @param {Array<string>} [affiliatedWelfareInstitutions] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectCounselees(page: number, size: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounseleePageRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselees(page, size, options);
+        async selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounseleePageRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselees(page, size, name, birthDates, affiliatedWelfareInstitutions, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.selectCounselees']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -5889,6 +6018,24 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary 연계 기관 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAffiliatedWelfareInstitutions(options?: RawAxiosRequestConfig): AxiosPromise<CommonResListString> {
+            return localVarFp.getAffiliatedWelfareInstitutions(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 등록된 생년월일 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBirthDates(options?: RawAxiosRequestConfig): AxiosPromise<CommonResListLocalDate> {
+            return localVarFp.getBirthDates(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary 폐의약품 폐기 정보 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -5995,11 +6142,14 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @summary 내담자 목록 조회
          * @param {number} page 
          * @param {number} size 
+         * @param {string} [name] 
+         * @param {Array<string>} [birthDates] 
+         * @param {Array<string>} [affiliatedWelfareInstitutions] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounselees(page: number, size: number, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounseleePageRes> {
-            return localVarFp.selectCounselees(page, size, options).then((request) => request(axios, basePath));
+        selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounseleePageRes> {
+            return localVarFp.selectCounselees(page, size, name, birthDates, affiliatedWelfareInstitutions, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -6364,6 +6514,28 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
+     * @summary 연계 기관 목록 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getAffiliatedWelfareInstitutions(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getAffiliatedWelfareInstitutions(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 등록된 생년월일 목록 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getBirthDates(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getBirthDates(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary 폐의약품 폐기 정보 조회
      * @param {string} counselSessionId 
      * @param {*} [options] Override http request option.
@@ -6490,12 +6662,15 @@ export class DefaultApi extends BaseAPI {
      * @summary 내담자 목록 조회
      * @param {number} page 
      * @param {number} size 
+     * @param {string} [name] 
+     * @param {Array<string>} [birthDates] 
+     * @param {Array<string>} [affiliatedWelfareInstitutions] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public selectCounselees(page: number, size: number, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).selectCounselees(page, size, options).then((request) => request(this.axios, this.basePath));
+    public selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).selectCounselees(page, size, name, birthDates, affiliatedWelfareInstitutions, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9757,6 +9932,74 @@ export const CounseleeControllerApiAxiosParamCreator = function (configuration?:
         },
         /**
          * 
+         * @summary 연계 기관 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAffiliatedWelfareInstitutions: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/counsel/counselee/affiliated-welfare-institutions`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 등록된 생년월일 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBirthDates: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/counsel/counselee/birth-dates`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary 내담자 상세 정보 조회
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
@@ -9836,10 +10079,13 @@ export const CounseleeControllerApiAxiosParamCreator = function (configuration?:
          * @summary 내담자 목록 조회
          * @param {number} page 
          * @param {number} size 
+         * @param {string} [name] 
+         * @param {Array<string>} [birthDates] 
+         * @param {Array<string>} [affiliatedWelfareInstitutions] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounselees: async (page: number, size: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        selectCounselees: async (page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'page' is not null or undefined
             assertParamExists('selectCounselees', 'page', page)
             // verify required parameter 'size' is not null or undefined
@@ -9866,6 +10112,18 @@ export const CounseleeControllerApiAxiosParamCreator = function (configuration?:
 
             if (size !== undefined) {
                 localVarQueryParameter['size'] = size;
+            }
+
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
+
+            if (birthDates) {
+                localVarQueryParameter['birthDates'] = birthDates;
+            }
+
+            if (affiliatedWelfareInstitutions) {
+                localVarQueryParameter['affiliatedWelfareInstitutions'] = affiliatedWelfareInstitutions;
             }
 
 
@@ -9970,6 +10228,30 @@ export const CounseleeControllerApiFp = function(configuration?: Configuration) 
         },
         /**
          * 
+         * @summary 연계 기관 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAffiliatedWelfareInstitutions(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListString>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAffiliatedWelfareInstitutions(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounseleeControllerApi.getAffiliatedWelfareInstitutions']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 등록된 생년월일 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getBirthDates(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListLocalDate>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getBirthDates(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounseleeControllerApi.getBirthDates']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary 내담자 상세 정보 조회
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
@@ -9999,11 +10281,14 @@ export const CounseleeControllerApiFp = function(configuration?: Configuration) 
          * @summary 내담자 목록 조회
          * @param {number} page 
          * @param {number} size 
+         * @param {string} [name] 
+         * @param {Array<string>} [birthDates] 
+         * @param {Array<string>} [affiliatedWelfareInstitutions] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectCounselees(page: number, size: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounseleePageRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselees(page, size, options);
+        async selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounseleePageRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselees(page, size, name, birthDates, affiliatedWelfareInstitutions, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounseleeControllerApi.selectCounselees']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -10063,6 +10348,24 @@ export const CounseleeControllerApiFactory = function (configuration?: Configura
         },
         /**
          * 
+         * @summary 연계 기관 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAffiliatedWelfareInstitutions(options?: RawAxiosRequestConfig): AxiosPromise<CommonResListString> {
+            return localVarFp.getAffiliatedWelfareInstitutions(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 등록된 생년월일 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBirthDates(options?: RawAxiosRequestConfig): AxiosPromise<CommonResListLocalDate> {
+            return localVarFp.getBirthDates(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary 내담자 상세 정보 조회
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
@@ -10086,11 +10389,14 @@ export const CounseleeControllerApiFactory = function (configuration?: Configura
          * @summary 내담자 목록 조회
          * @param {number} page 
          * @param {number} size 
+         * @param {string} [name] 
+         * @param {Array<string>} [birthDates] 
+         * @param {Array<string>} [affiliatedWelfareInstitutions] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounselees(page: number, size: number, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounseleePageRes> {
-            return localVarFp.selectCounselees(page, size, options).then((request) => request(axios, basePath));
+        selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounseleePageRes> {
+            return localVarFp.selectCounselees(page, size, name, birthDates, affiliatedWelfareInstitutions, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -10150,6 +10456,28 @@ export class CounseleeControllerApi extends BaseAPI {
 
     /**
      * 
+     * @summary 연계 기관 목록 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounseleeControllerApi
+     */
+    public getAffiliatedWelfareInstitutions(options?: RawAxiosRequestConfig) {
+        return CounseleeControllerApiFp(this.configuration).getAffiliatedWelfareInstitutions(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 등록된 생년월일 목록 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounseleeControllerApi
+     */
+    public getBirthDates(options?: RawAxiosRequestConfig) {
+        return CounseleeControllerApiFp(this.configuration).getBirthDates(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary 내담자 상세 정보 조회
      * @param {string} counseleeId 
      * @param {*} [options] Override http request option.
@@ -10177,12 +10505,15 @@ export class CounseleeControllerApi extends BaseAPI {
      * @summary 내담자 목록 조회
      * @param {number} page 
      * @param {number} size 
+     * @param {string} [name] 
+     * @param {Array<string>} [birthDates] 
+     * @param {Array<string>} [affiliatedWelfareInstitutions] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CounseleeControllerApi
      */
-    public selectCounselees(page: number, size: number, options?: RawAxiosRequestConfig) {
-        return CounseleeControllerApiFp(this.configuration).selectCounselees(page, size, options).then((request) => request(this.axios, this.basePath));
+    public selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig) {
+        return CounseleeControllerApiFp(this.configuration).selectCounselees(page, size, name, birthDates, affiliatedWelfareInstitutions, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
