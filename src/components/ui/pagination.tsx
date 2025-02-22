@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { MoreHorizontal } from 'lucide-react';
+import * as React from 'react';
 
-import { cn } from '@/lib/utils';
-import { ButtonProps } from '@/components/ui/button';
-import { buttonVariants } from '@/components/ui/buttonVariants';
 import arrowLeftIcon from '@/assets/icon/16/arrowleft.outlined.black.svg';
 import arrowRightIcon from '@/assets/icon/16/arrowright.outlined.black.svg';
+import { ButtonProps } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/buttonVariants';
+import { cn } from '@/lib/utils';
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav

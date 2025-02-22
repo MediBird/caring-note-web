@@ -1,5 +1,4 @@
 import { SelectCounseleeRes } from '@/api/api';
-import { CounseleeTable } from './table/CounseleeTable';
 import {
   Pagination,
   PaginationContent,
@@ -13,6 +12,7 @@ import {
   AddCounseleeFormData,
   CounseleeDialog,
 } from './dialog/CounseleeDialog';
+import { CounseleeTable } from './table/CounseleeTable';
 
 interface PaginationInfo {
   currentPage: number;
