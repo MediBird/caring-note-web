@@ -4,6 +4,8 @@ import { MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ButtonProps } from '@/components/ui/button';
 import { buttonVariants } from '@/components/ui/buttonVariants';
+import arrowLeftIcon from '@/assets/icon/16/arrowleft.outlined.black.svg';
+import arrowRightIcon from '@/assets/icon/16/arrowright.outlined.black.svg';
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav
@@ -65,18 +67,14 @@ const PaginationPrevious = ({
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
-    aria-label="Go to previous page"
+    aria-label="이전 페이지로 이동"
     size="sm"
     className={cn(
       'gap-1 pl-2.5 h-[30px] font-light flex items-center',
       className,
     )}
     {...props}>
-    <img
-      src="/src/assets/icon/16/arrowleft.outlined.black.svg"
-      alt="previous"
-      className="h-4 w-4"
-    />
+    <img src={arrowLeftIcon} alt="이전" className="h-4 w-4" />
     <span>이전</span>
   </PaginationLink>
 );
@@ -87,7 +85,7 @@ const PaginationNext = ({
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
-    aria-label="Go to next page"
+    aria-label="다음 페이지로 이동"
     size="sm"
     className={cn(
       'gap-1 pr-2.5 h-[30px] font-light flex items-center',
@@ -95,11 +93,7 @@ const PaginationNext = ({
     )}
     {...props}>
     <span>다음</span>
-    <img
-      src="/src/assets/icon/16/arrowright.outlined.black.svg"
-      alt="next"
-      className="h-4 w-4"
-    />
+    <img src={arrowRightIcon} alt="다음" className="h-4 w-4" />
   </PaginationLink>
 );
 PaginationNext.displayName = 'PaginationNext';
