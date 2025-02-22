@@ -1,3 +1,5 @@
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandGroup,
@@ -11,13 +13,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { PlusCircle } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { X } from 'lucide-react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { ChevronDown, ChevronUp, PlusCircle, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface TableFilterOption {
   label: string;

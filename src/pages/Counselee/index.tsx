@@ -1,13 +1,11 @@
-import { CounseleeDialog } from './components/dialog/CounseleeDialog';
-import { useCounseleeManagement } from './hooks/query/useCounseleeManagement';
-import { Header } from './components/Header';
-import { FilterSection } from './components/FilterSection';
 import { CounseleeTableSection } from './components/CounseleeTableSection';
+import { CounseleeDialog } from './components/dialog/CounseleeDialog';
+import { FilterSection } from './components/FilterSection';
+import { Header } from './components/Header';
+import { useCounseleeManagement } from './hooks/query/useCounseleeManagement';
 
 const CounseleeManagement = () => {
   const {
-    page,
-    size,
     data,
     filter,
     filterOptions,
@@ -16,7 +14,7 @@ const CounseleeManagement = () => {
     handleBirthDatesClick,
     handleInstitutionsClick,
     handleDelete,
-    handleEdit,
+    handleUpdate,
     handleCreate,
     setFilter,
   } = useCounseleeManagement();
@@ -60,10 +58,8 @@ const CounseleeManagement = () => {
                   hasNext: data?.pagination?.hasNext ?? false,
                 }}
                 onDelete={handleDelete}
-                onEdit={handleEdit}
+                onUpdate={handleUpdate}
                 onPageChange={handlePageChange}
-                page={page}
-                size={size}
               />
             </div>
           </div>

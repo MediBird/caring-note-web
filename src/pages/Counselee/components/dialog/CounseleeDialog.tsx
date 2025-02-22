@@ -1,16 +1,18 @@
-import { Input } from '@/components/ui/input';
+import { AddCounseleeReqGenderTypeEnum, SelectCounseleeRes } from '@/api/api';
+import personAddIcon from '@/assets/icon/20/personadd.svg';
+import { InfoIcon } from '@/components/icon/InfoIcon';
 import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogClose,
   DialogTrigger,
-  DialogFooter,
 } from '@/components/ui/dialog';
-import { AddCounseleeReqGenderTypeEnum } from '@/api/api';
-import { useState } from 'react';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -20,10 +22,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { XIcon } from 'lucide-react';
-import { InfoIcon } from '@/components/icon/InfoIcon';
-import { SelectCounseleeRes } from '@/api/api';
-import { ButtonGroup } from '@/components/ui/button-group';
-import personAddIcon from '@/assets/icon/20/personadd.svg';
+import { useState } from 'react';
 
 interface AddCounseleeDialogProps {
   onSubmit: (data: AddCounseleeFormData) => void;
@@ -57,6 +56,7 @@ export const CounseleeDialog = ({
   const [formData, setFormData] = useState<AddCounseleeFormData>(() => {
     if (initialData) {
       return {
+        id: initialData.id ?? '',
         name: initialData.name || '',
         dateOfBirth: initialData.dateOfBirth || '',
         genderType: initialData.gender || AddCounseleeReqGenderTypeEnum.Female,

@@ -1,5 +1,4 @@
 import { SelectCounseleeRes } from '@/api/api';
-import { CounseleeTable } from './table/CounseleeTable';
 import {
   Pagination,
   PaginationContent,
@@ -8,6 +7,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import { useState } from 'react';
+import {
+  AddCounseleeFormData,
+  CounseleeDialog,
+} from './dialog/CounseleeDialog';
+import { CounseleeTable } from './table/CounseleeTable';
 
 interface PaginationInfo {
   currentPage: number;
@@ -20,10 +25,8 @@ interface CounseleeTableSectionProps {
   data?: SelectCounseleeRes[];
   pagination?: PaginationInfo;
   onDelete: (id: string) => void;
-  onEdit: (counselee: SelectCounseleeRes) => void;
+  onUpdate: (counselee: AddCounseleeFormData) => void;
   onPageChange: (newPage: number) => void;
-  page: number;
-  size: number;
 }
 
 export const CounseleeTableSection = ({
@@ -35,12 +38,37 @@ export const CounseleeTableSection = ({
     hasNext: false,
   },
   onDelete,
-  onEdit,
+  onUpdate,
   onPageChange,
 }: CounseleeTableSectionProps) => {
+  const [editingCounselee, setEditingCounselee] =
+    useState<SelectCounseleeRes | null>(null);
+
+  const handleEdit = (counselee: SelectCounseleeRes) => {
+    setEditingCounselee(counselee);
+  };
+
+  const handleEditSubmit = (data: AddCounseleeFormData) => {
+    onUpdate(data);
+    setEditingCounselee(null);
+  };
+
   return (
     <div className="w-full">
-      <CounseleeTable data={data ?? []} onDelete={onDelete} onEdit={onEdit} />
+      <CounseleeTable
+        data={data ?? []}
+        onDelete={onDelete}
+        onEdit={handleEdit}
+      />
+      {editingCounselee && (
+        <CounseleeDialog
+          mode="edit"
+          initialData={editingCounselee}
+          onSubmit={handleEditSubmit}
+          open={!!editingCounselee}
+          onOpenChange={(open) => !open && setEditingCounselee(null)}
+        />
+      )}
       <div className="flex justify-center mt-4">
         <Pagination>
           <PaginationContent>

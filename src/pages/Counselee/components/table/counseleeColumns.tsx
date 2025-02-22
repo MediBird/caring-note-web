@@ -1,4 +1,3 @@
-import { ColumnDef } from '@tanstack/react-table';
 import { SelectCounseleeRes } from '@/api/api';
 import {
   DropdownMenu,
@@ -6,6 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
 import { TableCell } from './TableCell';
 
