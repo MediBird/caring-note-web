@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { SelectCounseleeRes } from '@/api/api';
 import { useCounseleeStore } from '../store/counseleeInfoStore';
 import {
   useSelectCounseleeList,
