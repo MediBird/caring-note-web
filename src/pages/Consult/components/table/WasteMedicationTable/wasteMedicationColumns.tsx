@@ -7,9 +7,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import TextInputCell from '@/components/common/DataTable/TextInputCell';
-import SelectCellWithCustomInput from '@/components/common/DataTable/SelectCellWithCustomInput';
-import MedicineSearchCell from '@/components/common/DataTable/MedicineSearchCell';
+import TextInputCell from '@/components/common/DataTable/text-input-cell';
+import MedicineSearchCell from '@/components/common/DataTable/medicine-search-cell';
+import SelectCellWithCustomInput from '@/components/common/DataTable/select-cell-with-custom-input';
 
 export const defaultColumnSizing = {
   size: 400,
@@ -76,7 +76,7 @@ export const createColumns = ({
           initialValue={row.original.disposalReason}
           options={DISPOSAL_REASON_OPTIONS}
           placeholder="폐기 원인을 선택하세요"
-          onValueChange={(value) => {
+          onValueChange={(value: string) => {
             handleUpdateCell(row.original.id, 'disposalReason', value);
           }}
         />

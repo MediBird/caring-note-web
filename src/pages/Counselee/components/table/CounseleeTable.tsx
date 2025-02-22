@@ -1,5 +1,4 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '@/components/common/DataTable/DataTable';
 import { SelectCounseleeRes } from '@/api/api';
 import {
   DropdownMenu,
@@ -8,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Ellipsis } from 'lucide-react';
+import { DataTable } from '@/components/common/DataTable/data-table';
 
 const TableCell = ({ text }: { text: string }) => (
   <div className="text-body-2 font-medium text-grayscale-90 ml-3">{text}</div>

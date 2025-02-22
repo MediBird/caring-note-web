@@ -7,7 +7,7 @@ import {
 } from '@/api/api';
 import { ColumnDef } from '@tanstack/react-table';
 import Tooltip from '@/components/Tooltip';
-import CounselStatusCell from '@/components/common/DataTable/CounselStatusCell';
+import CounselStatusCell from '@/components/common/DataTable/counsel-status-cell';
 
 interface TodayScheduleTableColumnProps {
   onCellClick: (counselSessionId: string) => void;

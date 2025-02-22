@@ -1,5 +1,5 @@
-import { DataTable } from '@/components/common/DataTable/DataTable';
-import AddTableRowButton from '@/components/common/DataTable/AddTableRowButton';
+import { DataTable } from '@/components/common/DataTable/data-table';
+import AddTableRowButton from '@/components/common/DataTable/add-table-row-button';
 import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
 import { useEffect } from 'react';
 import { useDeleteMedicationList } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useDeleteWasteMedicationList';

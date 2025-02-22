@@ -3,7 +3,7 @@ import {
   useDeleteCounseleeInfo,
 } from './hooks/query/useCounseleeInfoQuery';
 import { SelectCounseleeRes } from '@/api/api';
-import { CounseleeTable } from './components/table/counseleeTable';
+import { CounseleeTable } from './components/table/CounseleeTable';
 import { useState } from 'react';
 import {
   Pagination,
