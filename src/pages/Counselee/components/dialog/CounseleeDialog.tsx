@@ -23,6 +23,7 @@ import { XIcon } from 'lucide-react';
 import { InfoIcon } from '@/components/icon/InfoIcon';
 import { SelectCounseleeRes } from '@/api/api';
 import { ButtonGroup } from '@/components/ui/button-group';
+import { PlusCircle } from 'lucide-react';
 
 interface AddCounseleeDialogProps {
   onSubmit: (data: AddCounseleeFormData) => void;
@@ -33,6 +34,7 @@ interface AddCounseleeDialogProps {
 }
 
 export interface AddCounseleeFormData {
+  id?: string;
   name: string;
   dateOfBirth: string;
   genderType: AddCounseleeReqGenderTypeEnum;
@@ -97,7 +99,7 @@ export const CounseleeDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       {mode === 'add' && (
-        <DialogTrigger>
+        <DialogTrigger asChild>
           <Button variant="secondary" size="lg">
             <img
               src="/src/assets/icon/20/personadd.svg"

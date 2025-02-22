@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { memo, useState, useEffect } from 'react';
 import { useRef } from 'react';
 
@@ -31,12 +31,18 @@ export const SearchInput = memo(
       onSearch();
     };
 
+    const handleClear = () => {
+      setLocalValue('');
+      onChange('');
+      onSearch();
+    };
+
     return (
       <div className="relative">
         <button
           type="button"
           onClick={handleSearch}
-          className="absolute h-full w-10 left-3">
+          className="absolute inset-y-0 left-3 flex items-center w-10">
           <Search className="h-5 w-5" />
         </button>
         <Input
@@ -45,8 +51,16 @@ export const SearchInput = memo(
           onChange={handleChange}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           placeholder="내담자 검색..."
-          className="pl-10"
+          className="pl-10 pr-10"
         />
+        {localValue && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="absolute inset-y-0 right-3 flex items-center">
+            <X className="h-5 w-5" />
+          </button>
+        )}
       </div>
     );
   },
