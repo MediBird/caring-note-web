@@ -23,6 +23,8 @@ import { XIcon } from 'lucide-react';
 import { InfoIcon } from '@/components/icon/InfoIcon';
 import { SelectCounseleeRes } from '@/api/api';
 import { ButtonGroup } from '@/components/ui/button-group';
+import personAddIcon from '@/assets/icon/20/personadd.svg';
+
 interface AddCounseleeDialogProps {
   onSubmit: (data: AddCounseleeFormData) => void;
   initialData?: SelectCounseleeRes;
@@ -99,11 +101,7 @@ export const CounseleeDialog = ({
       {mode === 'add' && (
         <DialogTrigger asChild>
           <Button variant="secondary" size="lg">
-            <img
-              src="/src/assets/icon/20/personadd.svg"
-              alt="plus"
-              className="h-5 w-5"
-            />
+            <img src={personAddIcon} alt="내담자 추가" className="h-5 w-5" />
             내담자 등록
           </Button>
         </DialogTrigger>
