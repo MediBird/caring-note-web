@@ -1,6 +1,6 @@
-import MedicineSearchCell from '@/components/common/DataTable/MedicineSearchCell';
-import SelectCell from '@/components/common/DataTable/SelectCell';
-import TextInputCell from '@/components/common/DataTable/TextInputCell';
+import MedicineSearchCell from '@/components/common/DataTable/medicine-search-cell';
+import SelectCell from '@/components/common/DataTable/select-cell';
+import TextInputCell from '@/components/common/DataTable/text-input-cell';
 import DatePickerComponent from '@/components/ui/datepicker';
 import {
   DropdownMenu,

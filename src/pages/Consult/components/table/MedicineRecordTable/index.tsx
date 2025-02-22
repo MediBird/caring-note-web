@@ -1,6 +1,6 @@
 import { SelectMedicationRecordHistResDivisionCodeEnum } from '@/api/api';
-import AddTableRowButton from '@/components/common/DataTable/AddTableRowButton';
-import { DataTable } from '@/components/common/DataTable/DataTable';
+import AddTableRowButton from '@/components/common/DataTable/add-table-row-button';
+import { DataTable } from '@/components/common/DataTable/data-table';
 import { createColumns } from '@/pages/Consult/components/table/MedicineRecordTable/medicineRecordTableColumns';
 import { MedicationRecordListDTO } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordList';
 

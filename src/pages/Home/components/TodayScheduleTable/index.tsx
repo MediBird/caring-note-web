@@ -1,4 +1,4 @@
-import { DataTable } from '@/components/common/DataTable/DataTable';
+import { DataTable } from '@/components/common/DataTable/data-table';
 import { createColumns } from './todayScheduleTableColumn';
 import { SelectCounselSessionListItem } from '@/api/api';
 import { useNavigate } from 'react-router-dom';
