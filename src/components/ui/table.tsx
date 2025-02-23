@@ -93,13 +93,17 @@ TableHead.displayName = 'TableHead';
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+>(({ className, style, ...props }, ref) => (
   <td
     ref={ref}
     className={cn(
-      'align-middle [&:has([role=checkbox])]:pr-0 leading-6 h-12 px-1 break-keep',
+      'align-middle [&:has([role=checkbox])]:pr-0 leading-6 h-12 px-1 break-keep overflow-hidden',
       className,
     )}
+    style={{
+      ...style,
+      maxWidth: style?.width,
+    }}
     {...props}
   />
 ));
@@ -122,11 +126,11 @@ TableCaption.displayName = 'TableCaption';
 
 export {
   Table,
-  TableHeader,
   TableBody,
+  TableCaption,
+  TableCell,
   TableFooter,
   TableHead,
+  TableHeader,
   TableRow,
-  TableCell,
-  TableCaption,
 };

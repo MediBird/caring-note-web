@@ -102,7 +102,7 @@ const TableFilter = ({
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant={open ? 'tertiary' : 'outline'}
           role="combobox"
           size="lg"
           aria-expanded={open}

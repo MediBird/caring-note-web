@@ -15,7 +15,7 @@ export function CounseleeTable({
   onEdit,
 }: CounseleeTableProps) {
   return (
-    <ScrollArea className="max-w-[1000px] w-full">
+    <ScrollArea className="max-w-[1000px] w-[1084px]">
       <DataTable
         columns={createCounseleeColumns({ onDelete, onEdit })}
         data={data}

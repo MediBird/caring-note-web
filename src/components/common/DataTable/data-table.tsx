@@ -84,7 +84,9 @@ export function DataTable<TData, TValue>({
                     key={cell.id}
                     style={{
                       width: cell.column.columnDef.size,
-                    }}>
+                      maxWidth: cell.column.columnDef.size,
+                    }}
+                    className="overflow-hidden">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
