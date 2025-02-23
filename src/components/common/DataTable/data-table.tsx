@@ -18,6 +18,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useState } from 'react';
+import { getCommonPinningStyles } from '@/lib/getTableCellPinningStyle';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,74 +43,93 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
+
     state: {
       sorting,
     },
+    initialState: {
+      columnPinning: { right: ['actions'] },
+    },
+
     sortingFns: SortingFns ?? {},
   });
 
   return (
-    <div className="w-full">
-      <Table className="w-full">
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header, index) => {
-                return (
-                  <TableHead
-                    key={header.id + index}
-                    style={{
-                      width: header.column.columnDef.size,
-                    }}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row, index) => (
-              <TableRow
-                key={row.id + index}
-                data-state={row.getIsSelected() && 'selected'}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    style={{
-                      width: cell.column.columnDef.size,
-                      maxWidth: cell.column.columnDef.size,
-                    }}
-                    className="overflow-hidden">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+    <div className="w-full max-w-[1400px]">
+      <div
+        className="overflow-x-scroll"
+        style={{
+          overflowX: 'scroll',
+        }}>
+        <Table className="w-full min-w-[1020px]">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header, index) => {
+                  return (
+                    <TableHead
+                      key={header.id + index}
+                      style={{
+                        width: header.column.columnDef.size,
+                        ...getCommonPinningStyles({
+                          column: header.column,
+                        }),
+                      }}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="h-12 text-sm text-center text-grayscale-30">
-                기록 내역이 없습니다.
-              </TableCell>
-            </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row, index) => (
+                <TableRow
+                  key={row.id + index}
+                  data-state={row.getIsSelected() && 'selected'}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      style={{
+                        width: cell.column.columnDef.size,
+                        backgroundColor: 'white',
+                        ...getCommonPinningStyles({
+                          column: cell.column,
+                        }),
+                      }}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-12 text-sm text-center text-grayscale-30">
+                  기록 내역이 없습니다.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+          {footer && (
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={columns.length}>{footer}</TableCell>
+              </TableRow>
+            </TableFooter>
           )}
-        </TableBody>
-        {footer && (
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={columns.length}>{footer}</TableCell>
-            </TableRow>
-          </TableFooter>
-        )}
-      </Table>
+        </Table>
+      </div>
     </div>
   );
 }

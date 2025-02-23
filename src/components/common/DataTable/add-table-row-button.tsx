@@ -6,15 +6,15 @@ const AddTableRowButton = ({
   onClickAddButton: () => void;
 }) => {
   return (
-    <div
-      className="flex items-center hover:cursor-pointer gap-[10px]"
+    <span
+      className="inline-flex items-center hover:cursor-pointer gap-[10px] sticky left-1 h-full"
       onClick={onClickAddButton}>
       <PlusBlueIcon
         className="inline-block"
         width={24}
         height={24}></PlusBlueIcon>
       <span className="text-body1 text-primary-50 ">추가하기</span>
-    </div>
+    </span>
   );
 };
 
