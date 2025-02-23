@@ -112,11 +112,7 @@ export const CounseleeDialog = ({
           <DialogTitle>
             {mode === 'add' ? '신규 내담자 등록' : '내담자 정보 수정'}
           </DialogTitle>
-          <DialogDescription className="text-sm text-grayscale-60">
-            {mode === 'add'
-              ? '(*)은 필수 입력 항목입니다.'
-              : '(*)은 필수 입력 항목입니다.'}
-          </DialogDescription>
+          <DialogDescription className="text-sm text-grayscale-60"></DialogDescription>
           <DialogClose
             asChild
             className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6">
@@ -136,6 +132,7 @@ export const CounseleeDialog = ({
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
+                maxLength={30}
               />
             </div>
             <div className="space-y-2">
@@ -145,9 +142,24 @@ export const CounseleeDialog = ({
               <Input
                 placeholder="YYYY-MM-DD"
                 value={formData.dateOfBirth}
-                onChange={(e) =>
-                  setFormData({ ...formData, dateOfBirth: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, '');
+                  let formattedDate = '';
+
+                  if (value.length <= 4) {
+                    formattedDate = value;
+                  } else if (value.length <= 6) {
+                    formattedDate = `${value.slice(0, 4)}-${value.slice(4)}`;
+                  } else {
+                    formattedDate = `${value.slice(0, 4)}-${value.slice(
+                      4,
+                      6,
+                    )}-${value.slice(6, 8)}`;
+                  }
+
+                  setFormData({ ...formData, dateOfBirth: formattedDate });
+                }}
+                maxLength={10}
               />
             </div>
           </div>
@@ -185,9 +197,24 @@ export const CounseleeDialog = ({
               <Input
                 placeholder="000-0000-0000"
                 value={formData.phoneNumber}
-                onChange={(e) =>
-                  setFormData({ ...formData, phoneNumber: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, '');
+                  let formattedNumber = '';
+
+                  if (value.length <= 3) {
+                    formattedNumber = value;
+                  } else if (value.length <= 7) {
+                    formattedNumber = `${value.slice(0, 3)}-${value.slice(3)}`;
+                  } else {
+                    formattedNumber = `${value.slice(0, 3)}-${value.slice(
+                      3,
+                      7,
+                    )}-${value.slice(7, 11)}`;
+                  }
+
+                  setFormData({ ...formData, phoneNumber: formattedNumber });
+                }}
+                maxLength={13}
               />
             </div>
             <div className="space-y-2">
@@ -214,7 +241,7 @@ export const CounseleeDialog = ({
               />
             </div>
             <div className="space-y-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <Label>연계 기관</Label>
                 <TooltipProvider>
                   <Tooltip>
@@ -222,10 +249,15 @@ export const CounseleeDialog = ({
                       <InfoIcon className="h-5 w-5 text-grayscale-50" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      • 사회복지관: 신림, 강감찬
-                      <br />
-                      • 의료기관: 한울
-                      <br />• 연계기관이 없을 경우: 공란으로 처리
+                      <ul className="list-disc marker:text-white pl-5 text-caption1 font-light space-y-0.5">
+                        <li className="ml-[-0.6rem]">
+                          사회복지관: 신림, 강감찬
+                        </li>
+                        <li className="ml-[-0.6rem]">의료기관: 한울</li>
+                        <li className="ml-[-0.6rem]">
+                          연계기관이 없을 경우: 공란으로 처리
+                        </li>
+                      </ul>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -239,6 +271,7 @@ export const CounseleeDialog = ({
                     affiliatedWelfareInstitution: e.target.value,
                   })
                 }
+                maxLength={50}
               />
             </div>
           </div>
@@ -262,11 +295,12 @@ export const CounseleeDialog = ({
           <div className="space-y-2">
             <Label>비고</Label>
             <Textarea
-              placeholder="비고 사항을 입력하세요"
+              placeholder="비고 사항을 입력하세요."
               value={formData.note}
               onChange={(e) =>
                 setFormData({ ...formData, note: e.target.value })
               }
+              maxLength={300}
               className="overflow-hidden text-ellipsis"
               style={{
                 display: '-webkit-box',
