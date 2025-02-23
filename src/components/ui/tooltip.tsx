@@ -17,9 +17,22 @@ const TooltipContent = React.forwardRef<
     ref={ref}
     sideOffset={sideOffset}
     className={cn(
-      'z-50 overflow-visible rounded-md text-caption1 font-medium text-white bg-grayscale-80 py-1 px-2 relative',
-      'after:content-[""] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2',
-      'after:border-[4px] after:border-transparent after:border-t-grayscale-80',
+      'z-50 overflow-visible rounded-md',
+      'bg-grayscale-80',
+      'text-caption1 font-medium text-white',
+      'py-1 px-2 relative shadow-md',
+      'animate-in fade-in-0 zoom-in-95',
+      'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+      'data-[side=bottom]:slide-in-from-top-2',
+      'data-[side=left]:slide-in-from-right-2',
+      'data-[side=right]:slide-in-from-left-2',
+      'data-[side=top]:slide-in-from-bottom-2',
+      'before:absolute before:content-[""]',
+      'before:w-2 before:h-2 before:rotate-45 before:bg-grayscale-80',
+      'data-[side=bottom]:before:-top-1 data-[side=bottom]:before:left-1/2 data-[side=bottom]:before:-translate-x-1/2',
+      'data-[side=top]:before:-bottom-1 data-[side=top]:before:left-1/2 data-[side=top]:before:-translate-x-1/2',
+      'data-[side=left]:before:-right-1 data-[side=left]:before:top-1/2 data-[side=left]:before:-translate-y-1/2',
+      'data-[side=right]:before:-left-1 data-[side=right]:before:top-1/2 data-[side=right]:before:-translate-y-1/2',
       className,
     )}
     {...props}
