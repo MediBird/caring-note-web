@@ -21,7 +21,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from '@/components/ui/tooltip-triangle';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
 

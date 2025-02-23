@@ -27,6 +27,12 @@ const TooltipContent = React.forwardRef<
       'data-[side=left]:slide-in-from-right-2',
       'data-[side=right]:slide-in-from-left-2',
       'data-[side=top]:slide-in-from-bottom-2',
+      'before:absolute before:content-[""]',
+      'before:w-2 before:h-2 before:rotate-45 before:bg-grayscale-80',
+      'data-[side=bottom]:before:-top-1 data-[side=bottom]:before:left-1/2 data-[side=bottom]:before:-translate-x-1/2',
+      'data-[side=top]:before:-bottom-1 data-[side=top]:before:left-1/2 data-[side=top]:before:-translate-x-1/2',
+      'data-[side=left]:before:-right-1 data-[side=left]:before:top-1/2 data-[side=left]:before:-translate-y-1/2',
+      'data-[side=right]:before:-left-1 data-[side=right]:before:top-1/2 data-[side=right]:before:-translate-y-1/2',
       className,
     )}
     {...props}

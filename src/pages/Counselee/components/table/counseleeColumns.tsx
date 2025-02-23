@@ -5,9 +5,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { TableCell } from '@/components/ui/table-cell';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
-import { TableCell } from './TableCell';
 
 export const createCounseleeColumns = ({
   onDelete,
@@ -30,7 +30,7 @@ export const createCounseleeColumns = ({
     id: 'disability',
     accessorKey: 'disability',
     header: '장애여부',
-    size: 95,
+    size: 120,
     cell: ({ row }) => {
       const disability = row.getValue('disability');
       return <TableCell text={disability ? '있음' : '없음'} />;
