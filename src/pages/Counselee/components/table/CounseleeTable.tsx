@@ -1,5 +1,6 @@
 import { SelectCounseleeRes } from '@/api/api';
 import { DataTable } from '@/components/common/DataTable/data-table';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { createCounseleeColumns } from './counseleeColumns';
 
 interface CounseleeTableProps {
@@ -14,9 +15,12 @@ export function CounseleeTable({
   onEdit,
 }: CounseleeTableProps) {
   return (
-    <DataTable
-      columns={createCounseleeColumns({ onDelete, onEdit })}
-      data={data}
-    />
+    <ScrollArea className="max-w-[1000px] w-full">
+      <DataTable
+        columns={createCounseleeColumns({ onDelete, onEdit })}
+        data={data}
+      />
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
   );
 }

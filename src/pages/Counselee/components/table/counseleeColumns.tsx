@@ -43,7 +43,14 @@ export const createCounseleeColumns = ({
     size: 120,
     cell: ({ row }) => {
       const date = new Date(row.getValue('dateOfBirth'));
-      return <TableCell text={date.toISOString().split('T')[0]} />;
+      const formattedDate = date
+        .toISOString()
+        .split('T')[0]
+        .replace(
+          /^(\d{4})-(\d{2})-(\d{2})$/,
+          (_, year, month, day) => `${year.slice(2)}${month}${day}`,
+        );
+      return <TableCell text={formattedDate} />;
     },
   },
   {

@@ -1,6 +1,5 @@
-import { AddCounseleeReqGenderTypeEnum } from '@/api/api';
+import { AddCounseleeReqGenderTypeEnum, DefaultApi } from '@/api/api';
 import { create } from 'zustand';
-import { DefaultApi } from '@/api/api';
 
 // 기본 타입 정의
 export interface CounseleeInfo {
@@ -95,7 +94,10 @@ export const useCounseleeStore = create<CounseleeState>((set) => ({
       const response = await defaultApi.getBirthDates();
       const options =
         response.data.data?.map((date: string) => ({
-          label: date,
+          label: date.replace(
+            /^(\d{4})-(\d{2})-(\d{2})$/,
+            (_, year, month, day) => `${year.slice(2)}${month}${day}`,
+          ),
           value: date,
         })) || [];
 

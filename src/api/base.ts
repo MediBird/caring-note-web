@@ -15,9 +15,10 @@
 import type { Configuration } from './configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
-import globalAxios from 'axios';
 import { keycloak } from '@/app/keycloak';
+import type { AxiosInstance, RawAxiosRequestConfig } from 'axios';
+import globalAxios from 'axios';
+import { handleApiError } from './errorHandler';
 
 export const BASE_PATH = 'https://caringnote.co.kr/api'.replace(/\/+$/, '');
 
@@ -42,13 +43,10 @@ export interface RequestArgs {
   options: RawAxiosRequestConfig;
 }
 
-/**
- *
- * @export
- * @class BaseAPI
- */
 export class BaseAPI {
   protected configuration: Configuration | undefined;
+  private static interceptorsAdded = false;
+  private static errorInterceptorId: number | null = null;
 
   constructor(
     configuration?: Configuration,
@@ -60,27 +58,46 @@ export class BaseAPI {
       this.basePath = configuration.basePath ?? basePath;
     }
 
-    this.axios.interceptors.request.use(async (config) => {
-      // keycloak이 초기화될 때까지 대기
-
-      // 토큰이 만료되었다면 갱신
-      if (keycloak.token && keycloak.isTokenExpired()) {
-        try {
-          await keycloak.updateToken(5);
-        } catch (error) {
-          console.error('Token refresh failed:', error);
+    // 인터셉터가 아직 추가되지 않은 경우에만 추가
+    if (!BaseAPI.interceptorsAdded) {
+      this.axios.interceptors.request.use(async (config) => {
+        if (keycloak.token && keycloak.isTokenExpired()) {
+          try {
+            await keycloak.updateToken(5);
+          } catch (error) {
+            console.error('Token refresh failed:', error);
+          }
         }
+
+        const token = keycloak.token;
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      });
+
+      // 기존 에러 인터셉터 제거
+      if (BaseAPI.errorInterceptorId !== null) {
+        this.axios.interceptors.response.eject(BaseAPI.errorInterceptorId);
       }
 
-      const token = keycloak.token;
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
+      // 새로운 에러 인터셉터 추가
+      BaseAPI.errorInterceptorId = this.axios.interceptors.response.use(
+        (response) => response,
+        (error) => {
+          // 에러가 이미 처리되었는지 확인
+          if (!error.config?.hasBeenHandled) {
+            error.config.hasBeenHandled = true;
+            handleApiError(error);
+          }
+          return Promise.reject(error);
+        },
+      );
+
+      BaseAPI.interceptorsAdded = true;
+    }
   }
 }
-
 /**
  *
  * @export

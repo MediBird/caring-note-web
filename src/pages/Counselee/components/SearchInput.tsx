@@ -37,7 +37,7 @@ export const SearchInput = ({
         value={value}
         onChange={handleChange}
         onKeyDown={(e) => e.key === 'Enter' && onSearch()}
-        placeholder="내담자 검색..."
+        placeholder="내담자 검색"
         className="pl-10 pr-10"
       />
       {value && (
