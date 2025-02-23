@@ -47,7 +47,6 @@ const TableFilter = ({
     externalSelectedValues || [],
   );
   const [searchValue, setSearchValue] = useState('');
-  const [showAllBadges, setShowAllBadges] = useState(false);
 
   useEffect(() => {
     setSelectedValues(externalSelectedValues || []);
@@ -74,15 +73,6 @@ const TableFilter = ({
       onSelectionChange(tempSelectedValues);
       setSearchValue('');
     }
-  };
-
-  const handleRemoveFilter = (valueToRemove: string) => {
-    const newSelectedValues = selectedValues.filter(
-      (value) => value !== valueToRemove,
-    );
-    setSelectedValues(newSelectedValues);
-    setTempSelectedValues(newSelectedValues);
-    onSelectionChange(newSelectedValues);
   };
 
   const handleClear = () => {
