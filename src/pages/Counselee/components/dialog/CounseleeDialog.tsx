@@ -301,12 +301,7 @@ export const CounseleeDialog = ({
                 setFormData({ ...formData, note: e.target.value })
               }
               maxLength={300}
-              className="overflow-hidden text-ellipsis"
-              style={{
-                display: '-webkit-box',
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: 'vertical',
-              }}
+              className="h-[5rem] resize-none overflow-y-auto"
             />
           </div>
         </div>
