@@ -25,7 +25,7 @@ const CounseleeManagement = () => {
         title="내담자 관리"
         description="복약 상담소를 방문하는 모든 내담자의 정보"
       />
-      <div className="flex justify-center pt-10">
+      <div className="flex justify-center pt-5">
         <div className="max-w-[120rem]">
           <div className="h-full px-25">
             <div className="w-full h-full rounded-[0.5rem] items-center flex flex-col p-5">
