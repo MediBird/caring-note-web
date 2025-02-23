@@ -1,12 +1,15 @@
+import { DefaultApi } from '@/api';
+import { useMutation } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { AddCounseleeFormData } from '../../components/dialog/CounseleeDialog';
 import { useCounseleeStore } from '../store/counseleeInfoStore';
 import {
-  useCreateCounseleeInfo,
   useDeleteCounseleeInfo,
   useSelectCounseleeList,
   useUpdateCounseleeInfo,
 } from './useCounseleeInfoQuery';
+
+const api = new DefaultApi();
 
 export const useCounseleeManagement = () => {
   const [page, setPage] = useState(0);
@@ -29,7 +32,13 @@ export const useCounseleeManagement = () => {
     affiliatedWelfareInstitutions: filter.affiliatedWelfareInstitutions,
   });
 
-  const createCounselee = useCreateCounseleeInfo();
+  const createCounselee = useMutation({
+    mutationFn: (data: AddCounseleeFormData) => api.addCounselee(data),
+    retry: false,
+    onError: () => {
+      return;
+    },
+  });
   const updateCounselee = useUpdateCounseleeInfo();
   const deleteCounseleeInfo = useDeleteCounseleeInfo();
 
@@ -60,7 +69,6 @@ export const useCounseleeManagement = () => {
       if (id && window.confirm('정말로 이 내담자를 삭제하시겠습니까?')) {
         deleteCounseleeInfo.mutate([{ counseleeId: id }], {
           onSuccess: () => refetch(),
-          onError: () => window.alert('내담자 삭제에 실패했습니다.'),
         });
       }
     },
@@ -69,35 +77,27 @@ export const useCounseleeManagement = () => {
 
   const handleUpdate = useCallback(
     async (formData: AddCounseleeFormData) => {
-      if (!formData.id) {
-        console.error('내담자 ID가 없습니다.');
-        return;
-      }
+      if (!formData.id) return;
 
-      try {
-        await updateCounselee.mutateAsync(
-          {
-            counseleeId: formData.id,
-            name: formData.name,
-            phoneNumber: formData.phoneNumber,
-            dateOfBirth: formData.dateOfBirth,
-            genderType: formData.genderType,
-            address: formData.address,
-            note: formData.note,
-            careManagerName: formData.careManagerName,
-            affiliatedWelfareInstitution: formData.affiliatedWelfareInstitution,
-            disability: formData.disability,
+      await updateCounselee.mutateAsync(
+        {
+          counseleeId: formData.id,
+          name: formData.name,
+          phoneNumber: formData.phoneNumber,
+          dateOfBirth: formData.dateOfBirth,
+          genderType: formData.genderType,
+          address: formData.address,
+          note: formData.note,
+          careManagerName: formData.careManagerName,
+          affiliatedWelfareInstitution: formData.affiliatedWelfareInstitution,
+          disability: formData.disability,
+        },
+        {
+          onSuccess: () => {
+            refetch();
           },
-          {
-            onSuccess: () => {
-              refetch();
-            },
-          },
-        );
-      } catch (error) {
-        console.error('내담자 수정 실패:', error);
-        throw error;
-      }
+        },
+      );
     },
     [updateCounselee, refetch],
   );
@@ -110,9 +110,8 @@ export const useCounseleeManagement = () => {
             refetch();
           },
         });
-      } catch (error) {
-        console.error('내담자 생성 실패:', error);
-        throw error;
+      } catch {
+        // 에러는 BaseAPI에서 처리하므로 여기서는 아무것도 하지 않음
       }
     },
     [createCounselee, refetch],

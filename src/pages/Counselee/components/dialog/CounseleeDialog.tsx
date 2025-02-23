@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -111,6 +112,11 @@ export const CounseleeDialog = ({
           <DialogTitle>
             {mode === 'add' ? '신규 내담자 등록' : '내담자 정보 수정'}
           </DialogTitle>
+          <DialogDescription className="text-sm text-grayscale-60">
+            {mode === 'add'
+              ? '(*)은 필수 입력 항목입니다.'
+              : '(*)은 필수 입력 항목입니다.'}
+          </DialogDescription>
           <DialogClose
             asChild
             className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6">
