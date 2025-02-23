@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
-import { PlusCircle } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface TableFilterOption {
@@ -107,7 +107,7 @@ const TableFilter = ({
           size="lg"
           aria-expanded={open}
           className="flex items-center gap-2">
-          <PlusCircle className="h-4 w-4" />
+          <ChevronDown className="h-4 w-4" />
           <span>{title}</span>
           {selectedValues.length > 0 && (
             <>
