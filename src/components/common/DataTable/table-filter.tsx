@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
-import { ChevronDown } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface TableFilterOption {
@@ -98,6 +98,18 @@ const TableFilter = ({
     ));
   };
 
+  const renderSelectedContent = () => {
+    if (selectedValues.length === 0) return null;
+    if (selectedValues.length > 2) {
+      return <Badge variant="secondary">{selectedValues.length}개 선택</Badge>;
+    }
+    return selectedOptions.map((option) => (
+      <Badge key={option.value} variant="secondary">
+        {option.label}
+      </Badge>
+    ));
+  };
+
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
@@ -107,7 +119,7 @@ const TableFilter = ({
           size="lg"
           aria-expanded={open}
           className="flex items-center gap-2">
-          <ChevronDown className="h-4 w-4" />
+          <PlusCircle className="h-4 w-4" />
           <span>{title}</span>
           {selectedValues.length > 0 && (
             <>
