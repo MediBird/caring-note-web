@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
-import { ChevronDown, ChevronUp, PlusCircle, X } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface TableFilterOption {
@@ -95,111 +95,93 @@ const TableFilter = ({
   const selectedOptions = options.filter((option) =>
     selectedValues.includes(option.value),
   );
-  const hasMoreBadges = selectedOptions.length > 2;
-  const visibleBadges = showAllBadges
-    ? selectedOptions
-    : selectedOptions.slice(0, 2);
+
+  const renderSelectedContent = () => {
+    if (selectedValues.length === 0) return null;
+    if (selectedValues.length > 2) {
+      return <Badge variant="secondary">{selectedValues.length}개 선택</Badge>;
+    }
+    return selectedOptions.map((option) => (
+      <Badge key={option.value} variant="secondary">
+        {option.label}
+      </Badge>
+    ));
+  };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 border rounded-md p-2">
-      <Popover open={open} onOpenChange={handleOpenChange}>
-        <PopoverTrigger asChild>
-          <Button variant="outline" role="combobox" aria-expanded={open}>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            {title}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
-          <Command>
-            <CommandInput
-              placeholder={title}
-              value={searchValue}
-              onValueChange={setSearchValue}
-            />
-            <CommandList>
-              <CommandGroup>
-                {filteredOptions.map((option) => (
-                  <CommandItem
-                    key={option.value}
-                    onSelect={() => handleSelect(option.value)}>
-                    <div className="flex items-center justify-between w-full">
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={tempSelectedValues.includes(option.value)}
-                          readOnly
-                          className="h-4 w-4"
-                        />
-                        <span>{option.label}</span>
-                      </div>
-                      {option.count !== undefined && (
-                        <span className="ml-auto text-xs text-gray-500">
-                          {option.count}
-                        </span>
-                      )}
+    <Popover open={open} onOpenChange={handleOpenChange}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          size="lg"
+          aria-expanded={open}
+          className="flex items-center gap-2">
+          <PlusCircle className="h-4 w-4" />
+          <span>{title}</span>
+          {selectedValues.length > 0 && (
+            <>
+              <Separator orientation="vertical" className="h-4" />
+              <div className="flex gap-1">{renderSelectedContent()}</div>
+            </>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0" align="start">
+        <Command>
+          <CommandInput
+            placeholder={title}
+            value={searchValue}
+            onValueChange={setSearchValue}
+          />
+          <CommandList>
+            <CommandGroup>
+              {filteredOptions.map((option) => (
+                <CommandItem
+                  key={option.value}
+                  onSelect={() => handleSelect(option.value)}>
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={tempSelectedValues.includes(option.value)}
+                        readOnly
+                        className="h-4 w-4"
+                      />
+                      <span>{option.label}</span>
                     </div>
-                  </CommandItem>
-                ))}
+                    {option.count !== undefined && (
+                      <span className="ml-auto text-xs text-gray-500">
+                        {option.count}
+                      </span>
+                    )}
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            {filteredOptions.length === 0 && (
+              <CommandGroup>
+                <CommandItem className="text-sm text-gray-500 py-2">
+                  검색 결과가 없습니다
+                </CommandItem>
               </CommandGroup>
-              {filteredOptions.length === 0 && (
+            )}
+            {selectedValues.length > 0 && (
+              <>
+                <CommandSeparator />
                 <CommandGroup>
-                  <CommandItem className="text-sm text-gray-500 py-2">
-                    검색 결과가 없습니다
+                  <CommandItem
+                    onSelect={handleClear}
+                    className="justify-center text-sm">
+                    필터 초기화
                   </CommandItem>
                 </CommandGroup>
-              )}
-              {selectedValues.length > 0 && (
-                <>
-                  <CommandSeparator />
-                  <CommandGroup>
-                    <CommandItem
-                      onSelect={handleClear}
-                      className="justify-center text-sm">
-                      필터 초기화
-                    </CommandItem>
-                  </CommandGroup>
-                </>
-              )}
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-      {selectedValues.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
-          <Separator orientation="vertical" className="h-6" />
-          {visibleBadges.map((option) => (
-            <Badge
-              key={option.value}
-              variant="secondary"
-              className="flex items-center gap-1">
-              {option.label}
-              <X
-                className="h-3 w-3 cursor-pointer"
-                onClick={() => handleRemoveFilter(option.value)}
-              />
-            </Badge>
-          ))}
-          {hasMoreBadges && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-6 px-2 text-xs"
-              onClick={() => setShowAllBadges(!showAllBadges)}>
-              {showAllBadges ? (
-                <div className="flex items-center gap-1">
-                  접기 <ChevronUp className="h-3 w-3" />
-                </div>
-              ) : (
-                <div className="flex items-center gap-1">
-                  +{selectedOptions.length - 2}개 더보기{' '}
-                  <ChevronDown className="h-3 w-3" />
-                </div>
-              )}
-            </Button>
-          )}
-        </div>
-      )}
-    </div>
+              </>
+            )}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 };
 

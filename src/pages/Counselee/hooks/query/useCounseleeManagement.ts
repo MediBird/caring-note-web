@@ -47,9 +47,13 @@ export const useCounseleeManagement = () => {
   }, []);
 
   const handleSearch = useCallback(() => {
-    setSearchKeyword(filter.name);
-    setPage(0);
-    refetch();
+    const namePattern = /^[가-힣a-zA-Z\s]*$/;
+
+    if (namePattern.test(filter.name)) {
+      setSearchKeyword(filter.name);
+      setPage(0);
+      refetch();
+    }
   }, [filter.name, refetch]);
 
   const handleBirthDatesClick = useCallback(async () => {

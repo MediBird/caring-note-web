@@ -26,7 +26,6 @@ interface CounseleeTableSectionProps {
   pagination?: PaginationInfo;
   onDelete: (id: string) => void;
   onUpdate: (counselee: AddCounseleeFormData) => void;
-  onUpdate: (counselee: AddCounseleeFormData) => void;
   onPageChange: (newPage: number) => void;
 }
 
@@ -39,7 +38,6 @@ export const CounseleeTableSection = ({
     hasNext: false,
   },
   onDelete,
-  onUpdate,
   onUpdate,
   onPageChange,
 }: CounseleeTableSectionProps) => {
@@ -55,34 +53,8 @@ export const CounseleeTableSection = ({
     setEditingCounselee(null);
   };
 
-  const [editingCounselee, setEditingCounselee] =
-    useState<SelectCounseleeRes | null>(null);
-
-  const handleEdit = (counselee: SelectCounseleeRes) => {
-    setEditingCounselee(counselee);
-  };
-
-  const handleEditSubmit = (data: AddCounseleeFormData) => {
-    onUpdate(data);
-    setEditingCounselee(null);
-  };
-
   return (
     <div className="w-full">
-      <CounseleeTable
-        data={data ?? []}
-        onDelete={onDelete}
-        onEdit={handleEdit}
-      />
-      {editingCounselee && (
-        <CounseleeDialog
-          mode="edit"
-          initialData={editingCounselee}
-          onSubmit={handleEditSubmit}
-          open={!!editingCounselee}
-          onOpenChange={(open) => !open && setEditingCounselee(null)}
-        />
-      )}
       <CounseleeTable
         data={data ?? []}
         onDelete={onDelete}
