@@ -4,12 +4,12 @@ import { Outlet } from 'react-router-dom';
 // 내담자 관리 레이아웃
 function CounseleeManagementLayout() {
   return (
-    <div className="flex justify-start w-full h-auto">
+    <div className="flex w-full h-screen">
       <NavigationLeft />
 
-      <div className="w-full min-h-screen">
+      <main className="flex-1 overflow-auto">
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 }
