@@ -3,16 +3,30 @@ import CollegeMessage from '@/components/CollegeMessage';
 import ConsultCount from '@/components/ConsultCount';
 import { useAuthContext } from '@/context/AuthContext';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
-import { useMemo } from 'react';
-
+import { useMemo, useState } from 'react';
+import CalendarIcon from '@/assets/icon/calendar.svg?react';
 import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
+import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
+import DatePickerComponent from '@/components/ui/datepicker';
+import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
+import { addMonths } from 'date-fns';
 
 function Home() {
   const { user } = useAuthContext();
+  const today = new Date();
+  const thisMonth = addMonths(today, 0);
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedMonth, setSelectedMonth] = useState(thisMonth);
 
   const { data: counselList } = useSelectCounselSessionList({
-    size: 15,
+    baseDate: formatDateToHyphen(selectedDate),
   });
+
+  const { data: counselActiveDate, isLoading: isCounselActiveDateLoading } =
+    useCounselActiveDate({
+      year: selectedMonth.getFullYear(),
+      month: selectedMonth.getMonth() + 1,
+    });
 
   const formattedCounselList = useMemo(() => {
     return counselList?.map((item: SelectCounselSessionListItem) => {
@@ -65,6 +79,22 @@ function Home() {
             <div className="w-full h-auto p-6 bg-white rounded-xl shadow-container">
               <div className="flex items-center justify-between w-full h-10">
                 <span className="text-2xl font-bold">오늘 일정</span>
+                <DatePickerComponent
+                  isLoading={isCounselActiveDateLoading}
+                  trigger={
+                    <button className="text-right flex items-center gap-0.5 text-primary-50 font-bold px-2">
+                      <CalendarIcon />
+                      날짜 선택
+                    </button>
+                  }
+                  initialDate={selectedDate}
+                  selectedMonth={selectedMonth}
+                  onMonthChange={setSelectedMonth}
+                  handleClicked={(date) => {
+                    setSelectedDate(date ?? new Date());
+                  }}
+                  enabledDates={counselActiveDate ?? []}
+                />
               </div>
               <div className="mt-5">
                 <TodayScheduleTable counselList={formattedCounselList ?? []} />

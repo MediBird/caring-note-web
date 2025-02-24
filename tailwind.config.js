@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       screens: {
-        xl: '1440px',
+        fhd: '1920px',
       },
       fontSize: {
         h0: ['3.75rem', '4.125rem'],

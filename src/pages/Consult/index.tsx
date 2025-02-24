@@ -71,22 +71,24 @@ const ConsultHeader = ({
 }) => (
   <div>
     <div className=" bg-white h-fit">
-      <div className="pl-[5.75rem] pr-[9.5rem] pt-12 pb-1 border-b border-grayscale-05 flex justify-between">
-        <div>
-          <div className="text-h3 font-bold">
-            {counseleeInfo?.name}
-            <span className="text-subtitle2 font-bold"> 님</span>
+      <div className="pt-12 pb-1 border-b border-grayscale-05">
+        <div className="flex justify-between max-w-[1584px] px-[92px] [&>*]:max-w-[1400px]  mx-auto w-full">
+          <div>
+            <div className="text-h3 font-bold">
+              {counseleeInfo?.name}
+              <span className="text-subtitle2 font-bold"> 님</span>
+            </div>
+            <div className="mt-3 pl-[7px] flex items-center text-body1 font-medium text-grayscale-60">
+              <InfoItem icon="📍" content={consultStatus} />
+              <InfoItem icon="🎂" content={age} />
+              <InfoItem icon="💊" content={diseases} showDivider={false} />
+            </div>
           </div>
-          <div className="mt-3 pl-[7px] flex items-center text-body1 font-medium text-grayscale-60">
-            <InfoItem icon="📍" content={consultStatus} />
-            <InfoItem icon="🎂" content={age} />
-            <InfoItem icon="💊" content={diseases} showDivider={false} />
-          </div>
+          <HeaderButtons
+            onSave={saveConsult}
+            onComplete={() => console.log('설문 완료')}
+          />
         </div>
-        <HeaderButtons
-          onSave={saveConsult}
-          onComplete={() => console.log('설문 완료')}
-        />
       </div>
       <ConsultTabs />
     </div>
@@ -94,12 +96,14 @@ const ConsultHeader = ({
 );
 
 const ConsultTabs = () => (
-  <TabsList className="w-full flex justify-start pl-[5.75rem] gap-5 border-b border-grayscale-10">
-    <TabsTrigger value="pastConsult">이전 상담 내역</TabsTrigger>
-    <TabsTrigger value="survey">기초 설문 내역</TabsTrigger>
-    <TabsTrigger value="medicine">의약물 기록</TabsTrigger>
-    <TabsTrigger value="note">중재 기록 작성</TabsTrigger>
-    <TabsTrigger value="wasteMedication">폐의약물 기록</TabsTrigger>
+  <TabsList className="w-full border-b border-grayscale-10">
+    <div className="flex gap-5 justify-start max-w-[1584px] px-[92px] [&>*]:max-w-[1400px] mx-auto w-full">
+      <TabsTrigger value="pastConsult">이전 상담 내역</TabsTrigger>
+      <TabsTrigger value="survey">기초 설문 내역</TabsTrigger>
+      <TabsTrigger value="medicine">의약물 기록</TabsTrigger>
+      <TabsTrigger value="note">중재 기록 작성</TabsTrigger>
+      <TabsTrigger value="wasteMedication">폐의약물 기록</TabsTrigger>
+    </div>
   </TabsList>
 );
 

@@ -79,7 +79,7 @@ function MedicineSearchCell<T extends { id: string }>({
         <PopoverTrigger
           asChild
           ref={triggerRef}
-          className="data-[state=open]:shadow-cell-shadow content-center rounded-[8px] bg-transparent data-[state=open]:bg-white h-full">
+          className="data-[state=open]:shadow-cell-shadow border-none content-center rounded-[8px] bg-transparent data-[state=open]:bg-white h-full">
           <div className="w-full h-full">
             <Input
               type="text"
@@ -88,7 +88,7 @@ function MedicineSearchCell<T extends { id: string }>({
               onChange={handleChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
-              className="bg-transparent h-full truncate"
+              className="bg-transparent h-full truncate border-none"
             />
           </div>
         </PopoverTrigger>
