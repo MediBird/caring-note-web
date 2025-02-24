@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 interface FetchParams {
   baseDate?: string;
   cursor?: string;
-  size: number;
+  size?: number;
 }
 
 const counselSessionControllerApi = new CounselSessionControllerApi();
@@ -18,7 +18,7 @@ const selectCounselSessionList = async (params: FetchParams) => {
       params.cursor,
       params.size,
     );
-  return response.data.data;
+  return response.data.data ?? [];
 };
 
 // 쿼리키를 상수로 정의
@@ -42,7 +42,7 @@ const selectPreviousCounselSessionList = async (counselSessionId: string) => {
       counselSessionId,
     );
 
-  return response?.data?.data;
+  return response.data.data ?? [];
 };
 
 export const COUNSEL_SESSION_PREVIOUS_KEYS = {
@@ -52,12 +52,18 @@ export const COUNSEL_SESSION_PREVIOUS_KEYS = {
 } as const;
 
 // 이전 상담 내역 조회 쿼리 훅
-export const useSelectPreviousCounselSessionList = (counselSessionId: string) =>
-  useQuery({
+export const useSelectPreviousCounselSessionList = (
+  counselSessionId: string,
+) => {
+  const { data, isLoading } = useQuery({
     queryKey: COUNSEL_SESSION_PREVIOUS_KEYS.list(counselSessionId),
     queryFn: async () => {
       const data = await selectPreviousCounselSessionList(counselSessionId);
+
       return data ?? []; // undefined 방지 (빈 배열 반환)
     },
     enabled: !!counselSessionId,
   });
+
+  return { data, isLoading };
+};

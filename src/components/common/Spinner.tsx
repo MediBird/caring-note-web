@@ -8,14 +8,12 @@ const Spinner: React.FC<SpinnerProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'mt-4 animate-spin rounded-full border-2 border-primary-50',
+        'mt-4 animate-spin rounded-full border-2 border-primary-50 w-6 h-6',
         className,
       )}
       style={{
         borderTopColor: 'transparent',
         borderRightColor: 'transparent',
-        width: '36px',
-        height: '36px',
         animation: 'spin 1s linear infinite',
       }}
     />

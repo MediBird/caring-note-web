@@ -20,11 +20,12 @@ export const createColumns = ({
     id: 'scheduledTime',
     accessorKey: 'scheduledTime',
     header: '예약 시각',
+    size: 110,
     cell: ({ row }) => {
       const counselSessionId = row.original.counselSessionId;
       return (
         <span
-          className="cursor-pointer w-full h-full inline-block content-center px-3"
+          className="cursor-pointer h-full inline-block content-center px-3"
           onClick={() => {
             onCellClick(counselSessionId ?? '');
           }}>
