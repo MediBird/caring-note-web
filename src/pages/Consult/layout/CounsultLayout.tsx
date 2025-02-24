@@ -6,7 +6,7 @@ function CounsultLayout() {
   return (
     <div className="flex w-full h-screen">
       <NavigationLeft />
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto pr-16">
         <Outlet />
       </main>
       <NavigationRight />
