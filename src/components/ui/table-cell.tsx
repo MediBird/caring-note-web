@@ -36,7 +36,7 @@ export const TableCell = ({ text, width, className }: TableCellProps) => {
           align="start"
           sideOffset={4}
           collisionPadding={20}
-          className="max-w-[400px] break-words z-[99999]">
+          className="max-w-[400px] break-words">
           {text}
         </TooltipContent>
       </Tooltip>
