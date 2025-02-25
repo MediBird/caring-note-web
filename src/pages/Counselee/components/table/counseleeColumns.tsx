@@ -134,6 +134,6 @@ export const createCounseleeColumns = ({
         </DropdownMenu>
       );
     },
-    size: 20,
+    size: 30,
   },
 ];

@@ -43,7 +43,6 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
-
     state: {
       sorting,
     },
@@ -55,7 +54,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full max-w-[1400px]">
+    <div className="w-full max-w-content">
       <div
         className="overflow-x-scroll"
         style={{

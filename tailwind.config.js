@@ -108,6 +108,13 @@ export default {
         container: '0px 0px 20px 0px rgba(0,0,0,0.1)',
         'cell-shadow': '0px 2px 8px 0px #12121233',
       },
+      maxWidth: {
+        layout: '1584px',
+        content: '1400px',
+      },
+      padding: {
+        layout: '92px',
+      },
     },
   },
   safelist: [

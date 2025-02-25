@@ -104,6 +104,7 @@ export const useCounseleeStore = create<CounseleeState>((set) => ({
       set((state) => ({
         filterOptions: {
           ...state.filterOptions,
+
           birthDatesOptions: options,
         },
       }));
