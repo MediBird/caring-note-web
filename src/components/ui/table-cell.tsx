@@ -32,12 +32,14 @@ export const TableCell = ({ text, width, className }: TableCellProps) => {
           </div>
         </TooltipTrigger>
         <TooltipContent
-          side="top"
+          side="bottom"
           align="start"
-          className="max-w-[400px] break-words">
+          sideOffset={4}
+          collisionPadding={20}
+          className="max-w-[400px] break-words z-[99999]">
           {text}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
-}; 
+};
