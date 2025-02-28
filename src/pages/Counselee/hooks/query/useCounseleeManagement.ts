@@ -94,7 +94,7 @@ export const useCounseleeManagement = () => {
           note: formData.note,
           careManagerName: formData.careManagerName,
           affiliatedWelfareInstitution: formData.affiliatedWelfareInstitution,
-          disability: formData.disability,
+          isDisability: formData.disability,
         },
         {
           onSuccess: () => {

@@ -71,20 +71,20 @@ const initialState = {
 export const useCounseleeStore = create<CounseleeState>((set) => ({
   ...initialState,
 
-  setCounseleeInfo: (info) => set({ counseleeInfo: info }),
+  setCounseleeInfo: (info: CounseleeInfo) => set({ counseleeInfo: info }),
 
-  setFilter: (filter) =>
-    set((state) => ({
+  setFilter: (filter: Partial<FilterState>) =>
+    set((state: CounseleeState) => ({
       filter: { ...state.filter, ...filter },
     })),
 
-  setFilterOptions: (options) =>
-    set((state) => ({
+  setFilterOptions: (options: Partial<FilterOptions>) =>
+    set((state: CounseleeState) => ({
       filterOptions: { ...state.filterOptions, ...options },
     })),
 
   clearFilters: () =>
-    set((state) => ({
+    set((state: CounseleeState) => ({
       ...state,
       filter: initialState.filter,
     })),
@@ -101,7 +101,7 @@ export const useCounseleeStore = create<CounseleeState>((set) => ({
           value: date,
         })) || [];
 
-      set((state) => ({
+      set((state: CounseleeState) => ({
         filterOptions: {
           ...state.filterOptions,
 
@@ -123,7 +123,7 @@ export const useCounseleeStore = create<CounseleeState>((set) => ({
           value: institution,
         })) || [];
 
-      set((state) => ({
+      set((state: CounseleeState) => ({
         filterOptions: {
           ...state.filterOptions,
           institutionsOptions: options,
