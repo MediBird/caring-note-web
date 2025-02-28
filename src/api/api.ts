@@ -357,6 +357,12 @@ export interface AddCounseleeReq {
     'address'?: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof AddCounseleeReq
+     */
+    'isDisability'?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof AddCounseleeReq
      */
@@ -373,12 +379,6 @@ export interface AddCounseleeReq {
      * @memberof AddCounseleeReq
      */
     'affiliatedWelfareInstitution'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof AddCounseleeReq
-     */
-    'disability'?: boolean;
 }
 
 export const AddCounseleeReqGenderTypeEnum = {
@@ -1046,6 +1046,25 @@ export interface CommonResSelectCounselCardRes {
 /**
  * 
  * @export
+ * @interface CommonResSelectCounselSessionPageRes
+ */
+export interface CommonResSelectCounselSessionPageRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResSelectCounselSessionPageRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {SelectCounselSessionPageRes}
+     * @memberof CommonResSelectCounselSessionPageRes
+     */
+    'data'?: SelectCounselSessionPageRes;
+}
+/**
+ * 
+ * @export
  * @interface CommonResSelectCounselSessionRes
  */
 export interface CommonResSelectCounselSessionRes {
@@ -1331,6 +1350,25 @@ export interface CommonResUpdateStatusInCounselSessionRes {
 /**
  * 
  * @export
+ * @interface CommonResValidationErrorRes
+ */
+export interface CommonResValidationErrorRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResValidationErrorRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {ValidationErrorRes}
+     * @memberof CommonResValidationErrorRes
+     */
+    'data'?: ValidationErrorRes;
+}
+/**
+ * 
+ * @export
  * @interface CommonResVoid
  */
 export interface CommonResVoid {
@@ -1469,6 +1507,19 @@ export interface CounselSessionStatRes {
 /**
  * 
  * @export
+ * @interface CounselorNameListRes
+ */
+export interface CounselorNameListRes {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CounselorNameListRes
+     */
+    'counselorNames'?: Array<string>;
+}
+/**
+ * 
+ * @export
  * @interface DeleteAICounselSummaryReq
  */
 export interface DeleteAICounselSummaryReq {
@@ -1570,6 +1621,12 @@ export interface DeleteCounseleeConsentRes {
      */
     'deletedCounseleeConsentId'?: string;
 }
+/**
+ * @type DeleteCounselor400Response
+ * @export
+ */
+export type DeleteCounselor400Response = CommonResValidationErrorRes | ErrorRes;
+
 /**
  * 
  * @export
@@ -1958,6 +2015,43 @@ export interface NutritionDTO {
 /**
  * 
  * @export
+ * @interface PageRes
+ */
+export interface PageRes {
+    /**
+     * 
+     * @type {number}
+     * @memberof PageRes
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageRes
+     */
+    'totalElements'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageRes
+     */
+    'currentPage'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageRes
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageRes
+     */
+    'hasPrevious'?: boolean;
+}
+/**
+ * 
+ * @export
  * @interface SearchMedicationByKeywordRes
  */
 export interface SearchMedicationByKeywordRes {
@@ -2148,7 +2242,7 @@ export interface SelectCounselSessionListItem {
      * @type {boolean}
      * @memberof SelectCounselSessionListItem
      */
-    'counselorAssign'?: boolean;
+    'isCounselorAssign'?: boolean;
 }
 
 export const SelectCounselSessionListItemStatusEnum = {
@@ -2167,6 +2261,25 @@ export const SelectCounselSessionListItemCardRecordStatusEnum = {
 
 export type SelectCounselSessionListItemCardRecordStatusEnum = typeof SelectCounselSessionListItemCardRecordStatusEnum[keyof typeof SelectCounselSessionListItemCardRecordStatusEnum];
 
+/**
+ * 
+ * @export
+ * @interface SelectCounselSessionPageRes
+ */
+export interface SelectCounselSessionPageRes {
+    /**
+     * 
+     * @type {Array<SelectCounselSessionListItem>}
+     * @memberof SelectCounselSessionPageRes
+     */
+    'content'?: Array<SelectCounselSessionListItem>;
+    /**
+     * 
+     * @type {PageRes}
+     * @memberof SelectCounselSessionPageRes
+     */
+    'pageInfo'?: PageRes;
+}
 /**
  * 
  * @export
@@ -2370,40 +2483,16 @@ export interface SelectCounseleeConsentByCounseleeIdRes {
 export interface SelectCounseleePageRes {
     /**
      * 
+     * @type {PageRes}
+     * @memberof SelectCounseleePageRes
+     */
+    'pageInfo'?: PageRes;
+    /**
+     * 
      * @type {Array<SelectCounseleeRes>}
      * @memberof SelectCounseleePageRes
      */
     'content'?: Array<SelectCounseleeRes>;
-    /**
-     * 
-     * @type {number}
-     * @memberof SelectCounseleePageRes
-     */
-    'totalPages'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SelectCounseleePageRes
-     */
-    'totalElements'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SelectCounseleePageRes
-     */
-    'currentPage'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SelectCounseleePageRes
-     */
-    'hasNext'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SelectCounseleePageRes
-     */
-    'hasPrevious'?: boolean;
 }
 /**
  * 
@@ -3079,19 +3168,19 @@ export interface UpdateCounseleeReq {
      * @type {string}
      * @memberof UpdateCounseleeReq
      */
-    'name': string;
+    'name'?: string;
     /**
      * 
      * @type {string}
      * @memberof UpdateCounseleeReq
      */
-    'phoneNumber': string;
+    'phoneNumber'?: string;
     /**
      * 
      * @type {string}
      * @memberof UpdateCounseleeReq
      */
-    'dateOfBirth': string;
+    'dateOfBirth'?: string;
     /**
      * 
      * @type {string}
@@ -3104,6 +3193,12 @@ export interface UpdateCounseleeReq {
      * @memberof UpdateCounseleeReq
      */
     'address'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateCounseleeReq
+     */
+    'isDisability'?: boolean;
     /**
      * 
      * @type {string}
@@ -3122,12 +3217,6 @@ export interface UpdateCounseleeReq {
      * @memberof UpdateCounseleeReq
      */
     'affiliatedWelfareInstitution'?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof UpdateCounseleeReq
-     */
-    'disability'?: boolean;
 }
 
 export const UpdateCounseleeReqGenderTypeEnum = {
@@ -3170,6 +3259,76 @@ export interface UpdateCounselorInCounselSessionRes {
      */
     'updatedCounselSessionId'?: string;
 }
+/**
+ * 
+ * @export
+ * @interface UpdateCounselorReq
+ */
+export interface UpdateCounselorReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounselorReq
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounselorReq
+     */
+    'phoneNumber'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounselorReq
+     */
+    'roleType'?: UpdateCounselorReqRoleTypeEnum;
+}
+
+export const UpdateCounselorReqRoleTypeEnum = {
+    Admin: 'ROLE_ADMIN',
+    User: 'ROLE_USER',
+    Assistant: 'ROLE_ASSISTANT',
+    None: 'ROLE_NONE'
+} as const;
+
+export type UpdateCounselorReqRoleTypeEnum = typeof UpdateCounselorReqRoleTypeEnum[keyof typeof UpdateCounselorReqRoleTypeEnum];
+
+/**
+ * 
+ * @export
+ * @interface UpdateCounselorRes
+ */
+export interface UpdateCounselorRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounselorRes
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounselorRes
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounselorRes
+     */
+    'roleType'?: UpdateCounselorResRoleTypeEnum;
+}
+
+export const UpdateCounselorResRoleTypeEnum = {
+    Admin: 'ROLE_ADMIN',
+    User: 'ROLE_USER',
+    Assistant: 'ROLE_ASSISTANT',
+    None: 'ROLE_NONE'
+} as const;
+
+export type UpdateCounselorResRoleTypeEnum = typeof UpdateCounselorResRoleTypeEnum[keyof typeof UpdateCounselorResRoleTypeEnum];
+
 /**
  * 
  * @export
@@ -3249,6 +3408,38 @@ export interface UpdateStatusInCounselSessionRes {
      * @memberof UpdateStatusInCounselSessionRes
      */
     'updatedCounselSessionId'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ValidationError
+ */
+export interface ValidationError {
+    /**
+     * 
+     * @type {string}
+     * @memberof ValidationError
+     */
+    'field'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ValidationError
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ValidationErrorRes
+ */
+export interface ValidationErrorRes {
+    /**
+     * 
+     * @type {Array<ValidationError>}
+     * @memberof ValidationErrorRes
+     */
+    'errors'?: Array<ValidationError>;
 }
 /**
  * 
@@ -4248,6 +4439,69 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary 상담일정 검색 및 필터링
+         * @param {number} page 
+         * @param {number} size 
+         * @param {string} [counseleeNameKeyword] 
+         * @param {Array<string>} [counselorNames] 
+         * @param {Array<string>} [scheduledDates] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchCounselSessions: async (page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('searchCounselSessions', 'page', page)
+            // verify required parameter 'size' is not null or undefined
+            assertParamExists('searchCounselSessions', 'size', size)
+            const localVarPath = `/v1/counsel/session/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+            if (counseleeNameKeyword !== undefined) {
+                localVarQueryParameter['counseleeNameKeyword'] = counseleeNameKeyword;
+            }
+
+            if (counselorNames) {
+                localVarQueryParameter['counselorNames'] = counselorNames;
+            }
+
+            if (scheduledDates) {
+                localVarQueryParameter['scheduledDates'] = scheduledDates;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary 약 검색
          * @param {string} keyword 
          * @param {*} [options] Override http request option.
@@ -5002,6 +5256,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @summary 상담일정 수정
          * @param {UpdateCounselSessionReq} updateCounselSessionReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         updateCounselSession: async (updateCounselSessionReq: UpdateCounselSessionReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -5118,7 +5373,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨. 
+         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨.
          * @summary 상담일정 담당 약사 수정
          * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
          * @param {*} [options] Override http request option.
@@ -5512,6 +5767,23 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary 상담일정 검색 및 필터링
+         * @param {number} page 
+         * @param {number} size 
+         * @param {string} [counseleeNameKeyword] 
+         * @param {Array<string>} [counselorNames] 
+         * @param {Array<string>} [scheduledDates] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounselSessionPageRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.searchCounselSessions']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary 약 검색
          * @param {string} keyword 
          * @param {*} [options] Override http request option.
@@ -5758,6 +6030,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @summary 상담일정 수정
          * @param {UpdateCounselSessionReq} updateCounselSessionReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         async updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResUpdateCounselSessionRes>> {
@@ -5793,7 +6066,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨. 
+         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨.
          * @summary 상담일정 담당 약사 수정
          * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
          * @param {*} [options] Override http request option.
@@ -6046,6 +6319,20 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary 상담일정 검색 및 필터링
+         * @param {number} page 
+         * @param {number} size 
+         * @param {string} [counseleeNameKeyword] 
+         * @param {Array<string>} [counselorNames] 
+         * @param {Array<string>} [scheduledDates] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounselSessionPageRes> {
+            return localVarFp.searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary 약 검색
          * @param {string} keyword 
          * @param {*} [options] Override http request option.
@@ -6238,6 +6525,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @summary 상담일정 수정
          * @param {UpdateCounselSessionReq} updateCounselSessionReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResUpdateCounselSessionRes> {
@@ -6264,7 +6552,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.updateCounseleeConsent(updateCounseleeConsentReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨. 
+         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨.
          * @summary 상담일정 담당 약사 수정
          * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
          * @param {*} [options] Override http request option.
@@ -6548,6 +6836,22 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
+     * @summary 상담일정 검색 및 필터링
+     * @param {number} page 
+     * @param {number} size 
+     * @param {string} [counseleeNameKeyword] 
+     * @param {Array<string>} [counselorNames] 
+     * @param {Array<string>} [scheduledDates] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary 약 검색
      * @param {string} keyword 
      * @param {*} [options] Override http request option.
@@ -6776,6 +7080,7 @@ export class DefaultApi extends BaseAPI {
      * @summary 상담일정 수정
      * @param {UpdateCounselSessionReq} updateCounselSessionReq 
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
@@ -6808,7 +7113,7 @@ export class DefaultApi extends BaseAPI {
     }
 
     /**
-     * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨. 
+     * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨.
      * @summary 상담일정 담당 약사 수정
      * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
      * @param {*} [options] Override http request option.
@@ -8827,6 +9132,69 @@ export const CounselSessionControllerApiAxiosParamCreator = function (configurat
         },
         /**
          * 
+         * @summary 상담일정 검색 및 필터링
+         * @param {number} page 
+         * @param {number} size 
+         * @param {string} [counseleeNameKeyword] 
+         * @param {Array<string>} [counselorNames] 
+         * @param {Array<string>} [scheduledDates] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchCounselSessions: async (page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('searchCounselSessions', 'page', page)
+            // verify required parameter 'size' is not null or undefined
+            assertParamExists('searchCounselSessions', 'size', size)
+            const localVarPath = `/v1/counsel/session/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+            if (counseleeNameKeyword !== undefined) {
+                localVarQueryParameter['counseleeNameKeyword'] = counseleeNameKeyword;
+            }
+
+            if (counselorNames) {
+                localVarQueryParameter['counselorNames'] = counselorNames;
+            }
+
+            if (scheduledDates) {
+                localVarQueryParameter['scheduledDates'] = scheduledDates;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary 상담일정 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -8957,6 +9325,7 @@ export const CounselSessionControllerApiAxiosParamCreator = function (configurat
          * @summary 상담일정 수정
          * @param {UpdateCounselSessionReq} updateCounselSessionReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         updateCounselSession: async (updateCounselSessionReq: UpdateCounselSessionReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -8993,7 +9362,7 @@ export const CounselSessionControllerApiAxiosParamCreator = function (configurat
             };
         },
         /**
-         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨. 
+         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨.
          * @summary 상담일정 담당 약사 수정
          * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
          * @param {*} [options] Override http request option.
@@ -9136,6 +9505,23 @@ export const CounselSessionControllerApiFp = function(configuration?: Configurat
         },
         /**
          * 
+         * @summary 상담일정 검색 및 필터링
+         * @param {number} page 
+         * @param {number} size 
+         * @param {string} [counseleeNameKeyword] 
+         * @param {Array<string>} [counselorNames] 
+         * @param {Array<string>} [scheduledDates] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounselSessionPageRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.searchCounselSessions']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary 상담일정 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -9180,6 +9566,7 @@ export const CounselSessionControllerApiFp = function(configuration?: Configurat
          * @summary 상담일정 수정
          * @param {UpdateCounselSessionReq} updateCounselSessionReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         async updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResUpdateCounselSessionRes>> {
@@ -9189,7 +9576,7 @@ export const CounselSessionControllerApiFp = function(configuration?: Configurat
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨. 
+         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨.
          * @summary 상담일정 담당 약사 수정
          * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
          * @param {*} [options] Override http request option.
@@ -9266,6 +9653,20 @@ export const CounselSessionControllerApiFactory = function (configuration?: Conf
         },
         /**
          * 
+         * @summary 상담일정 검색 및 필터링
+         * @param {number} page 
+         * @param {number} size 
+         * @param {string} [counseleeNameKeyword] 
+         * @param {Array<string>} [counselorNames] 
+         * @param {Array<string>} [scheduledDates] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounselSessionPageRes> {
+            return localVarFp.searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary 상담일정 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -9301,13 +9702,14 @@ export const CounselSessionControllerApiFactory = function (configuration?: Conf
          * @summary 상담일정 수정
          * @param {UpdateCounselSessionReq} updateCounselSessionReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResUpdateCounselSessionRes> {
             return localVarFp.updateCounselSession(updateCounselSessionReq, options).then((request) => request(axios, basePath));
         },
         /**
-         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨. 
+         * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨.
          * @summary 상담일정 담당 약사 수정
          * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
          * @param {*} [options] Override http request option.
@@ -9386,6 +9788,22 @@ export class CounselSessionControllerApi extends BaseAPI {
 
     /**
      * 
+     * @summary 상담일정 검색 및 필터링
+     * @param {number} page 
+     * @param {number} size 
+     * @param {string} [counseleeNameKeyword] 
+     * @param {Array<string>} [counselorNames] 
+     * @param {Array<string>} [scheduledDates] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselSessionControllerApi
+     */
+    public searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig) {
+        return CounselSessionControllerApiFp(this.configuration).searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary 상담일정 조회
      * @param {string} counselSessionId 
      * @param {*} [options] Override http request option.
@@ -9427,6 +9845,7 @@ export class CounselSessionControllerApi extends BaseAPI {
      * @summary 상담일정 수정
      * @param {UpdateCounselSessionReq} updateCounselSessionReq 
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      * @memberof CounselSessionControllerApi
      */
@@ -9435,7 +9854,7 @@ export class CounselSessionControllerApi extends BaseAPI {
     }
 
     /**
-     * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨. 
+     * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨.
      * @summary 상담일정 담당 약사 수정
      * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
      * @param {*} [options] Override http request option.
@@ -10538,6 +10957,78 @@ export class CounseleeControllerApi extends BaseAPI {
 export const CounselorControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * 상담사를 삭제한다.
+         * @summary 상담사 삭제
+         * @param {string} counselorId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCounselor: async (counselorId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselorId' is not null or undefined
+            assertParamExists('deleteCounselor', 'counselorId', counselorId)
+            const localVarPath = `/v1/counselor/{counselorId}`
+                .replace(`{${"counselorId"}}`, encodeURIComponent(String(counselorId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 모든 상담사의 이름 목록을 조회한다. 결과는 캐싱됩니다.
+         * @summary 상담사 이름 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCounselorNames: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/counselor/names`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 내 정보를 조회한다.
          * @summary 내 정보 조회
          * @param {*} [options] Override http request option.
@@ -10571,6 +11062,50 @@ export const CounselorControllerApiAxiosParamCreator = function (configuration?:
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 상담사 정보를 업데이트한다.
+         * @summary 상담사 정보 업데이트
+         * @param {string} counselorId 
+         * @param {UpdateCounselorReq} updateCounselorReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCounselor: async (counselorId: string, updateCounselorReq: UpdateCounselorReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselorId' is not null or undefined
+            assertParamExists('updateCounselor', 'counselorId', counselorId)
+            // verify required parameter 'updateCounselorReq' is not null or undefined
+            assertParamExists('updateCounselor', 'updateCounselorReq', updateCounselorReq)
+            const localVarPath = `/v1/counselor/{counselorId}`
+                .replace(`{${"counselorId"}}`, encodeURIComponent(String(counselorId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateCounselorReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -10582,6 +11117,31 @@ export const CounselorControllerApiFp = function(configuration?: Configuration) 
     const localVarAxiosParamCreator = CounselorControllerApiAxiosParamCreator(configuration)
     return {
         /**
+         * 상담사를 삭제한다.
+         * @summary 상담사 삭제
+         * @param {string} counselorId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteCounselor(counselorId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCounselor(counselorId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.deleteCounselor']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 모든 상담사의 이름 목록을 조회한다. 결과는 캐싱됩니다.
+         * @summary 상담사 이름 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCounselorNames(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CounselorNameListRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCounselorNames(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.getCounselorNames']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * 내 정보를 조회한다.
          * @summary 내 정보 조회
          * @param {*} [options] Override http request option.
@@ -10591,6 +11151,20 @@ export const CounselorControllerApiFp = function(configuration?: Configuration) 
             const localVarAxiosArgs = await localVarAxiosParamCreator.getMyInfo(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.getMyInfo']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 상담사 정보를 업데이트한다.
+         * @summary 상담사 정보 업데이트
+         * @param {string} counselorId 
+         * @param {UpdateCounselorReq} updateCounselorReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateCounselor(counselorId: string, updateCounselorReq: UpdateCounselorReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateCounselorRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCounselor(counselorId, updateCounselorReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.updateCounselor']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -10604,6 +11178,25 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
     const localVarFp = CounselorControllerApiFp(configuration)
     return {
         /**
+         * 상담사를 삭제한다.
+         * @summary 상담사 삭제
+         * @param {string} counselorId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteCounselor(counselorId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteCounselor(counselorId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 모든 상담사의 이름 목록을 조회한다. 결과는 캐싱됩니다.
+         * @summary 상담사 이름 목록 조회
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCounselorNames(options?: RawAxiosRequestConfig): AxiosPromise<CounselorNameListRes> {
+            return localVarFp.getCounselorNames(options).then((request) => request(axios, basePath));
+        },
+        /**
          * 내 정보를 조회한다.
          * @summary 내 정보 조회
          * @param {*} [options] Override http request option.
@@ -10611,6 +11204,17 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
          */
         getMyInfo(options?: RawAxiosRequestConfig): AxiosPromise<GetCounselorRes> {
             return localVarFp.getMyInfo(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 상담사 정보를 업데이트한다.
+         * @summary 상담사 정보 업데이트
+         * @param {string} counselorId 
+         * @param {UpdateCounselorReq} updateCounselorReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCounselor(counselorId: string, updateCounselorReq: UpdateCounselorReq, options?: RawAxiosRequestConfig): AxiosPromise<UpdateCounselorRes> {
+            return localVarFp.updateCounselor(counselorId, updateCounselorReq, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -10623,6 +11227,29 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
  */
 export class CounselorControllerApi extends BaseAPI {
     /**
+     * 상담사를 삭제한다.
+     * @summary 상담사 삭제
+     * @param {string} counselorId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselorControllerApi
+     */
+    public deleteCounselor(counselorId: string, options?: RawAxiosRequestConfig) {
+        return CounselorControllerApiFp(this.configuration).deleteCounselor(counselorId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 모든 상담사의 이름 목록을 조회한다. 결과는 캐싱됩니다.
+     * @summary 상담사 이름 목록 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselorControllerApi
+     */
+    public getCounselorNames(options?: RawAxiosRequestConfig) {
+        return CounselorControllerApiFp(this.configuration).getCounselorNames(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * 내 정보를 조회한다.
      * @summary 내 정보 조회
      * @param {*} [options] Override http request option.
@@ -10631,6 +11258,19 @@ export class CounselorControllerApi extends BaseAPI {
      */
     public getMyInfo(options?: RawAxiosRequestConfig) {
         return CounselorControllerApiFp(this.configuration).getMyInfo(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 상담사 정보를 업데이트한다.
+     * @summary 상담사 정보 업데이트
+     * @param {string} counselorId 
+     * @param {UpdateCounselorReq} updateCounselorReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselorControllerApi
+     */
+    public updateCounselor(counselorId: string, updateCounselorReq: UpdateCounselorReq, options?: RawAxiosRequestConfig) {
+        return CounselorControllerApiFp(this.configuration).updateCounselor(counselorId, updateCounselorReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -11506,111 +12146,6 @@ export class MedicationRecordHistControllerApi extends BaseAPI {
      */
     public selectMedicationRecordListBySessionId1(counselSessionId: string, options?: RawAxiosRequestConfig) {
         return MedicationRecordHistControllerApiFp(this.configuration).selectMedicationRecordListBySessionId1(counselSessionId, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * SampleControllerApi - axios parameter creator
- * @export
- */
-export const SampleControllerApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        auth: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/sample/v1/auth`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * SampleControllerApi - functional programming interface
- * @export
- */
-export const SampleControllerApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = SampleControllerApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        async auth(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.auth(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['SampleControllerApi.auth']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * SampleControllerApi - factory interface
- * @export
- */
-export const SampleControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = SampleControllerApiFp(configuration)
-    return {
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        auth(options?: RawAxiosRequestConfig): AxiosPromise<string> {
-            return localVarFp.auth(options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * SampleControllerApi - object-oriented interface
- * @export
- * @class SampleControllerApi
- * @extends {BaseAPI}
- */
-export class SampleControllerApi extends BaseAPI {
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @deprecated
-     * @throws {RequiredError}
-     * @memberof SampleControllerApi
-     */
-    public auth(options?: RawAxiosRequestConfig) {
-        return SampleControllerApiFp(this.configuration).auth(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

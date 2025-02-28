@@ -29,11 +29,11 @@ const selectCounseleeList = async (params: FetchParams) => {
   return {
     content: response.data.data?.content as SelectCounseleeRes[],
     pagination: {
-      totalPages: response.data.data?.totalPages,
-      totalElements: response.data.data?.totalElements,
-      currentPage: response.data.data?.currentPage,
-      hasNext: response.data.data?.hasNext,
-      hasPrevious: response.data.data?.hasPrevious,
+      totalPages: response.data.data?.pageInfo?.totalPages,
+      totalElements: response.data.data?.pageInfo?.totalElements,
+      currentPage: response.data.data?.pageInfo?.currentPage,
+      hasNext: response.data.data?.pageInfo?.hasNext,
+      hasPrevious: response.data.data?.pageInfo?.hasPrevious,
     },
   };
 };
