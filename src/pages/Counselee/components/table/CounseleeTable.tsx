@@ -1,6 +1,5 @@
 import { SelectCounseleeRes } from '@/api/api';
 import { DataTable } from '@/components/common/DataTable/data-table';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { createCounseleeColumns } from './counseleeColumns';
 
 interface CounseleeTableProps {
