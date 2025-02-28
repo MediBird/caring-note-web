@@ -54,81 +54,72 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full max-w-content">
-      <div
-        className="overflow-x-scroll"
-        style={{
-          overflowX: 'scroll',
-        }}>
-        <Table className="w-full min-w-[1020px]">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header, index) => {
-                  return (
-                    <TableHead
-                      key={header.id + index}
-                      style={{
-                        width: header.column.columnDef.size,
-                        ...getCommonPinningStyles({
-                          column: header.column,
-                        }),
-                      }}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
+    <div className="w-full max-w-content overflow-hidden border border-1 border-grayscale-10 rounded-[12px] bg-white">
+      <Table className="w-full min-w-[1020px]">
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header, index) => {
+                return (
+                  <TableHead
+                    key={header.id + index}
+                    style={{
+                      width: header.column.columnDef.size,
+                      ...getCommonPinningStyles({
+                        column: header.column,
+                      }),
+                    }}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row, index) => (
+              <TableRow
+                key={row.id + index}
+                data-state={row.getIsSelected() && 'selected'}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell
+                    key={cell.id}
+                    style={{
+                      width: cell.column.columnDef.size,
+                      backgroundColor: 'white',
+                      ...getCommonPinningStyles({
+                        column: cell.column,
+                      }),
+                    }}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
               </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, index) => (
-                <TableRow
-                  key={row.id + index}
-                  data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      style={{
-                        width: cell.column.columnDef.size,
-                        backgroundColor: 'white',
-                        ...getCommonPinningStyles({
-                          column: cell.column,
-                        }),
-                      }}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-12 text-sm text-center text-grayscale-30">
-                  기록 내역이 없습니다.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-          {footer && (
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={columns.length}>{footer}</TableCell>
-              </TableRow>
-            </TableFooter>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="h-12 text-sm text-center text-grayscale-30">
+                기록 내역이 없습니다.
+              </TableCell>
+            </TableRow>
           )}
-        </Table>
-      </div>
+        </TableBody>
+        {footer && (
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={columns.length}>{footer}</TableCell>
+            </TableRow>
+          </TableFooter>
+        )}
+      </Table>
     </div>
   );
 }
