@@ -30,7 +30,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ['react', 'react-dom'],
-          mui: ['@mui/material', '@mui/x-data-grid'],
           radix: [
             '@radix-ui/react-checkbox',
             '@radix-ui/react-dialog',

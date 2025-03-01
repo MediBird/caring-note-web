@@ -8,7 +8,6 @@ import ErrorPage from '@/pages/ErrorPage';
 import Home from '@/pages/Home';
 import Layout from '@/pages/Layout';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
-import SurveyList from '@/pages/Survey/Index';
 
 type AppRouteObject = RouteObject & {
   children?: AppRouteObject[];
@@ -52,10 +51,6 @@ const Routes = () => {
     path: '/survey',
     element: <SurveyLayout />,
     children: [
-      {
-        path: '',
-        element: <SurveyList />,
-      },
       {
         path: ':counselSessionId',
         element: <Survey />,
