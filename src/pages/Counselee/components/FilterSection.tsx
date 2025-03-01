@@ -1,5 +1,5 @@
 import TableFilter from '@/components/common/DataTable/table-filter';
-import { SearchInput } from './SearchInput';
+import { SearchInput } from '../../../components/common/CounseleeSearchInput';
 
 interface FilterSectionProps {
   nameFilter: string;
@@ -11,8 +11,6 @@ interface FilterSectionProps {
   setInstitutionsFilter: (value: string[]) => void;
   birthDatesOptions: { label: string; value: string }[];
   institutionsOptions: { label: string; value: string }[];
-  onBirthDatesClick: () => void;
-  onInstitutionsClick: () => void;
 }
 
 export const FilterSection = ({
@@ -25,8 +23,6 @@ export const FilterSection = ({
   setInstitutionsFilter,
   birthDatesOptions,
   institutionsOptions,
-  onBirthDatesClick,
-  onInstitutionsClick,
 }: FilterSectionProps) => {
   return (
     <div className="flex gap-4 items-center">
@@ -39,14 +35,12 @@ export const FilterSection = ({
         title="생년월일"
         options={birthDatesOptions}
         onSelectionChange={setBirthDatesFilter}
-        onOpen={onBirthDatesClick}
         selectedValues={birthDatesFilter}
       />
       <TableFilter
         title="연계기관"
         options={institutionsOptions}
         onSelectionChange={setInstitutionsFilter}
-        onOpen={onInstitutionsClick}
         selectedValues={institutionsFilter}
       />
     </div>

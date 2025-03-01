@@ -1,29 +1,30 @@
-import { DefaultApi } from '@/api';
-import { useMutation } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
-import { AddCounseleeFormData } from '../../components/dialog/CounseleeDialog';
-import { useCounseleeStore } from '../store/counseleeInfoStore';
+import { AddCounseleeFormData } from '../components/dialog/CounseleeDialog';
 import {
+  useCreateCounseleeInfo,
   useDeleteCounseleeInfo,
   useSelectCounseleeList,
   useUpdateCounseleeInfo,
-} from './useCounseleeInfoQuery';
-
-const api = new DefaultApi();
+} from './queries/useCounseleeQuery';
+import {
+  useBirthDatesQuery,
+  useInstitutionsQuery,
+} from './queries/useFilterOptionsQuery';
+import { useFilterStore } from './stores/useFilterStore';
 
 export const useCounseleeManagement = () => {
   const [page, setPage] = useState(0);
   const [size] = useState(10);
   const [searchKeyword, setSearchKeyword] = useState('');
 
-  const {
-    filter,
-    filterOptions,
-    setFilter,
-    fetchBirthDates,
-    fetchInstitutions,
-  } = useCounseleeStore();
+  // 스토어 사용
+  const { filter, setFilter } = useFilterStore();
 
+  // 쿼리 사용
+  const { data: birthDatesData, refetch: refetchBirthDates } =
+    useBirthDatesQuery();
+  const { data: institutionsData, refetch: refetchInstitutions } =
+    useInstitutionsQuery();
   const { data, refetch } = useSelectCounseleeList({
     page,
     size,
@@ -32,13 +33,8 @@ export const useCounseleeManagement = () => {
     affiliatedWelfareInstitutions: filter.affiliatedWelfareInstitutions,
   });
 
-  const createCounselee = useMutation({
-    mutationFn: (data: AddCounseleeFormData) => api.addCounselee(data),
-    retry: false,
-    onError: () => {
-      return;
-    },
-  });
+  // 뮤테이션 사용
+  const createCounselee = useCreateCounseleeInfo();
   const updateCounselee = useUpdateCounseleeInfo();
   const deleteCounseleeInfo = useDeleteCounseleeInfo();
 
@@ -56,27 +52,19 @@ export const useCounseleeManagement = () => {
     }
   }, [filter.name, refetch]);
 
-  const handleBirthDatesClick = useCallback(async () => {
-    if (filterOptions.birthDatesOptions.length === 0) {
-      await fetchBirthDates();
-    }
-  }, [filterOptions.birthDatesOptions.length, fetchBirthDates]);
-
-  const handleInstitutionsClick = useCallback(async () => {
-    if (filterOptions.institutionsOptions.length === 0) {
-      await fetchInstitutions();
-    }
-  }, [filterOptions.institutionsOptions.length, fetchInstitutions]);
-
   const handleDelete = useCallback(
     (id: string) => {
       if (id && window.confirm('정말로 이 내담자를 삭제하시겠습니까?')) {
         deleteCounseleeInfo.mutate([{ counseleeId: id }], {
-          onSuccess: () => refetch(),
+          onSuccess: () => {
+            refetch();
+            refetchBirthDates();
+            refetchInstitutions();
+          },
         });
       }
     },
-    [deleteCounseleeInfo, refetch],
+    [deleteCounseleeInfo, refetch, refetchBirthDates, refetchInstitutions],
   );
 
   const handleUpdate = useCallback(
@@ -99,11 +87,13 @@ export const useCounseleeManagement = () => {
         {
           onSuccess: () => {
             refetch();
+            refetchBirthDates();
+            refetchInstitutions();
           },
         },
       );
     },
-    [updateCounselee, refetch],
+    [updateCounselee, refetch, refetchBirthDates, refetchInstitutions],
   );
 
   const handleCreate = useCallback(
@@ -112,14 +102,21 @@ export const useCounseleeManagement = () => {
         await createCounselee.mutateAsync(formData, {
           onSuccess: () => {
             refetch();
+            refetchBirthDates();
+            refetchInstitutions();
           },
         });
       } catch {
         // 에러는 BaseAPI에서 처리하므로 여기서는 아무것도 하지 않음
       }
     },
-    [createCounselee, refetch],
+    [createCounselee, refetch, refetchBirthDates, refetchInstitutions],
   );
+
+  const filterOptions = {
+    birthDatesOptions: birthDatesData || [],
+    institutionsOptions: institutionsData || [],
+  };
 
   return {
     page,
@@ -129,8 +126,6 @@ export const useCounseleeManagement = () => {
     filterOptions,
     handlePageChange,
     handleSearch,
-    handleBirthDatesClick,
-    handleInstitutionsClick,
     handleDelete,
     handleUpdate,
     handleCreate,

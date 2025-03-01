@@ -27,7 +27,6 @@ interface TableFilterProps {
   title: string;
   options: TableFilterOption[];
   onSelectionChange: (values: string[]) => void;
-  onOpen?: () => void;
   selectedValues?: string[];
 }
 
@@ -35,7 +34,6 @@ const TableFilter = ({
   title,
   options,
   onSelectionChange,
-  onOpen,
   selectedValues: externalSelectedValues,
 }: TableFilterProps) => {
   const [open, setOpen] = useState(false);
@@ -65,7 +63,6 @@ const TableFilter = ({
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (isOpen) {
-      if (onOpen) onOpen();
       setTempSelectedValues(selectedValues);
     } else {
       setSelectedValues(tempSelectedValues);

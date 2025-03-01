@@ -1,25 +1,24 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
+import { BaseInfoDTOHealthInsuranceTypeEnum } from '@/api/api';
+import InfoBlueIcon from '@/assets/icon/24/info.filled.blue.svg';
 import Badge from '@/components/common/Badge';
 import CardContainer from '@/components/common/CardContainer';
 import TabContentContainer from '@/components/consult/TabContentContainer';
-import InfoBlueIcon from '@/assets/icon/24/info.filled.blue.svg';
-import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { formatDate } from '@/function/formatDate';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
-import { useSelectCounseleedetailInfo } from '@/pages/Counselee/hooks/query/useCounseleeInfoQuery';
+import { useSelectPreviousCounselSessionList } from '@/hooks/useCounselSessionQuery';
 import {
-  insuranceTypes,
   consultationCounts,
   consultationGoals,
+  insuranceTypes,
 } from '@/pages/Survey/constants/baseInfo';
 import { useSelectCounselCard } from '@/pages/Survey/hooks/useCounselAssistantQuery';
-import { BaseInfoDTOHealthInsuranceTypeEnum } from '@/api/api';
-import { useSelectPreviousCounselSessionList } from '@/hooks/useCounselSessionQuery';
-import { formatDate } from '@/function/formatDate';
+import { useCounselSurveyStore } from '@/pages/Survey/store/surveyInfoStore';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const BaseInfo = () => {
   //useParams()를 통해 counselSessionId를 가져옴
@@ -33,10 +32,6 @@ const BaseInfo = () => {
   // 내담자 기본 정보 조회
   const { data: counseleeBasicInfo } = useSelectCounseleeInfo(
     counselSessionId ?? '',
-  );
-  // 내담자 상세 정보 조회
-  const { data: counseleeDetailInfo } = useSelectCounseleedetailInfo(
-    counseleeBasicInfo?.counseleeId ?? '',
   );
   // 이전 상담 내역 조회
   const { data: previousCounselSessionList } =
@@ -78,7 +73,7 @@ const BaseInfo = () => {
   // 초기값 설정: counselSurvey.baseInformation을 의존성 배열에 포함시키되, 최초 실행 후에는 업데이트되지 않도록 함.
   useEffect(() => {
     if (
-      counseleeDetailInfo &&
+      counseleeBasicInfo &&
       previousCounselSessionList &&
       !hasInitialized.current
     ) {
@@ -113,8 +108,8 @@ const BaseInfo = () => {
         // 서버 데이터 기반으로 초기값 설정
         const mergedData: FormData = {
           baseInfo: {
-            name: counseleeDetailInfo.name || '',
-            birthDate: counseleeDetailInfo.dateOfBirth || '',
+            name: counseleeBasicInfo.name || '',
+            birthDate: counseleeBasicInfo.dateOfBirth || '',
             counselSessionOrder:
               previousCounselSessionList[0]?.CounselSessionOrder !== ''
                 ? '재상담'
@@ -135,7 +130,7 @@ const BaseInfo = () => {
       hasInitialized.current = true;
     }
   }, [
-    counseleeDetailInfo,
+    counseleeBasicInfo,
     previousCounselSessionList,
     counselSurvey.baseInformation,
   ]);

@@ -1,11 +1,10 @@
 import { SelectCounselSessionListItem } from '@/api/api';
 import CollegeMessages from '@/pages/Home/components/CollegeMessages';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
-import { useMemo, useState } from 'react';
-import CalendarIcon from '@/assets/icon/calendar.svg?react';
 import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
 import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
-import DatePickerComponent from '@/components/ui/datepicker';
+import { addMonths } from 'date-fns';
+import { useMemo, useState } from 'react';
 import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
 import { addMonths } from 'date-fns';
 import logoWide from '@/assets/home/logo-wide.webp';

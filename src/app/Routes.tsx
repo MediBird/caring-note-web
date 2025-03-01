@@ -1,10 +1,14 @@
+import Consult from '@/pages/Consult';
 import CounseleeManagement from '@/pages/Counselee';
 import Survey from '@/pages/Survey/tabs/Index';
 import Consult from '@/pages/Consult';
 import ErrorPage from '@/pages/ErrorPage';
 import Home from '@/pages/Home';
+import Layout from '@/pages/Layout';
+import Schedule from '@/pages/Schedule';
+import SurveyLayout from '@/pages/Survey/layout/SurveyLayout';
+import Survey from '@/pages/Survey/tabs/Index';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
-import SurveyList from '@/pages/Survey/Index';
 import Layout from '@/pages/Layout';
 
 type AppRouteObject = RouteObject & {
@@ -60,6 +64,16 @@ const Routes = () => {
       },
     ],
   };
+  const scheduleRoutes: AppRouteObject = {
+    path: '/schedule',
+    element: <Layout />,
+    children: [
+      {
+        path: '',
+        element: <Schedule />,
+      },
+    ],
+  };
 
   const counseleeManagementRoute: AppRouteObject = {
     path: '/counselee-management',
@@ -77,6 +91,8 @@ const Routes = () => {
     mainRoutes,
     consultRoutes,
     surveyRoutes,
+    scheduleRoutes,
+    counseleeManagementRoute,
   ];
 
   return useRoutes(routes);

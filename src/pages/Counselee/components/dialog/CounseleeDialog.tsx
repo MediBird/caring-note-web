@@ -251,7 +251,7 @@ export const CounseleeDialog = ({
                     <TooltipContent>
                       <ul className="list-disc marker:text-white pl-5 text-caption1 font-light space-y-0.5">
                         <li className="ml-[-0.6rem]">
-                          사회복지관: 신림, 강감찬
+                          사회복지관: 신림, 강감찬, 봉천, 관악 장애인
                         </li>
                         <li className="ml-[-0.6rem]">의료기관: 한울</li>
                         <li className="ml-[-0.6rem]">
