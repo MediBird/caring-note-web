@@ -53,11 +53,22 @@ const Routes = () => {
     path: '/survey',
     element: <Layout />,
     children: [
+      { path: ':counselSessionId', element: <Survey /> },
+      {
+        path: ':counselSessionId',
+        element: <Survey />,
+      },
+    ],
+  };
+
+  const counseleeManagementRoute: AppRouteObject = {
+    path: '/counselee-management',
+    element: <CounseleeManagementLayout />,
+    children: [
       {
         path: '',
-        element: <SurveyList />,
+        element: <CounseleeManagement />,
       },
-      { path: ':counselSessionId', element: <Survey /> },
     ],
   };
 
