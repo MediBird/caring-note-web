@@ -1,9 +1,9 @@
+import NavigationLeftMenu from '@/components/NavigationLeftMenu';
+import { useAuthContext } from '@/context/AuthContext';
+import { useNavigationStore } from '@/store/navigationStore';
+import { useKeycloak } from '@react-keycloak/web';
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '@/context/AuthContext';
-import { useKeycloak } from '@react-keycloak/web';
-import { useNavigationStore } from '@/store/navigationStore';
-import NavigationLeftMenu from '@/components/NavigationLeftMenu';
 
 import AdminBlackIcon from '@/assets/icon/24/accountcircle.fiiled.black.svg?react';
 import AdminBlueIcon from '@/assets/icon/24/accountcircle.fiiled.blue.svg?react';
@@ -38,7 +38,8 @@ const NavigationLeft = () => {
         activeIcon: <HomeBlueIcon width={24} height={24} />,
       },
       {
-        name: '상담노트',
+        name: '상담 내역',
+        route: '/schedule',
         icon: <NoteBlackIcon width={24} height={24} />,
         activeIcon: <NoteBlueIcon width={24} height={24} />,
       },

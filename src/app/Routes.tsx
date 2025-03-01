@@ -1,12 +1,13 @@
-import CounseleeManagement from '@/pages/Counselee';
-import CounseleeManagementLayout from '@/pages/Counselee/layout/CounseleeManagementLayout';
-import SurveyLayout from '@/pages/Survey/layout/SurveyLayout';
-import Survey from '@/pages/Survey/tabs/Index';
 import Consult from '@/pages/Consult';
 import CounsultLayout from '@/pages/Consult/layout/CounsultLayout';
+import CounseleeManagement from '@/pages/Counselee';
+import CounseleeManagementLayout from '@/pages/Counselee/layout/CounseleeManagementLayout';
 import ErrorPage from '@/pages/ErrorPage';
 import Home from '@/pages/Home';
 import Layout from '@/pages/Layout';
+import Schedule from '@/pages/Schedule';
+import SurveyLayout from '@/pages/Survey/layout/SurveyLayout';
+import Survey from '@/pages/Survey/tabs/Index';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 
 type AppRouteObject = RouteObject & {
@@ -57,6 +58,16 @@ const Routes = () => {
       },
     ],
   };
+  const scheduleRoutes: AppRouteObject = {
+    path: '/schedule',
+    element: <Layout />,
+    children: [
+      {
+        path: '',
+        element: <Schedule />,
+      },
+    ],
+  };
 
   const counseleeManagementRoute: AppRouteObject = {
     path: '/counselee-management',
@@ -74,6 +85,7 @@ const Routes = () => {
     mainRoutes,
     consultRoutes,
     surveyRoutes,
+    scheduleRoutes,
     counseleeManagementRoute,
   ];
 
