@@ -7,10 +7,12 @@ import ConsultCount from './ConsultCount';
 function ConsultCountContainer() {
   return (
     <div className="flex flex-col w-full bg-white rounded-xl shadow-container p-4">
-      <span className="text-xl font-bold text-primary-50">
+      <span className="text-xl font-bold text-primary-50 leading-[26px]">
         약으로 이어지는 <br className="hidden hd:block" /> 건강한 변화들 💫
       </span>
-      <p className="text-sm mt-1.5 mb-3 text-grayscale-50">오늘 기준</p>
+      <p className="text-sm mt-1.5 mb-[10px] text-grayscale-50 leading-[14px]">
+        오늘 기준
+      </p>
       <div className="grid grid-cols-2 gap-3">
         <ConsultCount
           count={1234}

@@ -25,7 +25,7 @@ function ConsultCount({
             {unit}
           </p>
           <p
-            className="text-xs w-full text-start"
+            className="text-xs w-full text-start leading-[14px]"
             dangerouslySetInnerHTML={{ __html: title }}
           />
         </div>

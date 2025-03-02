@@ -15,16 +15,17 @@ function CollegeMessages() {
   return (
     <div className="flex flex-col bg-white border-white rounded-xl gap-3 p-4 items-center justify-start shadow-container">
       <h1 className="text-left text-xl font-bold break-keep text-primary-50 w-full leading-[26px]">
-        동료약사의 <br className="hd:hidden" />
-        따뜻한 마음
+        동료약사의 따뜻한 마음 ✨
       </h1>
-      <div className="flex flex-col p-3 bg-primary-5 rounded-[8px] items-center justify-center">
-        <div className="text-center">{messages[0].message}</div>
-        <p className="text-grayscale-50">{`- ${messages[0].name} -`}</p>
-      </div>
-      <div className="flex flex-col p-3 bg-primary-5 rounded-[8px] items-center justify-center">
-        <div className="text-center">{messages[1].message}</div>
-        <p className="text-grayscale-50">{`- ${messages[1].name} -`}</p>
+      <div className="flex flex-row hd:flex-col gap-3 w-full">
+        <div className="flex flex-col p-3 bg-primary-5 rounded-[8px] items-center justify-center w-full gap-[10px]">
+          <div className="text-center leading-6">{messages[0].message}</div>
+          <p className="text-grayscale-50">{`- ${messages[0].name} -`}</p>
+        </div>
+        <div className="flex flex-col p-3 bg-primary-5 rounded-[8px] items-center justify-center w-full gap-[10px]">
+          <div className="text-center leading-6">{messages[1].message}</div>
+          <p className="text-grayscale-50">{`- ${messages[1].name} -`}</p>
+        </div>
       </div>
     </div>
   );
