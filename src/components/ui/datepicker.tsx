@@ -66,13 +66,19 @@ export function DatePickerComponent({
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         {trigger ? (
-          trigger
+          React.cloneElement(trigger as React.ReactElement, {
+            className: cn(
+              (trigger as React.ReactElement).props.className,
+              isOpen && '!text-primary-50',
+            ),
+          })
         ) : (
           <Button
             variant={'outline'}
             className={cn(
               'w-[280px] h-[2.25rem] justify-start border-none items-center text-left font-normal bg-transparent hover:bg-transparent text-base',
               !date && 'text-muted-foreground',
+              isOpen && '!text-primary-50',
               className,
             )}>
             {date ? (
