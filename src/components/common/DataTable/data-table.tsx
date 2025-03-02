@@ -26,6 +26,7 @@ interface DataTableProps<TData, TValue> {
   footer?: React.ReactNode;
   sorting?: SortingState;
   SortingFns?: Record<string, SortingFn<TData>>;
+  minWidth?: number;
 }
 
 export function DataTable<TData, TValue>({
@@ -33,6 +34,7 @@ export function DataTable<TData, TValue>({
   data,
   footer,
   sorting: initialSorting,
+  minWidth = 1020,
   SortingFns,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>(initialSorting || []);
@@ -55,7 +57,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full max-w-content overflow-hidden border border-1 border-grayscale-10 rounded-[12px] bg-white">
-      <Table className="w-full min-w-[1020px]">
+      <Table
+        style={{
+          width: '100%',
+          minWidth: minWidth,
+        }}>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

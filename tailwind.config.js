@@ -6,6 +6,7 @@ export default {
     extend: {
       screens: {
         fhd: '1920px',
+        hd: '1440px',
       },
       fontSize: {
         h0: ['3.75rem', '4.125rem'],

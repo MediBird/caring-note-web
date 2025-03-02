@@ -1,7 +1,5 @@
 import { SelectCounselSessionListItem } from '@/api/api';
-import CollegeMessage from '@/components/CollegeMessage';
-import ConsultCount from '@/components/ConsultCount';
-import { useAuthContext } from '@/context/AuthContext';
+import CollegeMessages from '@/pages/Home/components/CollegeMessages';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
 import { useMemo, useState } from 'react';
 import CalendarIcon from '@/assets/icon/calendar.svg?react';
@@ -10,10 +8,15 @@ import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 import DatePickerComponent from '@/components/ui/datepicker';
 import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
 import { addMonths } from 'date-fns';
+import logoWide from '@/assets/home/logo-wide.webp';
+import background from '@/assets/home/home-bg.webp';
+import ConsultCountContainer from '@/pages/Home/components/ConsultCountContainer';
+import tableEmpty from '@/assets/home/table-empty.webp';
+import { cn } from '@/lib/utils';
 
 function Home() {
-  const { user } = useAuthContext();
   const today = new Date();
+
   const thisMonth = addMonths(today, 0);
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedMonth, setSelectedMonth] = useState(thisMonth);
@@ -38,51 +41,41 @@ function Home() {
   }, [counselList]);
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-start h-full bg-gray-50">
-        <div className="w-full font-bold text-h3 text-primary-80 pl-20 pt-[9.25rem] pb-6 bg-primary-30">
-          {`${user?.name ?? ''}님,`.replace(/\s/g, '')}
-          <br />
-          오늘도 힘찬 하루를 보내세요!
+    <div
+      style={{ backgroundImage: `url(${background})` }}
+      className="bg-cover bg-center bg-no-repeat h-full">
+      <div className="flex flex-col items-center justify-start h-full pt-[120px] pb-6 max-w-layout mx-auto px-layout [&>*]:max-w-content">
+        <div className="w-full flex justify-between items-center">
+          <img src={logoWide} alt="logo" width={310} />
+          <div className="flex items-center gap-4 text-primary-50 font-medium">
+            <a className="border-b-2 border-primary-50" href="/">
+              내 정보
+            </a>
+            <a
+              className="border-b-2 border-primary-50"
+              href="https://withnp.campaignus.me/"
+              target="_blank">
+              늘픔가치 바로가기
+            </a>
+          </div>
         </div>
-        <div className="flex flex-col items-center justify-center w-full gap-8 mt-8 2xl:items-start 2xl:flex-row px-10 pb-10">
-          <div className="hidden 2xl:flex 2xl:flex-col gap-5 2xl:items-center 2xl:justify-center w-[278px]">
-            <ConsultCount
-              messageCount="1,234회"
-              patientCount="201명"
-              //반복 제거 필요
-              date={new Date()
-                .toLocaleDateString('ko-KR', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                })
-                .replace(/\. /g, '.')}
-            />
-            <CollegeMessage message="약대 입학 후 얼마 안 되었을 때, 더 나은 사회를 위해 같이 공부하고 행동해 보자는 글귀를 읽고 가입하기로 마음먹었어요." />
+        <div className="flex flex-col items-center justify-between w-full gap-6 mt-3 hd:items-start hd:flex-row pb-10">
+          {/* min-width 1440px 이상 */}
+          <div className="flex-col gap-4 hidden hd:flex w-full max-w-[314px]">
+            <ConsultCountContainer />
+            <CollegeMessages />
           </div>
-
-          <div className="flex justify-center 2xl:hidden max-w-[1020px] w-full">
-            <ConsultCount
-              messageCount="1,234회"
-              patientCount="201명"
-              date={new Date()
-                .toLocaleDateString('ko-KR', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                })
-                .replace(/\. /g, '.')}
-            />
-          </div>
-          <div className="flex flex-col items-center justify-center flex-grow w-full max-w-[1020px]">
-            <div className="w-full h-auto p-6 bg-white rounded-xl shadow-container">
-              <div className="flex items-center justify-between w-full h-10">
-                <span className="text-2xl font-bold">오늘 일정</span>
+          <div className="flex flex-col items-center justify-center flex-grow w-full ">
+            <div className="w-full h-auto p-6 gap-6 bg-white rounded-xl shadow-container min-h-[824px] flex flex-col">
+              <div className="flex items-center justify-between w-full">
+                <span className="text-2xl font-bold">상담 일정</span>
                 <DatePickerComponent
                   isLoading={isCounselActiveDateLoading}
                   trigger={
-                    <button className="text-right flex items-center gap-0.5 text-primary-50 font-bold px-2">
+                    <button
+                      className={cn(
+                        'text-right flex items-center gap-0.5 font-bold px-2',
+                      )}>
                       <CalendarIcon />
                       날짜 선택
                     </button>
@@ -96,17 +89,33 @@ function Home() {
                   enabledDates={counselActiveDate ?? []}
                 />
               </div>
-              <div className="mt-5">
-                <TodayScheduleTable counselList={formattedCounselList ?? []} />
+              <div className="flex flex-col items-center justify-start flex-1">
+                {formattedCounselList?.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center flex-1">
+                    <img src={tableEmpty} alt="table-empty" />
+                    <span className="text-2xl font-bold">
+                      예정된 상담 일정이 없어요
+                    </span>
+                    <span className="text-base text-gray-500">
+                      상담 내역에서 이전 상담 기록을 볼 수 있습니다
+                    </span>
+                  </div>
+                ) : (
+                  <TodayScheduleTable
+                    counselList={formattedCounselList ?? []}
+                  />
+                )}
               </div>
             </div>
           </div>
-          <div className="flex justify-center 2xl:hidden max-w-[1020px] w-full">
-            <CollegeMessage message="약대 입학 후 얼마 안 되었을 때, 더 나은 사회를 위해 같이 공부하고 행동해 보자는 글귀를 읽고 가입하기로 마음먹었어요." />
+          {/* min-width 1440px 이하 */}
+          <div className="flex flex-col gap-4 justify-center hd:hidden w-full">
+            <ConsultCountContainer />
+            <CollegeMessages />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -18,6 +18,7 @@ const TodayScheduleTable = ({ counselList }: TodayScheduleTableProps) => {
 
   return (
     <DataTable
+      minWidth={600}
       columns={columns}
       data={counselList}
       sorting={[{ id: 'scheduledDate', desc: false }]}
