@@ -181,7 +181,7 @@ export function Index() {
             saveConsult={saveConsult}
           />
         </div>
-        <div className="w-full h-full overflow-y-auto mb-100">
+        <div className="w-full h-full  mb-100">
           <TabsContent value="pastConsult">
             <PastConsult />
           </TabsContent>
