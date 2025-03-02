@@ -6,7 +6,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from '@/components/ui/command';
 import {
   Popover,
@@ -124,51 +123,51 @@ const TableFilter = ({
             value={searchValue}
             onValueChange={setSearchValue}
           />
-          <CommandList>
-            <CommandGroup>
-              {filteredOptions.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  onSelect={() => handleSelect(option.value)}>
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={tempSelectedValues.includes(option.value)}
-                        readOnly
-                        className="h-4 w-4"
-                      />
-                      <span>{option.label}</span>
-                    </div>
-                    {option.count !== undefined && (
-                      <span className="ml-auto text-xs text-gray-500">
-                        {option.count}
-                      </span>
-                    )}
-                  </div>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-            {filteredOptions.length === 0 && (
+          <div className="flex flex-col">
+            <CommandList className="max-h-[200px] overflow-auto">
               <CommandGroup>
-                <CommandItem className="text-sm text-gray-500 py-2">
-                  검색 결과가 없습니다
-                </CommandItem>
-              </CommandGroup>
-            )}
-            {selectedValues.length > 0 && (
-              <>
-                <CommandSeparator />
-                <CommandGroup>
+                {filteredOptions.map((option) => (
                   <CommandItem
-                    onSelect={handleClear}
-                    className="justify-center text-sm">
-                    필터 초기화
+                    key={option.value}
+                    onSelect={() => handleSelect(option.value)}>
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={tempSelectedValues.includes(option.value)}
+                          readOnly
+                          className="h-4 w-4"
+                        />
+                        <span>{option.label}</span>
+                      </div>
+                      {option.count !== undefined && (
+                        <span className="ml-auto text-xs text-gray-500">
+                          {option.count}
+                        </span>
+                      )}
+                    </div>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+              {filteredOptions.length === 0 && (
+                <CommandGroup>
+                  <CommandItem className="text-sm text-gray-500 py-2">
+                    검색 결과가 없습니다
                   </CommandItem>
                 </CommandGroup>
-              </>
+              )}
+            </CommandList>
+            
+            {selectedValues.length > 0 && (
+              <div className="border-t border-gray-100">
+                <CommandItem
+                  onSelect={handleClear}
+                  className="justify-center text-sm py-2">
+                  필터 초기화
+                </CommandItem>
+              </div>
             )}
-          </CommandList>
+          </div>
         </Command>
       </PopoverContent>
     </Popover>
