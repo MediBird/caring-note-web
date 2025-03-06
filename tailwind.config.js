@@ -97,6 +97,16 @@ export default {
           100: '#1BB200',
         },
         white: '#FFFFFF',
+        sidebar: {
+          DEFAULT: 'hsl(var(--sidebar-background))',
+          foreground: 'hsl(var(--sidebar-foreground))',
+          primary: 'hsl(var(--sidebar-primary))',
+          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+          accent: 'hsl(var(--sidebar-accent))',
+          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+          border: 'hsl(var(--sidebar-border))',
+          ring: 'hsl(var(--sidebar-ring))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -115,6 +125,9 @@ export default {
       },
       padding: {
         layout: '92px',
+      },
+      transitionDuration: {
+        1500: '1500ms',
       },
     },
   },

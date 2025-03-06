@@ -1,26 +1,39 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/context/AuthContext';
 import { useKeycloak } from '@react-keycloak/web';
 import { useNavigationStore } from '@/store/navigationStore';
-import NavigationLeftMenu from '@/components/NavigationLeftMenu';
+import AdminIcon from '@/assets/icon/24/accountcircle.fiiled.svg?react';
+import QuestionIcon from '@/assets/icon/24/help.fiiled.svg?react';
+import HomeIcon from '@/assets/icon/24/home.filled.svg?react';
+import LogoutIcon from '@/assets/icon/24/logout.outline.svg?react';
+import NoteIcon from '@/assets/icon/24/note.fiiled.svg?react';
+import PaperPlainIcon from '@/assets/icon/24/paperplane.svg?react';
+import PatientIcon from '@/assets/icon/24/patient.fiiled.svg?react';
+import MenuIcon from '@/assets/icon/24/menu.svg?react';
+import TextLogo from '@/assets/text-logo.webp';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 
-import AdminBlackIcon from '@/assets/icon/24/accountcircle.fiiled.black.svg?react';
-import AdminBlueIcon from '@/assets/icon/24/accountcircle.fiiled.blue.svg?react';
-import QuestionBlackIcon from '@/assets/icon/24/help.fiiled.black.svg?react';
-import HomeBlackIcon from '@/assets/icon/24/home.filled.black.svg?react';
-import HomeBlueIcon from '@/assets/icon/24/home.filled.blue.svg?react';
-import LogoutBlackIcon from '@/assets/icon/24/logout.outline.black.svg?react';
-import NoteBlackIcon from '@/assets/icon/24/note.fiiled.black.svg?react';
-import NoteBlueIcon from '@/assets/icon/24/note.fiiled.blue.svg?react';
-import PaperPlainBlackIcon from '@/assets/icon/24/paperplane.black.svg?react';
-import PaperPlainBlueIcon from '@/assets/icon/24/paperplane.blue.svg?react';
-import PatientBlackIcon from '@/assets/icon/24/patient.fiiled.black.svg?react';
-import PatientBlueIcon from '@/assets/icon/24/patient.fiiled.blue.svg?react';
-import logoBlack from '@/assets/logoBlack.png';
+interface NavigationLeftProps {
+  initialOpen?: boolean;
+}
 
-const NavigationLeft = () => {
+const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
   const navigate = useNavigate();
+  const { toggleSidebar, open, setOpen } = useSidebar();
+
   const { user } = useAuthContext();
   const { keycloak } = useKeycloak();
 
@@ -29,49 +42,60 @@ const NavigationLeft = () => {
   const setActiveMenu = useNavigationStore((state) => state.setActiveMenu);
 
   // 메뉴 데이터 타입과 정의
-  const menuItems = useMemo(
-    () => [
+  const menuItems = useMemo(() => {
+    const baseMenuItems = [
       {
         name: '홈',
+        collapsedName: '홈',
         route: '/',
-        icon: <HomeBlackIcon width={24} height={24} />,
-        activeIcon: <HomeBlueIcon width={24} height={24} />,
+        icon: <HomeIcon width={24} height={24} />,
+        roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
       },
       {
-        name: '상담노트',
-        icon: <NoteBlackIcon width={24} height={24} />,
-        activeIcon: <NoteBlueIcon width={24} height={24} />,
+        name: '상담 내역',
+        collapsedName: '상담내역',
+        icon: <NoteIcon width={24} height={24} />,
+        roles: ['ROLE_ADMIN'],
       },
       {
-        name: '케어링노트',
-        icon: <PaperPlainBlackIcon width={24} height={24} />,
-        activeIcon: <PaperPlainBlueIcon width={24} height={24} />,
+        name: '메세지 보관함',
+        collapsedName: '메세지 보관함',
+        icon: <PaperPlainIcon width={24} height={24} />,
+        roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
       },
       {
-        name: '내담자관리',
+        name: '내담자 관리',
+        collapsedName: '내담자 관리',
         route: '/counselee-management',
-        icon: <PatientBlackIcon width={24} height={24} />,
-        activeIcon: <PatientBlueIcon width={24} height={24} />,
+        icon: <PatientIcon width={24} height={24} />,
+        roles: ['ROLE_ADMIN', 'ROLE_USER'],
       },
       {
-        name: '계정관리',
-        icon: <AdminBlackIcon width={24} height={24} />,
-        activeIcon: <AdminBlueIcon width={24} height={24} />,
+        name: '계정 관리',
+        collapsedName: '계정관리',
+        icon: <AdminIcon width={24} height={24} />,
+        roles: ['ROLE_ADMIN'],
       },
       {
-        name: '도움말',
-        icon: <QuestionBlackIcon width={24} height={24} />,
+        name: '사용법 · 문의',
+        collapsedName: '사용법',
+        icon: <QuestionIcon width={24} height={24} />,
+        roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
       },
       {
         name: '로그아웃',
-        icon: <LogoutBlackIcon width={24} height={24} />,
+        collapsedName: '로그아웃',
+        icon: <LogoutIcon width={24} height={24} />,
         action: () => keycloak.logout(),
+        roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
       },
-    ],
-    [keycloak],
-  );
+    ];
 
-  // 새로고침 시 현재 URL 경로에 맞는 메뉴 설정
+    return baseMenuItems.filter((item) =>
+      item.roles.includes(user?.roleType as string),
+    );
+  }, [keycloak, user?.roleType]);
+
   useEffect(() => {
     const currentPath = location.pathname;
     const matchedMenu = menuItems.find((menu) => menu.route === currentPath);
@@ -90,51 +114,119 @@ const NavigationLeft = () => {
     if (route) navigate(route);
   };
 
+  useLayoutEffect(() => {
+    if (!initialOpen) {
+      setOpen(false);
+    }
+  }, [initialOpen, setOpen]);
+
   return (
-    <div className="relative h-auto py-0 w-52 bg-grayscale-3 z-50 shadow-nav-left">
-      {/* 사용자 정보 */}
-      <div className="flex items-end p-5">
-        <span className="whitespace-nowrap">
-          <span className="text-subtitle2 font-bold">{user?.name ?? ''}</span>
-          <span className="text-body1 font-medium">{`${(() => {
-            switch (user?.roleType) {
-              case 'ROLE_ADMIN':
-                return '관리자';
-              case 'ROLE_ASSISTANT':
-                return '상담사';
-              case 'ROLE_USER':
-                return '약사';
-              default:
-                return '';
-            }
-          })()}님`}</span>
-        </span>
-      </div>
-      <hr className="border-t border-grayscale-10" />
-
-      {/* 메뉴 렌더링 */}
-      {menuItems.map((menu) => (
-        <NavigationLeftMenu
-          key={menu.name}
-          isActive={activeMenu === menu.name}
-          menuIcon={menu.icon}
-          activteMenuIcon={menu.activeIcon}
-          menuName={menu.name}
-          onClick={() => handleMenuClick(menu.name, menu.route, menu.action)}
-        />
-      ))}
-
-      {/* 하단 로고 */}
-      <div className="absolute flex items-center justify-center w-full bottom-5">
-        <img
-          className="hover:cursor-pointer"
-          src={logoBlack}
-          alt="logo"
-          onClick={() => handleMenuClick('홈', '/')}
-        />
-      </div>
-    </div>
+    <Sidebar collapsible="icon" className="shadow-nav-left !border-0 z-50">
+      <SidebarHeader
+        className={cn(
+          'border-b border-grayscale-10 flex flex-col gap-4 text-left',
+          !open && 'gap-0',
+        )}>
+        <button
+          onClick={toggleSidebar}
+          className={cn(
+            'p-0 h-fit flex justify-start items-center',
+            !open && 'justify-center',
+          )}>
+          <MenuIcon width={24} height={24} />
+        </button>
+        <div
+          className={cn(
+            'flex flex-wrap max-w-[156px] transition-opacity duration-1000 items-end gap-1.5',
+            open ? 'opacity-100' : 'max-h-[0px] opacity-0 duration-0',
+          )}>
+          <span className="text-subtitle2 font-bold break-words">
+            {user?.name?.trim() ?? ''}
+          </span>
+          <span className="text-body1 font-medium break-keep">
+            {`${
+              roleNameMapByRoleType[
+                user?.roleType as keyof typeof roleNameMapByRoleType
+              ]
+            }님`}
+          </span>
+        </div>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {menuItems.slice(0, 5).map((item) => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton
+                    isActive={activeMenu === item.name}
+                    onClick={() =>
+                      handleMenuClick(item.name, item.route, item.action)
+                    }
+                    className={cn(
+                      'flex items-center gap-2 flex-row',
+                      !open &&
+                        'justify-center flex-col text-xs text-center p-[3px] overflow-hidden gap-1 font-bold',
+                    )}>
+                    {item.icon}
+                    <span
+                      className={cn(
+                        'overflow-hidden whitespace-nowrap w-full',
+                        !open && 'text-center w-full whitespace-pre-wrap',
+                      )}>
+                      {open ? item.name : item.collapsedName}
+                    </span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+            <div className="h-[1px] my-1 bg-grayscale-10 w-full" />
+            <SidebarMenu>
+              {menuItems.slice(5).map((item) => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton
+                    onClick={() =>
+                      handleMenuClick(item.name, item.route, item.action)
+                    }
+                    className={cn(
+                      'flex items-center gap-2 flex-row',
+                      !open &&
+                        'justify-center flex-col text-xs text-center p-[3px] overflow-hidden gap-1 font-bold',
+                    )}>
+                    {item.icon}
+                    <span
+                      className={cn(
+                        'overflow-hidden whitespace-nowrap w-full',
+                        !open && 'text-center w-full whitespace-pre-wrap',
+                      )}>
+                      {open ? item.name : item.collapsedName}
+                    </span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter>
+        {open && (
+          <img
+            src={TextLogo}
+            alt="logo"
+            className="h-10 w-auto object-contain mb-2"
+            height={40}
+          />
+        )}
+      </SidebarFooter>
+    </Sidebar>
   );
 };
 
 export default NavigationLeft;
+
+const roleNameMapByRoleType: Record<string, string> = {
+  ROLE_NONE: '',
+  ROLE_ADMIN: '관리자',
+  ROLE_ASSISTANT: '상담사',
+  ROLE_USER: '약사',
+};
