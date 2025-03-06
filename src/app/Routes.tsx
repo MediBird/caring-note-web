@@ -1,14 +1,11 @@
 import CounseleeManagement from '@/pages/Counselee';
-import CounseleeManagementLayout from '@/pages/Counselee/layout/CounseleeManagementLayout';
-import SurveyLayout from '@/pages/Survey/layout/SurveyLayout';
 import Survey from '@/pages/Survey/tabs/Index';
 import Consult from '@/pages/Consult';
-import CounsultLayout from '@/pages/Consult/layout/CounsultLayout';
 import ErrorPage from '@/pages/ErrorPage';
 import Home from '@/pages/Home';
-import Layout from '@/pages/Layout';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import SurveyList from '@/pages/Survey/Index';
+import Layout from '@/pages/Layout';
 
 type AppRouteObject = RouteObject & {
   children?: AppRouteObject[];
@@ -29,12 +26,16 @@ const Routes = () => {
         path: '/',
         element: <Home />,
       },
+      {
+        path: '/counselee-management',
+        element: <CounseleeManagement />,
+      },
     ],
   };
 
   const consultRoutes: AppRouteObject = {
     path: '/consult',
-    element: <CounsultLayout />,
+    element: <Layout />,
     children: [
       {
         //block route when counselSessionId is not provided
@@ -50,27 +51,13 @@ const Routes = () => {
 
   const surveyRoutes: AppRouteObject = {
     path: '/survey',
-    element: <SurveyLayout />,
+    element: <Layout />,
     children: [
       {
         path: '',
         element: <SurveyList />,
       },
-      {
-        path: ':counselSessionId',
-        element: <Survey />,
-      },
-    ],
-  };
-
-  const counseleeManagementRoute: AppRouteObject = {
-    path: '/counselee-management',
-    element: <CounseleeManagementLayout />,
-    children: [
-      {
-        path: '',
-        element: <CounseleeManagement />,
-      },
+      { path: ':counselSessionId', element: <Survey /> },
     ],
   };
 
@@ -79,7 +66,6 @@ const Routes = () => {
     mainRoutes,
     consultRoutes,
     surveyRoutes,
-    counseleeManagementRoute,
   ];
 
   return useRoutes(routes);
