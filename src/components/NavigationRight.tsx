@@ -4,6 +4,7 @@ import Recording from '@/components/consult/Recording';
 import { useAppDispatch, useAppSelector } from '../app/reduxHooks';
 import { toggleRightNavigation } from '../reducers/navigationReducer';
 import HighlightInput from './consult/HighlightInput';
+import { cn } from '@/lib/utils';
 
 const NavigationRight = () => {
   const isOpen = useAppSelector(
@@ -29,11 +30,10 @@ const NavigationRight = () => {
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full z-50 ${
-        isOpen ? 'w-96' : 'w-16'
-      } bg-white ${
-        isOpen ? '' : 'hover:bg-primary-5'
-      } transition-width duration-300 shadow-nav-right`}>
+      className={cn(
+        'fixed top-0 right-0 h-full z-50 bg-white transition-width duration-300 shadow-nav-right',
+        isOpen ? 'w-96' : 'w-16 hover:bg-primary-5',
+      )}>
       {!isOpen && defaultMenu()}
       {isOpen && (
         <div className="flex justify-start">
