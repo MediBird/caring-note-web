@@ -11,7 +11,7 @@ import {
 import { useRecording } from '@/hooks/useRecording';
 import { useState } from 'react';
 
-import recordingDialog from '@/assets/recordingDialog.png';
+import recordingDialog from '@/assets/recording/recordingDialog.webp';
 
 function RecordingDialog() {
   const { startRecording } = useRecording();
