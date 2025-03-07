@@ -1,6 +1,9 @@
 import PauseIcon from '@/assets/icon/24/pause.fill.black.svg?react';
 import PlayIcon from '@/assets/icon/24/play.fill.black.svg?react';
 import StopIcon from '@/assets/icon/24/stop.fill.black.svg?react';
+import recording from '@/assets/recording/recording.webp';
+import recordingComplete from '@/assets/recording/recordingComplete.webp';
+import recordingWaiting from '@/assets/recording/recordingWaiting.webp';
 import Spinner from '@/components/common/Spinner';
 import { Button } from '@/components/ui/button';
 import { useRecording } from '@/hooks/useRecording';
@@ -67,6 +70,25 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     )}`;
   };
 
+  const getRecordingImage = () => {
+    if (
+      recordingStatus === RecordingStatus.Ready ||
+      recordingStatus === RecordingStatus.Paused
+    ) {
+      return (
+        <img className="w-24" src={recordingWaiting} alt="recordingWaiting" />
+      );
+    } else if (recordingStatus === RecordingStatus.Recording) {
+      return <img className="w-24" src={recording} alt="recording" />;
+    } else if (recordingStatus === RecordingStatus.Stopped) {
+      return (
+        <img className="w-24" src={recordingComplete} alt="recordingComplete" />
+      );
+    }
+
+    return null;
+  };
+
   return (
     <>
       {recordingStatus !== RecordingStatus.AICompleted && (
@@ -121,19 +143,25 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
             </div>
           ) : (
             <>
-              <p className="text-body1 font-medium">{recordingStatus}</p>
-              <div className="flex items-center space-x-2">
-                {recordingStatus !== RecordingStatus.Stopped && (
-                  <Circle
-                    className={`w-2 h-2 ${circleColorClass}`}
-                    fill="currentColor"
-                  />
-                )}
-                <span className="text-subtitle1 font-medium text-grayscale-50">
-                  {formatTime(recordingTime)}
-                </span>
+              <div className="flex flex-row items-center justify-between w-full pl-8 pr-4">
+                <div className="flex flex-col items-start justify-center space-y-1">
+                  <p className="text-body1 font-medium">{recordingStatus}</p>
+                  <div className="flex items-center space-x-2">
+                    {recordingStatus !== RecordingStatus.Stopped && (
+                      <Circle
+                        className={`w-2 h-2 ${circleColorClass}`}
+                        fill="currentColor"
+                      />
+                    )}
+                    <span className="text-subtitle1 font-medium text-grayscale-50">
+                      {formatTime(recordingTime)}
+                    </span>
+                  </div>
+                </div>
+                {getRecordingImage()}
               </div>
-              <div className="flex items-center space-x-2 mt-3">
+
+              <div className="flex items-center space-x-2">
                 {recordingStatus === RecordingStatus.Ready && <>{playIcon}</>}
                 {recordingStatus === RecordingStatus.Recording && (
                   <>

@@ -11,7 +11,7 @@ import {
 import { useRecording } from '@/hooks/useRecording';
 import { useState } from 'react';
 
-import recordingDialog from '@/assets/recordingDialog.png';
+import recordingDialog from '@/assets/recording/recordingDialog.webp';
 
 function RecordingDialog() {
   const { startRecording } = useRecording();
@@ -48,14 +48,14 @@ function RecordingDialog() {
         </DialogDescription>
         <DialogFooter className="flex w-full items-center justify-center m-0 p-5">
           <DialogClose asChild>
-            <Button variant="secondary" size="xl" className="flex-1 m-0 p-0">
+            <Button variant="secondary" size="xl" className="w-1/2 m-0 p-0">
               나중에 시작
             </Button>
           </DialogClose>
           <Button
             variant="primary"
             size="xl"
-            className="flex-1"
+            className="w-1/2"
             onClick={handleClickSaveRecording}>
             녹음 시작
           </Button>

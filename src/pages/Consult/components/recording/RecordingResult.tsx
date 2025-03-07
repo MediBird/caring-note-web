@@ -36,10 +36,10 @@ const RecordingResult: React.FC<RecordingResultProps> = ({ className }) => {
         <div className={cn('ml-4', className)}>
           <Tabs defaultValue="aiSummary">
             <RecordingResultTabLists />
-            <TabsContent value="aiSummary" className="m-0 p-0">
+            <TabsContent value="aiSummary" className="!m-0 !p-0">
               <AiSummary />
             </TabsContent>
-            <TabsContent value="totalRecordings" className="m-0 p-0">
+            <TabsContent value="totalRecordings" className="!m-0 !p-0">
               <TotalRecordings />
             </TabsContent>
           </Tabs>
