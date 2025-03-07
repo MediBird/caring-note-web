@@ -41,8 +41,8 @@ const MedicineConsult: React.FC = () => {
           </GrayContainer>
         </div>
 
-        <div className="flex flex-1 justify-center">
-          {!isRightNavigationOpen && <Recording />}
+        <div className="flex flex-1 w-full justify-center">
+          {!isRightNavigationOpen && <Recording className="w-full" />}
           <RecordingResult />
         </div>
       </div>
