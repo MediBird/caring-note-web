@@ -13,17 +13,25 @@ interface CounseleeSearchInputProps {
   value: string;
   selectedId: string;
   onChange: (counseleeId: string, counseleeName: string) => void;
+  forceClose?: boolean;
 }
 
 export default function CounseleeSearchInput({
   value,
   selectedId,
   onChange,
+  forceClose = false,
 }: CounseleeSearchInputProps) {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);
   const debouncedInputValue = useDebounce(inputValue, 300);
   const popoverRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (forceClose) {
+      setOpen(false);
+    }
+  }, [forceClose]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

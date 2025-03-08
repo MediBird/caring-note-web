@@ -42,7 +42,7 @@ export interface AddCounseleeFormData {
   address: string;
   careManagerName: string;
   affiliatedWelfareInstitution: string;
-  disability: boolean;
+  isDisability: boolean;
   note: string;
 }
 
@@ -66,7 +66,7 @@ export const CounseleeDialog = ({
         careManagerName: initialData.careManagerName || '',
         affiliatedWelfareInstitution:
           initialData.affiliatedWelfareInstitution || '',
-        disability: initialData.disability || false,
+        isDisability: initialData.disability || false,
         note: initialData.note || '',
       };
     }
@@ -78,7 +78,7 @@ export const CounseleeDialog = ({
       address: '',
       careManagerName: '',
       affiliatedWelfareInstitution: '',
-      disability: false,
+      isDisability: false,
       note: '',
     };
   });
@@ -285,9 +285,9 @@ export const CounseleeDialog = ({
                 { value: 'false', label: '비장애인' },
                 { value: 'true', label: '장애인' },
               ]}
-              value={formData.disability ? 'true' : 'false'}
+              value={formData.isDisability ? 'true' : 'false'}
               onChange={(value) =>
-                setFormData({ ...formData, disability: value === 'true' })
+                setFormData({ ...formData, isDisability: value === 'true' })
               }
             />
           </div>

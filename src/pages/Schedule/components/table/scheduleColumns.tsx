@@ -2,13 +2,13 @@ import {
   SelectCounselSessionListItem,
   SelectCounselSessionListItemStatusEnum,
 } from '@/api/api';
+import { TableCell } from '@/components/common/DataTable/table-cell';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { TableCell } from '@/components/ui/table-cell';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
 
@@ -30,13 +30,13 @@ export const createScheduleColumns = ({
     },
   },
   {
-    id: 'counselSessionId',
-    accessorKey: 'counselSessionId',
+    id: 'sessionCount',
+    accessorKey: 'sessionCount',
     header: '상담 회차',
     size: 100,
     cell: ({ row }) => {
-      const counselSessionId = row.original.counselSessionId;
-      return <TableCell text={counselSessionId ?? ''} />;
+      const sessionCount = 1;
+      return <TableCell text={sessionCount.toString() + '회차'} />;
     },
   },
   {
@@ -80,22 +80,35 @@ export const createScheduleColumns = ({
 
       switch (status) {
         case SelectCounselSessionListItemStatusEnum.Scheduled:
-          statusText = '예약됨';
+          statusText = '예정';
           break;
         case SelectCounselSessionListItemStatusEnum.Progress:
-          statusText = '진행 중';
+          statusText = '진행';
           break;
         case SelectCounselSessionListItemStatusEnum.Completed:
-          statusText = '완료됨';
+          statusText = '완료';
           break;
         case SelectCounselSessionListItemStatusEnum.Canceled:
-          statusText = '취소됨';
+          statusText = '취소';
           break;
         default:
           statusText = '';
       }
 
-      return <TableCell text={statusText} />;
+      return (
+        <TableCell
+          text={statusText}
+          textColor={`${
+            status === SelectCounselSessionListItemStatusEnum.Scheduled
+              ? 'text-grayscale-50'
+              : status === SelectCounselSessionListItemStatusEnum.Progress
+              ? 'text-primary-50'
+              : status === SelectCounselSessionListItemStatusEnum.Completed
+              ? 'text-grayscale-100'
+              : 'text-error-50'
+          }`}
+        />
+      );
     },
   },
   {

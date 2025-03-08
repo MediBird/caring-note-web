@@ -1,54 +1,24 @@
 import {
   CounselorControllerApiFactory,
   CounselSessionControllerApiFactory,
-  CreateCounselReservationReq,
   DefaultApiFactory,
-  DeleteCounselSessionReq,
-  ModifyCounselReservationReq,
 } from '@/api/api';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  COUNSEL_SESSION_KEYS,
+  useCreateCounselSession,
+  useDeleteCounselSession,
+  useUpdateCounselSession,
+} from '@/hooks/useCounselSessionQuery';
+import { useQuery } from '@tanstack/react-query';
 
-// 상담 세션 생성
-export const useAddCounselSession = () => {
-  const queryClient = useQueryClient();
+// 상담 세션 생성 - 중앙 라이브러리에서 가져옴
+export { useCreateCounselSession as useCreateCounselReservation };
 
-  return useMutation({
-    mutationFn: (newCounselSession: CreateCounselReservationReq) => {
-      return DefaultApiFactory().createCounselReservation(newCounselSession);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['counselSessions'] });
-    },
-  });
-};
+// 상담 세션 업데이트 - 중앙 라이브러리에서 가져옴
+export { useUpdateCounselSession };
 
-// 상담 세션 업데이트
-export const useUpdateCounselSession = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (updateParams: ModifyCounselReservationReq) => {
-      return DefaultApiFactory().modifyCounselReservation(updateParams);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['counselSessions'] });
-    },
-  });
-};
-
-// 상담 세션 삭제
-export const useDeleteCounselSession = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (params: DeleteCounselSessionReq) => {
-      return DefaultApiFactory().deleteCounselSession(params);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['counselSessions'] });
-    },
-  });
-};
+// 상담 세션 삭제 - 중앙 라이브러리에서 가져옴
+export { useDeleteCounselSession };
 
 // 상담 세션 목록 조회 (페이지네이션)
 export const useCounselSessionList = (
@@ -58,7 +28,7 @@ export const useCounselSessionList = (
   enabled = true,
 ) => {
   return useQuery({
-    queryKey: ['counselSessions', baseDate, cursor, size],
+    queryKey: COUNSEL_SESSION_KEYS.list({ baseDate, cursor, size }),
     queryFn: () =>
       DefaultApiFactory().selectCounselSessionListByBaseDateAndCursorAndSize(
         baseDate,
@@ -82,6 +52,18 @@ const isValidKeyword = (keyword?: string): boolean => {
   return validPattern.test(keyword);
 };
 
+// 검색 쿼리 키를 관리하는 상수 정의
+export const SEARCH_COUNSEL_SESSIONS_KEYS = {
+  all: [...COUNSEL_SESSION_KEYS.all, 'search'] as const,
+  list: (params: {
+    page: number;
+    size: number;
+    counseleeNameKeyword?: string;
+    counselorNames?: string[];
+    scheduledDates?: string[];
+  }) => [...SEARCH_COUNSEL_SESSIONS_KEYS.all, params] as const,
+};
+
 // 상담 세션 검색
 export const useSearchCounselSessions = (
   page: number,
@@ -99,14 +81,13 @@ export const useSearchCounselSessions = (
   const shouldEnableQuery = enabled && isKeywordValid;
 
   return useQuery({
-    queryKey: [
-      'searchCounselSessions',
+    queryKey: SEARCH_COUNSEL_SESSIONS_KEYS.list({
       page,
       size,
       counseleeNameKeyword,
       counselorNames,
       scheduledDates,
-    ],
+    }),
     queryFn: () =>
       DefaultApiFactory().searchCounselSessions(
         page,

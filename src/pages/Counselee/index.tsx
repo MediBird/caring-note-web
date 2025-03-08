@@ -10,7 +10,6 @@ const CounseleeManagement = () => {
     filter,
     filterOptions,
     handlePageChange,
-    handleSearch,
     handleDelete,
     handleUpdate,
     handleCreate,
@@ -29,7 +28,6 @@ const CounseleeManagement = () => {
             <FilterSection
               nameFilter={filter.name}
               setNameFilter={(value) => setFilter({ name: value })}
-              handleSearch={handleSearch}
               birthDatesFilter={filter.birthDates}
               setBirthDatesFilter={(values) =>
                 setFilter({ birthDates: values })

@@ -1,10 +1,9 @@
 import TableFilter from '@/components/common/DataTable/table-filter';
-import { SearchInput } from '../../../components/common/CounseleeSearchInput';
+import { SearchInput } from '../../../components/common/search-input';
 
 interface FilterSectionProps {
   nameFilter: string;
   setNameFilter: (value: string) => void;
-  handleSearch: () => void;
   birthDatesFilter: string[];
   setBirthDatesFilter: (value: string[]) => void;
   institutionsFilter: string[];
@@ -16,7 +15,6 @@ interface FilterSectionProps {
 export const FilterSection = ({
   nameFilter,
   setNameFilter,
-  handleSearch,
   birthDatesFilter,
   setBirthDatesFilter,
   institutionsFilter,
@@ -26,11 +24,7 @@ export const FilterSection = ({
 }: FilterSectionProps) => {
   return (
     <div className="flex gap-4 items-center">
-      <SearchInput
-        value={nameFilter}
-        onChange={setNameFilter}
-        onSearch={handleSearch}
-      />
+      <SearchInput value={nameFilter} onChange={setNameFilter} />
       <TableFilter
         title="생년월일"
         options={birthDatesOptions}

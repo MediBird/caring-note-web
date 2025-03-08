@@ -1,5 +1,5 @@
-import { SearchInput } from '@/components/common/CounseleeSearchInput';
 import TableFilter from '@/components/common/DataTable/table-filter';
+import { SearchInput } from '@/components/common/search-input';
 import { useCounselActiveDate } from '@/pages/Home/hooks/query/useCounselActiveDate';
 import { useCallback, useEffect, useState } from 'react';
 import TableFilterDate from '../../../components/common/DataTable/table-filter-date';
@@ -8,7 +8,7 @@ import {
   useCounselSessionParamsStore,
   useSessionDateStore,
 } from '../hooks/store/useCounselSessionStore';
-import { ScheduleDialog } from './dialog/ScheduleDialog';
+import { CreateReservationDialog } from './dialog/CreateReservationDialog';
 
 interface FilterSectionProps {
   onSearch?: () => void;
@@ -86,13 +86,6 @@ export const FilterSection = ({ onSearch }: FilterSectionProps) => {
     });
   };
 
-  // 검색 실행 핸들러
-  const handleSearch = () => {
-    // 검색 실행 (API 호출 여부는 useSearchCounselSessions에서 결정)
-    console.log('검색 요청:', params);
-    onSearch?.();
-  };
-
   // 현재 선택된 날짜를 Date 객체로 변환
   const selectedDatesAsDateObjects = dates.map((dateStr) => {
     const [year, month, day] = dateStr.split('-').map(Number);
@@ -107,7 +100,6 @@ export const FilterSection = ({ onSearch }: FilterSectionProps) => {
             <SearchInput
               value={params.counseleeNameKeyword || ''}
               onChange={handleNameFilterChange}
-              onSearch={handleSearch}
             />
             {keywordError && (
               <span className="text-red-500 text-xs mt-1">{keywordError}</span>
@@ -130,7 +122,7 @@ export const FilterSection = ({ onSearch }: FilterSectionProps) => {
           />
         </div>
 
-        <ScheduleDialog mode="add" />
+        <CreateReservationDialog />
       </div>
     </div>
   );

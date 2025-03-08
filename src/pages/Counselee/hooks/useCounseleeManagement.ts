@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { AddCounseleeFormData } from '../components/dialog/CounseleeDialog';
 import {
   useCreateCounseleeInfo,
@@ -15,10 +15,23 @@ import { useFilterStore } from './stores/useFilterStore';
 export const useCounseleeManagement = () => {
   const [page, setPage] = useState(0);
   const [size] = useState(10);
-  const [searchKeyword, setSearchKeyword] = useState('');
 
   // 스토어 사용
   const { filter, setFilter } = useFilterStore();
+
+  // 필터 이름이 한글 또는 영어인지 확인하는 함수
+  const isValidName = useCallback((name: string | undefined) => {
+    if (!name) return false;
+    // 한글 또는 영어만 포함되어 있는지 확인 (공백 허용)
+    const koreanRegex = /^[가-힣\s]+$/;
+    const englishRegex = /^[a-zA-Z\s]+$/;
+    return koreanRegex.test(name) || englishRegex.test(name);
+  }, []);
+
+  // 유효한 이름 필터 설정
+  const validNameFilter = useMemo(() => {
+    return isValidName(filter.name) ? filter.name : undefined;
+  }, [filter.name, isValidName]);
 
   // 쿼리 사용
   const { data: birthDatesData, refetch: refetchBirthDates } =
@@ -28,7 +41,7 @@ export const useCounseleeManagement = () => {
   const { data, refetch } = useSelectCounseleeList({
     page,
     size,
-    name: searchKeyword,
+    name: validNameFilter,
     birthDates: filter.birthDates,
     affiliatedWelfareInstitutions: filter.affiliatedWelfareInstitutions,
   });
@@ -41,16 +54,6 @@ export const useCounseleeManagement = () => {
   const handlePageChange = useCallback((newPage: number) => {
     setPage(newPage);
   }, []);
-
-  const handleSearch = useCallback(() => {
-    const namePattern = /^[가-힣a-zA-Z\s]*$/;
-
-    if (namePattern.test(filter.name)) {
-      setSearchKeyword(filter.name);
-      setPage(0);
-      refetch();
-    }
-  }, [filter.name, refetch]);
 
   const handleDelete = useCallback(
     (id: string) => {
@@ -82,7 +85,7 @@ export const useCounseleeManagement = () => {
           note: formData.note,
           careManagerName: formData.careManagerName,
           affiliatedWelfareInstitution: formData.affiliatedWelfareInstitution,
-          isDisability: formData.disability,
+          isDisability: formData.isDisability,
         },
         {
           onSuccess: () => {
@@ -99,13 +102,26 @@ export const useCounseleeManagement = () => {
   const handleCreate = useCallback(
     async (formData: AddCounseleeFormData) => {
       try {
-        await createCounselee.mutateAsync(formData, {
-          onSuccess: () => {
-            refetch();
-            refetchBirthDates();
-            refetchInstitutions();
+        await createCounselee.mutateAsync(
+          {
+            name: formData.name,
+            dateOfBirth: formData.dateOfBirth,
+            genderType: formData.genderType,
+            phoneNumber: formData.phoneNumber,
+            address: formData.address,
+            note: formData.note,
+            careManagerName: formData.careManagerName,
+            affiliatedWelfareInstitution: formData.affiliatedWelfareInstitution,
+            isDisability: formData.isDisability,
           },
-        });
+          {
+            onSuccess: () => {
+              refetch();
+              refetchBirthDates();
+              refetchInstitutions();
+            },
+          },
+        );
       } catch {
         // 에러는 BaseAPI에서 처리하므로 여기서는 아무것도 하지 않음
       }
@@ -125,7 +141,6 @@ export const useCounseleeManagement = () => {
     filter,
     filterOptions,
     handlePageChange,
-    handleSearch,
     handleDelete,
     handleUpdate,
     handleCreate,

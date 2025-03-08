@@ -3,13 +3,12 @@ import {
   DataTablePagination,
   PaginationInfo,
 } from '@/components/common/DataTable/pagination';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useSearchCounselSessions } from '../hooks/query/useCounselSessionQuery';
 import {
   useCounselSessionDetailStore,
   useCounselSessionParamsStore,
 } from '../hooks/store/useCounselSessionStore';
-import { ScheduleDialog } from './dialog/ScheduleDialog';
 import { ScheduleTable } from './table/ScheduleTable';
 
 // API 응답 타입 확장
@@ -22,9 +21,6 @@ export function ScheduleTableSection() {
   // Zustand 스토어 사용
   const { params, setParams } = useCounselSessionParamsStore();
   const { setDetail } = useCounselSessionDetailStore();
-
-  // 수정 모드 대화상자 상태
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   // 데이터 조회
   const { data, isLoading } = useSearchCounselSessions(
@@ -66,7 +62,6 @@ export function ScheduleTableSection() {
   const handleUpdate = useCallback(
     (session: SelectCounselSessionListItem) => {
       setDetail(session);
-      setIsEditDialogOpen(true);
     },
     [setDetail],
   );
@@ -85,13 +80,6 @@ export function ScheduleTableSection() {
       <DataTablePagination
         pagination={pagination}
         onPageChange={handlePageChange}
-      />
-
-      {/* 수정 모드 대화상자 */}
-      <ScheduleDialog
-        mode="edit"
-        isOpen={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
       />
     </div>
   );
