@@ -14,6 +14,11 @@ export const SearchInput = ({ value, onChange }: SearchInputProps) => {
     onChange(e.target.value);
   };
 
+  const handleClear = () => {
+    onChange('');
+    inputRef.current?.focus();
+  };
+
   return (
     <div className="relative">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5" />
@@ -27,6 +32,7 @@ export const SearchInput = ({ value, onChange }: SearchInputProps) => {
       {value && (
         <button
           type="button"
+          onClick={handleClear}
           className="absolute right-3 top-1/2 -translate-y-1/2">
           <X className="h-5 w-5" />
         </button>

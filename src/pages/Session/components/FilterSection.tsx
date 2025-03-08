@@ -54,8 +54,8 @@ export const FilterSection = () => {
       setKeywordError(null);
     }
 
-    // 파라미터 업데이트 (항상 실행)
-    setParams({ counseleeNameKeyword: value });
+    // 파라미터 업데이트 (항상 실행) - 페이지 리셋 추가
+    setParams({ counseleeNameKeyword: value, page: 0 });
   };
 
   // 상담사 필터 변경 핸들러
@@ -63,6 +63,7 @@ export const FilterSection = () => {
     setParams({
       counselorNames:
         selectedCounselors.length > 0 ? selectedCounselors : undefined,
+      page: 0, // 페이지 리셋
     });
   };
 
@@ -79,6 +80,7 @@ export const FilterSection = () => {
     setDates(formattedDates);
     setParams({
       scheduledDates: formattedDates.length > 0 ? formattedDates : undefined,
+      page: 0, // 페이지 리셋
     });
   };
 
@@ -89,9 +91,9 @@ export const FilterSection = () => {
   });
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex justify-between items-center">
-        <div className="flex gap-4 items-center">
+    <div className="flex flex-col gap-2 w-full">
+      <div className="flex justify-between items-center flex-wrap">
+        <div className="flex gap-4 items-center flex-wrap">
           <div className="flex flex-col">
             <SearchInput
               value={params.counseleeNameKeyword || ''}
@@ -102,7 +104,7 @@ export const FilterSection = () => {
             )}
           </div>
           <TableFilter
-            title="담당 상담사"
+            title="담당 약사"
             options={counselorNames.map((counselorName) => ({
               label: counselorName,
               value: counselorName,

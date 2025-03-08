@@ -1,9 +1,9 @@
 import NavigationLeft from '@/components/common/NavigationLeft';
-import { Outlet, useLocation } from 'react-router-dom';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { useMemo } from 'react';
 import NavigationRight from '@/components/NavigationRight';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
+import { useMemo } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 function Layout() {
   const location = useLocation();
 

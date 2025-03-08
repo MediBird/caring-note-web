@@ -17,7 +17,16 @@ export const useCounseleeManagement = () => {
   const [size] = useState(10);
 
   // 스토어 사용
-  const { filter, setFilter } = useFilterStore();
+  const { filter, setFilter: originalSetFilter } = useFilterStore();
+
+  // 필터 변경 시 페이지 리셋하는 래퍼 함수
+  const setFilter = useCallback(
+    (newFilter: Partial<typeof filter>) => {
+      originalSetFilter(newFilter);
+      setPage(0); // 필터 변경 시 페이지를 0으로 리셋
+    },
+    [originalSetFilter],
+  );
 
   // 필터 이름이 한글 또는 영어인지 확인하는 함수
   const isValidName = useCallback((name: string | undefined) => {

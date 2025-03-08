@@ -1,6 +1,6 @@
 import { Header } from '../../components/ui/Header';
+import { CounselSessionTableSection } from './components/CounselSessionTableSection';
 import { FilterSection } from './components/FilterSection';
-import { ScheduleTableSection } from './components/ScheduleTableSection';
 
 /**
  * 상담 일정 관리 페이지
@@ -13,24 +13,16 @@ const SessionManagement = () => {
   return (
     <div className="bg-white min-h-screen">
       {/* 페이지 헤더 */}
-      <Header
-        title="상담 일정 관리"
-        description="내담자의 상담 일정을 관리합니다"
-      />
+      <Header title="상담 일정 관리" description="내담자의 복약 상담 내역" />
 
       {/* 메인 콘텐츠 */}
-      <div className="container mx-auto py-8">
-        <div className="flex flex-col gap-6">
-          {/* 페이지 제목 */}
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">상담 일정 관리</h1>
-          </div>
-
+      <div className="flex justify-center pt-5 px-layout max-w-layout mx-auto w-full">
+        <div className="flex flex-col gap-5 w-full">
           {/* 필터 섹션 */}
           <FilterSection />
 
           {/* 테이블 섹션 */}
-          <ScheduleTableSection />
+          <CounselSessionTableSection />
         </div>
       </div>
     </div>
