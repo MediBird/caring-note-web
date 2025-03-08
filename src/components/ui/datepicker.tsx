@@ -56,6 +56,9 @@ export function DatePickerComponent({
 
   const isDateDisabled = useCallback(
     (date: Date) => {
+      if (enabledDatesSet.size === 0) {
+        return false;
+      }
       const formattedDate = format(date, 'yyyy-MM-dd');
       return !enabledDatesSet.has(formattedDate);
     },
