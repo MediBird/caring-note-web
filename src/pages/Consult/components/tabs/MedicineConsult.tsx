@@ -3,7 +3,6 @@ import logoBlack from '@/assets/logoBlack.png';
 import HighlightInput from '@/components/consult/HighlightInput';
 import Recording from '@/components/consult/Recording';
 import { CardHeader, CardTitle } from '@/components/ui/card';
-import GrayContainer from '@/pages/Consult/components/GrayContainer';
 import RecordingResult from '@/pages/Consult/components/recording/RecordingResult';
 
 const MedicineConsult: React.FC = () => {
@@ -30,15 +29,16 @@ const MedicineConsult: React.FC = () => {
   return (
     <div className="flex flex-col">
       <CardHeader>
-        <CardTitle>중재 기록 작성</CardTitle>
+        <CardTitle>상담 기록</CardTitle>
       </CardHeader>
+
       <div className="flex flex-row w-full space-x-4">
-        <div className="min-w-[600px] flex-1">
-          <GrayContainer
-            title="상담 기록"
-            subTitle="하이라이트 시, 다음 지속 상담에 해당 내용을 가장 먼저 확인할 수 있어요">
-            {isRightNavigationOpen ? <ViewWarningImage /> : <HighlightInput />}
-          </GrayContainer>
+        <div className="flex flex-col min-w-[600px] min-h-[600px] flex-1">
+          {isRightNavigationOpen ? (
+            <ViewWarningImage />
+          ) : (
+            <HighlightInput className="h-full" />
+          )}
         </div>
 
         <div className="flex flex-1 w-full justify-center">
