@@ -1,17 +1,18 @@
 import { SelectCounselSessionListItem } from '@/api/api';
-import CollegeMessages from '@/pages/Home/components/CollegeMessages';
+import background from '@/assets/home/home-bg.webp';
+import logoWide from '@/assets/home/logo-wide.webp';
+import tableEmpty from '@/assets/home/table-empty.webp';
+import DatePickerComponent from '@/components/ui/datepicker';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
+import { cn } from '@/lib/utils';
+import CollegeMessages from '@/pages/Home/components/CollegeMessages';
+import ConsultCountContainer from '@/pages/Home/components/ConsultCountContainer';
 import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
 import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 import { addMonths } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
-import { addMonths } from 'date-fns';
-import logoWide from '@/assets/home/logo-wide.webp';
-import background from '@/assets/home/home-bg.webp';
-import ConsultCountContainer from '@/pages/Home/components/ConsultCountContainer';
-import tableEmpty from '@/assets/home/table-empty.webp';
-import { cn } from '@/lib/utils';
 
 function Home() {
   const today = new Date();
@@ -82,7 +83,7 @@ function Home() {
                   initialDate={selectedDate}
                   selectedMonth={selectedMonth}
                   onMonthChange={setSelectedMonth}
-                  handleClicked={(date) => {
+                  handleClicked={(date?: Date) => {
                     setSelectedDate(date ?? new Date());
                   }}
                   enabledDates={counselActiveDate ?? []}
