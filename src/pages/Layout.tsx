@@ -1,4 +1,4 @@
-import NavigationLeft from '@/components/NavigationLeft';
+import NavigationLeft from '@/components/common/NavigationLeft';
 import { Outlet, useLocation } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useMemo } from 'react';

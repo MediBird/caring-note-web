@@ -1,8 +1,8 @@
+import { Header } from '../../components/ui/Header';
 import { CounseleeTableSection } from './components/CounseleeTableSection';
 import { CounseleeDialog } from './components/dialog/CounseleeDialog';
 import { FilterSection } from './components/FilterSection';
-import { Header } from './components/Header';
-import { useCounseleeManagement } from './hooks/query/useCounseleeManagement';
+import { useCounseleeManagement } from './hooks/useCounseleeManagement';
 
 const CounseleeManagement = () => {
   const {
@@ -10,9 +10,6 @@ const CounseleeManagement = () => {
     filter,
     filterOptions,
     handlePageChange,
-    handleSearch,
-    handleBirthDatesClick,
-    handleInstitutionsClick,
     handleDelete,
     handleUpdate,
     handleCreate,
@@ -31,7 +28,6 @@ const CounseleeManagement = () => {
             <FilterSection
               nameFilter={filter.name}
               setNameFilter={(value) => setFilter({ name: value })}
-              handleSearch={handleSearch}
               birthDatesFilter={filter.birthDates}
               setBirthDatesFilter={(values) =>
                 setFilter({ birthDates: values })
@@ -42,8 +38,6 @@ const CounseleeManagement = () => {
               }
               birthDatesOptions={filterOptions.birthDatesOptions}
               institutionsOptions={filterOptions.institutionsOptions}
-              onBirthDatesClick={handleBirthDatesClick}
-              onInstitutionsClick={handleInstitutionsClick}
             />
             <CounseleeDialog onSubmit={handleCreate} />
           </div>

@@ -1,11 +1,11 @@
-import CounseleeManagement from '@/pages/Counselee';
-import Survey from '@/pages/Survey/tabs/Index';
 import Consult from '@/pages/Consult';
+import CounseleeManagement from '@/pages/Counselee';
 import ErrorPage from '@/pages/ErrorPage';
 import Home from '@/pages/Home';
-import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
-import SurveyList from '@/pages/Survey/Index';
 import Layout from '@/pages/Layout';
+import SessionManagement from '@/pages/Session';
+import Survey from '@/pages/Survey/tabs/Index';
+import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 
 type AppRouteObject = RouteObject & {
   children?: AppRouteObject[];
@@ -25,10 +25,6 @@ const Routes = () => {
       {
         path: '/',
         element: <Home />,
-      },
-      {
-        path: '/counselee-management',
-        element: <CounseleeManagement />,
       },
     ],
   };
@@ -53,11 +49,19 @@ const Routes = () => {
     path: '/survey',
     element: <Layout />,
     children: [
-      {
-        path: '',
-        element: <SurveyList />,
-      },
       { path: ':counselSessionId', element: <Survey /> },
+      {
+        path: ':counselSessionId',
+        element: <Survey />,
+      },
+    ],
+  };
+  const AdminRoutes: AppRouteObject = {
+    path: '/admin',
+    element: <Layout />,
+    children: [
+      { path: '/admin/session', element: <SessionManagement /> },
+      { path: '/admin/counselee', element: <CounseleeManagement /> },
     ],
   };
 
@@ -66,6 +70,7 @@ const Routes = () => {
     mainRoutes,
     consultRoutes,
     surveyRoutes,
+    AdminRoutes,
   ];
 
   return useRoutes(routes);

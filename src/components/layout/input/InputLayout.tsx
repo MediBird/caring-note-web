@@ -1,4 +1,4 @@
-import InputComponent from "@/components/common/InputComponent";
+import InputComponent from '@/components/common/InputComponent';
 type option = {
   val: string;
   name: string;

@@ -1,11 +1,11 @@
 import { SelectCounseleeRes } from '@/api/api';
+import { TableCell } from '@/components/common/DataTable/table-cell';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { TableCell } from '@/components/ui/table-cell';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
 

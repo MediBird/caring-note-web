@@ -1,5 +1,10 @@
-import { CounselSessionControllerApi } from '@/api/api';
-import { useQuery } from '@tanstack/react-query';
+import {
+  CounselSessionControllerApi,
+  CreateCounselReservationReq,
+  DeleteCounselSessionReq,
+  ModifyCounselReservationReq,
+} from '@/api/api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface FetchParams {
   baseDate?: string;
@@ -34,6 +39,63 @@ export const useSelectCounselSessionList = (params: FetchParams) =>
     queryFn: () => selectCounselSessionList(params),
     enabled: !!params,
   });
+
+// 상담 세션 생성 mutation
+export const useCreateCounselSession = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (newSession: CreateCounselReservationReq) => {
+      return counselSessionControllerApi.createCounselReservation(newSession);
+    },
+    onSuccess: () => {
+      // 상담 세션 목록 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey: COUNSEL_SESSION_KEYS.all });
+      // 검색 쿼리도 함께 무효화 (Schedule 페이지에서 사용하는 쿼리)
+      queryClient.invalidateQueries({
+        queryKey: ['counselSession', 'search'],
+      });
+    },
+  });
+};
+
+// 상담 세션 수정 mutation
+export const useUpdateCounselSession = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (updateParams: ModifyCounselReservationReq) => {
+      return counselSessionControllerApi.modifyCounselReservation(updateParams);
+    },
+    onSuccess: () => {
+      // 상담 세션 목록 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey: COUNSEL_SESSION_KEYS.all });
+      // 검색 쿼리도 함께 무효화 (Schedule 페이지에서 사용하는 쿼리)
+      queryClient.invalidateQueries({
+        queryKey: ['counselSession', 'search'],
+      });
+    },
+  });
+};
+
+// 상담 세션 삭제 mutation
+export const useDeleteCounselSession = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (params: DeleteCounselSessionReq) => {
+      return counselSessionControllerApi.deleteCounselSession(params);
+    },
+    onSuccess: () => {
+      // 상담 세션 목록 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey: COUNSEL_SESSION_KEYS.all });
+      // 검색 쿼리도 함께 무효화 (Schedule 페이지에서 사용하는 쿼리)
+      queryClient.invalidateQueries({
+        queryKey: ['counselSession', 'search'],
+      });
+    },
+  });
+};
 
 // 이전 상담 내역 조회
 const selectPreviousCounselSessionList = async (counselSessionId: string) => {

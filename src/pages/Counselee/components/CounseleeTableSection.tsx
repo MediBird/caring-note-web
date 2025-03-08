@@ -1,25 +1,14 @@
 import { SelectCounseleeRes } from '@/api/api';
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
+  DataTablePagination,
+  PaginationInfo,
+} from '@/components/common/DataTable/pagination';
 import { useState } from 'react';
 import {
   AddCounseleeFormData,
   CounseleeDialog,
 } from './dialog/CounseleeDialog';
 import { CounseleeTable } from './table/CounseleeTable';
-
-interface PaginationInfo {
-  currentPage: number;
-  totalPages: number;
-  hasPrevious: boolean;
-  hasNext: boolean;
-}
 
 interface CounseleeTableSectionProps {
   data?: SelectCounseleeRes[];
@@ -70,44 +59,10 @@ export const CounseleeTableSection = ({
         />
       )}
       <div className="flex justify-center mt-4">
-        <Pagination>
-          <PaginationContent>
-            {pagination.currentPage >= 10 && (
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => onPageChange(pagination.currentPage - 10)}
-                />
-              </PaginationItem>
-            )}
-            {Array.from({ length: Math.min(10, pagination.totalPages) }).map(
-              (_, i) => {
-                const pageGroup = Math.floor(pagination.currentPage / 10);
-                const pageNumber = pageGroup * 10 + i;
-
-                if (pageNumber >= pagination.totalPages) return null;
-
-                return (
-                  <PaginationItem key={pageNumber}>
-                    <PaginationLink
-                      onClick={() => onPageChange(pageNumber)}
-                      isActive={pagination.currentPage === pageNumber}
-                      className="w-[30px] h-[30px] font-light flex items-center justify-center"
-                      size="md">
-                      {pageNumber + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                );
-              },
-            )}
-            {pagination.currentPage < pagination.totalPages - 10 && (
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => onPageChange(pagination.currentPage + 10)}
-                />
-              </PaginationItem>
-            )}
-          </PaginationContent>
-        </Pagination>
+        <DataTablePagination
+          pagination={pagination}
+          onPageChange={onPageChange}
+        />
       </div>
     </div>
   );

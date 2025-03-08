@@ -10,23 +10,27 @@ interface TableCellProps {
   text: string;
   width?: number;
   className?: string;
+  textColor?: string;
 }
 
-export const TableCell = ({ text, width, className }: TableCellProps) => {
+export const TableCell = ({
+  text,
+  width,
+  className,
+  textColor,
+}: TableCellProps) => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div 
-            className={cn(
-              "w-full overflow-hidden",
-              className
-            )}
-            style={{ 
+          <div
+            className={cn('w-full overflow-hidden', className)}
+            style={{
               width: width ? `${width}px` : 'auto',
-              maxWidth: width ? `${width}px` : 'auto'
+              maxWidth: width ? `${width}px` : 'auto',
             }}>
-            <div className="text-body1 font-medium text-grayscale-100 ml-3 truncate">
+            <div
+              className={cn('text-body1 font-medium ml-3 truncate', textColor)}>
               {text}
             </div>
           </div>

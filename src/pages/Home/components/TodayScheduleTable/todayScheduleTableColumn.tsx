@@ -1,13 +1,13 @@
-import AssignDialog from '@/pages/Home/components/AssignDialog';
-import SurveyDialog from '@/pages/Home/components/SurveyDialog';
 import {
   AddCounselCardReqCardRecordStatusEnum,
-  AddCounselSessionReqStatusEnum,
   SelectCounselSessionListItem,
+  SelectCounselSessionListItemStatusEnum,
 } from '@/api/api';
-import { ColumnDef } from '@tanstack/react-table';
 import Tooltip from '@/components/Tooltip';
 import CounselStatusCell from '@/components/common/DataTable/counsel-status-cell';
+import AssignDialog from '@/pages/Home/components/AssignDialog';
+import SurveyDialog from '@/pages/Home/components/SurveyDialog';
+import { ColumnDef } from '@tanstack/react-table';
 
 interface TodayScheduleTableColumnProps {
   onCellClick: (counselSessionId: string) => void;
@@ -51,7 +51,9 @@ export const createColumns = ({
     cell: ({ row }) => {
       const status = row.original.status ?? '-';
       return (
-        <CounselStatusCell status={status as AddCounselSessionReqStatusEnum} />
+        <CounselStatusCell
+          status={status as SelectCounselSessionListItemStatusEnum}
+        />
       );
     },
   },

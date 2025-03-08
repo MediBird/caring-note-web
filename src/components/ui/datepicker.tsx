@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import * as React from 'react';
 
+import Spinner from '@/components/common/Spinner';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -9,9 +10,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { Dispatch, useMemo, useCallback } from 'react';
-import { SetStateAction } from 'react';
-import Spinner from '@/components/common/Spinner';
+import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 
 export interface DatePickerProps {
   placeholder?: string;
@@ -66,7 +65,7 @@ export function DatePickerComponent({
   );
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
+    <Popover open={isOpen} onOpenChange={setIsOpen} modal={true}>
       <PopoverTrigger asChild>
         {trigger ? (
           React.cloneElement(trigger as React.ReactElement, {
@@ -92,7 +91,17 @@ export function DatePickerComponent({
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-auto" align="end" side="bottom">
+      <PopoverContent
+        className="w-auto"
+        align="end"
+        side="bottom"
+        onInteractOutside={(e) => {
+          e.preventDefault();
+          setIsOpen(false);
+        }}
+        onEscapeKeyDown={() => {
+          setIsOpen(false);
+        }}>
         {isLoading ? (
           <div className="flex items-center justify-center h-[289px] w-[252px]">
             <Spinner className="w-6 h-6" />
