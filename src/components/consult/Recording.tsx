@@ -37,7 +37,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
 
   const playIcon = (
     <PlayIcon
-      className="w-8 h-8 bg-white rounded-[100px] p-1 cursor-pointer"
+      className="w-11 h-11 bg-white rounded-[100px] p-2 cursor-pointer border-[1px] border-grayscale-10"
       onClick={
         recordingStatus === RecordingStatus.Ready
           ? startRecording // 최초 녹음시작
@@ -48,14 +48,14 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
 
   const pauseIcon = (
     <PauseIcon
-      className="w-8 h-8 bg-white rounded-[100px] p-1 cursor-pointer"
+      className="w-11 h-11 bg-white rounded-[100px] p-2 cursor-pointer border-[1px] border-grayscale-10"
       onClick={pauseRecording}
     />
   );
 
   const stopIcon = (
     <StopIcon
-      className="w-8 h-8 bg-white rounded-[100px] p-1 cursor-pointer"
+      className="w-11 h-11 bg-white rounded-[100px] p-2 cursor-pointer border-[1px] border-grayscale-10"
       onClick={stopRecording}
     />
   );
@@ -161,7 +161,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
                 {getRecordingImage()}
               </div>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 {recordingStatus === RecordingStatus.Ready && <>{playIcon}</>}
                 {recordingStatus === RecordingStatus.Recording && (
                   <>
