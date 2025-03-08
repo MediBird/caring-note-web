@@ -10,84 +10,55 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import TimepickerComponent from '@/components/ui/time-picker';
+import { DialogTrigger } from '@radix-ui/react-dialog';
 import { AlertCircle, XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useUpdateCounselSession } from '../../hooks/query/useCounselSessionQuery';
-import { useCounselSessionDetailStore } from '../../hooks/store/useCounselSessionStore';
 import {
-  combineToIsoDateTime,
+  combineToFormattedDateTime,
   extractDateTimeFromIso,
 } from '../../utils/dateTimeUtils';
 import CounseleeSearchInput from './CounseleeSearchInput';
 
 interface EditReservationDialogProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  sessionData: SelectCounselSessionListItem;
+  session: SelectCounselSessionListItem;
+  triggerComponent?: React.ReactNode;
 }
 
 export const EditReservationDialog = ({
-  isOpen,
-  onOpenChange,
-  sessionData,
+  session,
+  triggerComponent,
 }: EditReservationDialogProps) => {
-  // 로컬 상태
   const [counseleeId, setCounseleeId] = useState('');
   const [counseleeName, setCounselee] = useState('');
   const [sessionDate, setSessionDate] = useState('');
   const [sessionTime, setSessionTime] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // 상담 세션 상세 정보 저장소
-  const { setDetail, resetDetail } = useCounselSessionDetailStore();
+  const [sessionId, setSessionId] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   // 상담 세션 업데이트 뮤테이션
   const updateCounselSession = useUpdateCounselSession();
 
   // 수정 모드에서 상세 정보 로드
   useEffect(() => {
-    if (isOpen && sessionData) {
+    if (session) {
       // 내담자 정보 설정
-      setCounselee(sessionData.counseleeName || '');
-      setCounseleeId(sessionData.counseleeId || '');
+      setCounselee(session.counseleeName || '');
+      setCounseleeId(session.counseleeId || '');
+      setSessionId(session.counselSessionId || '');
 
       // 날짜와 시간 설정
-      if (sessionData.scheduledDate) {
-        const { date, time } = extractDateTimeFromIso(
-          sessionData.scheduledDate,
-        );
+      if (session.scheduledDate) {
+        const { date, time } = extractDateTimeFromIso(session.scheduledDate);
         setSessionDate(date);
         setSessionTime(time);
       }
-
-      // 상세 정보 저장
-      setDetail(sessionData);
     }
-  }, [isOpen, sessionData, setDetail]);
-
-  // 대화상자 상태 변경 처리
-  const handleOpenChange = (open: boolean) => {
-    // 부모 컴포넌트에 상태 변경 알림
-    onOpenChange(open);
-
-    // 대화상자가 닫힐 때 상태 초기화
-    if (!open) {
-      resetFormFields();
-      resetDetail();
-    }
-  };
-
-  // 폼 필드 초기화
-  const resetFormFields = () => {
-    setCounselee('');
-    setCounseleeId('');
-    setSessionDate('');
-    setSessionTime('');
-    setError(null);
-    setIsSubmitting(false);
-  };
+  }, [session]);
 
   // 폼 유효성 검증
   const validateForm = (): boolean => {
@@ -121,28 +92,30 @@ export const EditReservationDialog = ({
       setError(null);
 
       // 날짜와 시간 결합 (ISO 형식)
-      const scheduledDateTime = combineToIsoDateTime(sessionDate, sessionTime);
+      const scheduledDateTime = combineToFormattedDateTime(
+        sessionDate,
+        sessionTime,
+      );
 
       if (!scheduledDateTime) {
         setError('날짜와 시간 형식이 유효하지 않습니다.');
         return;
       }
 
-      if (sessionData?.counselSessionId) {
+      if (sessionId) {
         // 상담 세션 수정
         await updateCounselSession.mutateAsync({
-          counselSessionId: sessionData.counselSessionId,
+          counselSessionId: sessionId,
           counseleeId: counseleeId,
           scheduledStartDateTime: scheduledDateTime,
         });
         console.log('상담 일정이 수정되었습니다.');
+        // 성공 후 다이얼로그 닫기
+        setDialogOpen(false);
       } else {
         setError('수정할 상담 세션 정보가 없습니다.');
         return;
       }
-
-      // 대화상자 닫기
-      handleOpenChange(false);
     } catch (error) {
       console.error('상담 일정 처리 중 오류가 발생했습니다:', error);
       setError('상담 일정 처리 중 오류가 발생했습니다.');
@@ -162,6 +135,17 @@ export const EditReservationDialog = ({
     }
   };
 
+  // 대화상자 상태 변경 처리
+  const handleOpenChange = (open: boolean) => {
+    setDialogOpen(open);
+
+    // 대화상자가 닫힐 때 에러 초기화
+    if (!open) {
+      setError(null);
+      setIsSubmitting(false);
+    }
+  };
+
   // 에러 메시지가 있을 경우 자동으로 스크롤
   useEffect(() => {
     if (error) {
@@ -171,7 +155,20 @@ export const EditReservationDialog = ({
   }, [error]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
+      {triggerComponent ? (
+        <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
+      ) : (
+        <DialogTrigger asChild>
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              setDialogOpen(true);
+            }}>
+            수정하기
+          </DropdownMenuItem>
+        </DialogTrigger>
+      )}
       <DialogContent className="w-[31.25rem]">
         <DialogHeader>
           <DialogTitle>상담 일정 수정</DialogTitle>

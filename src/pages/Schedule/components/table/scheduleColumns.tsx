@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
+import { EditReservationDialog } from '../dialog/EditReservationDialog';
 
 export const createScheduleColumns = ({
   onDelete,
@@ -124,12 +125,14 @@ export const createScheduleColumns = ({
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => {
-                onEdit(row.original);
-              }}>
-              수정하기
-            </DropdownMenuItem>
+            <EditReservationDialog
+              session={row.original}
+              triggerComponent={
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  수정하기
+                </DropdownMenuItem>
+              }
+            />
             <DropdownMenuItem
               onClick={() => {
                 onDelete(row.original.counselSessionId as string);
