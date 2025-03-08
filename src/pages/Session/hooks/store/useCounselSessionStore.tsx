@@ -25,7 +25,6 @@ interface ParamsState {
 export const useCounselSessionParamsStore = create<ParamsState>((set) => ({
   params: {
     baseDate: undefined,
-    cursor: undefined,
     size: 10,
     page: 0,
     counseleeNameKeyword: undefined,
@@ -38,7 +37,6 @@ export const useCounselSessionParamsStore = create<ParamsState>((set) => ({
     set({
       params: {
         baseDate: undefined,
-        cursor: undefined,
         size: 10,
         page: 0,
         counseleeNameKeyword: undefined,

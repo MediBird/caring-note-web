@@ -22,7 +22,7 @@ export const createScheduleColumns = ({
     id: 'counseleeName',
     accessorKey: 'counseleeName',
     header: '내담자',
-    size: 100,
+    size: 150,
     cell: ({ row }) => {
       const counseleeName = row.original.counseleeName;
       return <TableCell text={counseleeName ?? ''} />;
@@ -42,7 +42,7 @@ export const createScheduleColumns = ({
     id: 'counselorName',
     accessorKey: 'counselorName',
     header: '담당 약사',
-    size: 120,
+    size: 150,
     cell: ({ row }) => {
       const counselorName = row.original.counselorName;
       return <TableCell text={counselorName ?? ''} />;
@@ -52,7 +52,7 @@ export const createScheduleColumns = ({
     id: 'scheduledDate',
     accessorKey: 'scheduledDate',
     header: '상담 일자',
-    size: 120,
+    size: 150,
     cell: ({ row }) => {
       const scheduledDate = row.original.scheduledDate;
       return <TableCell text={scheduledDate ?? ''} />;
@@ -62,7 +62,7 @@ export const createScheduleColumns = ({
     id: 'scheduledTime',
     accessorKey: 'scheduledTime',
     header: '예약 시각',
-    size: 100,
+    size: 150,
     cell: ({ row }) => {
       const scheduledTime = row.original.scheduledTime;
       return <TableCell text={scheduledTime ?? ''} />;
@@ -72,7 +72,7 @@ export const createScheduleColumns = ({
     id: 'status',
     accessorKey: 'status',
     header: '상담 상태',
-    size: 120,
+    size: 150,
     cell: ({ row }) => {
       const status = row.original.status;
       let statusText = '';
