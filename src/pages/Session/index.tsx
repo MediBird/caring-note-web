@@ -9,7 +9,7 @@ import { ScheduleTableSection } from './components/ScheduleTableSection';
  * FilterSection과 ScheduleTableSection 컴포넌트로 구성되어 있으며,
  * 각 컴포넌트는 Zustand 스토어를 통해 상태를 공유합니다.
  */
-const ScheduleManagement = () => {
+const SessionManagement = () => {
   return (
     <div className="bg-white min-h-screen">
       {/* 페이지 헤더 */}
@@ -37,4 +37,4 @@ const ScheduleManagement = () => {
   );
 };
 
-export default ScheduleManagement;
+export default SessionManagement;

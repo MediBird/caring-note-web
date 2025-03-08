@@ -3,7 +3,7 @@ import CounseleeManagement from '@/pages/Counselee';
 import ErrorPage from '@/pages/ErrorPage';
 import Home from '@/pages/Home';
 import Layout from '@/pages/Layout';
-import Schedule from '@/pages/Schedule';
+import SessionManagement from '@/pages/Session';
 import Survey from '@/pages/Survey/tabs/Index';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 
@@ -25,10 +25,6 @@ const Routes = () => {
       {
         path: '/',
         element: <Home />,
-      },
-      {
-        path: '/counselee-management',
-        element: <CounseleeManagement />,
       },
     ],
   };
@@ -60,25 +56,12 @@ const Routes = () => {
       },
     ],
   };
-  const scheduleRoutes: AppRouteObject = {
-    path: '/schedule',
+  const AdminRoutes: AppRouteObject = {
+    path: '/admin',
     element: <Layout />,
     children: [
-      {
-        path: '',
-        element: <Schedule />,
-      },
-    ],
-  };
-
-  const counseleeManagementRoute: AppRouteObject = {
-    path: '/counselee-management',
-    element: <Layout />,
-    children: [
-      {
-        path: '',
-        element: <CounseleeManagement />,
-      },
+      { path: '/admin/session', element: <SessionManagement /> },
+      { path: '/admin/counselee', element: <CounseleeManagement /> },
     ],
   };
 
@@ -87,8 +70,7 @@ const Routes = () => {
     mainRoutes,
     consultRoutes,
     surveyRoutes,
-    scheduleRoutes,
-    counseleeManagementRoute,
+    AdminRoutes,
   ];
 
   return useRoutes(routes);

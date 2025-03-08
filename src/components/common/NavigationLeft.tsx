@@ -55,7 +55,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         name: '상담 내역',
         collapsedName: '상담내역',
         icon: <NoteIcon width={24} height={24} />,
-        route: '/schedule',
+        route: '/admin/session',
         roles: ['ROLE_ADMIN'],
       },
       {
@@ -67,13 +67,14 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
       {
         name: '내담자 관리',
         collapsedName: '내담자 관리',
-        route: '/counselee-management',
+        route: '/admin/counselee',
         icon: <PatientIcon width={24} height={24} />,
         roles: ['ROLE_ADMIN', 'ROLE_USER'],
       },
       {
         name: '계정 관리',
         collapsedName: '계정관리',
+        route: '/admin/account',
         icon: <AdminIcon width={24} height={24} />,
         roles: ['ROLE_ADMIN'],
       },
