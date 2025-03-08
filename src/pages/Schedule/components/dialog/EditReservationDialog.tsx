@@ -143,6 +143,14 @@ export const EditReservationDialog = ({
     if (!open) {
       setError(null);
       setIsSubmitting(false);
+
+      // 포커스 관리: 다이얼로그가 닫힐 때 트리거 요소로 포커스 돌려주기
+      setTimeout(() => {
+        const triggerElement = document.querySelector('[data-state="closed"]');
+        if (triggerElement instanceof HTMLElement) {
+          triggerElement.focus();
+        }
+      }, 0);
     }
   };
 
@@ -155,11 +163,13 @@ export const EditReservationDialog = ({
   }, [error]);
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={dialogOpen} onOpenChange={handleOpenChange} modal={true}>
       {triggerComponent ? (
-        <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
+        <DialogTrigger asChild data-trigger-id="edit-reservation-trigger">
+          {triggerComponent}
+        </DialogTrigger>
       ) : (
-        <DialogTrigger asChild>
+        <DialogTrigger asChild data-trigger-id="edit-reservation-trigger">
           <DropdownMenuItem
             onSelect={(e) => {
               e.preventDefault();
@@ -169,12 +179,22 @@ export const EditReservationDialog = ({
           </DropdownMenuItem>
         </DialogTrigger>
       )}
-      <DialogContent className="w-[31.25rem]">
+      <DialogContent
+        className="w-[31.25rem]"
+        // 포커스 관리 및 접근성 개선
+        onEscapeKeyDown={() => setDialogOpen(false)}
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+          const triggerElement = document.querySelector(
+            '[data-trigger-id="edit-reservation-trigger"]',
+          );
+          if (triggerElement instanceof HTMLElement) {
+            setTimeout(() => triggerElement.focus(), 0);
+          }
+        }}>
         <DialogHeader>
           <DialogTitle>상담 일정 수정</DialogTitle>
-          <DialogDescription className="text-sm text-grayscale-60">
-            상담 일정을 수정합니다.
-          </DialogDescription>
+          <DialogDescription className="text-sm text-grayscale-60"></DialogDescription>
           <DialogClose
             asChild
             className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6 absolute right-4 top-4">
@@ -214,6 +234,7 @@ export const EditReservationDialog = ({
               <DatePickerComponent
                 className="border border-grayscale-30"
                 selectedMonth={sessionDate ? new Date(sessionDate) : new Date()}
+                initialDate={sessionDate ? new Date(sessionDate) : undefined}
                 enabledDates={[]}
                 handleClicked={(date) => {
                   if (date) {
@@ -221,6 +242,12 @@ export const EditReservationDialog = ({
                     setSessionDate(formattedDate);
                     if (error === '상담 일자를 선택해주세요.') {
                       setError(null);
+                    }
+                    // DatePicker가 닫힐 때 DialogContent로 포커스 이동
+                    const dialogContent =
+                      document.querySelector('[role="dialog"]');
+                    if (dialogContent instanceof HTMLElement) {
+                      setTimeout(() => dialogContent.focus(), 0);
                     }
                   }
                 }}
@@ -231,10 +258,17 @@ export const EditReservationDialog = ({
                 예약 시간<span className="text-red-500 ml-1">*</span>
               </label>
               <TimepickerComponent
+                placeholder={sessionTime}
                 handleClicked={(time: string | undefined) => {
                   setSessionTime(time || '');
                   if (error === '상담 시간을 선택해주세요.') {
                     setError(null);
+                  }
+                  // TimePicker가 닫힐 때 DialogContent로 포커스 이동
+                  const dialogContent =
+                    document.querySelector('[role="dialog"]');
+                  if (dialogContent instanceof HTMLElement) {
+                    setTimeout(() => dialogContent.focus(), 0);
                   }
                 }}
               />

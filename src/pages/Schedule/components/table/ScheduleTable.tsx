@@ -1,18 +1,13 @@
-import { SelectCounselSessionListItem } from '@/api/api';
+import { SelectCounselSessionRes } from '@/api/api';
 import { DataTable } from '@/components/common/DataTable/data-table';
-import { createScheduleColumns } from './scheduleColumns';
-
+import { createScheduleColumns } from './ScheduleColumns';
 interface ScheduleTableProps {
-  data: SelectCounselSessionListItem[];
+  data: SelectCounselSessionRes[];
   onDelete: (id: string) => void;
-  onEdit: (session: SelectCounselSessionListItem) => void;
 }
 
-export function ScheduleTable({ data, onDelete, onEdit }: ScheduleTableProps) {
+export function ScheduleTable({ data, onDelete }: ScheduleTableProps) {
   return (
-    <DataTable
-      columns={createScheduleColumns({ onDelete, onEdit })}
-      data={data}
-    />
+    <DataTable columns={createScheduleColumns({ onDelete })} data={data} />
   );
 }

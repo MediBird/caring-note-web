@@ -1,6 +1,6 @@
 import {
-  SelectCounselSessionListItem,
   SelectCounselSessionListItemStatusEnum,
+  SelectCounselSessionRes,
 } from '@/api/api';
 import { TableCell } from '@/components/common/DataTable/table-cell';
 import {
@@ -15,11 +15,9 @@ import { EditReservationDialog } from '../dialog/EditReservationDialog';
 
 export const createScheduleColumns = ({
   onDelete,
-  onEdit,
 }: {
   onDelete: (id: string) => void;
-  onEdit: (session: SelectCounselSessionListItem) => void;
-}): ColumnDef<SelectCounselSessionListItem>[] => [
+}): ColumnDef<SelectCounselSessionRes>[] => [
   {
     id: 'counseleeName',
     accessorKey: 'counseleeName',
@@ -36,8 +34,8 @@ export const createScheduleColumns = ({
     header: '상담 회차',
     size: 100,
     cell: ({ row }) => {
-      const sessionCount = 1;
-      return <TableCell text={sessionCount.toString() + '회차'} />;
+      const sessionCount = row.original.sessionNumber;
+      return <TableCell text={sessionCount?.toString() + '회차'} />;
     },
   },
   {

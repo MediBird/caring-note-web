@@ -10,11 +10,7 @@ import {
 } from '../hooks/store/useCounselSessionStore';
 import { CreateReservationDialog } from './dialog/CreateReservationDialog';
 
-interface FilterSectionProps {
-  onSearch?: () => void;
-}
-
-export const FilterSection = ({ onSearch }: FilterSectionProps) => {
+export const FilterSection = () => {
   // 스토어와 데이터
   const { params, setParams } = useCounselSessionParamsStore();
   const { dates, setDates, year, month, setYearMonth } = useSessionDateStore();

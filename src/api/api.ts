@@ -2304,10 +2304,10 @@ export type SelectCounselSessionListItemCardRecordStatusEnum = typeof SelectCoun
 export interface SelectCounselSessionPageRes {
     /**
      * 
-     * @type {Array<SelectCounselSessionListItem>}
+     * @type {Array<SelectCounselSessionRes>}
      * @memberof SelectCounselSessionPageRes
      */
-    'content'?: Array<SelectCounselSessionListItem>;
+    'content'?: Array<SelectCounselSessionRes>;
     /**
      * 
      * @type {PageRes}
@@ -2369,7 +2369,23 @@ export interface SelectCounselSessionRes {
      * @memberof SelectCounselSessionRes
      */
     'sessionNumber'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SelectCounselSessionRes
+     */
+    'status'?: SelectCounselSessionResStatusEnum;
 }
+
+export const SelectCounselSessionResStatusEnum = {
+    Scheduled: 'SCHEDULED',
+    Progress: 'PROGRESS',
+    Completed: 'COMPLETED',
+    Canceled: 'CANCELED'
+} as const;
+
+export type SelectCounselSessionResStatusEnum = typeof SelectCounselSessionResStatusEnum[keyof typeof SelectCounselSessionResStatusEnum];
+
 /**
  * 내담자 자동완성 응답
  * @export

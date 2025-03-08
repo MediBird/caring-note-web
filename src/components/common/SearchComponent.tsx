@@ -5,8 +5,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { debounce } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface SearchComponentProps {
   commandProps?: React.ComponentProps<typeof Command>;
@@ -43,7 +42,7 @@ const SearchComponent = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
-    if (onChangeInputValue) debouncedOnChangeInputValue(value);
+    if (onChangeInputValue) onChangeInputValue(value);
     if (value === '') {
       setFilteredItems([]);
     } else {
@@ -54,15 +53,6 @@ const SearchComponent = ({
       setFilteredItems(updatedItems);
     }
   };
-
-  const debouncedOnChangeInputValue = useCallback(
-    (value: string) => {
-      debounce(() => {
-        if (onChangeInputValue) onChangeInputValue(value);
-      }, 300)();
-    },
-    [onChangeInputValue],
-  );
 
   const handleSelect = (item: string) => {
     setInputValue(item);

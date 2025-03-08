@@ -68,7 +68,6 @@ export const combineToIsoDateTime = (
   if (!date || !time) return null;
 
   try {
-    // 'yyyy-mm-dd HH:mm' 형식으로 변경
     return combineToFormattedDateTime(date, time);
   } catch (error) {
     console.error('날짜 결합 중 오류 발생:', error);
@@ -90,6 +89,7 @@ export const isValidDateTime = (date: string, time: string): boolean => {
     const dateTime = new Date(dateTimeString);
     return !isNaN(dateTime.getTime());
   } catch (error) {
+    console.error('날짜 유효성 검사 중 오류 발생:', error);
     return false;
   }
 };
