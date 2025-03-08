@@ -1,51 +1,59 @@
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { Header } from '../../components/ui/Header';
-import { ScheduleDialog } from './components/dialog/ScheduleDialog';
 import { FilterSection } from './components/FilterSection';
+import { ScheduleTableSection } from './components/ScheduleTableSection';
+import { useCounselSessionParamsStore } from './hooks/store/useCounselSessionStore';
 
+/**
+ * 상담 일정 관리 페이지
+ *
+ * 상담 일정을 조회, 등록, 수정, 삭제할 수 있는 페이지입니다.
+ * FilterSection과 ScheduleTableSection 컴포넌트로 구성되어 있으며,
+ * 각 컴포넌트는 Zustand 스토어를 통해 상태를 공유합니다.
+ */
 const ScheduleManagement = () => {
-  const [filter, setFilter] = useState({
-    name: '',
-    counselors: [] as string[],
-    dates: [] as Date[],
+  // Zustand 스토어
+  const { params } = useCounselSessionParamsStore();
+
+  // 검색 쿼리 - 명시적인 검색 버튼 클릭 시에만 사용
+  const { refetch } = useQuery({
+    queryKey: ['counselSessions', params],
+    queryFn: async () => {
+      // 빈 응답으로 지정 (실제 데이터는 ScheduleTableSection에서 로드함)
+      return null;
+    },
+    enabled: false, // 수동 실행 모드
   });
 
-  const handleSearch = () => {
-    // TODO: Implement search functionality
-    console.log('Searching with filters:', filter);
-  };
+  // 검색 버튼 핸들러 - 검증 없이 항상 refetch 요청
+  // (실제 API 호출 여부는 useSearchCounselSessions 내에서 결정됨)
+  const handleSearch = useCallback(() => {
+    console.log('검색 요청 전달');
+    refetch();
+  }, [refetch]);
 
   return (
-    <div>
-      <Header title="상담 내역" description="내담자의 복약 상담 내역" />
-      <div className="flex justify-center pt-5 max-w-layout px-layout [&>*]:max-w-content mx-auto w-full">
-        <div className="w-full h-full rounded-[0.5rem] items-center flex flex-col">
-          <div className="w-full h-full rounded-[0.5rem] flex justify-between pb-5">
-            <FilterSection
-              nameFilter={filter.name}
-              setNameFilter={(value) => setFilter({ ...filter, name: value })}
-              handleSearch={handleSearch}
-              counselors={filter.counselors}
-              setCounselors={(values) =>
-                setFilter({ ...filter, counselors: values })
-              }
-              selectedDates={filter.dates}
-              setSelectedDates={(dates) => setFilter({ ...filter, dates })}
-            />
-            <ScheduleDialog mode="add" />
+    <div className="bg-white min-h-screen">
+      {/* 페이지 헤더 */}
+      <Header
+        title="상담 일정 관리"
+        description="내담자의 상담 일정을 관리합니다"
+      />
+
+      {/* 메인 콘텐츠 */}
+      <div className="container mx-auto py-8">
+        <div className="flex flex-col gap-6">
+          {/* 페이지 제목 */}
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold">상담 일정 관리</h1>
           </div>
-          {/* <ScheduleTableSection
-            data={data?.content}
-            pagination={{
-              currentPage: data?.pagination?.currentPage ?? 0,
-              totalPages: data?.pagination?.totalPages ?? 1,
-              hasPrevious: data?.pagination?.hasPrevious ?? false,
-              hasNext: data?.pagination?.hasNext ?? false,
-            }}
-            onDelete={handleDelete}
-            onUpdate={handleUpdate}
-            onPageChange={handlePageChange}
-          /> */}
+
+          {/* 필터 섹션 */}
+          <FilterSection onSearch={handleSearch} />
+
+          {/* 테이블 섹션 */}
+          <ScheduleTableSection />
         </div>
       </div>
     </div>

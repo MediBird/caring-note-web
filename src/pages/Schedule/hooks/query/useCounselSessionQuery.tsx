@@ -1,10 +1,10 @@
 import {
-  AddCounselSessionReq,
   CounselorControllerApiFactory,
   CounselSessionControllerApiFactory,
+  CreateCounselReservationReq,
   DefaultApiFactory,
   DeleteCounselSessionReq,
-  UpdateCounselSessionReq,
+  ModifyCounselReservationReq,
 } from '@/api/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -13,8 +13,8 @@ export const useAddCounselSession = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (newCounselSession: AddCounselSessionReq) => {
-      return DefaultApiFactory().addCounselSession(newCounselSession);
+    mutationFn: (newCounselSession: CreateCounselReservationReq) => {
+      return DefaultApiFactory().createCounselReservation(newCounselSession);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['counselSessions'] });
@@ -27,8 +27,8 @@ export const useUpdateCounselSession = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (updateParams: UpdateCounselSessionReq) => {
-      return DefaultApiFactory().updateCounselSession(updateParams);
+    mutationFn: (updateParams: ModifyCounselReservationReq) => {
+      return DefaultApiFactory().modifyCounselReservation(updateParams);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['counselSessions'] });
@@ -70,6 +70,18 @@ export const useCounselSessionList = (
   });
 };
 
+/**
+ * 키워드가 유효한지 검증하는 함수
+ * 한글(가~힣)과 영문(a~z, A~Z)으로만 구성된 문자열인지 확인
+ */
+const isValidKeyword = (keyword?: string): boolean => {
+  if (!keyword) return true; // 키워드가 없는 경우 유효함
+
+  // 한글 또는 영문 문자만 허용하는 정규식
+  const validPattern = /^[가-힣a-zA-Z]+$/;
+  return validPattern.test(keyword);
+};
+
 // 상담 세션 검색
 export const useSearchCounselSessions = (
   page: number,
@@ -79,6 +91,13 @@ export const useSearchCounselSessions = (
   scheduledDates?: string[],
   enabled = true,
 ) => {
+  // 키워드 유효성 검증
+  const isKeywordValid = isValidKeyword(counseleeNameKeyword);
+
+  // 쿼리 활성화 여부 : enabled 파라미터와 키워드 유효성에 따라 결정
+  // 키워드가 없거나 유효하면 쿼리 활성화, 키워드가 유효하지 않으면 비활성화
+  const shouldEnableQuery = enabled && isKeywordValid;
+
   return useQuery({
     queryKey: [
       'searchCounselSessions',
@@ -96,7 +115,7 @@ export const useSearchCounselSessions = (
         counselorNames,
         scheduledDates,
       ),
-    enabled: enabled,
+    enabled: shouldEnableQuery,
     select: (response) => response.data?.data,
   });
 };

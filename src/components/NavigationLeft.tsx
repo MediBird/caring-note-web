@@ -1,16 +1,11 @@
-import { useEffect, useLayoutEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '@/context/AuthContext';
-import { useKeycloak } from '@react-keycloak/web';
-import { useNavigationStore } from '@/store/navigationStore';
 import AdminIcon from '@/assets/icon/24/accountcircle.fiiled.svg?react';
 import QuestionIcon from '@/assets/icon/24/help.fiiled.svg?react';
 import HomeIcon from '@/assets/icon/24/home.filled.svg?react';
 import LogoutIcon from '@/assets/icon/24/logout.outline.svg?react';
+import MenuIcon from '@/assets/icon/24/menu.svg?react';
 import NoteIcon from '@/assets/icon/24/note.fiiled.svg?react';
 import PaperPlainIcon from '@/assets/icon/24/paperplane.svg?react';
 import PatientIcon from '@/assets/icon/24/patient.fiiled.svg?react';
-import MenuIcon from '@/assets/icon/24/menu.svg?react';
 import TextLogo from '@/assets/text-logo.webp';
 import {
   Sidebar,
@@ -24,7 +19,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { useAuthContext } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
+import { useNavigationStore } from '@/store/navigationStore';
+import { useKeycloak } from '@react-keycloak/web';
+import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface NavigationLeftProps {
   initialOpen?: boolean;
@@ -55,6 +55,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         name: '상담 내역',
         collapsedName: '상담내역',
         icon: <NoteIcon width={24} height={24} />,
+        route: '/schedule',
         roles: ['ROLE_ADMIN'],
       },
       {

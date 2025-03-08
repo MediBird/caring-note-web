@@ -1,15 +1,11 @@
 import Consult from '@/pages/Consult';
 import CounseleeManagement from '@/pages/Counselee';
-import Survey from '@/pages/Survey/tabs/Index';
-import Consult from '@/pages/Consult';
 import ErrorPage from '@/pages/ErrorPage';
 import Home from '@/pages/Home';
 import Layout from '@/pages/Layout';
 import Schedule from '@/pages/Schedule';
-import SurveyLayout from '@/pages/Survey/layout/SurveyLayout';
 import Survey from '@/pages/Survey/tabs/Index';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
-import Layout from '@/pages/Layout';
 
 type AppRouteObject = RouteObject & {
   children?: AppRouteObject[];
@@ -77,7 +73,7 @@ const Routes = () => {
 
   const counseleeManagementRoute: AppRouteObject = {
     path: '/counselee-management',
-    element: <CounseleeManagementLayout />,
+    element: <Layout />,
     children: [
       {
         path: '',

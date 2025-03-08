@@ -230,60 +230,6 @@ export interface AddCounselCardRes {
 /**
  * 
  * @export
- * @interface AddCounselSessionReq
- */
-export interface AddCounselSessionReq {
-    /**
-     * 
-     * @type {string}
-     * @memberof AddCounselSessionReq
-     */
-    'counseleeId': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AddCounselSessionReq
-     */
-    'counselorId': string;
-    /**
-     * 상담 일정 날짜 및 시간
-     * @type {string}
-     * @memberof AddCounselSessionReq
-     */
-    'scheduledStartDateTime': string;
-    /**
-     * 상담 상태(SCHEDULED, COMPLETED, CANCELED)
-     * @type {string}
-     * @memberof AddCounselSessionReq
-     */
-    'status'?: AddCounselSessionReqStatusEnum;
-}
-
-export const AddCounselSessionReqStatusEnum = {
-    Scheduled: 'SCHEDULED',
-    Progress: 'PROGRESS',
-    Completed: 'COMPLETED',
-    Canceled: 'CANCELED'
-} as const;
-
-export type AddCounselSessionReqStatusEnum = typeof AddCounselSessionReqStatusEnum[keyof typeof AddCounselSessionReqStatusEnum];
-
-/**
- * 
- * @export
- * @interface AddCounselSessionRes
- */
-export interface AddCounselSessionRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof AddCounselSessionRes
-     */
-    'counselSessionId'?: string;
-}
-/**
- * 
- * @export
  * @interface AddCounseleeConsentReq
  */
 export interface AddCounseleeConsentReq {
@@ -590,25 +536,6 @@ export interface CommonResAddCounselCardRes {
 /**
  * 
  * @export
- * @interface CommonResAddCounselSessionRes
- */
-export interface CommonResAddCounselSessionRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof CommonResAddCounselSessionRes
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {AddCounselSessionRes}
-     * @memberof CommonResAddCounselSessionRes
-     */
-    'data'?: AddCounselSessionRes;
-}
-/**
- * 
- * @export
  * @interface CommonResAddCounseleeConsentRes
  */
 export interface CommonResAddCounseleeConsentRes {
@@ -662,6 +589,25 @@ export interface CommonResCounselSessionStatRes {
      * @memberof CommonResCounselSessionStatRes
      */
     'data'?: CounselSessionStatRes;
+}
+/**
+ * 
+ * @export
+ * @interface CommonResCreateCounselReservationRes
+ */
+export interface CommonResCreateCounselReservationRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResCreateCounselReservationRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {CreateCounselReservationRes}
+     * @memberof CommonResCreateCounselReservationRes
+     */
+    'data'?: CreateCounselReservationRes;
 }
 /**
  * 
@@ -837,6 +783,25 @@ export interface CommonResListSearchMedicationByKeywordRes {
 /**
  * 
  * @export
+ * @interface CommonResListSelectCounseleeAutocompleteRes
+ */
+export interface CommonResListSelectCounseleeAutocompleteRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListSelectCounseleeAutocompleteRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<SelectCounseleeAutocompleteRes>}
+     * @memberof CommonResListSelectCounseleeAutocompleteRes
+     */
+    'data'?: Array<SelectCounseleeAutocompleteRes>;
+}
+/**
+ * 
+ * @export
  * @interface CommonResListSelectMedicationRecordHistRes
  */
 export interface CommonResListSelectMedicationRecordHistRes {
@@ -966,6 +931,25 @@ export interface CommonResListString {
      * @memberof CommonResListString
      */
     'data'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface CommonResModifyCounselReservationRes
+ */
+export interface CommonResModifyCounselReservationRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResModifyCounselReservationRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {ModifyCounselReservationRes}
+     * @memberof CommonResModifyCounselReservationRes
+     */
+    'data'?: ModifyCounselReservationRes;
 }
 /**
  * 
@@ -1255,25 +1239,6 @@ export interface CommonResUpdateCounselCardRes {
 /**
  * 
  * @export
- * @interface CommonResUpdateCounselSessionRes
- */
-export interface CommonResUpdateCounselSessionRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof CommonResUpdateCounselSessionRes
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {UpdateCounselSessionRes}
-     * @memberof CommonResUpdateCounselSessionRes
-     */
-    'data'?: UpdateCounselSessionRes;
-}
-/**
- * 
- * @export
  * @interface CommonResUpdateCounseleeConsentRes
  */
 export interface CommonResUpdateCounseleeConsentRes {
@@ -1516,6 +1481,38 @@ export interface CounselorNameListRes {
      * @memberof CounselorNameListRes
      */
     'counselorNames'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface CreateCounselReservationReq
+ */
+export interface CreateCounselReservationReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateCounselReservationReq
+     */
+    'counseleeId': string;
+    /**
+     * 상담 일정 날짜 및 시간
+     * @type {string}
+     * @memberof CreateCounselReservationReq
+     */
+    'scheduledStartDateTime': string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateCounselReservationRes
+ */
+export interface CreateCounselReservationRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateCounselReservationRes
+     */
+    'id'?: string;
 }
 /**
  * 
@@ -1996,6 +1993,44 @@ export interface MedicationSideEffectDTO {
 /**
  * 
  * @export
+ * @interface ModifyCounselReservationReq
+ */
+export interface ModifyCounselReservationReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof ModifyCounselReservationReq
+     */
+    'counselSessionId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModifyCounselReservationReq
+     */
+    'counseleeId': string;
+    /**
+     * 상담 일정 날짜 및 시간
+     * @type {string}
+     * @memberof ModifyCounselReservationReq
+     */
+    'scheduledStartDateTime': string;
+}
+/**
+ * 
+ * @export
+ * @interface ModifyCounselReservationRes
+ */
+export interface ModifyCounselReservationRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof ModifyCounselReservationRes
+     */
+    'counselSessionId'?: string;
+}
+/**
+ * 
+ * @export
  * @interface NutritionDTO
  */
 export interface NutritionDTO {
@@ -2328,6 +2363,37 @@ export interface SelectCounselSessionRes {
      * @memberof SelectCounselSessionRes
      */
     'counselorName'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SelectCounselSessionRes
+     */
+    'sessionNumber'?: number;
+}
+/**
+ * 내담자 자동완성 응답
+ * @export
+ * @interface SelectCounseleeAutocompleteRes
+ */
+export interface SelectCounseleeAutocompleteRes {
+    /**
+     * 내담자 ID
+     * @type {string}
+     * @memberof SelectCounseleeAutocompleteRes
+     */
+    'counseleeId'?: string;
+    /**
+     * 내담자 이름
+     * @type {string}
+     * @memberof SelectCounseleeAutocompleteRes
+     */
+    'name'?: string;
+    /**
+     * 생년월일
+     * @type {string}
+     * @memberof SelectCounseleeAutocompleteRes
+     */
+    'birthDate'?: string;
 }
 /**
  * 
@@ -3062,66 +3128,6 @@ export interface UpdateCounselCardRes {
 /**
  * 
  * @export
- * @interface UpdateCounselSessionReq
- */
-export interface UpdateCounselSessionReq {
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateCounselSessionReq
-     */
-    'counselSessionId': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateCounselSessionReq
-     */
-    'counseleeId': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateCounselSessionReq
-     */
-    'counselorId': string;
-    /**
-     * 상담 일정 날짜 및 시간
-     * @type {string}
-     * @memberof UpdateCounselSessionReq
-     */
-    'scheduledStartDateTime': string;
-    /**
-     * 상담 상태(SCHEDULED, COMPLETED, CANCELED)
-     * @type {string}
-     * @memberof UpdateCounselSessionReq
-     */
-    'status'?: UpdateCounselSessionReqStatusEnum;
-}
-
-export const UpdateCounselSessionReqStatusEnum = {
-    Scheduled: 'SCHEDULED',
-    Progress: 'PROGRESS',
-    Completed: 'COMPLETED',
-    Canceled: 'CANCELED'
-} as const;
-
-export type UpdateCounselSessionReqStatusEnum = typeof UpdateCounselSessionReqStatusEnum[keyof typeof UpdateCounselSessionReqStatusEnum];
-
-/**
- * 
- * @export
- * @interface UpdateCounselSessionRes
- */
-export interface UpdateCounselSessionRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateCounselSessionRes
-     */
-    'updatedCounselSessionId'?: string;
-}
-/**
- * 
- * @export
  * @interface UpdateCounseleeConsentReq
  */
 export interface UpdateCounseleeConsentReq {
@@ -3773,46 +3779,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @summary 상담세션(일정) 추가
-         * @param {AddCounselSessionReq} addCounselSessionReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addCounselSession: async (addCounselSessionReq: AddCounselSessionReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'addCounselSessionReq' is not null or undefined
-            assertParamExists('addCounselSession', 'addCounselSessionReq', addCounselSessionReq)
-            const localVarPath = `/v1/counsel/session`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(addCounselSessionReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary 내담자 기본 정보 생성
          * @param {AddCounseleeReq} addCounseleeReq 
          * @param {*} [options] Override http request option.
@@ -3969,6 +3935,87 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(wasteMedicationDisposalReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 내담자 이름 자동완성
+         * @param {string} keyword 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        autocompleteCounselees: async (keyword: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'keyword' is not null or undefined
+            assertParamExists('autocompleteCounselees', 'keyword', keyword)
+            const localVarPath = `/v1/counsel/counselee/autocomplete`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (keyword !== undefined) {
+                localVarQueryParameter['keyword'] = keyword;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 상담세션(일정) 추가
+         * @param {CreateCounselReservationReq} createCounselReservationReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createCounselReservation: async (createCounselReservationReq: CreateCounselReservationReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createCounselReservationReq' is not null or undefined
+            assertParamExists('createCounselReservation', 'createCounselReservationReq', createCounselReservationReq)
+            const localVarPath = `/v1/counsel/session`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createCounselReservationReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4431,6 +4478,46 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 상담일정 수정
+         * @param {ModifyCounselReservationReq} modifyCounselReservationReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        modifyCounselReservation: async (modifyCounselReservationReq: ModifyCounselReservationReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'modifyCounselReservationReq' is not null or undefined
+            assertParamExists('modifyCounselReservation', 'modifyCounselReservationReq', modifyCounselReservationReq)
+            const localVarPath = `/v1/counsel/session`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(modifyCounselReservationReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5253,47 +5340,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @summary 상담일정 수정
-         * @param {UpdateCounselSessionReq} updateCounselSessionReq 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        updateCounselSession: async (updateCounselSessionReq: UpdateCounselSessionReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'updateCounselSessionReq' is not null or undefined
-            assertParamExists('updateCounselSession', 'updateCounselSessionReq', updateCounselSessionReq)
-            const localVarPath = `/v1/counsel/session`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(updateCounselSessionReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary 내담자 기본 정보 수정
          * @param {UpdateCounseleeReq} updateCounseleeReq 
          * @param {*} [options] Override http request option.
@@ -5545,19 +5591,6 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary 상담세션(일정) 추가
-         * @param {AddCounselSessionReq} addCounselSessionReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async addCounselSession(addCounselSessionReq: AddCounselSessionReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResAddCounselSessionRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addCounselSession(addCounselSessionReq, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.addCounselSession']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
          * @summary 내담자 기본 정보 생성
          * @param {AddCounseleeReq} addCounseleeReq 
          * @param {*} [options] Override http request option.
@@ -5607,6 +5640,32 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addWasteMedicationDisposal(counselSessionId, wasteMedicationDisposalReq, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.addWasteMedicationDisposal']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 내담자 이름 자동완성
+         * @param {string} keyword 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async autocompleteCounselees(keyword: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListSelectCounseleeAutocompleteRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.autocompleteCounselees(keyword, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.autocompleteCounselees']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 상담세션(일정) 추가
+         * @param {CreateCounselReservationReq} createCounselReservationReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createCounselReservation(createCounselReservationReq: CreateCounselReservationReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCreateCounselReservationRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createCounselReservation(createCounselReservationReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.createCounselReservation']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -5763,6 +5822,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getWasteMedicationDisposal(counselSessionId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.getWasteMedicationDisposal']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 상담일정 수정
+         * @param {ModifyCounselReservationReq} modifyCounselReservationReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async modifyCounselReservation(modifyCounselReservationReq: ModifyCounselReservationReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResModifyCounselReservationRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.modifyCounselReservation(modifyCounselReservationReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.modifyCounselReservation']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -6027,20 +6099,6 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary 상담일정 수정
-         * @param {UpdateCounselSessionReq} updateCounselSessionReq 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        async updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResUpdateCounselSessionRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCounselSession(updateCounselSessionReq, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.updateCounselSession']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
          * @summary 내담자 기본 정보 수정
          * @param {UpdateCounseleeReq} updateCounseleeReq 
          * @param {*} [options] Override http request option.
@@ -6148,16 +6206,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @summary 상담세션(일정) 추가
-         * @param {AddCounselSessionReq} addCounselSessionReq 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        addCounselSession(addCounselSessionReq: AddCounselSessionReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResAddCounselSessionRes> {
-            return localVarFp.addCounselSession(addCounselSessionReq, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary 내담자 기본 정보 생성
          * @param {AddCounseleeReq} addCounseleeReq 
          * @param {*} [options] Override http request option.
@@ -6196,6 +6244,26 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         addWasteMedicationDisposal(counselSessionId: string, wasteMedicationDisposalReq: WasteMedicationDisposalReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResString> {
             return localVarFp.addWasteMedicationDisposal(counselSessionId, wasteMedicationDisposalReq, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 내담자 이름 자동완성
+         * @param {string} keyword 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        autocompleteCounselees(keyword: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListSelectCounseleeAutocompleteRes> {
+            return localVarFp.autocompleteCounselees(keyword, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 상담세션(일정) 추가
+         * @param {CreateCounselReservationReq} createCounselReservationReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createCounselReservation(createCounselReservationReq: CreateCounselReservationReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCreateCounselReservationRes> {
+            return localVarFp.createCounselReservation(createCounselReservationReq, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -6316,6 +6384,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         getWasteMedicationDisposal(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResWasteMedicationDisposalRes> {
             return localVarFp.getWasteMedicationDisposal(counselSessionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 상담일정 수정
+         * @param {ModifyCounselReservationReq} modifyCounselReservationReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        modifyCounselReservation(modifyCounselReservationReq: ModifyCounselReservationReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResModifyCounselReservationRes> {
+            return localVarFp.modifyCounselReservation(modifyCounselReservationReq, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -6522,17 +6600,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @summary 상담일정 수정
-         * @param {UpdateCounselSessionReq} updateCounselSessionReq 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResUpdateCounselSessionRes> {
-            return localVarFp.updateCounselSession(updateCounselSessionReq, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary 내담자 기본 정보 수정
          * @param {UpdateCounseleeReq} updateCounseleeReq 
          * @param {*} [options] Override http request option.
@@ -6631,18 +6698,6 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
-     * @summary 상담세션(일정) 추가
-     * @param {AddCounselSessionReq} addCounselSessionReq 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public addCounselSession(addCounselSessionReq: AddCounselSessionReq, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).addCounselSession(addCounselSessionReq, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @summary 내담자 기본 정보 생성
      * @param {AddCounseleeReq} addCounseleeReq 
      * @param {*} [options] Override http request option.
@@ -6688,6 +6743,30 @@ export class DefaultApi extends BaseAPI {
      */
     public addWasteMedicationDisposal(counselSessionId: string, wasteMedicationDisposalReq: WasteMedicationDisposalReq, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).addWasteMedicationDisposal(counselSessionId, wasteMedicationDisposalReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 내담자 이름 자동완성
+     * @param {string} keyword 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public autocompleteCounselees(keyword: string, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).autocompleteCounselees(keyword, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 상담세션(일정) 추가
+     * @param {CreateCounselReservationReq} createCounselReservationReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public createCounselReservation(createCounselReservationReq: CreateCounselReservationReq, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).createCounselReservation(createCounselReservationReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -6832,6 +6911,18 @@ export class DefaultApi extends BaseAPI {
      */
     public getWasteMedicationDisposal(counselSessionId: string, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).getWasteMedicationDisposal(counselSessionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 상담일정 수정
+     * @param {ModifyCounselReservationReq} modifyCounselReservationReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public modifyCounselReservation(modifyCounselReservationReq: ModifyCounselReservationReq, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).modifyCounselReservation(modifyCounselReservationReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7073,19 +7164,6 @@ export class DefaultApi extends BaseAPI {
      */
     public updateCounselCard(updateCounselCardReq: UpdateCounselCardReq, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).updateCounselCard(updateCounselCardReq, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary 상담일정 수정
-     * @param {UpdateCounselSessionReq} updateCounselSessionReq 
-     * @param {*} [options] Override http request option.
-     * @deprecated
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).updateCounselSession(updateCounselSessionReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -8971,13 +9049,13 @@ export const CounselSessionControllerApiAxiosParamCreator = function (configurat
         /**
          * 
          * @summary 상담세션(일정) 추가
-         * @param {AddCounselSessionReq} addCounselSessionReq 
+         * @param {CreateCounselReservationReq} createCounselReservationReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addCounselSession: async (addCounselSessionReq: AddCounselSessionReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'addCounselSessionReq' is not null or undefined
-            assertParamExists('addCounselSession', 'addCounselSessionReq', addCounselSessionReq)
+        createCounselReservation: async (createCounselReservationReq: CreateCounselReservationReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createCounselReservationReq' is not null or undefined
+            assertParamExists('createCounselReservation', 'createCounselReservationReq', createCounselReservationReq)
             const localVarPath = `/v1/counsel/session`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9001,7 +9079,7 @@ export const CounselSessionControllerApiAxiosParamCreator = function (configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(addCounselSessionReq, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createCounselReservationReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9124,6 +9202,46 @@ export const CounselSessionControllerApiAxiosParamCreator = function (configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 상담일정 수정
+         * @param {ModifyCounselReservationReq} modifyCounselReservationReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        modifyCounselReservation: async (modifyCounselReservationReq: ModifyCounselReservationReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'modifyCounselReservationReq' is not null or undefined
+            assertParamExists('modifyCounselReservation', 'modifyCounselReservationReq', modifyCounselReservationReq)
+            const localVarPath = `/v1/counsel/session`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(modifyCounselReservationReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9321,47 +9439,6 @@ export const CounselSessionControllerApiAxiosParamCreator = function (configurat
             };
         },
         /**
-         * 
-         * @summary 상담일정 수정
-         * @param {UpdateCounselSessionReq} updateCounselSessionReq 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        updateCounselSession: async (updateCounselSessionReq: UpdateCounselSessionReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'updateCounselSessionReq' is not null or undefined
-            assertParamExists('updateCounselSession', 'updateCounselSessionReq', updateCounselSessionReq)
-            const localVarPath = `/v1/counsel/session`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(updateCounselSessionReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨.
          * @summary 상담일정 담당 약사 수정
          * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
@@ -9454,14 +9531,14 @@ export const CounselSessionControllerApiFp = function(configuration?: Configurat
         /**
          * 
          * @summary 상담세션(일정) 추가
-         * @param {AddCounselSessionReq} addCounselSessionReq 
+         * @param {CreateCounselReservationReq} createCounselReservationReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addCounselSession(addCounselSessionReq: AddCounselSessionReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResAddCounselSessionRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addCounselSession(addCounselSessionReq, options);
+        async createCounselReservation(createCounselReservationReq: CreateCounselReservationReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCreateCounselReservationRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createCounselReservation(createCounselReservationReq, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.addCounselSession']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.createCounselReservation']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -9501,6 +9578,19 @@ export const CounselSessionControllerApiFp = function(configuration?: Configurat
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSessionStats(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.getSessionStats']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary 상담일정 수정
+         * @param {ModifyCounselReservationReq} modifyCounselReservationReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async modifyCounselReservation(modifyCounselReservationReq: ModifyCounselReservationReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResModifyCounselReservationRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.modifyCounselReservation(modifyCounselReservationReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.modifyCounselReservation']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -9562,20 +9652,6 @@ export const CounselSessionControllerApiFp = function(configuration?: Configurat
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * 
-         * @summary 상담일정 수정
-         * @param {UpdateCounselSessionReq} updateCounselSessionReq 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        async updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResUpdateCounselSessionRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCounselSession(updateCounselSessionReq, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.updateCounselSession']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨.
          * @summary 상담일정 담당 약사 수정
          * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
@@ -9614,12 +9690,12 @@ export const CounselSessionControllerApiFactory = function (configuration?: Conf
         /**
          * 
          * @summary 상담세션(일정) 추가
-         * @param {AddCounselSessionReq} addCounselSessionReq 
+         * @param {CreateCounselReservationReq} createCounselReservationReq 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addCounselSession(addCounselSessionReq: AddCounselSessionReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResAddCounselSessionRes> {
-            return localVarFp.addCounselSession(addCounselSessionReq, options).then((request) => request(axios, basePath));
+        createCounselReservation(createCounselReservationReq: CreateCounselReservationReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCreateCounselReservationRes> {
+            return localVarFp.createCounselReservation(createCounselReservationReq, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9650,6 +9726,16 @@ export const CounselSessionControllerApiFactory = function (configuration?: Conf
          */
         getSessionStats(options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselSessionStatRes> {
             return localVarFp.getSessionStats(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 상담일정 수정
+         * @param {ModifyCounselReservationReq} modifyCounselReservationReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        modifyCounselReservation(modifyCounselReservationReq: ModifyCounselReservationReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResModifyCounselReservationRes> {
+            return localVarFp.modifyCounselReservation(modifyCounselReservationReq, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9698,17 +9784,6 @@ export const CounselSessionControllerApiFactory = function (configuration?: Conf
             return localVarFp.selectPreviousCounselSessionList(counselSessionId, options).then((request) => request(axios, basePath));
         },
         /**
-         * 
-         * @summary 상담일정 수정
-         * @param {UpdateCounselSessionReq} updateCounselSessionReq 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResUpdateCounselSessionRes> {
-            return localVarFp.updateCounselSession(updateCounselSessionReq, options).then((request) => request(axios, basePath));
-        },
-        /**
          * req body에 counselorId 넣지 않은 경우 로그인 계정 정보로 할당됨.
          * @summary 상담일정 담당 약사 수정
          * @param {UpdateCounselorInCounselSessionReq} updateCounselorInCounselSessionReq 
@@ -9741,13 +9816,13 @@ export class CounselSessionControllerApi extends BaseAPI {
     /**
      * 
      * @summary 상담세션(일정) 추가
-     * @param {AddCounselSessionReq} addCounselSessionReq 
+     * @param {CreateCounselReservationReq} createCounselReservationReq 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CounselSessionControllerApi
      */
-    public addCounselSession(addCounselSessionReq: AddCounselSessionReq, options?: RawAxiosRequestConfig) {
-        return CounselSessionControllerApiFp(this.configuration).addCounselSession(addCounselSessionReq, options).then((request) => request(this.axios, this.basePath));
+    public createCounselReservation(createCounselReservationReq: CreateCounselReservationReq, options?: RawAxiosRequestConfig) {
+        return CounselSessionControllerApiFp(this.configuration).createCounselReservation(createCounselReservationReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9784,6 +9859,18 @@ export class CounselSessionControllerApi extends BaseAPI {
      */
     public getSessionStats(options?: RawAxiosRequestConfig) {
         return CounselSessionControllerApiFp(this.configuration).getSessionStats(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 상담일정 수정
+     * @param {ModifyCounselReservationReq} modifyCounselReservationReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselSessionControllerApi
+     */
+    public modifyCounselReservation(modifyCounselReservationReq: ModifyCounselReservationReq, options?: RawAxiosRequestConfig) {
+        return CounselSessionControllerApiFp(this.configuration).modifyCounselReservation(modifyCounselReservationReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9838,19 +9925,6 @@ export class CounselSessionControllerApi extends BaseAPI {
      */
     public selectPreviousCounselSessionList(counselSessionId: string, options?: RawAxiosRequestConfig) {
         return CounselSessionControllerApiFp(this.configuration).selectPreviousCounselSessionList(counselSessionId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary 상담일정 수정
-     * @param {UpdateCounselSessionReq} updateCounselSessionReq 
-     * @param {*} [options] Override http request option.
-     * @deprecated
-     * @throws {RequiredError}
-     * @memberof CounselSessionControllerApi
-     */
-    public updateCounselSession(updateCounselSessionReq: UpdateCounselSessionReq, options?: RawAxiosRequestConfig) {
-        return CounselSessionControllerApiFp(this.configuration).updateCounselSession(updateCounselSessionReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10273,6 +10347,47 @@ export const CounseleeControllerApiAxiosParamCreator = function (configuration?:
         },
         /**
          * 
+         * @summary 내담자 이름 자동완성
+         * @param {string} keyword 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        autocompleteCounselees: async (keyword: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'keyword' is not null or undefined
+            assertParamExists('autocompleteCounselees', 'keyword', keyword)
+            const localVarPath = `/v1/counsel/counselee/autocomplete`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (keyword !== undefined) {
+                localVarQueryParameter['keyword'] = keyword;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary 내담자 삭제
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
@@ -10621,6 +10736,19 @@ export const CounseleeControllerApiFp = function(configuration?: Configuration) 
         },
         /**
          * 
+         * @summary 내담자 이름 자동완성
+         * @param {string} keyword 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async autocompleteCounselees(keyword: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListSelectCounseleeAutocompleteRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.autocompleteCounselees(keyword, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounseleeControllerApi.autocompleteCounselees']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary 내담자 삭제
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
@@ -10747,6 +10875,16 @@ export const CounseleeControllerApiFactory = function (configuration?: Configura
         },
         /**
          * 
+         * @summary 내담자 이름 자동완성
+         * @param {string} keyword 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        autocompleteCounselees(keyword: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListSelectCounseleeAutocompleteRes> {
+            return localVarFp.autocompleteCounselees(keyword, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary 내담자 삭제
          * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
@@ -10847,6 +10985,18 @@ export class CounseleeControllerApi extends BaseAPI {
      */
     public addCounselee(addCounseleeReq: AddCounseleeReq, options?: RawAxiosRequestConfig) {
         return CounseleeControllerApiFp(this.configuration).addCounselee(addCounseleeReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 내담자 이름 자동완성
+     * @param {string} keyword 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounseleeControllerApi
+     */
+    public autocompleteCounselees(keyword: string, options?: RawAxiosRequestConfig) {
+        return CounseleeControllerApiFp(this.configuration).autocompleteCounselees(keyword, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

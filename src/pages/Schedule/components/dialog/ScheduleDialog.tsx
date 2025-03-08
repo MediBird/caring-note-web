@@ -1,9 +1,5 @@
-import {
-  AddCounselSessionReqStatusEnum,
-  SelectCounselSessionListItem,
-} from '@/api/api';
 import counselList from '@/assets/icon/20/counsellist.filled.blue.svg';
-import { Button } from '@/components/ui/button';https://www.youtube.com/
+import { Button } from '@/components/ui/button';
 import DatePickerComponent from '@/components/ui/datepicker';
 import {
   Dialog,
@@ -15,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import TimepickerComponent from '@/components/ui/timepicker';
 import { XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -26,57 +21,51 @@ import {
 } from '../../hooks/query/useCounselSessionQuery';
 import {
   useAddSessionFormStore,
-  useCounselorListStore,
   useCounselSessionDetailStore,
 } from '../../hooks/store/useCounselSessionStore';
+import CounseleeSearchInput from './CounseleeSearchInput';
 
 interface ScheduleDialogProps {
   mode: 'add' | 'edit';
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  counselSession?: SelectCounselSessionListItem;
 }
 
 export const ScheduleDialog = ({
   mode = 'add',
   isOpen = false,
   onOpenChange,
-  counselSession,
 }: ScheduleDialogProps) => {
+  // 로컬 상태
   const [dialogOpen, setDialogOpen] = useState(isOpen);
-  const [counselee, setCounselee] = useState('');
-  const [counselorId, setCounselorId] = useState('');
+  const [counseleeId, setCounseleeId] = useState('');
+  const [counseleeName, setCounselee] = useState('');
   const [sessionDate, setSessionDate] = useState('');
   const [sessionTime, setSessionTime] = useState('');
 
   // 상담사 목록 로드
   const { data: counselorList } = useCounselorList();
-  const { counselors, setCounselors } = useCounselorListStore();
 
   // 상담 세션 생성/수정 뮤테이션
   const addCounselSession = useAddCounselSession();
   const updateCounselSession = useUpdateCounselSession();
 
-  // 폼 상태 저장소
-  const { form, setForm, resetForm } = useAddSessionFormStore();
-  const { detail, setDetail } = useCounselSessionDetailStore();
+  // Zustand 스토어
+  const { setForm, resetForm } = useAddSessionFormStore();
+  const { detail, resetDetail } = useCounselSessionDetailStore();
 
+  // 수정 모드에서 상세 정보 로드
   useEffect(() => {
-    // 상담사 목록 저장
-    if (counselorList) {
-      setCounselors(counselorList);
-    }
-  }, [counselorList, setCounselors]);
+    if (mode === 'edit' && detail) {
+      // 내담자 정보 설정
+      setCounselee(detail.counseleeName || '');
+      setCounseleeId(detail.counseleeId || '');
 
-  useEffect(() => {
-    // 수정 모드일 때 기존 데이터 로드
-    if (mode === 'edit' && counselSession) {
-      setCounselee(counselSession.counseleeName || '');
-      setCounselorId(counselSession.counselorId || '');
+      // 날짜와 시간 설정
+      if (detail.scheduledDate) {
+        const dateTime = new Date(detail.scheduledDate);
 
-      // 날짜와 시간 분리 (2023-10-15T14:30:00 형식 가정)
-      if (counselSession.scheduledDate) {
-        const dateTime = new Date(counselSession.scheduledDate);
+        // 날짜 형식 (YYYY-MM-DD)
         const formattedDate = dateTime.toISOString().split('T')[0];
 
         // 시간 형식 (HH:MM)
@@ -87,48 +76,79 @@ export const ScheduleDialog = ({
         setSessionDate(formattedDate);
         setSessionTime(formattedTime);
       }
-
-      setDetail(counselSession);
+    } else {
+      // 추가 모드에서는 기본값 설정
+      setCounselee('');
+      setCounseleeId('');
+      setSessionDate('');
+      setSessionTime('');
     }
-  }, [mode, counselSession, setDetail]);
+  }, [mode, detail, isOpen]);
 
+  // 대화상자 상태 변경 처리
   const handleOpenChange = (open: boolean) => {
     setDialogOpen(open);
+
+    // 부모 컴포넌트에 상태 변경 알림
     if (onOpenChange) {
       onOpenChange(open);
     }
 
-    // 다이얼로그가 닫힐 때 폼 초기화
+    // 대화상자가 닫힐 때 상태 초기화
     if (!open) {
       resetForm();
+      if (mode === 'edit') {
+        resetDetail();
+      }
     }
   };
 
+  // 폼 제출 처리
   const handleSubmit = async () => {
-    // 날짜와 시간 결합
-    const scheduledDateTime = `${sessionDate}T${sessionTime}:00`;
-
-    if (mode === 'add') {
-      // 새 상담 세션 생성
-      addCounselSession.mutate({
-        counseleeId: counselee,
-        counselorId: counselorId,
-        scheduledStartDateTime: scheduledDateTime,
-        status: AddCounselSessionReqStatusEnum.Scheduled,
-      });
-    } else {
-      // 상담 세션 수정
-      if (detail && detail.counselSessionId) {
-        updateCounselSession.mutate({
-          counselSessionId: detail.counselSessionId,
-          counseleeId: counselee,
-          scheduledStartDateTime: scheduledDateTime,
-        });
-      }
+    // 유효성 검사
+    if (!counseleeId) {
+      alert('내담자를 선택해주세요.');
+      return;
     }
 
-    // 다이얼로그 닫기
-    handleOpenChange(false);
+    if (!sessionDate || !sessionTime) {
+      alert('상담 일자와 시간을 선택해주세요.');
+      return;
+    }
+
+    // 날짜와 시간 결합 (ISO 형식)
+    const scheduledDateTime = `${sessionDate}T${sessionTime}:00`;
+
+    try {
+      if (mode === 'add') {
+        // 새 상담 세션 생성
+        await addCounselSession.mutateAsync({
+          counseleeId: counseleeId,
+          scheduledStartDateTime: scheduledDateTime,
+        });
+        console.log('상담 일정이 등록되었습니다.');
+      } else if (detail?.counselSessionId) {
+        // 상담 세션 수정
+        await updateCounselSession.mutateAsync({
+          counselSessionId: detail.counselSessionId,
+          counseleeId: counseleeId,
+          scheduledStartDateTime: scheduledDateTime,
+        });
+        console.log('상담 일정이 수정되었습니다.');
+      }
+
+      // 대화상자 닫기
+      handleOpenChange(false);
+    } catch (error) {
+      console.error('상담 일정 처리 중 오류가 발생했습니다:', error);
+      alert('상담 일정 처리 중 오류가 발생했습니다.');
+    }
+  };
+
+  // 내담자 선택 처리
+  const handleCounseleeChange = (id: string, name: string) => {
+    setCounseleeId(id);
+    setCounselee(name);
   };
 
   return (
@@ -136,7 +156,11 @@ export const ScheduleDialog = ({
       {mode === 'add' && (
         <DialogTrigger asChild>
           <Button variant="secondary" size="lg">
-            <img src={counselList} alt="상담 일정 등록" className="h-5 w-5" />
+            <img
+              src={counselList}
+              alt="상담 일정 등록"
+              className="h-5 w-5 mr-2"
+            />
             상담 일정 등록
           </Button>
         </DialogTrigger>
@@ -146,10 +170,14 @@ export const ScheduleDialog = ({
           <DialogTitle>
             {mode === 'add' ? '상담 일정 등록' : '상담 일정 수정'}
           </DialogTitle>
-          <DialogDescription className="text-sm text-grayscale-60"></DialogDescription>
+          <DialogDescription className="text-sm text-grayscale-60">
+            {mode === 'add'
+              ? '새로운 상담 일정을 등록합니다.'
+              : '상담 일정을 수정합니다.'}
+          </DialogDescription>
           <DialogClose
             asChild
-            className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6">
+            className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6 absolute right-4 top-4">
             <XIcon />
           </DialogClose>
         </DialogHeader>
@@ -160,11 +188,10 @@ export const ScheduleDialog = ({
             <label htmlFor="counselee" className="text-sm font-medium">
               내담자
             </label>
-            <Input
-              id="counselee"
-              value={counselee}
-              onChange={(e) => setCounselee(e.target.value)}
-              placeholder="내담자 이름"
+            <CounseleeSearchInput
+              value={counseleeName}
+              selectedId={counseleeId}
+              onChange={handleCounseleeChange}
             />
           </div>
 
@@ -175,7 +202,7 @@ export const ScheduleDialog = ({
                 상담 일자
               </label>
               <DatePickerComponent
-                selectedMonth={new Date()}
+                selectedMonth={sessionDate ? new Date(sessionDate) : new Date()}
                 enabledDates={[]}
                 onMonthChange={(date) => setSessionDate(date.toString())}
               />

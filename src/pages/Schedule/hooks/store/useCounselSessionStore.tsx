@@ -1,7 +1,7 @@
 import {
-  AddCounselSessionReq,
+  CreateCounselReservationReq,
+  ModifyCounselReservationReq,
   SelectCounselSessionListItem,
-  UpdateCounselSessionReq,
 } from '@/api/api';
 import { create } from 'zustand';
 
@@ -91,8 +91,8 @@ export const useSessionDateStore = create<SessionDateState>((set) => ({
 
 // 새 상담 세션 생성 폼 저장소
 interface AddSessionFormState {
-  form: Partial<AddCounselSessionReq>;
-  setForm: (newForm: Partial<AddCounselSessionReq>) => void;
+  form: Partial<CreateCounselReservationReq>;
+  setForm: (newForm: Partial<CreateCounselReservationReq>) => void;
   resetForm: () => void;
 }
 
@@ -105,8 +105,8 @@ export const useAddSessionFormStore = create<AddSessionFormState>((set) => ({
 
 // 상담 세션 업데이트 폼 저장소
 interface UpdateSessionFormState {
-  form: Partial<UpdateCounselSessionReq>;
-  setForm: (newForm: Partial<UpdateCounselSessionReq>) => void;
+  form: Partial<ModifyCounselReservationReq>;
+  setForm: (newForm: Partial<ModifyCounselReservationReq>) => void;
   resetForm: () => void;
 }
 

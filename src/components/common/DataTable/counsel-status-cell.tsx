@@ -1,8 +1,8 @@
-import { AddCounselSessionReqStatusEnum } from '@/api/api';
+import { SelectCounselSessionListItemStatusEnum } from '@/api/api';
 import { cn } from '@/lib/utils';
 
 interface CounselStatusCellProps {
-  status: AddCounselSessionReqStatusEnum;
+  status: SelectCounselSessionListItemStatusEnum;
 }
 
 const counselSessionStatus = {
@@ -15,13 +15,13 @@ const counselSessionStatus = {
 const CounselStatusCell = ({ status }: CounselStatusCellProps) => {
   const getCounselSessionStatusColor = (status: string): string => {
     switch (status) {
-      case AddCounselSessionReqStatusEnum.Completed:
+      case SelectCounselSessionListItemStatusEnum.Completed:
         return 'text-grayscale-100';
-      case AddCounselSessionReqStatusEnum.Scheduled:
+      case SelectCounselSessionListItemStatusEnum.Scheduled:
         return 'text-grayscale-50';
-      case AddCounselSessionReqStatusEnum.Progress:
+      case SelectCounselSessionListItemStatusEnum.Progress:
         return 'text-primary-50';
-      case AddCounselSessionReqStatusEnum.Canceled:
+      case SelectCounselSessionListItemStatusEnum.Canceled:
         return 'text-error-50';
       default:
         return 'text-black';
