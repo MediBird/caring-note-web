@@ -10,7 +10,7 @@ import ConsultCountContainer from '@/pages/Home/components/ConsultCountContainer
 import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
 import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 import { addMonths } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
+import CalendarIcon from '@/assets/icon/calendar.svg?react';
 import { useMemo, useState } from 'react';
 import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
 

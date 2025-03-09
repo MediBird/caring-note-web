@@ -92,7 +92,7 @@ export function DatePickerComponent({
         )}
       </PopoverTrigger>
       <PopoverContent
-        className="w-auto"
+        className="w-auto border-none !shadow-cell-shadow"
         align="end"
         side="bottom"
         onInteractOutside={(e) => {

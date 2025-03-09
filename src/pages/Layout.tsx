@@ -33,7 +33,7 @@ function Layout() {
         <NavigationLeft />
         <main
           className={cn(
-            'flex-1 overflow-auto',
+            'flex-1 overflow-x-auto overflow-y-hidden',
             isRightSideBarActive ? 'pr-[50px]' : '',
           )}>
           <Outlet />

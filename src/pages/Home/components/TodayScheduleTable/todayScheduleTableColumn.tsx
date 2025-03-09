@@ -20,7 +20,7 @@ export const createColumns = ({
     id: 'scheduledTime',
     accessorKey: 'scheduledTime',
     header: '예약 시각',
-    size: 110,
+    size: 92,
     cell: ({ row }) => {
       const counselSessionId = row.original.counselSessionId;
       return (
@@ -39,15 +39,17 @@ export const createColumns = ({
     accessorKey: 'scheduledDate',
     header: '상담 일자',
     enableSorting: true,
+    size: 122,
     cell: ({ row }) => {
       const scheduledDate = row.original.scheduledDate ?? '-';
-      return <span className="px-3">{scheduledDate}</span>;
+      return <span className="px-3 w-full min-w-[145px]">{scheduledDate}</span>;
     },
   },
   {
     id: 'status',
     accessorKey: 'status',
     header: '상담 진행',
+    size: 92,
     cell: ({ row }) => {
       const status = row.original.status ?? '-';
       return (
@@ -61,6 +63,7 @@ export const createColumns = ({
     id: 'counseleeName',
     accessorKey: 'counseleeName',
     header: '내담자',
+    size: 102,
     cell: ({ row }) => {
       const counseleeName = row.original.counseleeName ?? '-';
       return <span className="px-3">{counseleeName}</span>;
@@ -70,6 +73,7 @@ export const createColumns = ({
     id: 'counselorName',
     accessorKey: 'counselorName',
     header: '담당약사',
+    size: 102,
     cell: ({ row }) => {
       const counselorName = row.original.counselorName ?? '-';
       return <span className="px-3">{counselorName}</span>;
@@ -78,6 +82,7 @@ export const createColumns = ({
   {
     id: 'counselorAssign',
     accessorKey: 'counselorAssign',
+    size: 116,
     header: () => {
       return (
         <div className="flex items-center gap-1 relative">
@@ -109,6 +114,7 @@ export const createColumns = ({
     id: 'cardRecordStatus',
     accessorKey: 'cardRecordStatus',
     header: '기초 설문',
+    size: 116,
     cell: ({ row }) => {
       const counselSessionId = row.original.counselSessionId ?? '';
       const counseleeId = row.original.counseleeId ?? '';
