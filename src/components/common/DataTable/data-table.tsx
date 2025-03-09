@@ -56,7 +56,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full max-w-content overflow-hidden border border-1 border-grayscale-10 rounded-[12px] bg-white">
+    <div className="w-full overflow-hidden border border-1 border-grayscale-10 rounded-[12px] bg-white">
       <Table
         style={{
           width: '100%',
