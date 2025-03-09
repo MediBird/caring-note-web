@@ -51,7 +51,7 @@ function TextInputCell<T extends { id: string }>({
         autoFocus
         onBlur={handleBlur}
         onFocus={handleFocus}
-        className="w-full h-7 border-b-2 border-primary-50 rounded-none px-3"
+        className="w-full h-7 border-0 border-b-2 border-b-primary-50 rounded-none px-3 !focus:outline-none !focus:ring-0 !focus:ring-offset-0"
       />
       {unit && (
         <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500">
