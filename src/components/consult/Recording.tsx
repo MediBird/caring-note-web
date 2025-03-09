@@ -94,7 +94,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
       {recordingStatus !== RecordingStatus.AICompleted && (
         <div
           className={cn(
-            'flex flex-col items-center justify-center rounded-xl gap-1 w-[260px] h-[166px] bg-grayscale-3 border-[1px] border-grayscale-10',
+            'flex flex-col items-center justify-center rounded-xl gap-1 min-w-[348px] h-[166px] bg-grayscale-3 border-[1px] border-grayscale-10',
             className,
           )}>
           {recordingStatus === RecordingStatus.STTLoading ? (
