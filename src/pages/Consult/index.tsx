@@ -68,7 +68,7 @@ const ConsultHeader = ({
   diseases: React.ReactNode;
   saveConsult: () => void;
 }) => (
-  <div>
+  <div className="sticky top-0 z-10">
     <div className=" bg-white h-fit">
       <div className="pt-12 pb-1 border-b border-grayscale-05">
         <div className="flex justify-between max-w-layout px-layout [&>*]:max-w-content  mx-auto w-full">
@@ -169,18 +169,16 @@ export function Index() {
   return (
     <>
       <Tabs defaultValue="pastConsult" className="w-full h-full">
-        <div className="sticky top-0 z-10">
-          <ConsultHeader
-            counseleeInfo={
-              counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes
-            }
-            consultStatus={consultStatus}
-            age={age}
-            diseases={diseases}
-            saveConsult={saveConsult}
-          />
-        </div>
-        <div className="w-full h-full  mb-100">
+        <ConsultHeader
+          counseleeInfo={
+            counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes
+          }
+          consultStatus={consultStatus}
+          age={age}
+          diseases={diseases}
+          saveConsult={saveConsult}
+        />
+        <div className="w-full h-full mb-100">
           {/* <TabsContent value="pastConsult">
             <PastConsult />
           </TabsContent> */}
