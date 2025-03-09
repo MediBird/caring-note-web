@@ -38,10 +38,10 @@ const NavigationRight = () => {
       {!isOpen && defaultMenu()}
       {isOpen && (
         <div className="flex justify-start">
-          <button className="absolute left-[-1.2rem] top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-nav-right z-[-1]">
-            {isOpen && (
-              <ChevronRight size={24} className="pr-2" onClick={toggleMenu} />
-            )}
+          <button
+            className="absolute left-[-1.2rem] top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-nav-right z-[-1]"
+            onClick={toggleMenu}>
+            {isOpen && <ChevronRight size={24} className="pr-2" />}
           </button>
           <div className="bg-white w-full">
             <div className="flex items-center justify-between border-b-2 border-grayscale-10 p-4 pt-8">
