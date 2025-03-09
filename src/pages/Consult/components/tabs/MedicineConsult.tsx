@@ -2,7 +2,7 @@ import { useAppSelector } from '@/app/reduxHooks';
 import warning from '@/assets/warning.webp';
 import HighlightInput from '@/components/consult/HighlightInput';
 import Recording from '@/components/consult/Recording';
-import { CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import RecordingResult from '@/pages/Consult/components/recording/RecordingResult';
 
 const MedicineConsult: React.FC = () => {
@@ -27,7 +27,7 @@ const MedicineConsult: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <Card>
       <CardHeader>
         <CardTitle>상담 기록</CardTitle>
       </CardHeader>
@@ -43,10 +43,10 @@ const MedicineConsult: React.FC = () => {
 
         <div className="flex flex-1 w-full justify-center">
           {!isRightNavigationOpen && <Recording className="w-full" />}
-          <RecordingResult className="w-full" />
+          <RecordingResult className="w-full -mt-[54px] min-w-[456px]" />
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

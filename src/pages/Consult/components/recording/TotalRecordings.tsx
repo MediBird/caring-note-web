@@ -24,7 +24,7 @@ const TotalRecordings: React.FC = () => {
   return (
     <ScrollArea
       variant="mini"
-      className="border-[1px] border-grayscale-30 rounded-[4px] px-3 py-4 mt-2 max-h-[600px] overflow-y-auto">
+      className="border-[1px] border-grayscale-30 rounded-[4px] px-3 py-4 mt-2 min-h-[602px] overflow-y-auto">
       <div className="flex flex-col gap-3">
         {isSuccess &&
           speechToTextList?.map((data, index) => (

@@ -33,7 +33,7 @@ const RecordingResult: React.FC<RecordingResultProps> = ({ className }) => {
   return (
     <>
       {recordingStatus === RecordingStatus.AICompleted && (
-        <div className={cn('ml-4', className)}>
+        <div className={cn('', className)}>
           <Tabs defaultValue="aiSummary">
             <RecordingResultTabLists />
             <TabsContent value="aiSummary" className="!m-0 !p-0">

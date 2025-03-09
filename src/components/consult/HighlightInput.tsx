@@ -223,11 +223,11 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'p-0 rounded-lg bg-white border-2 border-gray-300 ',
+        'p-0 rounded-lg bg-white border-[1px] border-grayscale-30 ',
         className,
       )}>
       <div
-        className="border-b p-2 h-[550px]"
+        className="border-b-[1px] border-grayscale-30 p-2 h-[550px]"
         onClick={() => getHighlightedText()}>
         <Editor
           editorState={editorState}
