@@ -11,12 +11,6 @@ import TextInputCell from '@/components/common/DataTable/text-input-cell';
 import MedicineSearchCell from '@/components/common/DataTable/medicine-search-cell';
 import SelectCellWithCustomInput from '@/components/common/DataTable/select-cell-with-custom-input';
 
-export const defaultColumnSizing = {
-  size: 400,
-  minSize: 50,
-  maxSize: Number.MAX_SAFE_INTEGER,
-};
-
 interface WasteMedicationColumnsProps {
   onDelete: (id: string) => void;
   handleUpdateCell: (id: string, field: string, value: string | number) => void;
