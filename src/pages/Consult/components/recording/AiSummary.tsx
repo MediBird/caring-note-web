@@ -14,8 +14,12 @@ const AiSummary: React.FC = () => {
   );
 
   return (
-    <ScrollArea className="mt-2 p-4 h-[600px] border-[1px] border-grayscale-30 rounded-[4px]">
-      {isSuccess && <ReactMarkDown>{aiSummary?.analysedText}</ReactMarkDown>}
+    <ScrollArea className="mt-2 p-4 h-[602px] border-[1px] border-grayscale-30 rounded-[4px]">
+      {isSuccess && (
+        <ReactMarkDown className={'prose'}>
+          {aiSummary?.analysedText}
+        </ReactMarkDown>
+      )}
     </ScrollArea>
   );
 };

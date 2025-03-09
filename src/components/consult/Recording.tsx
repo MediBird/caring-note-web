@@ -35,9 +35,12 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
       ? 'text-error-50'
       : 'text-grayscale-50';
 
+  const recordingIconClass =
+    'w-11 h-11 bg-white rounded-[100px] p-2 cursor-pointer border border-grayscale-10';
+
   const playIcon = (
     <PlayIcon
-      className="w-8 h-8 bg-white rounded-[100px] p-1 cursor-pointer"
+      className={recordingIconClass}
       onClick={
         recordingStatus === RecordingStatus.Ready
           ? startRecording // 최초 녹음시작
@@ -47,17 +50,11 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
   );
 
   const pauseIcon = (
-    <PauseIcon
-      className="w-8 h-8 bg-white rounded-[100px] p-1 cursor-pointer"
-      onClick={pauseRecording}
-    />
+    <PauseIcon className={recordingIconClass} onClick={pauseRecording} />
   );
 
   const stopIcon = (
-    <StopIcon
-      className="w-8 h-8 bg-white rounded-[100px] p-1 cursor-pointer"
-      onClick={stopRecording}
-    />
+    <StopIcon className={recordingIconClass} onClick={stopRecording} />
   );
 
   // 녹음시간 포맷팅(mm:ss)
@@ -94,7 +91,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
       {recordingStatus !== RecordingStatus.AICompleted && (
         <div
           className={cn(
-            'flex flex-col items-center justify-center rounded-xl gap-1 w-[260px] h-[166px] bg-grayscale-3 border-[1px] border-grayscale-10 shadow',
+            'flex flex-col items-center justify-center rounded-xl gap-1 min-w-[348px] h-[166px] bg-grayscale-3 border border-grayscale-10',
             className,
           )}>
           {recordingStatus === RecordingStatus.STTLoading ? (
@@ -153,7 +150,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
                         fill="currentColor"
                       />
                     )}
-                    <span className="text-subtitle1 font-medium text-grayscale-50">
+                    <span className="text-subtitle1 font-medium text-grayscale-80">
                       {formatTime(recordingTime)}
                     </span>
                   </div>
@@ -161,7 +158,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
                 {getRecordingImage()}
               </div>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 {recordingStatus === RecordingStatus.Ready && <>{playIcon}</>}
                 {recordingStatus === RecordingStatus.Recording && (
                   <>

@@ -223,15 +223,16 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'p-0 rounded-lg bg-white border-2 border-gray-300',
+        'p-0 rounded-lg bg-white border border-grayscale-30 ',
         className,
       )}>
       <div
-        className="border-b p-2 min-h-64"
+        className="border-b border-grayscale-30 p-2 h-[550px]"
         onClick={() => getHighlightedText()}>
         <Editor
           editorState={editorState}
-          placeholder={`상담 내용을 기록하세요`}
+          placeholder={`실시간으로 상담 내용을 기록하세요.
+형광펜 하이라이트 시, 다음 상담에 해당 내용을 가장 먼저 확인할 수 있어요.`}
           onChange={(editorState) => {
             setEditorState(editorState);
             setCounselRecord(editorState.getCurrentContent().getPlainText());

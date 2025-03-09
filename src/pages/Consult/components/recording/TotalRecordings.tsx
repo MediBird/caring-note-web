@@ -22,27 +22,31 @@ const TotalRecordings: React.FC = () => {
   };
 
   return (
-    <ScrollArea className="flex flex-col gap-4 px-3 py-4 mt-2 max-h-[600px] border-[1px] border-grayscale-30 rounded-[4px] overflow-y-auto ">
-      {isSuccess &&
-        speechToTextList?.map((data, index) => (
-          <div
-            key={index}
-            className="flex flex-row items-center justify-between">
-            <div className="flex flex-row items-center gap-3">
-              <div
-                className={cn(
-                  'flex items-center justify-center text-sm font-medium min-w-[24px] min-h-[24px] rounded-full',
-                  getColorForSpeaker(data.name),
-                )}>
-                {data.name}
+    <ScrollArea
+      variant="mini"
+      className="border-[1px] border-grayscale-30 rounded-[4px] px-3 py-4 mt-2 min-h-[602px] overflow-y-auto">
+      <div className="flex flex-col gap-3">
+        {isSuccess &&
+          speechToTextList?.map((data, index) => (
+            <div
+              key={index}
+              className="flex flex-row items-center justify-between">
+              <div className="flex flex-row items-center gap-3">
+                <div
+                  className={cn(
+                    'flex items-center justify-center text-sm font-medium min-w-[24px] min-h-[24px] rounded-full',
+                    getColorForSpeaker(data.name),
+                  )}>
+                  {data.name}
+                </div>
+                <p className="text-body1 text-grayscale-90">{data.text}</p>
               </div>
-              <p className="text-body1 text-grayscale-90">{data.text}</p>
+              <p className="text-body2 text-grayscale-30 ml-2">
+                {data.startTime}
+              </p>
             </div>
-            <p className="text-body2 text-grayscale-30 ml-2">
-              {data.startTime}
-            </p>
-          </div>
-        ))}
+          ))}
+      </div>
     </ScrollArea>
   );
 };
