@@ -3,7 +3,6 @@ import { AddCounseleeFormData } from '../components/dialog/CounseleeDialog';
 import {
   useCreateCounseleeInfo,
   useDeleteCounseleeInfo,
-  useSelectCounseleeList,
   useUpdateCounseleeInfo,
 } from './queries/useCounseleeQuery';
 import {
@@ -47,13 +46,6 @@ export const useCounseleeManagement = () => {
     useBirthDatesQuery();
   const { data: institutionsData, refetch: refetchInstitutions } =
     useInstitutionsQuery();
-  const { data, refetch } = useSelectCounseleeList({
-    page,
-    size,
-    name: validNameFilter,
-    birthDates: filter.birthDates,
-    affiliatedWelfareInstitutions: filter.affiliatedWelfareInstitutions,
-  });
 
   // 뮤테이션 사용
   const createCounselee = useCreateCounseleeInfo();
