@@ -1,6 +1,7 @@
 import Consult from '@/pages/Consult';
 import CounseleeManagement from '@/pages/Counselee';
-import ErrorPage from '@/pages/ErrorPage';
+import ForbiddenErrorPage from '@/pages/Errors/Forbidden';
+import NotFoundErrorPage from '@/pages/Errors/NotFound';
 import Home from '@/pages/Home';
 import Layout from '@/pages/Layout';
 import SessionManagement from '@/pages/Session';
@@ -14,13 +15,13 @@ type AppRouteObject = RouteObject & {
 const Routes = () => {
   const noMatchRoutes: AppRouteObject = {
     path: '/*',
-    element: <ErrorPage />,
+    element: <NotFoundErrorPage />,
   };
 
   const mainRoutes: AppRouteObject = {
     path: '/',
     element: <Layout />,
-    errorElement: <ErrorPage />,
+    errorElement: <ForbiddenErrorPage />,
     children: [
       {
         path: '/',

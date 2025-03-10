@@ -83,6 +83,11 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         collapsedName: '사용법',
         icon: <QuestionIcon width={24} height={24} />,
         roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
+        action: () =>
+          window.open(
+            'https://www.notion.so/yoonyounglee/19a4b68481fb802db0fef7bbf9e35afb?pvs=4',
+            '_blank',
+          ),
       },
       {
         name: '로그아웃',
