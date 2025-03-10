@@ -3,6 +3,7 @@ import { AddCounseleeFormData } from '../components/dialog/CounseleeDialog';
 import {
   useCreateCounseleeInfo,
   useDeleteCounseleeInfo,
+  useSelectCounseleeList,
   useUpdateCounseleeInfo,
 } from './queries/useCounseleeQuery';
 import {
@@ -40,6 +41,15 @@ export const useCounseleeManagement = () => {
   const validNameFilter = useMemo(() => {
     return isValidName(filter.name) ? filter.name : undefined;
   }, [filter.name, isValidName]);
+
+  // 내담자 목록 쿼리
+  const { data, refetch } = useSelectCounseleeList({
+    page,
+    size,
+    name: validNameFilter,
+    birthDates: filter.birthDates,
+    affiliatedWelfareInstitutions: filter.affiliatedWelfareInstitutions,
+  });
 
   // 쿼리 사용
   const { data: birthDatesData, refetch: refetchBirthDates } =
