@@ -95,6 +95,7 @@ export const CounseleeDialog = ({
 
   const handleSubmit = () => {
     onSubmit(formData);
+    handleOpenChange(false);
   };
 
   return (

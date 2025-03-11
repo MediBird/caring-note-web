@@ -42,11 +42,7 @@ export const useCounseleeManagement = () => {
     return isValidName(filter.name) ? filter.name : undefined;
   }, [filter.name, isValidName]);
 
-  // 쿼리 사용
-  const { data: birthDatesData, refetch: refetchBirthDates } =
-    useBirthDatesQuery();
-  const { data: institutionsData, refetch: refetchInstitutions } =
-    useInstitutionsQuery();
+  // 내담자 목록 쿼리
   const { data, refetch } = useSelectCounseleeList({
     page,
     size,
@@ -54,6 +50,12 @@ export const useCounseleeManagement = () => {
     birthDates: filter.birthDates,
     affiliatedWelfareInstitutions: filter.affiliatedWelfareInstitutions,
   });
+
+  // 쿼리 사용
+  const { data: birthDatesData, refetch: refetchBirthDates } =
+    useBirthDatesQuery();
+  const { data: institutionsData, refetch: refetchInstitutions } =
+    useInstitutionsQuery();
 
   // 뮤테이션 사용
   const createCounselee = useCreateCounseleeInfo();
