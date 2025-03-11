@@ -10,7 +10,7 @@ function ConsultCountContainer() {
       <span className="text-xl font-bold text-primary-50 leading-[26px]">
         약으로 이어지는 <br className="hidden hd:block" /> 건강한 변화들 💫
       </span>
-      <p className="text-sm mt-1.5 mb-[10px] text-grayscale-50 leading-[14px]">
+      <p className="text-caption1 mt-1.5 mb-[10px] text-grayscale-50 leading-[14px]">
         오늘 기준
       </p>
       <div className="grid grid-cols-2 gap-3">

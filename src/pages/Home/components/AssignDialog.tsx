@@ -78,6 +78,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
     <Button
       type="button"
       className="w-full"
+      size="md"
       variant={dialogState.UNASSIGNED ? 'primary' : 'secondary'}>
       {dialogState.UNASSIGNED ? '나에게 할당' : '할당 완료'}
     </Button>
@@ -93,6 +94,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
           <Button
             type="button"
             variant="primary"
+            size="md"
             onClick={handleAssignAndConsult}>
             할당하고 상담하기
           </Button>

@@ -1,19 +1,19 @@
 import { cva } from 'class-variance-authority';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-1 whitespace-nowrap font-bold ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300',
+  'inline-flex items-center justify-center gap-1 whitespace-nowrap font-bold ring-offset-white transition-colors disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0',
   {
     variants: {
       size: {
         sm: 'h-6 rounded-md px-3 py-[10px] text-caption1 font-medium',
-        md: 'h-8 rounded-md px-2 text-body2 font-medium',
+        md: 'h-8 rounded-md px-2 !text-body2 font-medium',
         lg: 'h-10 rounded-md px-3 py-3 text-body1 font-bold',
         xl: 'h-12 rounded-md px-4 text-body1 font-bold',
         icon: 'h-5 w-5',
       },
       variant: {
         primary:
-          'text-white border-[1.5px] bg-primary-50 hover:bg-primary-60 active:bg-primary-70 disabled:bg-grayscale-20 disabled:text-grayscale-40 dark:bg-neutral-50 dark:text-neutral-900 dark:hover:bg-neutral-50/90',
+          'text-white border-[1.5px] border-transparent bg-primary-50 hover:bg-primary-60 active:bg-primary-70 disabled:bg-grayscale-20 disabled:text-grayscale-40 dark:bg-neutral-50 dark:text-neutral-900 dark:hover:bg-neutral-50/90',
         destructive:
           'bg-red-500 border-[1.5px]  text-neutral-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/90',
         outline:

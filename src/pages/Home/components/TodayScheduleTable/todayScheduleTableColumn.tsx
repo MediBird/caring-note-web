@@ -39,7 +39,7 @@ export const createColumns = ({
     accessorKey: 'scheduledDate',
     header: '상담 일자',
     enableSorting: true,
-    size: 122,
+    size: 124,
     cell: ({ row }) => {
       const scheduledDate = row.original.scheduledDate ?? '-';
       return <span className="px-3 w-full min-w-[145px]">{scheduledDate}</span>;
