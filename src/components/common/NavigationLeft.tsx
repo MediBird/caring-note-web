@@ -37,8 +37,6 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
   const { user } = useAuthContext();
   const { keycloak } = useKeycloak();
 
-  // Zustand 상태 가져오기
-
   const getIsActive = (route: string) => {
     return location.pathname === route;
   };
