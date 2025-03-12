@@ -21,9 +21,8 @@ import {
 } from '@/components/ui/sidebar';
 import { useAuthContext } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
-import { useNavigationStore } from '@/store/navigationStore';
 import { useKeycloak } from '@react-keycloak/web';
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface NavigationLeftProps {
@@ -32,14 +31,15 @@ interface NavigationLeftProps {
 
 const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
   const navigate = useNavigate();
+
   const { toggleSidebar, open, setOpen } = useSidebar();
 
   const { user } = useAuthContext();
   const { keycloak } = useKeycloak();
 
-  // Zustand 상태 가져오기
-  const activeMenu = useNavigationStore((state) => state.activeMenu);
-  const setActiveMenu = useNavigationStore((state) => state.setActiveMenu);
+  const getIsActive = (route: string) => {
+    return location.pathname === route;
+  };
 
   // 메뉴 데이터 타입과 정의
   const menuItems = useMemo(() => {
@@ -103,20 +103,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
     );
   }, [keycloak, user?.roleType]);
 
-  useEffect(() => {
-    const currentPath = location.pathname;
-    const matchedMenu = menuItems.find((menu) => menu.route === currentPath);
-    if (matchedMenu) {
-      setActiveMenu(matchedMenu.name);
-    }
-  }, [setActiveMenu, menuItems]);
-
-  const handleMenuClick = (
-    menuName: string,
-    route?: string,
-    action?: () => void,
-  ) => {
-    setActiveMenu(menuName);
+  const handleMenuClick = (route?: string, action?: () => void) => {
     if (action) action();
     if (route) navigate(route);
   };
@@ -128,11 +115,11 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
   }, [initialOpen, setOpen]);
 
   return (
-    <Sidebar collapsible="icon" className="shadow-nav-left !border-0 z-50">
+    <Sidebar collapsible="icon" className="shadow-nav-left !border-0 z-50 ">
       <SidebarHeader
         className={cn(
           'border-b border-grayscale-10 flex flex-col gap-4 text-left',
-          !open && 'gap-0',
+          !open && 'gap-0 border-b-0',
         )}>
         <button
           onClick={toggleSidebar}
@@ -142,22 +129,24 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
           )}>
           <MenuIcon width={24} height={24} />
         </button>
-        <div
-          className={cn(
-            'flex flex-wrap max-w-[156px] transition-opacity duration-1000 items-end gap-1.5',
-            open ? 'opacity-100' : 'max-h-[0px] opacity-0 duration-0',
-          )}>
-          <span className="text-subtitle2 font-bold break-words">
-            {user?.name?.trim() ?? ''}
-          </span>
-          <span className="text-body1 font-medium break-keep">
-            {`${
-              roleNameMapByRoleType[
-                user?.roleType as keyof typeof roleNameMapByRoleType
-              ]
-            }님`}
-          </span>
-        </div>
+        {user && (
+          <div
+            className={cn(
+              'flex flex-wrap max-w-[156px] transition-opacity duration-1000 items-end gap-1.5',
+              open ? 'opacity-100' : 'max-h-[0px] opacity-0 duration-0',
+            )}>
+            <span className="text-subtitle2 font-bold break-words">
+              {user?.name?.trim() ?? ''}
+            </span>
+            <span className="text-body1 font-medium break-keep">
+              {`${
+                roleNameMapByRoleType[
+                  user?.roleType as keyof typeof roleNameMapByRoleType
+                ]
+              }님`}
+            </span>
+          </div>
+        )}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -166,14 +155,15 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
               {menuItems.slice(0, 5).map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton
-                    isActive={activeMenu === item.name}
-                    onClick={() =>
-                      handleMenuClick(item.name, item.route, item.action)
-                    }
+                    isActive={getIsActive(item.route ?? '')}
+                    onClick={() => handleMenuClick(item.route, item.action)}
                     className={cn(
                       'flex items-center gap-2 flex-row',
-                      !open &&
-                        'justify-center flex-col text-xs text-center p-[3px] overflow-hidden gap-1 font-bold',
+                      !open
+                        ? 'justify-center flex-col text-xs text-center p-[3px] overflow-hidden gap-1 font-bold text-grayscale-50 hover:!text-grayscale-70 [&>svg]:text-grayscale-90'
+                        : 'text-grayscale-90',
+                      getIsActive(item.route ?? '') &&
+                        'text-primary-50 [&>svg]:text-primary-50',
                     )}>
                     {item.icon}
                     <span
@@ -187,18 +177,19 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-            <div className="h-[1px] my-1 bg-grayscale-10 w-full" />
+            {user && <div className="h-[1px] my-2.5 bg-grayscale-10 w-full" />}
             <SidebarMenu>
               {menuItems.slice(5).map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton
-                    onClick={() =>
-                      handleMenuClick(item.name, item.route, item.action)
-                    }
+                    onClick={() => handleMenuClick(item.route, item.action)}
                     className={cn(
                       'flex items-center gap-2 flex-row',
-                      !open &&
-                        'justify-center flex-col text-xs text-center p-[3px] overflow-hidden gap-1 font-bold',
+                      !open
+                        ? 'justify-center flex-col text-xs text-center p-[3px] overflow-hidden gap-1 font-bold text-grayscale-50 hover:!text-grayscale-70 [&>svg]:text-grayscale-90'
+                        : 'text-grayscale-90',
+                      getIsActive(item.route ?? '') &&
+                        'text-primary-50 [&>svg]:text-primary-50',
                     )}>
                     {item.icon}
                     <span

@@ -44,7 +44,7 @@ function Home() {
     <div
       style={{ backgroundImage: `url(${background})` }}
       className="bg-cover bg-center bg-no-repeat h-full">
-      <div className="flex flex-col items-center justify-start h-full pt-[120px] pb-6 max-w-layout mx-auto px-layout [&>*]:max-w-content">
+      <div className="flex flex-col items-center justify-start h-full pt-[40px] pb-6 max-w-layout mx-auto px-layout [&>*]:max-w-content">
         <div className="w-full flex justify-between items-center">
           <img src={logoWide} alt="logo" width={310} />
           <div className="flex items-center gap-4 text-primary-50 font-medium">
@@ -94,7 +94,7 @@ function Home() {
                   <div className="flex flex-col items-center justify-center flex-1">
                     <img src={tableEmpty} alt="table-empty" />
                     <span className="text-2xl font-bold">
-                      예정된 상담 일정이 없어요
+                      오늘은 예정된 상담 일정이 없어요
                     </span>
                     <span className="text-base text-gray-500">
                       상담 내역에서 이전 상담 기록을 볼 수 있습니다
