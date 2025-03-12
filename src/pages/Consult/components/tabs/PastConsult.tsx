@@ -14,7 +14,7 @@ const PastConsult: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>이전 상담 내용</CardTitle>
+        <CardTitle>지난번 상담에서의 핵심 내용</CardTitle>
       </CardHeader>
       <div className="flex flex-row justify-between items-start space-x-4">
         <PastConsultContainer title="상담 기록 하이라이트" variant="primary">
