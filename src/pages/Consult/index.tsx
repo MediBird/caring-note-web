@@ -20,6 +20,7 @@ import ConsultCard from './components/tabs/ConsultCard';
 import DiscardMedicine from './components/tabs/DiscardMedicine';
 import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
+import PastConsult from '@/pages/Consult/components/tabs/PastConsult';
 
 interface InfoItemProps {
   icon: string;
@@ -179,9 +180,9 @@ export function Index() {
           saveConsult={saveConsult}
         />
         <div className="w-full h-full mb-100">
-          {/* <TabsContent value="pastConsult">
+          <TabsContent value="pastConsult">
             <PastConsult />
-          </TabsContent> */}
+          </TabsContent>
           <TabsContent value="survey">
             <ConsultCard />
           </TabsContent>
