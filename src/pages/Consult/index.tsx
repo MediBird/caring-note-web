@@ -97,7 +97,7 @@ const ConsultHeader = ({
 
 const ConsultTabs = () => (
   <TabsList className="w-full border-b border-grayscale-10">
-    <div className="flex gap-5 justify-start max-w-layout px-layout [&>*]:max-w-content mx-auto w-full">
+    <div className="flex gap-5 justify-start max-w-layout h-full px-layout [&>*]:max-w-content mx-auto w-full">
       <TabsTrigger value="pastConsult">이전 상담 내역</TabsTrigger>
       <TabsTrigger value="survey">기초 설문 내역</TabsTrigger>
       <TabsTrigger value="medicine">의약물 기록</TabsTrigger>
