@@ -27,7 +27,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'inline-flex h-full items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 hover:border-b-2 hover:border-grayscale-20 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-primary-50 data-[state=active]:shadow-sm data-[state=active]:border-b-2 data-[state=active]:border-b-primary-50 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300 dark:data-[state=active]:bg-neutral-950 dark:data-[state=active]:text-neutral-50',
+      'inline-flex h-full items-center justify-center whitespace-nowrap border-b-2 border-transparent text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 hover:border-b-2 hover:border-grayscale-20 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-primary-50 data-[state=active]:shadow-sm data-[state=active]:border-b-2 data-[state=active]:border-b-primary-50 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300 dark:data-[state=active]:bg-neutral-950 dark:data-[state=active]:text-neutral-50',
       className,
     )}
     {...props}
@@ -42,7 +42,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      'mb-10 pt-6 pb-10 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300 overflow-y-auto mx-auto w-full max-w-layout px-layout [&>*]:max-w-content [&>*]:mx-auto',
+      'mb-10 pt-10 pb-10 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300 overflow-y-auto mx-auto w-full max-w-layout px-layout [&>*]:max-w-content [&>*]:mx-auto',
       className,
     )}
     {...props}
