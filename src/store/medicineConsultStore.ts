@@ -4,14 +4,18 @@ import {
   MedicineConsultDTO,
 } from '@/types/MedicineConsultDTO';
 
-export const useMedicineConsultStore = create<{
+interface MedicineConsultState {
   medicineConsult: MedicineConsultDTO;
   setMedicationConsult: (data: MedicineConsultDTO) => void;
   setCounselRecord: (counselRecord: string) => void;
   setCounselRecordHighlights: (
     counselRecordHighlights: CounselRecordHighlights[],
   ) => void;
-}>((set) => ({
+  isEditorInitialized: boolean;
+  setEditorInitialized: (initialized: boolean) => void;
+}
+
+export const useMedicineConsultStore = create<MedicineConsultState>((set) => ({
   medicineConsult: {
     counselSessionId: '',
     medicationCounselId: '',
@@ -38,4 +42,8 @@ export const useMedicineConsultStore = create<{
         counselRecordHighlights,
       },
     })),
+
+  isEditorInitialized: false,
+  setEditorInitialized: (initialized) =>
+    set({ isEditorInitialized: initialized }),
 }));
