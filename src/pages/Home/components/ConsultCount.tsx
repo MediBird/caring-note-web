@@ -15,17 +15,17 @@ function ConsultCount({
 }: ConsultCountProps) {
   return (
     <div
-      className="flex w-full text-primary-50 p-3 border border-grayscale-5 rounded-xl"
+      className="flex w-full rounded-xl border border-grayscale-5 p-3 text-primary-50"
       style={{ background: backgroundColor }}>
-      <div className="flex  hd:flex-col w-full h-full items-center justify-center gap-2 flex-row-reverse ">
-        <img src={image} alt="theme" />
-        <div className="flex flex-col w-full h-full items-center justify-start hd:justify-center gap-1">
-          <p className="font-bold text-xl w-full text-start leading-6">
+      <div className="flex h-full w-full flex-row-reverse items-center justify-center gap-2 hd:flex-col">
+        <img src={image} alt="theme" width={80} height={80} />
+        <div className="flex h-full w-full flex-col items-center justify-start gap-1 hd:justify-center">
+          <p className="w-full text-start text-xl font-bold leading-6">
             {count.toLocaleString()}
             {unit}
           </p>
           <p
-            className="text-xs w-full text-start leading-[14px]"
+            className="w-full text-start text-xs leading-[14px]"
             dangerouslySetInnerHTML={{ __html: title }}
           />
         </div>
