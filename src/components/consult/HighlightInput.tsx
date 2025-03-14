@@ -29,8 +29,13 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
   const { editorState, setEditorState } = useCounselRecordEditorStateStore();
 
   const { counselSessionId } = useParams();
-  const { setMedicationConsult, setCounselRecordHighlights, setCounselRecord } =
-    useMedicineConsultStore();
+  const {
+    setMedicationConsult,
+    setCounselRecordHighlights,
+    setCounselRecord,
+    isEditorInitialized,
+    setEditorInitialized,
+  } = useMedicineConsultStore();
 
   const { data } = useSelectMedicineConsult(counselSessionId);
 
@@ -47,7 +52,7 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
   };
 
   useEffect(() => {
-    if (data) {
+    if (data && !isEditorInitialized) {
       setMedicationConsult({
         counselSessionId: counselSessionId || '',
         medicationCounselId: data.medicationCounselId || '',
@@ -55,75 +60,83 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
         counselRecordHighlights: data.counselRecordHighlights || [],
       });
 
-      // ContentState 초기화
-      const contentState = ContentState.createFromText(
-        data.counselRecord || '',
-      );
+      const currentText = editorState.getCurrentContent().getPlainText();
+      if (!currentText) {
+        const contentState = ContentState.createFromText(
+          data.counselRecord || '',
+        );
 
-      // 특정 하이라이트 설정 (데이터가 있다면 처리)
-      let contentStateWithHighlight = contentState;
+        let contentStateWithHighlight = contentState;
 
-      if (data.counselRecordHighlights?.length && data.counselRecord) {
-        // reduce를 사용하여 순차적으로 하이라이트 적용
-        contentStateWithHighlight = data.counselRecordHighlights.reduce(
-          (currentContent, highlight) => {
-            const start = highlight.startIndex;
-            const end = highlight.endIndex;
+        if (data.counselRecordHighlights?.length && data.counselRecord) {
+          contentStateWithHighlight = data.counselRecordHighlights.reduce(
+            (currentContent, highlight) => {
+              const start = highlight.startIndex;
+              const end = highlight.endIndex;
 
-            if (start === -1) return currentContent;
+              if (start === -1) return currentContent;
 
-            try {
-              let offset = 0;
-              let targetBlock: ContentBlock | null = null;
-              let targetStart = start;
-              let targetEnd = end;
+              try {
+                let offset = 0;
+                let targetBlock: ContentBlock | null = null;
+                let targetStart = start;
+                let targetEnd = end;
 
-              const blocks = currentContent.getBlockMap().toArray();
-              for (const block of blocks) {
-                const length = block.getLength();
-                if (start >= offset && start < offset + length) {
-                  targetBlock = block;
-                  targetStart = start - offset;
-                  targetEnd = end - offset;
-                  break;
+                const blocks = currentContent.getBlockMap().toArray();
+                for (const block of blocks) {
+                  const length = block.getLength();
+                  if (start >= offset && start < offset + length) {
+                    targetBlock = block;
+                    targetStart = start - offset;
+                    targetEnd = end - offset;
+                    break;
+                  }
+                  offset += length + 1;
                 }
-                offset += length + 1;
-              }
 
-              if (!targetBlock) return currentContent;
+                if (!targetBlock) return currentContent;
 
-              const blockKey = targetBlock.getKey();
-              const selectionState = SelectionState.createEmpty(blockKey).merge(
-                {
+                const blockKey = targetBlock.getKey();
+                const selectionState = SelectionState.createEmpty(
+                  blockKey,
+                ).merge({
                   anchorOffset: targetStart,
                   focusOffset: targetEnd,
                   hasFocus: true,
-                },
-              );
+                });
 
-              return Modifier.applyInlineStyle(
-                currentContent,
-                selectionState,
-                'HIGHLIGHT',
-              );
-            } catch (error) {
-              console.error('하이라이트 스타일 적용 중 오류 발생:', error);
-              return currentContent;
-            }
-          },
-          contentState,
+                return Modifier.applyInlineStyle(
+                  currentContent,
+                  selectionState,
+                  'HIGHLIGHT',
+                );
+              } catch (error) {
+                console.error('하이라이트 스타일 적용 중 오류 발생:', error);
+                return currentContent;
+              }
+            },
+            contentState,
+          );
+        }
+
+        const newEditorState = EditorState.createWithContent(
+          contentStateWithHighlight,
         );
+
+        setEditorState(newEditorState);
+        setEditorInitialized(true);
       }
-
-      const newEditorState = EditorState.createWithContent(
-        contentStateWithHighlight,
-      );
-
-      setEditorState(newEditorState);
     }
-  }, [data, setEditorState, setMedicationConsult, counselSessionId]);
+  }, [
+    data,
+    setEditorState,
+    setMedicationConsult,
+    counselSessionId,
+    editorState,
+    isEditorInitialized,
+    setEditorInitialized,
+  ]);
 
-  // 하이라이트 버튼 핸들러
   const applyHighlight = () => {
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
@@ -144,7 +157,6 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
     setEditorState(newEditorState);
   };
 
-  // 하이라이트 버튼 핸들러
   const removeHighlight = () => {
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
@@ -164,7 +176,6 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
     setEditorState(newEditorState);
   };
 
-  // 현재 하이라이트된 텍스트 추출
   const getHighlightedText = useCallback((): CounselRecordHighlights[] => {
     const contentState = editorState.getCurrentContent();
     const highlights: CounselRecordHighlights[] = [];
@@ -178,7 +189,6 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
       let currentHighlight = '';
       let startIndex = -1;
 
-      // 각 문자의 스타일을 확인
       for (let i = 0; i < text.length; i++) {
         const hasHighlight = charList.get(i).hasStyle('HIGHLIGHT');
 
@@ -200,7 +210,6 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
         }
       }
 
-      // 블록 끝에서 하이라이트가 끝나는 경우 처리
       if (startIndex !== -1) {
         highlights.push({
           startIndex,
@@ -209,7 +218,6 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
         });
       }
 
-      // 다음 블록을 위한 오프셋 업데이트 (줄바꿈 문자 고려)
       totalOffset += text.length + 1;
     });
 
@@ -223,11 +231,11 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'p-0 rounded-lg bg-white border border-grayscale-30 ',
+        'rounded-lg border border-grayscale-30 bg-white p-0',
         className,
       )}>
       <div
-        className="border-b border-grayscale-30 p-2 h-[550px]"
+        className="h-[550px] border-b border-grayscale-30 p-2"
         onClick={() => getHighlightedText()}>
         <Editor
           editorState={editorState}
@@ -242,7 +250,7 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
       </div>
       <div className="flex items-center">
         <img
-          className="w-8 h-8 cursor-pointer m-2 inline-block"
+          className="m-2 inline-block h-8 w-8 cursor-pointer"
           src={isHoverHighlightButton ? highlightpenBlue : highlightpenBlack}
           alt="하이라이트"
           onClick={applyHighlight}
@@ -250,7 +258,7 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
           onMouseLeave={() => setIsHoverHighlightButton(false)}
         />
         <img
-          className="w-8 h-8 cursor-pointer inline-block"
+          className="inline-block h-8 w-8 cursor-pointer"
           src={isHoverEraserButton ? eraserBlue : eraserBlack}
           alt="하이라이트 지우기"
           onClick={removeHighlight}
