@@ -8,6 +8,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
 import { useCounseleeAutocomplete } from '../../hooks/query/useCounseleeAutocomplete';
+import SearchIcon from '@/assets/icon/24/search.outline.black.svg?react';
 
 interface CounseleeSearchInputProps {
   value: string;
@@ -72,6 +73,11 @@ export default function CounseleeSearchInput({
   };
 
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleTriggerClick = () => {
+    inputRef.current?.focus();
+  };
 
   return (
     <Popover open={open}>
@@ -79,17 +85,20 @@ export default function CounseleeSearchInput({
         <PopoverTrigger
           asChild
           ref={triggerRef}
-          className="data-[state=open]:shadow-cell-shadow border-none content-center rounded-[8px] bg-transparent data-[state=open]:bg-white h-full">
-          <div className="w-full h-full">
+          onClick={handleTriggerClick}
+          className="!h-10 content-center rounded border border-grayscale-30 bg-transparent focus:outline-none data-[state=open]:border-transparent data-[state=open]:ring-2 data-[state=open]:ring-primary-50">
+          <div className="flex h-full w-full items-center gap-2 p-1">
+            <SearchIcon className="h-6 w-6" />
             <Input
+              ref={inputRef}
               type="text"
-              placeholder="내담자 이름을 입력해 주세요"
+              placeholder="내담자 이름"
               value={inputValue}
               onChange={handleChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
               className={cn(
-                'h-full',
+                'h-full border-none p-0',
                 open && 'border-primary-50 focus:border-primary-50',
               )}
             />
@@ -100,8 +109,8 @@ export default function CounseleeSearchInput({
           side="bottom"
           avoidCollisions={false}
           style={{ width: triggerRef.current?.offsetWidth }}
-          className="min-w-[200px] rounded-[8px] p-2 text-grayscale-100 font-medium">
-          <div className="relative flex flex-col gap-2 max-h-[304px] overflow-y-auto">
+          className="min-w-[200px] rounded-[8px] p-2 font-medium text-grayscale-100">
+          <div className="relative flex max-h-[304px] flex-col gap-2 overflow-y-auto">
             {counseleeList && counseleeList.length > 0 ? (
               counseleeList.map((item) => (
                 <div
@@ -112,7 +121,7 @@ export default function CounseleeSearchInput({
                   }}
                   key={item.counseleeId}
                   className={cn(
-                    'hover:bg-grayscale-5 p-1 rounded-sm flex flex-col cursor-pointer',
+                    'flex cursor-pointer flex-col rounded-sm p-1 hover:bg-grayscale-5',
                     item.counseleeId === selectedId && 'text-primary-50',
                   )}>
                   <div className="flex items-center justify-between">
@@ -126,7 +135,7 @@ export default function CounseleeSearchInput({
                 </div>
               ))
             ) : (
-              <div className="text-grayscale-40 font-medium">
+              <div className="font-medium text-grayscale-40">
                 검색 결과가 없습니다.
               </div>
             )}
