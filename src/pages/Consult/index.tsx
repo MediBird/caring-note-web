@@ -12,7 +12,7 @@ import { useGetIsRecordingPopupQuery } from '@/pages/Consult/hooks/query/counsel
 import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
 import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
-import useConsultTabStore from '@/store/consultTabStore';
+import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
 import { useEffect } from 'react';
@@ -174,7 +174,9 @@ export function Index() {
       <Tabs
         className="h-full w-full"
         value={activeTab}
-        onValueChange={setActiveTab}>
+        onValueChange={(value) => {
+          setActiveTab(value as ConsultTab);
+        }}>
         <ConsultHeader
           counseleeInfo={
             counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes

@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import DeleteRecordingDialog from '@/pages/Consult/components/recording/DeleteRecordingDialog';
 import SelectSpeakerDialog from '@/pages/Consult/components/recording/SelectSpeakerDialog';
 import { toggleRightNavigation } from '@/reducers/navigationReducer';
-import useConsultTabStore from '@/store/consultTabStore';
+import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { RecordingStatus } from '@/types/Recording.enum';
 import { Circle } from 'lucide-react';
 import React from 'react';
@@ -97,7 +97,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
 
   const showAiSummaryView = () => {
     toggleMenu();
-    setActiveTab('note');
+    setActiveTab(ConsultTab.consultNote);
   };
 
   return (
