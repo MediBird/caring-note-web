@@ -19,6 +19,11 @@ const Routes = () => {
     element: <NotFoundErrorPage />,
   };
 
+  const forbiddenRoutes: AppRouteObject = {
+    path: '/forbidden',
+    element: <ForbiddenErrorPage />,
+  };
+
   const mainRoutes: AppRouteObject = {
     path: '/',
     element: <Layout />,
@@ -27,10 +32,6 @@ const Routes = () => {
       {
         path: '/',
         element: <Home />,
-      },
-      {
-        path: '/unauthorized',
-        element: <ForbiddenErrorPage />,
       },
     ],
   };
@@ -75,6 +76,7 @@ const Routes = () => {
   const routes: AppRouteObject[] = [
     noMatchRoutes,
     mainRoutes,
+    forbiddenRoutes,
     consultRoutes,
     surveyRoutes,
     AdminRoutes,
