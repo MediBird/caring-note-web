@@ -55,7 +55,10 @@ const MedicineConsult: React.FC = () => {
         </div>
 
         <div className="flex w-full flex-1 justify-center">
-          {!isRightNavigationOpen && <Recording className="w-full" />}
+          {!isRightNavigationOpen &&
+            recordingStatus !== RecordingStatus.AICompleted && (
+              <Recording className="w-full" />
+            )}
           <RecordingResult className="-mt-[54px] w-full min-w-[456px]" />
         </div>
       </div>
