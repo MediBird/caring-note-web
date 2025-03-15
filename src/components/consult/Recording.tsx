@@ -1,3 +1,4 @@
+import { useAppDispatch } from '@/app/reduxHooks';
 import PauseIcon from '@/assets/icon/24/pause.fill.black.svg?react';
 import PlayIcon from '@/assets/icon/24/record.fill.red.svg?react';
 import StopIcon from '@/assets/icon/24/stop.fill.black.svg?react';
@@ -10,6 +11,8 @@ import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import DeleteRecordingDialog from '@/pages/Consult/components/recording/DeleteRecordingDialog';
 import SelectSpeakerDialog from '@/pages/Consult/components/recording/SelectSpeakerDialog';
+import { toggleRightNavigation } from '@/reducers/navigationReducer';
+import useConsultTabStore from '@/store/consultTabStore';
 import { RecordingStatus } from '@/types/Recording.enum';
 import { Circle } from 'lucide-react';
 import React from 'react';
@@ -29,6 +32,12 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     recordingStatus,
     recordingTime,
   } = useRecording(counselSessionId);
+  const dispatch = useAppDispatch();
+
+  const toggleMenu = () => {
+    dispatch(toggleRightNavigation());
+  };
+  const { setActiveTab } = useConsultTabStore();
 
   const circleColorClass =
     recordingStatus === RecordingStatus.Recording
@@ -86,9 +95,9 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     return null;
   };
 
-  const showAiSummary = () => {
-    // TODO : 중재기록작성 탭 이동 및 SNB 접기
-    console.log('AI 요약 보여주기');
+  const showAiSummaryView = () => {
+    toggleMenu();
+    setActiveTab('note');
   };
 
   return (
@@ -132,7 +141,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
               <p className="text-body1 font-bold text-grayscale-80">
                 스크립트 생성 완료!
               </p>
-              <Button onClick={showAiSummary} variant={'primary'} size="md">
+              <Button onClick={showAiSummaryView} variant={'primary'} size="md">
                 내용 확인
               </Button>
             </div>

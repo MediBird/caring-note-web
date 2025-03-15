@@ -7,10 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useRecording } from '@/hooks/useRecording';
+import PastConsult from '@/pages/Consult/components/tabs/PastConsult';
 import { useGetIsRecordingPopupQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetIsRecordingPopupQuery';
 import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
 import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
+import useConsultTabStore from '@/store/consultTabStore';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
 import { useEffect } from 'react';
@@ -20,7 +22,6 @@ import ConsultCard from './components/tabs/ConsultCard';
 import DiscardMedicine from './components/tabs/DiscardMedicine';
 import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
-import PastConsult from '@/pages/Consult/components/tabs/PastConsult';
 
 interface InfoItemProps {
   icon: string;
@@ -35,7 +36,7 @@ const InfoItem = ({ icon, content, showDivider = true }: InfoItemProps) => (
       <span className="text-grayscale-70">{content}</span>
     </div>
     {showDivider && (
-      <div className="w-[1px] h-[16px] bg-grayscale-10 mr-[6px]" />
+      <div className="mr-[6px] h-[16px] w-[1px] bg-grayscale-10" />
     )}
   </div>
 );
@@ -70,15 +71,15 @@ const ConsultHeader = ({
   saveConsult: () => void;
 }) => (
   <div className="sticky top-0 z-10">
-    <div className=" bg-white h-fit">
-      <div className="pt-12 pb-1 border-b border-grayscale-05">
-        <div className="flex justify-between max-w-layout px-layout [&>*]:max-w-content  mx-auto w-full">
+    <div className="h-fit bg-white">
+      <div className="border-grayscale-05 border-b pb-1 pt-12">
+        <div className="mx-auto flex w-full max-w-layout justify-between px-layout [&>*]:max-w-content">
           <div>
             <div className="text-h3 font-bold">
               {counseleeInfo?.name}
               <span className="text-subtitle2 font-bold"> 님</span>
             </div>
-            <div className="mt-3 pl-[7px] flex items-center text-body1 font-medium text-grayscale-60">
+            <div className="mt-3 flex items-center pl-[7px] text-body1 font-medium text-grayscale-60">
               <InfoItem icon="📍" content={consultStatus} />
               <InfoItem icon="🎂" content={age} />
               <InfoItem icon="💊" content={diseases} showDivider={false} />
@@ -97,7 +98,7 @@ const ConsultHeader = ({
 
 const ConsultTabs = () => (
   <TabsList className="w-full border-b border-grayscale-10">
-    <div className="flex gap-5 justify-start max-w-layout h-full px-layout [&>*]:max-w-content mx-auto w-full">
+    <div className="mx-auto flex h-full w-full max-w-layout justify-start gap-5 px-layout [&>*]:max-w-content">
       <TabsTrigger value="pastConsult">이전 상담 내역</TabsTrigger>
       <TabsTrigger value="survey">기초 설문 내역</TabsTrigger>
       <TabsTrigger value="medicine">의약물 기록</TabsTrigger>
@@ -122,6 +123,7 @@ export function Index() {
   const { saveMedicationRecordList } = useMedicationRecordSave();
   const { isSuccess: isSuccessGetIsRecordingPopup, data: isPopup } =
     useGetIsRecordingPopupQuery(counselSessionId);
+  const { activeTab, setActiveTab } = useConsultTabStore();
 
   useEffect(() => {
     resetRecording();
@@ -129,7 +131,7 @@ export function Index() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-full">
+      <div className="flex h-full items-center justify-center">
         <Spinner />
       </div>
     );
@@ -169,7 +171,10 @@ export function Index() {
 
   return (
     <>
-      <Tabs defaultValue="pastConsult" className="w-full h-full">
+      <Tabs
+        className="h-full w-full"
+        value={activeTab}
+        onValueChange={setActiveTab}>
         <ConsultHeader
           counseleeInfo={
             counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes
@@ -179,7 +184,7 @@ export function Index() {
           diseases={diseases}
           saveConsult={saveConsult}
         />
-        <div className="w-full h-full mb-100">
+        <div className="mb-100 h-full w-full">
           <TabsContent value="pastConsult">
             <PastConsult />
           </TabsContent>

@@ -1,21 +1,12 @@
-import { create } from "zustand";
-
-export enum ConsultTab {
-  pastConsult = "pastConsult",
-  consultCard = "consultCard",
-  medicineMemo = "medicineMemo",
-  medicineConsult = "medicineConsult",
-  discardMedicine = "discardMedicine",
-}
-
+import { create } from 'zustand';
 interface ConsultTabState {
-  activeTab: ConsultTab;
-  setActiveTab: (tab: ConsultTab) => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
 }
 
 const useConsultTabStore = create<ConsultTabState>((set) => ({
-  activeTab: ConsultTab.pastConsult,
-  setActiveTab: (tab: ConsultTab) => set({ activeTab: tab }),
+  activeTab: 'pastConsult',
+  setActiveTab: (tab: string) => set({ activeTab: tab }),
 }));
 
 export default useConsultTabStore;
