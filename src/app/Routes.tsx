@@ -28,6 +28,10 @@ const Routes = () => {
         path: '/',
         element: <Home />,
       },
+      {
+        path: '/unauthorized',
+        element: <ForbiddenErrorPage />,
+      },
     ],
   };
 
