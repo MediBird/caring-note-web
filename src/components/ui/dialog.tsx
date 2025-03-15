@@ -59,7 +59,7 @@ const DialogClose = React.forwardRef<
       asChild={asChild}
       ref={ref}
       className={cn(
-        'border-2 border-primary-50 px-3 py-1 text-sm font-bold text-primary-50 hover:bg-blue-100',
+        'border-2 border-primary-50 px-3 py-1 text-sm font-bold text-primary-50',
         // sizeClasses prop이 있으면 그것을 우선 사용하고, 없으면 defaultSizeClasses 사용
         sizeClasses ?? defaultSizeClasses,
         className,
