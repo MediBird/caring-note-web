@@ -44,7 +44,7 @@ const MedicineConsult: React.FC = () => {
       </CardHeader>
 
       <div className="flex w-full flex-row space-x-5">
-        <div className="flex min-h-[600px] min-w-[600px] flex-1 flex-col">
+        <div className="flex min-h-[600px] min-w-[600px] flex-col">
           {isRightNavOpen ? (
             <ViewWarningImage />
           ) : (
@@ -52,10 +52,10 @@ const MedicineConsult: React.FC = () => {
           )}
         </div>
 
-        <div className="flex w-full flex-1 justify-center">
+        <div className="flex justify-center">
           {!isRightNavOpen &&
             recordingStatus !== RecordingStatus.AICompleted && (
-              <Recording className="w-full" />
+              <Recording className="w-[348px]" />
             )}
           <RecordingResult className="-mt-[54px] w-full min-w-[456px]" />
         </div>

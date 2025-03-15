@@ -100,7 +100,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
       {
         <div
           className={cn(
-            'flex h-[166px] min-w-[348px] flex-col items-center justify-center gap-1 rounded-xl border border-grayscale-10 bg-grayscale-3',
+            'flex h-[166px] w-[348px] flex-col items-center justify-center gap-1 rounded-xl border border-grayscale-10 bg-grayscale-3',
             className,
           )}>
           {recordingStatus === RecordingStatus.STTLoading ? (
