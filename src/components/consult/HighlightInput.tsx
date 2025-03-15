@@ -231,7 +231,7 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'flex flex-col rounded-lg border border-grayscale-30 bg-white p-0',
+        'flex flex-col rounded-[4px] border border-grayscale-30 bg-white p-0',
         className,
       )}>
       <div
