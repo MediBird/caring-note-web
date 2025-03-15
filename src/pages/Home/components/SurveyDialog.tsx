@@ -29,7 +29,6 @@ function SurveyDialog({
 }: SurveyDialogProps) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
 
   // 내담자 개인정보 수집 동의 여부 조회
   const { data, isLoading } = useCounseleeConsentQuery(
