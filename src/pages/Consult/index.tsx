@@ -186,7 +186,7 @@ export function Index() {
           diseases={diseases}
           saveConsult={saveConsult}
         />
-        <div className="mb-100 h-full w-full">
+        <div className="mb-100 h-full w-full px-layout [&>*]:max-w-content [&>*]:mx-auto pt-10 pb-10">
           <TabsContent value="pastConsult">
             <PastConsult />
           </TabsContent>
