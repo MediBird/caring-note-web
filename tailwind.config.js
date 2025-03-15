@@ -114,8 +114,8 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       boxShadow: {
-        'nav-right': '-4px 0 8px rgba(0,0,0,0.2)',
-        'nav-left': '4px 0 8px rgba(0,0,0,0.2)',
+        'nav-right': '-4px 0 20px rgba(0,0,0,0.08)',
+        'nav-left': '4px 0 20px rgba(0,0,0,0.08)',
         container: '0px 0px 20px 0px rgba(0,0,0,0.1)',
         'cell-shadow': '0px 2px 8px 0px #12121233',
       },
