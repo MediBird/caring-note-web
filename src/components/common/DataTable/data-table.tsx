@@ -57,7 +57,7 @@ export function DataTable<TData, TValue>({
     sortingFns: SortingFns ?? {},
   });
 
-  const handleRowClick = (rowId: string, rowData: TData) => {
+  const handleRowClick = (rowData: TData) => {
     if (onRowClick) {
       onRowClick(rowData);
     }
@@ -101,7 +101,7 @@ export function DataTable<TData, TValue>({
               <TableRow
                 key={row.id + index}
                 data-state={row.getIsSelected() && 'selected'}
-                onClick={() => handleRowClick(row.id, row.original)}
+                onClick={() => handleRowClick(row.original)}
                 className={onRowClick ? `group cursor-pointer` : ''}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
