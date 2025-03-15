@@ -1,11 +1,11 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 export enum ConsultTab {
-  pastConsult = "pastConsult",
-  consultCard = "consultCard",
-  medicineMemo = "medicineMemo",
-  medicineConsult = "medicineConsult",
-  discardMedicine = "discardMedicine",
+  pastConsult = 'pastConsult',
+  consultCard = 'survey',
+  medicineMemo = 'medicine',
+  consultNote = 'note',
+  discardMedicineNote = 'wasteMedication',
 }
 
 interface ConsultTabState {

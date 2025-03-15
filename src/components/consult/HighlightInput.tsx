@@ -231,11 +231,11 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'rounded-lg border border-grayscale-30 bg-white p-0',
+        'flex flex-col rounded-[4px] border border-grayscale-30 bg-white p-0',
         className,
       )}>
       <div
-        className="h-[550px] border-b border-grayscale-30 p-2"
+        className="flex-1 border-b border-grayscale-30 p-2"
         onClick={() => getHighlightedText()}>
         <Editor
           editorState={editorState}
@@ -248,7 +248,7 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
           customStyleMap={styleMap}
         />
       </div>
-      <div className="flex items-center">
+      <div className="flex h-[48px] items-center">
         <img
           className="m-2 inline-block h-8 w-8 cursor-pointer"
           src={isHoverHighlightButton ? highlightpenBlue : highlightpenBlack}
