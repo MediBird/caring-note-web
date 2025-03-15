@@ -42,7 +42,7 @@ const NavigationRight = () => {
               </span>
               <CloseBlackIcon width={24} height={24} onClick={toggleRightNav} />
             </div>
-            <div className="flex w-full flex-col items-center justify-between gap-4 px-2 py-4">
+            <div className="flex w-full flex-col items-center justify-between gap-4 px-4 py-4">
               <HighlightInput className="h-[450px] w-full" />
               <Recording className="w-full" />
             </div>
