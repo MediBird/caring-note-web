@@ -17,8 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useState } from 'react';
 import { getCommonPinningStyles } from '@/lib/getTableCellPinningStyle';
+import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -27,6 +27,7 @@ interface DataTableProps<TData, TValue> {
   sorting?: SortingState;
   SortingFns?: Record<string, SortingFn<TData>>;
   minWidth?: number;
+  onRowClick?: (rowData: TData) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -36,6 +37,7 @@ export function DataTable<TData, TValue>({
   sorting: initialSorting,
   minWidth = 1020,
   SortingFns,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>(initialSorting || []);
 
@@ -54,6 +56,12 @@ export function DataTable<TData, TValue>({
 
     sortingFns: SortingFns ?? {},
   });
+
+  const handleRowClick = (rowId: string, rowData: TData) => {
+    if (onRowClick) {
+      onRowClick(rowData);
+    }
+  };
 
   return (
     <div className="w-full overflow-hidden border border-1 border-grayscale-10 rounded-[12px] bg-white">
@@ -92,17 +100,23 @@ export function DataTable<TData, TValue>({
             table.getRowModel().rows.map((row, index) => (
               <TableRow
                 key={row.id + index}
-                data-state={row.getIsSelected() && 'selected'}>
+                data-state={row.getIsSelected() && 'selected'}
+                onClick={() => handleRowClick(row.id, row.original)}
+                className={
+                  onRowClick 
+                    ? `cursor-pointer group`
+                    : ""
+                }>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
                     style={{
                       width: cell.column.columnDef.size,
-                      backgroundColor: 'white',
                       ...getCommonPinningStyles({
                         column: cell.column,
                       }),
-                    }}>
+                    }}
+                    className="group-hover:bg-secondary-5">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

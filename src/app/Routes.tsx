@@ -7,6 +7,7 @@ import Layout from '@/pages/Layout';
 import SessionManagement from '@/pages/Session';
 import Survey from '@/pages/Survey/tabs/Index';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
+import AccountManagement from '../pages/Account';
 
 type AppRouteObject = RouteObject & {
   children?: AppRouteObject[];
@@ -63,6 +64,7 @@ const Routes = () => {
     children: [
       { path: '/admin/session', element: <SessionManagement /> },
       { path: '/admin/counselee', element: <CounseleeManagement /> },
+      { path: '/admin/account', element: <AccountManagement /> },
     ],
   };
 
