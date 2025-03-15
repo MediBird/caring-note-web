@@ -14,7 +14,7 @@ const buttonVariants = cva(
       variant: {
         primary:
           'text-white border-[1.5px] border-transparent bg-primary-50 hover:bg-primary-60 active:bg-primary-70 disabled:bg-grayscale-20 disabled:text-grayscale-40 dark:bg-neutral-50 dark:text-neutral-900 dark:hover:bg-neutral-50/90',
-        destructive:
+        primaryError:
           'bg-red-500 border-[1.5px] text-neutral-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/90 disabled:bg-grayscale-20 disabled:text-grayscale-40',
         outline:
           'border border-neutral-200 bg-white hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:hover:text-neutral-50',
