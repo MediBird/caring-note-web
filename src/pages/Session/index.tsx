@@ -11,13 +11,13 @@ import { FilterSection } from './components/FilterSection';
  */
 const SessionManagement = () => {
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* 페이지 헤더 */}
-      <Header title="상담 일정 관리" description="내담자의 복약 상담 내역" />
+      <Header title="상담 내역" description="내담자의 복약 상담 내역" />
 
       {/* 메인 콘텐츠 */}
-      <div className="flex justify-center pt-5 px-layout max-w-layout mx-auto w-full">
-        <div className="flex flex-col gap-5 w-full">
+      <div className="mx-auto flex w-full max-w-layout justify-center px-layout pt-5">
+        <div className="flex w-full flex-col gap-5">
           {/* 필터 섹션 */}
           <FilterSection />
 
