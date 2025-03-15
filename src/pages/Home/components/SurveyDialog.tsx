@@ -1,3 +1,4 @@
+import { AddCounselCardReqCardRecordStatusEnum } from '@/api/api';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -9,13 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AddCounselCardReqCardRecordStatusEnum } from '@/api/api';
-import { useCounseleeConsentQueryId } from '@/pages/Survey/hooks/useCounselAgreeQuery';
-import UserInfoDialog from '@/pages/Survey/dialogs/userInfo/Index';
-import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 
 interface SurveyDialogProps {
   dialogState: AddCounselCardReqCardRecordStatusEnum;
@@ -28,16 +25,16 @@ function SurveyDialog({
   counselSessionId,
   counseleeId,
 }: SurveyDialogProps) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
+  // const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
 
   // 내담자 개인정보 수집 동의 여부 조회
-  const { data, isLoading } = useCounseleeConsentQueryId(
-    counselSessionId || undefined,
-    counseleeId || undefined,
-    !!open,
-  );
+  // const { data, isLoading } = useCounseleeConsentQueryId(
+  //   counselSessionId || undefined,
+  //   counseleeId || undefined,
+  //   !!open,
+  // );
   // 상담 세션 상세 정보 조회
   const { setDetail } = useDetailCounselSessionStore();
 
@@ -45,27 +42,27 @@ function SurveyDialog({
   const handleStartSurvey = () => {
     setDetail({ counselSessionId, counseleeId });
 
-    if (!isLoading && data) {
-      // 동의 한사람인 경우 기초 설문 작성 페이지로 이동
-      if (data.status === 200 && data.data.data?.isConsent === true) {
-        navigate(`/survey/${counselSessionId}`);
-      } else {
-        // 동의하지 않은 사람인 경우 동의 페이지로 이동
-        setIsUserInfoOpen(true);
-      }
-    }
+    // if (!isLoading && data) {
+    //   // 동의 한사람인 경우 기초 설문 작성 페이지로 이동
+    //   if (data.status === 200 && data.data.data?.isConsent === true) {
+    //     navigate(`/survey/${counselSessionId}`);
+    //   } else {
+    //     // 동의하지 않은 사람인 경우 동의 페이지로 이동
+    //     setIsUserInfoOpen(true);
+    //   }
+    // }
   };
 
   const buttonConfig = {
-    [AddCounselCardReqCardRecordStatusEnum.Unrecorded]: {
+    [AddCounselCardReqCardRecordStatusEnum.NotStarted]: {
       variant: 'primary' as const,
       text: '설문 작성',
     },
-    [AddCounselCardReqCardRecordStatusEnum.Recording]: {
+    [AddCounselCardReqCardRecordStatusEnum.InProgress]: {
       variant: 'secondary' as const,
       text: '작성 중',
     },
-    [AddCounselCardReqCardRecordStatusEnum.Recorded]: {
+    [AddCounselCardReqCardRecordStatusEnum.Completed]: {
       variant: 'primary' as const,
       text: '작성 완료',
     },
@@ -76,7 +73,9 @@ function SurveyDialog({
       className="w-full"
       type="button"
       variant={buttonConfig[dialogState].variant}
-      disabled={dialogState === AddCounselCardReqCardRecordStatusEnum.Recorded}>
+      disabled={
+        dialogState === AddCounselCardReqCardRecordStatusEnum.Completed
+      }>
       {buttonConfig[dialogState].text}
     </Button>
   );
@@ -90,7 +89,7 @@ function SurveyDialog({
             <DialogTitle>기초 설문을 작성하시겠어요?</DialogTitle>
             <DialogClose
               asChild
-              className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6">
+              className="!mt-0 h-6 w-6 cursor-pointer border-none bg-transparent !p-0 text-grayscale-100">
               <XIcon />
             </DialogClose>
           </DialogHeader>
@@ -115,12 +114,12 @@ function SurveyDialog({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <UserInfoDialog
+      {/* <UserInfoDialog
         isOpen={isUserInfoOpen}
         handleOpen={() => setIsUserInfoOpen(!isUserInfoOpen)}
         counselSessionId={counselSessionId}
         counseleeId={counseleeId}
-      />
+      /> */}
     </div>
   );
 }

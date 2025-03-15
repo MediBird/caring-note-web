@@ -1,19 +1,10 @@
-import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import CardSection from '@/components/ui/cardSection';
-import { useConsultCard } from '../../hooks/query/useConsultCard';
-import {
-  HistoryPopover,
-  HistoryPopoverContent,
-  HistoryPopoverTrigger,
-} from '@/components/ui/historyPopover';
-import ClockBlackIcon from '@/assets/icon/24/clock.outlined.black.svg?react';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ConsultCard: React.FC = () => {
   const { counselSessionId } = useParams();
   const navigate = useNavigate();
-  const { consultCardData: consultCardData } = useConsultCard(counselSessionId);
 
   return (
     <Card>
@@ -28,7 +19,7 @@ const ConsultCard: React.FC = () => {
         </div>
       </CardHeader>
 
-      <div className="flex gap-6">
+      {/* <div className="flex gap-6">
         <div className="w-1/2 space-y-2">
           <CardSection
             title="기본 정보"
@@ -390,7 +381,7 @@ const ConsultCard: React.FC = () => {
             </>
           )}
         </div>
-      </div>
+      </div> */}
     </Card>
   );
 };

@@ -157,7 +157,7 @@ export function Index() {
   const consultStatus =
     counseleeInfo?.counselCount === 0 ? '초기 상담' : '재상담';
   const age = `만 ${counseleeInfo?.age}세`;
-  const diseases = formatDiseases(counseleeInfo?.diseases);
+  const diseases = formatDiseases(Array.from(counseleeInfo?.diseases || []));
 
   const saveConsult = () => {
     saveWasteMedication();
