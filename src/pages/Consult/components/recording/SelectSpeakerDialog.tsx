@@ -49,16 +49,13 @@ function SelectSpeakerDialog() {
       </DialogTrigger>
       <DialogContent className="z-50 w-[520px]">
         <DialogHeader className="pb-0 pr-2">
-          <DialogTitle>상담에 참여한 사람을 선택해주세요</DialogTitle>
+          <DialogTitle>상담에 참여한 사람을 선택해주세요.</DialogTitle>
           <DialogClose
             asChild
             className="!m-0 h-6 w-6 cursor-pointer border-none bg-transparent !p-0 text-grayscale-100">
             <XIcon />
           </DialogClose>
         </DialogHeader>
-        <DialogDescription className="m-0 pb-2 pl-5 text-grayscale-60">
-          각자 말한 내용 중 가장 긴 문장을 추출했어요
-        </DialogDescription>
         <div className="h-[1px] bg-grayscale-20" />
         <DialogDescription
           asChild
