@@ -27,7 +27,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'fixed inset-0 bg-grayscale-100 bg-opacity-30 z-50',
+      'fixed inset-0 z-50 bg-grayscale-100 bg-opacity-30',
       className,
     )}
     {...props}
@@ -59,7 +59,7 @@ const DialogClose = React.forwardRef<
       asChild={asChild}
       ref={ref}
       className={cn(
-        'px-3 py-1 text-primary-50 border-2 border-primary-50  font-bold hover:bg-blue-100 text-sm',
+        'border-2 border-primary-50 px-3 py-1 text-sm font-bold text-primary-50 hover:bg-blue-100',
         // sizeClasses prop이 있으면 그것을 우선 사용하고, 없으면 defaultSizeClasses 사용
         sizeClasses ?? defaultSizeClasses,
         className,
@@ -80,8 +80,8 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={clsx(
-        'fixed sm:max-w-md top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
-        'bg-white rounded-[1rem] shadow-md w-[400px] max-w-full z-50',
+        'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform sm:max-w-lg',
+        'z-50 w-[400px] max-w-full rounded-[1rem] bg-white shadow-md',
         'focus:outline-none',
         className,
       )}
@@ -100,7 +100,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex justify-between items-center flex-row space-y-1.5 text-center sm:text-left mx-[1.25rem] pb-[0.75rem] h-[3.625rem] pt-[1.25rem]',
+      'mx-[1.25rem] flex h-[3.625rem] flex-row items-center justify-between space-y-1.5 pb-[0.75rem] pt-[1.25rem] text-center sm:text-left',
       className,
     )}
     {...props}>
@@ -112,7 +112,7 @@ DialogHeader.displayName = 'DialogHeader';
 // DialogCloseButton 컴포넌트
 const DialogCloseButton: React.FC = () => {
   return (
-    <DialogPrimitive.Close className="absolute w-5 h-5 pb-2 right-5">
+    <DialogPrimitive.Close className="absolute right-5 h-5 w-5 pb-2">
       <CloseBlackIcon width={24} height={24} />
     </DialogPrimitive.Close>
   );
@@ -147,7 +147,7 @@ const DialogDescription = React.forwardRef<
     asChild={asChild}
     ref={ref}
     className={cn(
-      'text-body1 font-medium mt-[0.75rem] mb-[1.75rem] mx-[1.25rem] text-grayscale-80',
+      'mx-[1.25rem] mb-[1.75rem] mt-[0.75rem] text-body1 font-medium text-grayscale-80',
       className,
     )}
     {...props}
@@ -162,7 +162,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex justify-end space-x-2 mb-[1rem] mx-[1.25rem]',
+      'mx-[1.25rem] mb-[1rem] flex justify-end space-x-2',
       className,
     )}
     {...props}
