@@ -3401,6 +3401,12 @@ export interface UpdateCounselorReq {
      * @type {string}
      * @memberof UpdateCounselorReq
      */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounselorReq
+     */
     'roleType'?: UpdateCounselorReqRoleTypeEnum;
 }
 

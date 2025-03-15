@@ -41,10 +41,7 @@ const TabsContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
-    className={cn(
-      'ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300 overflow-y-auto mx-auto w-full max-w-layout ',
-      className,
-    )}
+    className={cn('mx-auto w-full max-w-layout overflow-y-auto', className)}
     {...props}
   />
 ));

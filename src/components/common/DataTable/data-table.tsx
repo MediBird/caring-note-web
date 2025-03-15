@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({
   };
 
   return (
-    <div className="w-full overflow-hidden border border-1 border-grayscale-10 rounded-[12px] bg-white">
+    <div className="border-1 w-full overflow-hidden rounded-[12px] border border-grayscale-10 bg-white">
       <Table
         style={{
           width: '100%',
@@ -102,11 +102,7 @@ export function DataTable<TData, TValue>({
                 key={row.id + index}
                 data-state={row.getIsSelected() && 'selected'}
                 onClick={() => handleRowClick(row.id, row.original)}
-                className={
-                  onRowClick 
-                    ? `cursor-pointer group`
-                    : ""
-                }>
+                className={onRowClick ? `group cursor-pointer` : ''}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
@@ -116,7 +112,7 @@ export function DataTable<TData, TValue>({
                         column: cell.column,
                       }),
                     }}
-                    className="group-hover:bg-secondary-5">
+                    className="group-hover:bg-primary-5">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -126,7 +122,7 @@ export function DataTable<TData, TValue>({
             <TableRow>
               <TableCell
                 colSpan={columns.length}
-                className="h-12 text-sm text-center text-grayscale-30">
+                className="h-12 text-center text-sm text-grayscale-30">
                 기록 내역이 없습니다.
               </TableCell>
             </TableRow>

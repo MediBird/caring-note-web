@@ -20,19 +20,6 @@ export function AccountTable({ data }: AccountTableProps) {
     setIsDialogOpen(true);
   };
 
-  // 다이얼로그 닫기 핸들러
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-    setSelectedCounselor(null);
-  };
-
-  // 수정 완료 핸들러
-  const handleSave = () => {
-    // TODO: API를 통해 상담사 정보 업데이트 로직 구현
-    console.log('수정된 상담사 정보:', selectedCounselor);
-    setIsDialogOpen(false);
-    setSelectedCounselor(null);
-  };
 
   return (
     <>
@@ -47,9 +34,6 @@ export function AccountTable({ data }: AccountTableProps) {
         isOpen={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         counselor={selectedCounselor}
-        onCounselorChange={setSelectedCounselor}
-        onClose={handleCloseDialog}
-        onSave={handleSave}
       />
     </>
   );
