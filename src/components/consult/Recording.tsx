@@ -1,5 +1,5 @@
 import PauseIcon from '@/assets/icon/24/pause.fill.black.svg?react';
-import PlayIcon from '@/assets/icon/24/play.fill.black.svg?react';
+import PlayIcon from '@/assets/icon/24/record.fill.red.svg?react';
 import StopIcon from '@/assets/icon/24/stop.fill.black.svg?react';
 import recording from '@/assets/recording/recording.webp';
 import recordingComplete from '@/assets/recording/recordingComplete.webp';
@@ -86,12 +86,17 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     return null;
   };
 
+  const showAiSummary = () => {
+    // TODO : 중재기록작성 탭 이동 및 SNB 접기
+    console.log('AI 요약 보여주기');
+  };
+
   return (
     <>
-      {recordingStatus !== RecordingStatus.AICompleted && (
+      {
         <div
           className={cn(
-            'flex flex-col items-center justify-center rounded-xl gap-1 min-w-[348px] h-[166px] bg-grayscale-3 border border-grayscale-10',
+            'flex h-[166px] min-w-[348px] flex-col items-center justify-center gap-1 rounded-xl border border-grayscale-10 bg-grayscale-3',
             className,
           )}>
           {recordingStatus === RecordingStatus.STTLoading ? (
@@ -102,7 +107,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
                 녹음 저장 중...
               </p>
               <Spinner />
-              <p className="text-caption1 font-refular text-grayscale-50 mt-6">
+              <p className="font-refular mt-6 text-caption1 text-grayscale-50">
                 평균 1분 내 저장됩니다. 조금만 기다려 주세요.
               </p>
             </div>
@@ -122,6 +127,15 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
               </p>
               <Spinner />
             </div>
+          ) : recordingStatus === RecordingStatus.AICompleted ? (
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-body1 font-bold text-grayscale-80">
+                스크립트 생성 완료!
+              </p>
+              <Button onClick={showAiSummary} variant={'primary'} size="md">
+                내용 확인
+              </Button>
+            </div>
           ) : recordingStatus === RecordingStatus.PermissionDenied ? (
             <div className="flex flex-col items-center gap-4">
               <p className="text-body1 font-medium text-grayscale-50">
@@ -140,13 +154,13 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
             </div>
           ) : (
             <>
-              <div className="flex flex-row items-center justify-between w-full pl-8 pr-4">
+              <div className="flex w-full flex-row items-center justify-between pl-8 pr-4">
                 <div className="flex flex-col items-start justify-center space-y-1">
                   <p className="text-body1 font-medium">{recordingStatus}</p>
                   <div className="flex items-center space-x-2">
                     {recordingStatus !== RecordingStatus.Stopped && (
                       <Circle
-                        className={`w-2 h-2 ${circleColorClass}`}
+                        className={`h-2 w-2 ${circleColorClass}`}
                         fill="currentColor"
                       />
                     )}
@@ -182,7 +196,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
             </>
           )}
         </div>
-      )}
+      }
     </>
   );
 };
