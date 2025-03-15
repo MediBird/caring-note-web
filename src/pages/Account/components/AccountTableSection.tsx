@@ -1,4 +1,3 @@
-import { CounselorListItem } from '@/api/api';
 import {
   DataTablePagination,
   PaginationInfo,
@@ -7,12 +6,6 @@ import { useCallback, useState } from 'react';
 import { useGetCounselorsByPage } from '../hooks/queries/useCounselorQuery';
 import { CounselorFetchParams } from '../hooks/store/useCounselorStore';
 import { AccountTable } from './table/AccountTable';
-
-// API 응답 타입 확장
-interface ApiResponse {
-  counselors: CounselorListItem[];
-  pageInfo?: PaginationInfo;
-}
 
 export function AccountTableSection() {
   // 상담사 목록 조회 파라미터 상태 관리
@@ -42,13 +35,12 @@ export function AccountTableSection() {
     [params, setParams],
   );
 
-
   if (isLoading) {
     return <div className="flex justify-center py-10">데이터 로딩 중...</div>;
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex w-full flex-col gap-4">
       <AccountTable data={counselorData} />
       <DataTablePagination
         pagination={pagination}
