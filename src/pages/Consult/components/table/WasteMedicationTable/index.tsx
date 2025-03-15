@@ -1,10 +1,10 @@
-import { DataTable } from '@/components/common/DataTable/data-table';
 import AddTableRowButton from '@/components/common/DataTable/add-table-row-button';
-import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
-import { useEffect } from 'react';
+import { DataTable } from '@/components/common/DataTable/data-table';
 import { useDeleteMedicationList } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useDeleteWasteMedicationList';
 import { useWasteMedicationList } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useWasteMedicationListQuery';
-import { WasteMedicationListDTO } from '@/types/WasteMedicationDTO';
+import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
+import { WasteMedicationListDTO } from '@/pages/Consult/types/WasteMedicationDTO';
+import { useEffect } from 'react';
 import { createColumns } from './wasteMedicationColumns';
 
 interface WasteMedicationTableProps {

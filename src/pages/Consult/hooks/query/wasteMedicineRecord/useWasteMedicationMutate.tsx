@@ -1,9 +1,9 @@
 import { WasteMedicationControllerApi } from '@/api/api';
 import {
+  AddAndUpdateWasteMedicationDisposalDTO,
   AddAndUpdateWasteMedicationDisposalSaveDTO,
   WasteMedicationListSaveDTO,
-} from '@/types/WasteMedicationDTO';
-import { AddAndUpdateWasteMedicationDisposalDTO } from '@/types/WasteMedicationDTO';
+} from '@/pages/Consult/types/WasteMedicationDTO';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const wasteMedicationControllerApi = new WasteMedicationControllerApi();

@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import RecordingResult from '@/pages/Consult/components/recording/RecordingResult';
-import { RecordingStatus } from '@/types/Recording.enum';
+import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 
 const MedicineConsult: React.FC = () => {
   const isRightNavigationOpen = useAppSelector(

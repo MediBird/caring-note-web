@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
-import { SPEAKER_COLOR_LIST } from '@/types/Recording.enum';
+import { SPEAKER_COLOR_LIST } from '@/pages/Consult/types/Recording.enum';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';

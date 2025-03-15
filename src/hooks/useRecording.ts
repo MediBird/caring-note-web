@@ -5,7 +5,7 @@ import {
   MediaRecorderStatus,
   RecordingFileInfo,
   RecordingStatus,
-} from '@/types/Recording.enum';
+} from '@/pages/Consult/types/Recording.enum';
 import { useCallback, useEffect, useMemo } from 'react';
 import { create } from 'zustand';
 

@@ -2,7 +2,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import { useGetSpeechToTextQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetSpeechToTextQuery';
-import { SPEAKER_COLOR_LIST } from '@/types/Recording.enum';
+import { SPEAKER_COLOR_LIST } from '@/pages/Consult/types/Recording.enum';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 

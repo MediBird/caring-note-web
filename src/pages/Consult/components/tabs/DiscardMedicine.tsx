@@ -2,20 +2,20 @@ import {
   WasteMedicationDisposalDrugRemainActionTypeEnum,
   WasteMedicationDisposalReqUnusedReasonTypesEnum,
 } from '@/api/api';
+import Badge from '@/components/common/Badge';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import WasteMedicationTable from '@/pages/Consult/components/table/WasteMedicationTable';
+import WasteMedicationSurvey from '@/pages/Consult/components/WaseMedicationSurvey';
 import { useWasteMedicationDisposalQuery } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useWasteMedicationDisposalQuery';
 import {
   initialWasteMedicationDisposalState,
   useWasteMedicationDisposalStore,
 } from '@/pages/Consult/hooks/store/useWasteMedicationDisposalStore';
-import { AddAndUpdateWasteMedicationDisposalDTO } from '@/types/WasteMedicationDTO';
-import Badge from '@/components/common/Badge';
+import { AddAndUpdateWasteMedicationDisposalDTO } from '@/pages/Consult/types/WasteMedicationDTO';
 import { CheckedState } from '@radix-ui/react-checkbox';
+import { InfoIcon } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import WasteMedicationTable from '@/pages/Consult/components/table/WasteMedicationTable';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import { InfoIcon } from 'lucide-react';
-import WasteMedicationSurvey from '@/pages/Consult/components/WaseMedicationSurvey';
 
 const DiscardMedicine = () => {
   const { counselSessionId } = useParams();
