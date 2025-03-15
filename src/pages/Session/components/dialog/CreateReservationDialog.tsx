@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
 import { useCreateCounselReservation } from '../../hooks/query/useCounselSessionQuery';
 import { combineToFormattedDateTime } from '../../utils/dateTimeUtils';
 import CounseleeSearchInput from './CounseleeSearchInput';
+import { cn } from '@/lib/utils';
 
 export const CreateReservationDialog = () => {
   // 로컬 상태
@@ -99,10 +100,9 @@ export const CreateReservationDialog = () => {
         scheduledStartDateTime: scheduledDateTime,
       });
 
-      console.log('상담 일정이 등록되었습니다.');
-
       // 대화상자 닫기
       handleOpenChange(false);
+      // TODO: 상담 일정 등록 성공 토스트 메시지 추가
     } catch (error) {
       console.error('상담 일정 처리 중 오류가 발생했습니다:', error);
       setError('상담 일정 처리 중 오류가 발생했습니다.');
@@ -137,18 +137,20 @@ export const CreateReservationDialog = () => {
           <img
             src={counselList}
             alt="상담 일정 등록"
-            className="h-5 w-5 mr-2"
+            className="mr-2 h-5 w-5"
           />
           상담 일정 등록
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-[31.25rem]">
+      <DialogContent
+        className="w-[464px]"
+        onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>상담 일정 등록</DialogTitle>
           <DialogDescription className="text-sm text-grayscale-60"></DialogDescription>
           <DialogClose
             asChild
-            className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6 absolute right-4 top-4">
+            className="absolute right-4 top-4 !mt-0 h-6 w-6 cursor-pointer border-none bg-transparent !p-0 text-grayscale-100">
             <XIcon />
           </DialogClose>
         </DialogHeader>
@@ -158,7 +160,7 @@ export const CreateReservationDialog = () => {
           {error && (
             <div
               id="create-reservation-error"
-              className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm">
+              className="flex items-center gap-2 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
               <AlertCircle className="h-4 w-4" />
               <span>{error}</span>
             </div>
@@ -167,7 +169,7 @@ export const CreateReservationDialog = () => {
           {/* 내담자 */}
           <div className="grid gap-2">
             <label htmlFor="counselee" className="text-sm font-medium">
-              내담자<span className="text-red-500 ml-1">*</span>
+              내담자<span className="ml-1 text-red-500">*</span>
             </label>
             <CounseleeSearchInput
               value={counseleeName}
@@ -181,12 +183,17 @@ export const CreateReservationDialog = () => {
           <div className="grid grid-cols-2 gap-2">
             <div className="grid gap-2">
               <label htmlFor="sessionDate" className="text-sm font-medium">
-                상담 일자<span className="text-red-500 ml-1">*</span>
+                상담 일자<span className="ml-1 text-red-500">*</span>
               </label>
               <DatePickerComponent
-                className="border border-grayscale-30"
+                align="start"
+                className={cn(
+                  'h-full w-full rounded border border-grayscale-30 p-2 !text-base font-medium text-grayscale-40',
+                  sessionDate && 'text-grayscale-90',
+                )}
                 selectedMonth={sessionDate ? new Date(sessionDate) : new Date()}
-                enabledDates={[]}
+                placeholder="상담 일자 선택"
+                showBorderWithOpen={true}
                 handleClicked={(date) => {
                   if (date) {
                     const formattedDate = date.toISOString().split('T')[0];
@@ -200,9 +207,10 @@ export const CreateReservationDialog = () => {
             </div>
             <div className="grid gap-2">
               <label htmlFor="sessionTime" className="text-sm font-medium">
-                예약 시간<span className="text-red-500 ml-1">*</span>
+                예약 시간<span className="ml-1 text-red-500">*</span>
               </label>
               <TimepickerComponent
+                placeholder="예약 시각 선택"
                 handleClicked={(time: string | undefined) => {
                   setSessionTime(time || '');
                   if (error === '상담 시간을 선택해주세요.') {

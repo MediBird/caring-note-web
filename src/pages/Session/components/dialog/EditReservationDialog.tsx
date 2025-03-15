@@ -21,6 +21,7 @@ import {
   extractDateTimeFromIso,
 } from '../../utils/dateTimeUtils';
 import CounseleeSearchInput from './CounseleeSearchInput';
+import { cn } from '@/lib/utils';
 
 interface EditReservationDialogProps {
   session: SelectCounselSessionListItem;
@@ -52,8 +53,16 @@ export const EditReservationDialog = ({
       setSessionId(session.counselSessionId || '');
 
       // 날짜와 시간 설정
-      if (session.scheduledDate) {
-        const { date, time } = extractDateTimeFromIso(session.scheduledDate);
+      if (session.scheduledDate && session.scheduledTime) {
+        // 날짜와 시간을 결합하여 Date 객체 생성
+        const [year, month, day] = session.scheduledDate.split('-').map(Number);
+        const [hours, minutes] = session.scheduledTime.split(':').map(Number);
+        const dateWithTime = new Date(year, month - 1, day, hours, minutes);
+
+        const { date, time } = extractDateTimeFromIso(
+          dateWithTime.toISOString(),
+        );
+
         setSessionDate(date);
         setSessionTime(time);
       }
@@ -180,9 +189,10 @@ export const EditReservationDialog = ({
         </DialogTrigger>
       )}
       <DialogContent
-        className="w-[31.25rem]"
+        className="w-[464px]"
         // 포커스 관리 및 접근성 개선
         onEscapeKeyDown={() => setDialogOpen(false)}
+        onOpenAutoFocus={(e) => e.preventDefault()}
         onCloseAutoFocus={(e) => {
           e.preventDefault();
           const triggerElement = document.querySelector(
@@ -197,7 +207,7 @@ export const EditReservationDialog = ({
           <DialogDescription className="text-sm text-grayscale-60"></DialogDescription>
           <DialogClose
             asChild
-            className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6 absolute right-4 top-4">
+            className="absolute right-4 top-4 !mt-0 h-6 w-6 cursor-pointer border-none bg-transparent !p-0 text-grayscale-100">
             <XIcon />
           </DialogClose>
         </DialogHeader>
@@ -207,7 +217,7 @@ export const EditReservationDialog = ({
           {error && (
             <div
               id="edit-reservation-error"
-              className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm">
+              className="flex items-center gap-2 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
               <AlertCircle className="h-4 w-4" />
               <span>{error}</span>
             </div>
@@ -216,12 +226,13 @@ export const EditReservationDialog = ({
           {/* 내담자 */}
           <div className="grid gap-2">
             <label htmlFor="counselee" className="text-sm font-medium">
-              내담자<span className="text-red-500 ml-1">*</span>
+              내담자<span className="ml-1 text-red-500">*</span>
             </label>
             <CounseleeSearchInput
               value={counseleeName}
               selectedId={counseleeId}
               onChange={handleCounseleeChange}
+              forceClose={dialogOpen}
             />
           </div>
 
@@ -229,13 +240,18 @@ export const EditReservationDialog = ({
           <div className="grid grid-cols-2 gap-2">
             <div className="grid gap-2">
               <label htmlFor="sessionDate" className="text-sm font-medium">
-                상담 일자<span className="text-red-500 ml-1">*</span>
+                상담 일자<span className="ml-1 text-red-500">*</span>
               </label>
               <DatePickerComponent
-                className="border border-grayscale-30"
+                align="start"
+                className={cn(
+                  'h-full w-full rounded border border-grayscale-30 p-2 !text-base font-medium text-grayscale-40',
+                  sessionDate && 'text-grayscale-90',
+                )}
                 selectedMonth={sessionDate ? new Date(sessionDate) : new Date()}
                 initialDate={sessionDate ? new Date(sessionDate) : undefined}
-                enabledDates={[]}
+                placeholder="상담 일자 선택"
+                showBorderWithOpen={true}
                 handleClicked={(date) => {
                   if (date) {
                     const formattedDate = date.toISOString().split('T')[0];
@@ -255,10 +271,10 @@ export const EditReservationDialog = ({
             </div>
             <div className="grid gap-2">
               <label htmlFor="sessionTime" className="text-sm font-medium">
-                예약 시간<span className="text-red-500 ml-1">*</span>
+                예약 시간<span className="ml-1 text-red-500">*</span>
               </label>
               <TimepickerComponent
-                placeholder={sessionTime}
+                placeholder={sessionTime || '예약 시각 선택'}
                 handleClicked={(time: string | undefined) => {
                   setSessionTime(time || '');
                   if (error === '상담 시간을 선택해주세요.') {
