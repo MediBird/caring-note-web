@@ -342,9 +342,14 @@ export const CounseleeDialog = ({
         </div>
         <DialogFooter className="flex justify-end">
           <Button
-            onClick={handleSubmit}
-            variant="primaryError"
-            disabled={isSubmitDisabled}>
+            onClick={() => {
+              if (isSubmitDisabled) {
+                return;
+              }
+
+              handleSubmit();
+            }}
+            variant={isSubmitDisabled ? 'primaryError' : 'primary'}>
             {mode === 'add' ? '완료' : '수정'}
           </Button>
         </DialogFooter>
