@@ -1,17 +1,17 @@
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import InputContainer from '@/components/common/InputContainer';
 import {
   WasteMedicationDisposalDrugRemainActionTypeEnum,
   WasteMedicationDisposalRecoveryAgreementTypeEnum,
   WasteMedicationDisposalReqUnusedReasonTypesEnum,
 } from '@/api/api';
+import InputContainer from '@/components/common/InputContainer';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   AddAndUpdateWasteMedicationDisposalDTO,
   WasteMedicationDisposalDrugRemainActionDetailEnum,
-} from '@/types/WasteMedicationDTO';
+} from '@/pages/Consult/types/WasteMedicationDTO';
 import { CheckedState } from '@radix-ui/react-checkbox';
 
 interface WasteMedicationSurveyProps {
@@ -32,8 +32,8 @@ const WasteMedicationSurvey = ({
 }: WasteMedicationSurveyProps) => {
   return (
     <>
-      <div className="bg-grayscale-3 rounded-lg p-4">
-        <p className="text-body1 font-bold mb-4">
+      <div className="rounded-lg bg-grayscale-3 p-4">
+        <p className="mb-4 text-body1 font-bold">
           사용하지 않고 약이 남는 경우에 누구의 판단으로 사용하지 않게 되었나요?
         </p>
         <RadioGroup
@@ -92,9 +92,9 @@ const WasteMedicationSurvey = ({
       {wasteMedicationDisposal.drugRemainActionType &&
         wasteMedicationDisposal.drugRemainActionType !==
           WasteMedicationDisposalDrugRemainActionTypeEnum.None && (
-          <div className="bg-grayscale-3 flex flex-col gap-6 rounded-lg p-4 mt-4">
+          <div className="mt-4 flex flex-col gap-6 rounded-lg bg-grayscale-3 p-4">
             <div>
-              <p className="text-body1 font-bold mb-4">
+              <p className="mb-4 text-body1 font-bold">
                 사용하지 않은 주된 이유
               </p>
               <form className="flex flex-row">
@@ -267,7 +267,7 @@ const WasteMedicationSurvey = ({
               </form>
             </div>
             <div>
-              <p className="text-body1 font-bold mb-4">주된 처리 방법</p>
+              <p className="mb-4 text-body1 font-bold">주된 처리 방법</p>
 
               <RadioGroup
                 id="whos-decision"
@@ -352,7 +352,7 @@ const WasteMedicationSurvey = ({
               </RadioGroup>
             </div>
             <div>
-              <p className="text-body1 font-bold mb-4">폐의약품 회수</p>
+              <p className="mb-4 text-body1 font-bold">폐의약품 회수</p>
               <RadioGroup
                 id="medicine-collection"
                 className="flex flex-row"
@@ -396,11 +396,11 @@ const WasteMedicationSurvey = ({
               </RadioGroup>
             </div>
             <div>
-              <p className="text-body1 font-bold mb-4">폐의약품 무게</p>
-              <span className="flex flex-row justify-start items-center gap-1">
+              <p className="mb-4 text-body1 font-bold">폐의약품 무게</p>
+              <span className="flex flex-row items-center justify-start gap-1">
                 <Input
                   placeholder="00"
-                  className="w-24 text-right pr-[2px] bg-transparent border-b border-grayscale-30 p-0 h-[26px]"
+                  className="h-[26px] w-24 border-b border-grayscale-30 bg-transparent p-0 pr-[2px] text-right"
                   value={wasteMedicationDisposal.wasteMedicationGram}
                   onChange={(e) => {
                     setWasteMedicationDisposal({

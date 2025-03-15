@@ -1,15 +1,15 @@
-import { ColumnDef } from '@tanstack/react-table';
-import { WasteMedicationListDTO } from '@/types/WasteMedicationDTO';
-import { Ellipsis } from 'lucide-react';
+import MedicineSearchCell from '@/components/common/DataTable/medicine-search-cell';
+import SelectCellWithCustomInput from '@/components/common/DataTable/select-cell-with-custom-input';
+import TextInputCell from '@/components/common/DataTable/text-input-cell';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import TextInputCell from '@/components/common/DataTable/text-input-cell';
-import MedicineSearchCell from '@/components/common/DataTable/medicine-search-cell';
-import SelectCellWithCustomInput from '@/components/common/DataTable/select-cell-with-custom-input';
+import { WasteMedicationListDTO } from '@/pages/Consult/types/WasteMedicationDTO';
+import { ColumnDef } from '@tanstack/react-table';
+import { Ellipsis } from 'lucide-react';
 
 interface WasteMedicationColumnsProps {
   onDelete: (id: string) => void;
@@ -83,9 +83,9 @@ export const createColumns = ({
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="flex justify-end items-center">
-              <button className="hover:bg-grayscale-5 text-center content-center rounded-[4px] text-grayscale-60 p-1">
-                <Ellipsis className="w-4 h-4" />
+            <div className="flex items-center justify-end">
+              <button className="content-center rounded-[4px] p-1 text-center text-grayscale-60 hover:bg-grayscale-5">
+                <Ellipsis className="h-4 w-4" />
               </button>
             </div>
           </DropdownMenuTrigger>

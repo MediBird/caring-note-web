@@ -1,10 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useRecording } from '@/hooks/useRecording';
-import { RecordingStatus } from '@/types/Recording.enum';
+import { cn } from '@/lib/utils';
+import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import React from 'react';
 import AiSummary from './AiSummary';
 import TotalRecordings from './TotalRecordings';
-import { cn } from '@/lib/utils';
 
 const RecordingResultTabLists = () => {
   return (

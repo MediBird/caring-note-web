@@ -10,9 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useCounseleeConsentQuery } from '@/pages/Survey/hooks/useCounseleeConsentQuery';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface SurveyDialogProps {
   dialogState: AddCounselCardReqCardRecordStatusEnum;
@@ -25,16 +27,14 @@ function SurveyDialog({
   counselSessionId,
   counseleeId,
 }: SurveyDialogProps) {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  // const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
 
   // 내담자 개인정보 수집 동의 여부 조회
-  // const { data, isLoading } = useCounseleeConsentQueryId(
-  //   counselSessionId || undefined,
-  //   counseleeId || undefined,
-  //   !!open,
-  // );
+  const { data, isLoading } = useCounseleeConsentQuery(
+    counselSessionId,
+    counseleeId,
+  );
   // 상담 세션 상세 정보 조회
   const { setDetail } = useDetailCounselSessionStore();
 
@@ -42,15 +42,15 @@ function SurveyDialog({
   const handleStartSurvey = () => {
     setDetail({ counselSessionId, counseleeId });
 
-    // if (!isLoading && data) {
-    //   // 동의 한사람인 경우 기초 설문 작성 페이지로 이동
-    //   if (data.status === 200 && data.data.data?.isConsent === true) {
-    //     navigate(`/survey/${counselSessionId}`);
-    //   } else {
-    //     // 동의하지 않은 사람인 경우 동의 페이지로 이동
-    //     setIsUserInfoOpen(true);
-    //   }
-    // }
+    if (!isLoading && data) {
+      // 동의 한사람인 경우 기초 설문 작성 페이지로 이동
+      if (data.isConsent === true) {
+        navigate(`/survey/${counselSessionId}`);
+      } else {
+        // 동의하지 않은 사람인 경우 동의 페이지로 이동
+        navigate(`/survey/${counselSessionId}/consent`);
+      }
+    }
   };
 
   const buttonConfig = {

@@ -1,3 +1,4 @@
+import AccountManagement from '@/pages/Account';
 import Consult from '@/pages/Consult';
 import CounseleeManagement from '@/pages/Counselee';
 import ForbiddenErrorPage from '@/pages/Errors/Forbidden';
@@ -5,8 +6,9 @@ import NotFoundErrorPage from '@/pages/Errors/NotFound';
 import Home from '@/pages/Home';
 import Layout from '@/pages/Layout';
 import SessionManagement from '@/pages/Session';
+import Survey from '@/pages/Survey';
+import ConsentPage from '@/pages/Survey/consent';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
-import AccountManagement from '../pages/Account';
 
 type AppRouteObject = RouteObject & {
   children?: AppRouteObject[];
@@ -51,17 +53,23 @@ const Routes = () => {
     ],
   };
 
-  // const surveyRoutes: AppRouteObject = {
-  //   path: '/survey',
-  //   element: <Layout />,
-  //   children: [
-  //     { path: ':counselSessionId', element: <Survey /> },
-  //     {
-  //       path: ':counselSessionId',
-  //       element: <Survey />,
-  //     },
-  //   ],
-  // };
+  const surveyRoutes: AppRouteObject = {
+    path: '/survey',
+    element: <Layout />,
+    children: [
+      { path: ':counselSessionId', element: <Survey /> },
+      {
+        path: ':counselSessionId',
+        element: <Survey />,
+      },
+    ],
+  };
+
+  const consentRoutes: AppRouteObject = {
+    path: '/survey/:counselSessionId/consent',
+    element: <ConsentPage />,
+  };
+
   const AdminRoutes: AppRouteObject = {
     path: '/admin',
     element: <Layout />,
@@ -77,6 +85,8 @@ const Routes = () => {
     mainRoutes,
     forbiddenRoutes,
     consultRoutes,
+    surveyRoutes,
+    consentRoutes, // 새 라우트 추가
     AdminRoutes,
   ];
 

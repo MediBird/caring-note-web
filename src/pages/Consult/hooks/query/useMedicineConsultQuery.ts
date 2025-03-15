@@ -1,6 +1,6 @@
 import { MedicationCounselControllerApi } from '@/api/api';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { MedicineConsultDTO } from '@/types/MedicineConsultDTO';
+import { MedicineConsultDTO } from '@/pages/Consult/types/MedicineConsultDTO';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const medicationCounselControllerApi = new MedicationCounselControllerApi();
 
