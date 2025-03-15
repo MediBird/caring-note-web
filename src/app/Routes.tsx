@@ -5,7 +5,6 @@ import NotFoundErrorPage from '@/pages/Errors/NotFound';
 import Home from '@/pages/Home';
 import Layout from '@/pages/Layout';
 import SessionManagement from '@/pages/Session';
-import Survey from '@/pages/Survey/tabs/Index';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import AccountManagement from '../pages/Account';
 
@@ -52,17 +51,17 @@ const Routes = () => {
     ],
   };
 
-  const surveyRoutes: AppRouteObject = {
-    path: '/survey',
-    element: <Layout />,
-    children: [
-      { path: ':counselSessionId', element: <Survey /> },
-      {
-        path: ':counselSessionId',
-        element: <Survey />,
-      },
-    ],
-  };
+  // const surveyRoutes: AppRouteObject = {
+  //   path: '/survey',
+  //   element: <Layout />,
+  //   children: [
+  //     { path: ':counselSessionId', element: <Survey /> },
+  //     {
+  //       path: ':counselSessionId',
+  //       element: <Survey />,
+  //     },
+  //   ],
+  // };
   const AdminRoutes: AppRouteObject = {
     path: '/admin',
     element: <Layout />,
@@ -78,7 +77,6 @@ const Routes = () => {
     mainRoutes,
     forbiddenRoutes,
     consultRoutes,
-    surveyRoutes,
     AdminRoutes,
   ];
 
