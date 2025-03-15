@@ -47,41 +47,41 @@ function SelectSpeakerDialog() {
       <DialogTrigger asChild>
         <Button variant={'primary'}>내용 확인</Button>
       </DialogTrigger>
-      <DialogContent className="w-[520px] z-50">
+      <DialogContent className="z-50 w-[520px]">
         <DialogHeader className="pr-2">
           <DialogTitle>대화에 참석한 사람을 선택해주세요</DialogTitle>
           <DialogClose
             asChild
-            className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6">
+            className="!mt-0 h-6 w-6 cursor-pointer border-none bg-transparent !p-0 text-grayscale-100">
             <XIcon />
           </DialogClose>
         </DialogHeader>
         <div className="h-[1px] bg-grayscale-20" />
         <DialogDescription
           asChild
-          className="flex flex-col items-center m-0 p-0">
+          className="m-0 flex flex-col items-center p-0">
           <div>
             {isSuccessGetSpeakerList &&
               speakerList?.map((data, index) => {
                 return (
                   <div
                     key={index}
-                    className="flex items-center w-full cursor-pointer mt-6"
+                    className="mt-6 flex w-full cursor-pointer items-center"
                     onClick={handleClickSpeaker(data.speaker)}>
                     <div
                       className={cn(
-                        'flex items-center justify-center font-medium w-[36px] h-[36px] p-4 mx-4 rounded-full',
+                        'mx-4 flex h-[36px] w-[36px] items-center justify-center rounded-full p-4 font-medium',
                         selectedSpeakers.includes(data?.speaker || '')
-                          ? 'text-white bg-primary-50'
+                          ? 'bg-primary-50 text-white'
                           : SPEAKER_COLOR_LIST[index % 4],
                       )}>
-                      {data.speaker}
+                      {String.fromCharCode(65 + index)}
                     </div>
                     <p
                       className={cn(
                         'w-full pr-4',
                         selectedSpeakers.includes(data?.speaker || '')
-                          ? 'text-primary-50 font-bold'
+                          ? 'font-bold text-primary-50'
                           : 'text-grayscale-90',
                       )}>
                       {data.text}
@@ -91,7 +91,7 @@ function SelectSpeakerDialog() {
               })}
           </div>
         </DialogDescription>
-        <DialogFooter className="flex items-center justify-end m-0 p-5">
+        <DialogFooter className="m-0 flex items-center justify-end p-5">
           <Button variant="primary" size="md" onClick={handleClickConfirm}>
             확인
           </Button>
