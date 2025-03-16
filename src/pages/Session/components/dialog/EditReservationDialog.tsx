@@ -22,6 +22,7 @@ import {
 } from '../../utils/dateTimeUtils';
 import CounseleeSearchInput from './CounseleeSearchInput';
 import { cn } from '@/lib/utils';
+import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 
 interface EditReservationDialogProps {
   session: SelectCounselSessionListItem;
@@ -105,6 +106,8 @@ export const EditReservationDialog = ({
         sessionDate,
         sessionTime,
       );
+
+      console.log(scheduledDateTime);
 
       if (!scheduledDateTime) {
         setError('날짜와 시간 형식이 유효하지 않습니다.');
@@ -254,8 +257,9 @@ export const EditReservationDialog = ({
                 showBorderWithOpen={true}
                 handleClicked={(date) => {
                   if (date) {
-                    const formattedDate = date.toISOString().split('T')[0];
+                    const formattedDate = formatDateToHyphen(date);
                     setSessionDate(formattedDate);
+
                     if (error === '상담 일자를 선택해주세요.') {
                       setError(null);
                     }
