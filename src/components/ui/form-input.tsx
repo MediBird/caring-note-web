@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Warning from '@/assets/icon/20/warning.filled.red.svg?react';
 
 export interface FormInputProps extends React.ComponentProps<'input'> {
@@ -35,6 +35,12 @@ export const FormInput = ({
     }
     props.onChange?.(e);
   };
+
+  useEffect(() => {
+    if (props.disabled) {
+      setError(null);
+    }
+  }, [props.disabled]);
 
   return (
     <div className="relative w-full">
