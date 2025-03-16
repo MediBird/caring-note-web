@@ -32,7 +32,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     recordingTime,
   } = useRecording(counselSessionId);
   const { setActiveTab } = useConsultTabStore();
-  const { setRightNavIsOpen } = useRightNavigationStore();
+  const { closeRightNav } = useRightNavigationStore();
 
   const circleColorClass =
     recordingStatus === RecordingStatus.Recording
@@ -91,7 +91,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
   };
 
   const showAiSummaryView = () => {
-    setRightNavIsOpen(false);
+    closeRightNav();
     setActiveTab(ConsultTab.consultNote);
   };
 

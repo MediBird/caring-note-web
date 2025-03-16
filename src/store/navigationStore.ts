@@ -1,16 +1,17 @@
 import { create } from 'zustand';
 
 interface RightNavigationState {
-  isRightNavOpen: boolean;
-  setRightNavIsOpen: (isOpen: boolean) => void;
+  isOpen: boolean;
   toggleRightNav: () => void;
+  openRightNav: () => void;
+  closeRightNav: () => void;
 }
 
 const useRightNavigationStore = create<RightNavigationState>((set) => ({
-  isRightNavOpen: false,
-  setRightNavIsOpen: (isOpen) => set({ isRightNavOpen: isOpen }),
-  toggleRightNav: () =>
-    set((state) => ({ isRightNavOpen: !state.isRightNavOpen })),
+  isOpen: false,
+  toggleRightNav: () => set((state) => ({ isOpen: !state.isOpen })),
+  openRightNav: () => set({ isOpen: true }),
+  closeRightNav: () => set({ isOpen: false }),
 }));
 
 export default useRightNavigationStore;

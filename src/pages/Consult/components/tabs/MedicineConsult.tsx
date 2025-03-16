@@ -10,7 +10,7 @@ import useRightNavigationStore from '@/store/navigationStore';
 
 const MedicineConsult: React.FC = () => {
   const { recordingStatus } = useRecording();
-  const { isRightNavOpen } = useRightNavigationStore();
+  const { isOpen: isRightNavOpen } = useRightNavigationStore();
 
   const ViewWarningImage = () => {
     const heightClass =
