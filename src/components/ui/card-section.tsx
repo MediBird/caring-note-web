@@ -24,7 +24,7 @@ const CardSection = ({ title, items, variant }: CardSectionProps) => {
       case 'error':
         return {
           border: 'border-error bg-error-50',
-          line: 'bg-error',
+          line: 'bg-error-30',
         };
       case 'grayscale':
         return {

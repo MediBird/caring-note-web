@@ -2,7 +2,7 @@ import {
   WasteMedicationDisposalDrugRemainActionTypeEnum,
   WasteMedicationDisposalRecoveryAgreementTypeEnum,
   WasteMedicationDisposalReqUnusedReasonTypesEnum,
-} from '@/api/api';
+} from '@/api';
 import InputContainer from '@/components/common/InputContainer';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';

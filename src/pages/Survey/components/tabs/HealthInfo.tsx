@@ -1,9 +1,9 @@
-import { DiseaseInfoDTODiseasesEnum } from '@/api/api';
+import { DiseaseInfoDTODiseasesEnum } from '@/api';
 import { ButtonGroup, ButtonGroupOption } from '@/components/ui/button-group';
 import { Card } from '@/components/ui/card';
-import CardSection from '@/components/ui/cardSection';
+import CardSection from '@/components/ui/card-section';
 import { Textarea } from '@/components/ui/textarea';
-import { useCounselCardHealthInfoStore } from '../../hooks/counselCardStore';
+import { useCounselCardStore } from '../../hooks/counselCardStore';
 import { useCounselCardHealthInfoQuery } from '../../hooks/useCounselCardQuery';
 
 interface HealthInfoProps {
@@ -113,17 +113,19 @@ type HealthInfoField = {
 };
 
 export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
-  const { healthInfo, setHealthInfo } = useCounselCardHealthInfoStore();
+  const { healthInfo, setHealthInfo } = useCounselCardStore();
   const { isLoading } = useCounselCardHealthInfoQuery(counselSessionId);
 
   const handleDiseaseChange = (value: string) => {
     const enumValue = value as DiseaseInfoDTODiseasesEnum;
-    const currentDiseases = new Set(healthInfo?.diseaseInfo?.diseases || []);
+    let currentDiseases = healthInfo?.diseaseInfo?.diseases || [];
 
-    if (currentDiseases.has(enumValue)) {
-      currentDiseases.delete(enumValue);
+    if (currentDiseases.includes(enumValue)) {
+      currentDiseases = currentDiseases.filter(
+        (disease) => disease !== enumValue,
+      );
     } else {
-      currentDiseases.add(enumValue);
+      currentDiseases.push(enumValue);
     }
 
     setHealthInfo({
@@ -135,7 +137,7 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
     });
   };
 
-  const handleTextChange = (field: string, value: string) => {
+  const handleTextChange = (field: string, value: string | boolean) => {
     const [section, key] = field.split('.') as [
       HealthInfoField['section'],
       HealthInfoField['key'],
@@ -154,7 +156,7 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
   }
 
   return (
-    <Card>
+    <Card className="flex w-full flex-col gap-5">
       <CardSection
         title="앓고 있는 질병"
         variant="primary"
@@ -217,13 +219,10 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
                 options={allergyOptions}
                 value={healthInfo?.allergy?.isAllergy ? 'true' : 'false'}
                 onChange={(value) =>
-                  setHealthInfo({
-                    ...healthInfo,
-                    allergy: {
-                      ...healthInfo?.allergy,
-                      isAllergy: value === 'true',
-                    },
-                  })
+                  handleTextChange(
+                    'healthInfo.allergy.isAllergy',
+                    value === 'true',
+                  )
                 }
                 className="flex-wrap"
               />
@@ -245,13 +244,10 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
                     : 'false'
                 }
                 onChange={(value) =>
-                  setHealthInfo({
-                    ...healthInfo,
-                    medicationSideEffect: {
-                      ...healthInfo?.medicationSideEffect,
-                      isMedicationSideEffect: value === 'true',
-                    },
-                  })
+                  handleTextChange(
+                    'healthInfo.medicationSideEffect.isMedicationSideEffect',
+                    value === 'true',
+                  )
                 }
                 className="flex-wrap"
               />

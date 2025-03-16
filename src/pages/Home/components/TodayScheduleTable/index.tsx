@@ -1,7 +1,7 @@
+import { SelectCounselSessionListItem } from '@/api';
 import { DataTable } from '@/components/common/DataTable/data-table';
-import { createColumns } from './todayScheduleTableColumn';
-import { SelectCounselSessionListItem } from '@/api/api';
 import { useNavigate } from 'react-router-dom';
+import { createColumns } from './todayScheduleTableColumn';
 
 interface TodayScheduleTableProps {
   counselList: SelectCounselSessionListItem[];

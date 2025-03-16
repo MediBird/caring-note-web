@@ -5,7 +5,7 @@ import {
   DeleteCounseleeBatchRes,
   SelectCounseleeRes,
   UpdateCounseleeReq,
-} from '@/api/api';
+} from '@/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 const counseleeInfoControllerApi = new CounseleeControllerApi();

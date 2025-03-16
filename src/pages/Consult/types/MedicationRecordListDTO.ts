@@ -1,4 +1,4 @@
-import { SelectMedicationRecordHistRes } from '@/api/api';
+import { SelectMedicationRecordHistRes } from '@/api';
 
 export interface MedicationRecordListSaveDTO {
   counselSessionId: string;

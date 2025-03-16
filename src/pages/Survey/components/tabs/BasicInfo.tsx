@@ -1,63 +1,22 @@
-import { CounselPurposeAndNoteDTOCounselPurposeEnum } from '@/api/api';
-import { ButtonGroup, ButtonGroupOption } from '@/components/ui/button-group';
+import { CounselPurposeAndNoteDTOCounselPurposeEnum } from '@/api';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { Card } from '@/components/ui/card';
-import CardSection from '@/components/ui/cardSection';
+import CardSection from '@/components/ui/card-section';
 import { Textarea } from '@/components/ui/textarea';
-import { useCounselCardBaseInfoStore } from '../../hooks/counselCardStore';
+import {
+  COUNSEL_PURPOSE_OPTIONS,
+  HEALTH_INSURANCE_TYPE_MAP,
+} from '@/utils/constants';
+import { useCounselCardStore } from '../../hooks/counselCardStore';
 import { useCounselCardBaseInfoQuery } from '../../hooks/useCounselCardQuery';
 
 interface BasicInfoProps {
   counselSessionId: string;
 }
 
-const counselPurposeOptions: ButtonGroupOption[] = [
-  {
-    label: '약물 부작용 상담',
-    value: CounselPurposeAndNoteDTOCounselPurposeEnum.MedicationSideEffect,
-  },
-  {
-    label: '생활습관 관리',
-    value: CounselPurposeAndNoteDTOCounselPurposeEnum.LifestyleManagement,
-  },
-  {
-    label: '증상/질병 이해',
-    value:
-      CounselPurposeAndNoteDTOCounselPurposeEnum.SymptomDiseaseUnderstanding,
-  },
-  {
-    label: '복용약물 검토',
-    value: CounselPurposeAndNoteDTOCounselPurposeEnum.MedicationReview,
-  },
-  {
-    label: '기타',
-    value: CounselPurposeAndNoteDTOCounselPurposeEnum.Other,
-  },
-];
-
 export default function BasicInfo({ counselSessionId }: BasicInfoProps) {
-  const { baseInfo, setBaseInfo } = useCounselCardBaseInfoStore();
+  const { baseInfo, setBaseInfo } = useCounselCardStore();
   const { isLoading } = useCounselCardBaseInfoQuery(counselSessionId);
-
-  const handlePurposeChange = (value: string) => {
-    const currentPurposes: CounselPurposeAndNoteDTOCounselPurposeEnum[] =
-      Array.from(baseInfo?.counselPurposeAndNote?.counselPurpose || []);
-    const enumValue = value as CounselPurposeAndNoteDTOCounselPurposeEnum;
-
-    const updatedPurposes = currentPurposes.includes(enumValue)
-      ? currentPurposes.filter(
-          (purpose: CounselPurposeAndNoteDTOCounselPurposeEnum) =>
-            purpose !== enumValue,
-        )
-      : [...currentPurposes, enumValue];
-
-    setBaseInfo({
-      ...baseInfo,
-      counselPurposeAndNote: {
-        ...baseInfo?.counselPurposeAndNote,
-        counselPurpose: new Set(updatedPurposes),
-      },
-    });
-  };
 
   const handleUpdateBaseInfo = (
     field: 'significantNote' | 'medicationNote',
@@ -77,7 +36,7 @@ export default function BasicInfo({ counselSessionId }: BasicInfoProps) {
   }
 
   return (
-    <Card>
+    <Card className="flex w-full flex-col gap-5">
       <CardSection
         title="기본 정보"
         variant="grayscale"
@@ -93,7 +52,11 @@ export default function BasicInfo({ counselSessionId }: BasicInfoProps) {
           {
             label: '의료보장형태',
             subLabel: '',
-            value: baseInfo?.baseInfo?.healthInsuranceType || '',
+            value: baseInfo?.baseInfo?.healthInsuranceType
+              ? HEALTH_INSURANCE_TYPE_MAP[
+                  baseInfo.baseInfo.healthInsuranceType
+                ] || baseInfo.baseInfo.healthInsuranceType
+              : '',
           },
           {
             label: '최근 상담일',
@@ -115,11 +78,24 @@ export default function BasicInfo({ counselSessionId }: BasicInfoProps) {
             subLabel: '여러 개를 동시에 선택할 수 있어요',
             value: (
               <ButtonGroup
-                options={counselPurposeOptions}
+                options={COUNSEL_PURPOSE_OPTIONS}
                 value={Array.from(
                   baseInfo?.counselPurposeAndNote?.counselPurpose || [],
                 )}
-                onChange={handlePurposeChange}
+                onChange={(value) => {
+                  setBaseInfo({
+                    ...baseInfo,
+                    counselPurposeAndNote: {
+                      ...baseInfo?.counselPurposeAndNote,
+                      counselPurpose: [
+                        ...(
+                          baseInfo?.counselPurposeAndNote?.counselPurpose || []
+                        ).filter((purpose) => purpose !== value),
+                        value as CounselPurposeAndNoteDTOCounselPurposeEnum,
+                      ],
+                    },
+                  });
+                }}
                 className="flex-wrap"
                 multiple
               />

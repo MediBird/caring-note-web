@@ -1,6 +1,8 @@
-import { CounselSessionControllerApi } from '@/api';
+import {
+  CounselSessionControllerApi,
+  SelectPreviousCounselSessionListRes,
+} from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import { SelectPreviousCounselSessionListRes } from '@/api/api';
 
 export interface PrevCounselSessionListDTO
   extends SelectPreviousCounselSessionListRes {

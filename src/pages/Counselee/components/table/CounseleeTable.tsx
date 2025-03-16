@@ -1,4 +1,4 @@
-import { SelectCounseleeRes } from '@/api/api';
+import { SelectCounseleeRes } from '@/api';
 import { DataTable } from '@/components/common/DataTable/data-table';
 import { createCounseleeColumns } from './counseleeColumns';
 

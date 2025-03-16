@@ -3,16 +3,15 @@ import {
   CommunicationDTOHearingsEnum,
   CommunicationDTOSightsEnum,
   CommunicationDTOUsingKoreansEnum,
-  CounselCardIndependentLifeInformationRes,
   EvacuationDTOEvacuationsEnum,
   WalkingDTOWalkingEquipmentsEnum,
   WalkingDTOWalkingMethodsEnum,
-} from '@/api/api';
+} from '@/api';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Card } from '@/components/ui/card';
-import CardSection from '@/components/ui/cardSection';
+import CardSection from '@/components/ui/card-section';
 import { Textarea } from '@/components/ui/textarea';
-import { useCounselCardIndependentLifeInfoStore } from '../../hooks/counselCardStore';
+import { useCounselCardStore } from '../../hooks/counselCardStore';
 import { useCounselCardIndependentLifeInfoQuery } from '../../hooks/useCounselCardQuery';
 
 interface IndependentLivingAssessmentProps {
@@ -22,27 +21,140 @@ interface IndependentLivingAssessmentProps {
 export default function IndependentLivingAssessment({
   counselSessionId,
 }: IndependentLivingAssessmentProps) {
-  const { independentLifeInfo, setIndependentLifeInfo } =
-    useCounselCardIndependentLifeInfoStore();
+  const { independentLifeInfo, setIndependentLifeInfo } = useCounselCardStore();
   const { isLoading } =
     useCounselCardIndependentLifeInfoQuery(counselSessionId);
 
-  const handleUpdateIndependentLifeInfo = (
-    field: string,
-    value: string | string[],
-  ) => {
-    const [section, key] = field.split('.');
-    const updatedSection = {
-      ...independentLifeInfo?.[
-        section as keyof CounselCardIndependentLifeInformationRes
-      ],
-      [key]: Array.isArray(value) ? new Set(value) : value,
-    };
+  const handleWalkingMethodsChange = (value: string) => {
+    const enumValue = value as WalkingDTOWalkingMethodsEnum;
+    const currentMethods = new Set(
+      independentLifeInfo?.walking?.walkingMethods || [],
+    );
+
+    if (currentMethods.has(enumValue)) {
+      currentMethods.delete(enumValue);
+    } else {
+      currentMethods.add(enumValue);
+    }
 
     setIndependentLifeInfo({
       ...independentLifeInfo,
-      [section]: updatedSection,
-    } as CounselCardIndependentLifeInformationRes);
+      walking: {
+        ...independentLifeInfo?.walking,
+        walkingMethods: Array.from(currentMethods),
+      },
+    });
+  };
+
+  const handleWalkingEquipmentsChange = (value: string) => {
+    const enumValue = value as WalkingDTOWalkingEquipmentsEnum;
+    const currentEquipments = new Set(
+      independentLifeInfo?.walking?.walkingEquipments || [],
+    );
+
+    if (currentEquipments.has(enumValue)) {
+      currentEquipments.delete(enumValue);
+    } else {
+      currentEquipments.add(enumValue);
+    }
+
+    setIndependentLifeInfo({
+      ...independentLifeInfo,
+      walking: {
+        ...independentLifeInfo?.walking,
+        walkingEquipments: Array.from(currentEquipments),
+      },
+    });
+  };
+
+  const handleEvacuationsChange = (value: string) => {
+    const enumValue = value as EvacuationDTOEvacuationsEnum;
+    const currentEvacuations = new Set(
+      independentLifeInfo?.evacuation?.evacuations || [],
+    );
+
+    if (currentEvacuations.has(enumValue)) {
+      currentEvacuations.delete(enumValue);
+    } else {
+      currentEvacuations.add(enumValue);
+    }
+
+    setIndependentLifeInfo({
+      ...independentLifeInfo,
+      evacuation: {
+        ...independentLifeInfo?.evacuation,
+        evacuations: Array.from(currentEvacuations),
+      },
+    });
+  };
+
+  const handleSightsChange = (value: string) => {
+    const enumValue = value as CommunicationDTOSightsEnum;
+    const currentSights = independentLifeInfo?.communication?.sights || [];
+
+    if (currentSights.includes(enumValue)) {
+      currentSights.splice(currentSights.indexOf(enumValue), 1);
+    } else {
+      currentSights.push(enumValue);
+    }
+
+    setIndependentLifeInfo({
+      ...independentLifeInfo,
+      communication: {
+        ...independentLifeInfo?.communication,
+        sights: currentSights,
+      },
+    });
+  };
+
+  const handleHearingsChange = (value: string) => {
+    const enumValue = value as CommunicationDTOHearingsEnum;
+    const currentHearings = independentLifeInfo?.communication?.hearings || [];
+
+    if (currentHearings.includes(enumValue)) {
+      currentHearings.splice(currentHearings.indexOf(enumValue), 1);
+    } else {
+      currentHearings.push(enumValue);
+    }
+
+    setIndependentLifeInfo({
+      ...independentLifeInfo,
+      communication: {
+        ...independentLifeInfo?.communication,
+        hearings: currentHearings,
+      },
+    });
+  };
+
+  const handleCommunicationsChange = (value: string) => {
+    const enumValue = value as CommunicationDTOCommunicationsEnum;
+    setIndependentLifeInfo({
+      ...independentLifeInfo,
+      communication: {
+        ...independentLifeInfo?.communication,
+        communications: enumValue,
+      },
+    });
+  };
+
+  const handleUsingKoreansChange = (value: string) => {
+    const enumValue = value as CommunicationDTOUsingKoreansEnum;
+    const currentUsingKoreans =
+      independentLifeInfo?.communication?.usingKoreans || [];
+
+    if (currentUsingKoreans.includes(enumValue)) {
+      currentUsingKoreans.splice(currentUsingKoreans.indexOf(enumValue), 1);
+    } else {
+      currentUsingKoreans.push(enumValue);
+    }
+
+    setIndependentLifeInfo({
+      ...independentLifeInfo,
+      communication: {
+        ...independentLifeInfo?.communication,
+        usingKoreans: currentUsingKoreans,
+      },
+    });
   };
 
   if (isLoading) {
@@ -50,7 +162,7 @@ export default function IndependentLivingAssessment({
   }
 
   return (
-    <Card>
+    <Card className="flex w-full flex-col gap-5">
       <CardSection
         title="보행"
         variant="error"
@@ -77,12 +189,7 @@ export default function IndependentLivingAssessment({
                 value={Array.from(
                   independentLifeInfo?.walking?.walkingMethods || [],
                 )}
-                onChange={(value) =>
-                  handleUpdateIndependentLifeInfo(
-                    'walking.walkingMethods',
-                    value.split(','),
-                  )
-                }
+                onChange={handleWalkingMethodsChange}
                 multiple={true}
               />
             ),
@@ -113,12 +220,7 @@ export default function IndependentLivingAssessment({
                 value={Array.from(
                   independentLifeInfo?.walking?.walkingEquipments || [],
                 )}
-                onChange={(value) =>
-                  handleUpdateIndependentLifeInfo(
-                    'walking.walkingEquipments',
-                    value.split(','),
-                  )
-                }
+                onChange={handleWalkingEquipmentsChange}
                 multiple={true}
               />
             ),
@@ -131,10 +233,13 @@ export default function IndependentLivingAssessment({
                 className="w-full rounded border p-2"
                 value={independentLifeInfo?.walking?.walkingNote || ''}
                 onChange={(e) =>
-                  handleUpdateIndependentLifeInfo(
-                    'walking.walkingNote',
-                    e.target.value,
-                  )
+                  setIndependentLifeInfo({
+                    ...independentLifeInfo,
+                    walking: {
+                      ...independentLifeInfo?.walking,
+                      walkingNote: e.target.value,
+                    },
+                  })
                 }
               />
             ),
@@ -175,12 +280,7 @@ export default function IndependentLivingAssessment({
                 value={Array.from(
                   independentLifeInfo?.evacuation?.evacuations || [],
                 )}
-                onChange={(value) =>
-                  handleUpdateIndependentLifeInfo(
-                    'evacuation.evacuations',
-                    value.split(','),
-                  )
-                }
+                onChange={handleEvacuationsChange}
                 multiple={true}
               />
             ),
@@ -193,10 +293,13 @@ export default function IndependentLivingAssessment({
                 className="w-full rounded border p-2"
                 value={independentLifeInfo?.evacuation?.evacuationNote || ''}
                 onChange={(e) =>
-                  handleUpdateIndependentLifeInfo(
-                    'evacuation.evacuationNote',
-                    e.target.value,
-                  )
+                  setIndependentLifeInfo({
+                    ...independentLifeInfo,
+                    evacuation: {
+                      ...independentLifeInfo?.evacuation,
+                      evacuationNote: e.target.value,
+                    },
+                  })
                 }
               />
             ),
@@ -232,12 +335,7 @@ export default function IndependentLivingAssessment({
                 value={Array.from(
                   independentLifeInfo?.communication?.sights || [],
                 )}
-                onChange={(value) =>
-                  handleUpdateIndependentLifeInfo(
-                    'communication.sights',
-                    value.split(','),
-                  )
-                }
+                onChange={handleSightsChange}
                 multiple={true}
               />
             ),
@@ -268,12 +366,7 @@ export default function IndependentLivingAssessment({
                 value={Array.from(
                   independentLifeInfo?.communication?.hearings || [],
                 )}
-                onChange={(value) =>
-                  handleUpdateIndependentLifeInfo(
-                    'communication.hearings',
-                    value.split(','),
-                  )
-                }
+                onChange={handleHearingsChange}
                 multiple={true}
               />
             ),
@@ -296,16 +389,9 @@ export default function IndependentLivingAssessment({
                     value: CommunicationDTOCommunicationsEnum.NotCommunicate,
                   },
                 ]}
-                value={Array.from(
-                  independentLifeInfo?.communication?.communications || [],
-                )}
-                onChange={(value) =>
-                  handleUpdateIndependentLifeInfo(
-                    'communication.usingKoreans',
-                    value.split(','),
-                  )
-                }
-                multiple={true}
+                value={independentLifeInfo?.communication?.communications || ''}
+                onChange={handleCommunicationsChange}
+                multiple={false}
               />
             ),
           },
@@ -327,12 +413,7 @@ export default function IndependentLivingAssessment({
                 value={Array.from(
                   independentLifeInfo?.communication?.usingKoreans || [],
                 )}
-                onChange={(value) =>
-                  handleUpdateIndependentLifeInfo(
-                    'communication.usingKoreans',
-                    value.split(','),
-                  )
-                }
+                onChange={handleUsingKoreansChange}
                 multiple={true}
               />
             ),

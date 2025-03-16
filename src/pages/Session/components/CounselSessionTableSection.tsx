@@ -1,4 +1,4 @@
-import { SelectCounselSessionRes } from '@/api/api';
+import { SelectCounselSessionRes } from '@/api';
 import {
   DataTablePagination,
   PaginationInfo,

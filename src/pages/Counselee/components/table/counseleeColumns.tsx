@@ -1,4 +1,4 @@
-import { SelectCounseleeRes } from '@/api/api';
+import { SelectCounseleeRes } from '@/api';
 import { TableCell } from '@/components/common/DataTable/table-cell';
 import {
   DropdownMenu,
@@ -6,9 +6,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
-import { formatDisplayText } from '@/utils/formatDisplayText';
 
 export const createCounseleeColumns = ({
   onDelete,

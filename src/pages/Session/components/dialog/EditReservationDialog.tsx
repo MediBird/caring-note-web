@@ -1,4 +1,4 @@
-import { SelectCounselSessionListItem } from '@/api/api';
+import { SelectCounselSessionListItem } from '@/api';
 import { Button } from '@/components/ui/button';
 import DatePickerComponent from '@/components/ui/datepicker';
 import {

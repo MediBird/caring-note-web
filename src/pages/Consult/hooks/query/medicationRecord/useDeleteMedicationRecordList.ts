@@ -1,5 +1,5 @@
+import { MedicationRecordHistControllerApi } from '@/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { MedicationRecordHistControllerApi } from '@/api/api';
 
 const medicationRecordHistControllerApi =
   new MedicationRecordHistControllerApi();

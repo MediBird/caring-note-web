@@ -1,7 +1,7 @@
 import {
   SelectCounselSessionListItemStatusEnum,
   SelectCounselSessionRes,
-} from '@/api/api';
+} from '@/api';
 import { TableCell } from '@/components/common/DataTable/table-cell';
 import {
   DropdownMenu,
@@ -9,10 +9,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
 import { EditReservationDialog } from '../dialog/EditReservationDialog';
-import { formatDisplayText } from '@/utils/formatDisplayText';
 
 export const createScheduleColumns = ({
   onDelete,
@@ -82,7 +82,7 @@ export const createScheduleColumns = ({
         case SelectCounselSessionListItemStatusEnum.Scheduled:
           statusText = '예정';
           break;
-        case SelectCounselSessionListItemStatusEnum.Progress:
+        case SelectCounselSessionListItemStatusEnum.InProgress:
           statusText = '진행';
           break;
         case SelectCounselSessionListItemStatusEnum.Completed:
@@ -101,7 +101,7 @@ export const createScheduleColumns = ({
           textColor={`${
             status === SelectCounselSessionListItemStatusEnum.Scheduled
               ? 'text-grayscale-50'
-              : status === SelectCounselSessionListItemStatusEnum.Progress
+              : status === SelectCounselSessionListItemStatusEnum.InProgress
                 ? 'text-primary-50'
                 : status === SelectCounselSessionListItemStatusEnum.Completed
                   ? 'text-grayscale-100'

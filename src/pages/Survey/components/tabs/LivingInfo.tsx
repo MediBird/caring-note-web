@@ -3,12 +3,12 @@ import {
   ExerciseDTOExercisePatternEnum,
   MedicationManagementDTOMedicationAssistantsEnum,
   NutritionDTOMealPatternEnum,
-} from '@/api/api';
+} from '@/api';
 import { ButtonGroup, ButtonGroupOption } from '@/components/ui/button-group';
 import { Card } from '@/components/ui/card';
-import CardSection from '@/components/ui/cardSection';
+import CardSection from '@/components/ui/card-section';
 import { Textarea } from '@/components/ui/textarea';
-import { useCounselCardLivingInfoStore } from '../../hooks/counselCardStore';
+import { useCounselCardStore } from '../../hooks/counselCardStore';
 import { useCounselCardLivingInfoQuery } from '../../hooks/useCounselCardQuery';
 
 interface LivingInfoProps {
@@ -16,10 +16,13 @@ interface LivingInfoProps {
 }
 
 export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
-  const { livingInfo, setLivingInfo } = useCounselCardLivingInfoStore();
+  const { livingInfo, setLivingInfo } = useCounselCardStore();
   const { isLoading } = useCounselCardLivingInfoQuery(counselSessionId);
 
-  const handleUpdateLivingInfo = (field: string, value: string | string[]) => {
+  const handleUpdateLivingInfo = (
+    field: string,
+    value: string | string[] | boolean,
+  ) => {
     const [section, key] = field.split('.');
     const updatedSection = {
       ...livingInfo?.[section as keyof CounselCardLivingInformationRes],
@@ -49,7 +52,7 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
     { label: '동거인 있음', value: 'false' },
   ];
   return (
-    <Card>
+    <Card className="flex w-full flex-col gap-5">
       <CardSection
         title="흡연"
         variant="secondary"
@@ -61,7 +64,7 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
                 options={smokingAmountOptions}
                 value={livingInfo?.smoking?.isSmoking ? 'true' : 'false'}
                 onChange={(value) =>
-                  handleUpdateLivingInfo('smoking.isSmoking', value)
+                  handleUpdateLivingInfo('smoking.isSmoking', value === 'true')
                 }
               />
             ),
@@ -78,7 +81,10 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
                 options={drinkingAmountOptions}
                 value={livingInfo?.drinking?.isDrinking ? 'true' : 'false'}
                 onChange={(value) =>
-                  handleUpdateLivingInfo('drinking.isDrinking', value)
+                  handleUpdateLivingInfo(
+                    'drinking.isDrinking',
+                    value === 'true',
+                  )
                 }
               />
             ),
@@ -202,14 +208,28 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
               <ButtonGroup
                 options={houseMateOptions}
                 value={
-                  livingInfo?.medicationManagement?.isMedicationManagement
-                    ? 'true'
-                    : 'false'
+                  livingInfo?.medicationManagement?.isAlone ? 'true' : 'false'
                 }
                 onChange={(value) =>
                   handleUpdateLivingInfo(
-                    'medicationManagement.isMedicationManagement',
-                    value,
+                    'medicationManagement.isAlone',
+                    value === 'true',
+                  )
+                }
+              />
+            ),
+          },
+          {
+            label: '동거인 구성원',
+            value: (
+              <Textarea
+                placeholder="구성원과의 관계를 작성해주세요."
+                className="w-full rounded border p-2"
+                value={livingInfo?.medicationManagement?.houseMateNote || ''}
+                onChange={(e) =>
+                  handleUpdateLivingInfo(
+                    'medicationManagement.houseMateNote',
+                    e.target.value,
                   )
                 }
               />
@@ -259,12 +279,30 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
                 value={Array.from(
                   livingInfo?.medicationManagement?.medicationAssistants || [],
                 )}
-                onChange={(value) =>
-                  handleUpdateLivingInfo(
-                    'medicationManagement.medicationAssistants',
-                    value.split(','),
-                  )
-                }
+                onChange={(value) => {
+                  const enumValue =
+                    value as MedicationManagementDTOMedicationAssistantsEnum;
+                  let currentAssistants = Array.from(
+                    livingInfo?.medicationManagement?.medicationAssistants ||
+                      [],
+                  );
+
+                  if (currentAssistants.includes(enumValue)) {
+                    currentAssistants = currentAssistants.filter(
+                      (assistant) => assistant !== enumValue,
+                    );
+                  } else {
+                    currentAssistants.push(enumValue);
+                  }
+
+                  setLivingInfo({
+                    ...livingInfo,
+                    medicationManagement: {
+                      ...livingInfo?.medicationManagement,
+                      medicationAssistants: currentAssistants,
+                    },
+                  });
+                }}
                 multiple={true}
               />
             ),

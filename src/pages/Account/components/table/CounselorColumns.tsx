@@ -1,4 +1,4 @@
-import { CounselorListItem, CounselorListItemRoleTypeEnum } from '@/api/api';
+import { CounselorListItem, CounselorListItemRoleTypeEnum } from '@/api';
 import { TableCell } from '@/components/common/DataTable/table-cell';
 import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';

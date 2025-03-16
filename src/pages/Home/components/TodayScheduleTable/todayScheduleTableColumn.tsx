@@ -2,7 +2,7 @@ import {
   CounselCardBaseInformationResCardRecordStatusEnum,
   SelectCounselSessionListItem,
   SelectCounselSessionListItemStatusEnum,
-} from '@/api/api';
+} from '@/api';
 import Tooltip from '@/components/Tooltip';
 import CounselStatusCell from '@/components/common/DataTable/counsel-status-cell';
 import AssignDialog from '@/pages/Home/components/AssignDialog';

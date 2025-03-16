@@ -1,5 +1,5 @@
+import { CommonResListLocalDate, CounselSessionControllerApi } from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import { CounselSessionControllerApi, CommonResListLocalDate } from '@/api/api';
 
 const counselSessionControllerApi = new CounselSessionControllerApi();
 

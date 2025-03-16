@@ -1,7 +1,7 @@
 import {
   AddAndUpdateMedicationRecordHistReq,
   SelectCounseleeBaseInformationByCounseleeIdRes,
-} from '@/api/api';
+} from '@/api';
 import Spinner from '@/components/common/Spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';

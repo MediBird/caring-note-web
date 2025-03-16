@@ -1,7 +1,7 @@
 import {
   CounseleeControllerApi,
   SelectCounseleeBaseInformationByCounseleeIdRes,
-} from '@/api/api';
+} from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
 const counseleeControllerApi = new CounseleeControllerApi();

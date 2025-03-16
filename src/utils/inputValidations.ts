@@ -1,4 +1,4 @@
-import { AddCounseleeReqGenderTypeEnum } from '@/api/api';
+import { AddCounseleeReqGenderTypeEnum } from '@/api';
 
 export interface AddCounseleeFormData {
   id?: string;

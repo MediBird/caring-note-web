@@ -1,7 +1,4 @@
-import {
-  CounseleeControllerApi,
-  SelectCounseleeAutocompleteRes,
-} from '@/api/api';
+import { CounseleeControllerApi, SelectCounseleeAutocompleteRes } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
 const counseleeControllerApi = new CounseleeControllerApi();

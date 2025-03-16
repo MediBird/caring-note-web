@@ -2,7 +2,7 @@ import {
   AddCounseleeConsentReq,
   SelectCounseleeConsentByCounseleeIdRes,
   UpdateCounseleeConsentReq,
-} from '@/api/api';
+} from '@/api';
 import { create } from 'zustand';
 
 export interface CounseleeConsentState {

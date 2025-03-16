@@ -1,7 +1,7 @@
 import {
   CounselCardBaseInformationResCardRecordStatusEnum,
   UpdateCounselCardStatusReqStatusEnum,
-} from '@/api/api';
+} from '@/api';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,

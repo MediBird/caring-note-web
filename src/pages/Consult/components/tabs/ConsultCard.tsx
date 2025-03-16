@@ -1,10 +1,43 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import CardSection from '@/components/ui/card-section';
+import {
+  HistoryPopover,
+  HistoryPopoverContent,
+  HistoryPopoverTrigger,
+} from '@/components/ui/history-popover';
+import {
+  useCounselCardBaseInfoQuery,
+  useCounselCardHealthInfoQuery,
+  useCounselCardIndependentLifeInfoQuery,
+  useCounselCardLivingInfoQuery,
+} from '@/pages/Survey/hooks/useCounselCardQuery';
+import { HEALTH_INSURANCE_TYPE_MAP } from '@/utils/constants';
+import { ClockIcon } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const ConsultCard: React.FC = () => {
   const { counselSessionId } = useParams();
   const navigate = useNavigate();
+
+  const { data: baseInfoData } = useCounselCardBaseInfoQuery(
+    counselSessionId || '',
+  );
+  const { data: healthInfoData } = useCounselCardHealthInfoQuery(
+    counselSessionId || '',
+  );
+  const { data: independentLifeInfoData } =
+    useCounselCardIndependentLifeInfoQuery(counselSessionId || '');
+  const { data: livingInfoData } = useCounselCardLivingInfoQuery(
+    counselSessionId || '',
+  );
+
+  const consultCardData = {
+    baseInformation: baseInfoData,
+    healthInformation: healthInfoData,
+    independentLifeInformation: independentLifeInfoData,
+    livingInformation: livingInfoData,
+  };
 
   return (
     <Card>
@@ -19,7 +52,7 @@ const ConsultCard: React.FC = () => {
         </div>
       </CardHeader>
 
-      {/* <div className="flex gap-6">
+      <div className="flex gap-6">
         <div className="w-1/2 space-y-2">
           <CardSection
             title="기본 정보"
@@ -27,7 +60,8 @@ const ConsultCard: React.FC = () => {
             items={[
               {
                 label: '성명',
-                value: consultCardData?.baseInformation?.baseInfo?.name,
+                value:
+                  consultCardData?.baseInformation?.baseInfo?.counseleeName,
               },
               {
                 label: '생년월일',
@@ -35,9 +69,13 @@ const ConsultCard: React.FC = () => {
               },
               {
                 label: '의료보장형태',
-                value:
-                  consultCardData?.baseInformation?.baseInfo
-                    ?.counselSessionOrder,
+                value: consultCardData?.baseInformation?.baseInfo
+                  ?.healthInsuranceType
+                  ? HEALTH_INSURANCE_TYPE_MAP[
+                      consultCardData.baseInformation.baseInfo
+                        .healthInsuranceType
+                    ]
+                  : '',
               },
             ]}
           />
@@ -66,7 +104,7 @@ const ConsultCard: React.FC = () => {
                 label: '특이사항',
                 value:
                   consultCardData?.baseInformation?.counselPurposeAndNote
-                    ?.SignificantNote || '',
+                    ?.significantNote || '',
               },
             ]}
           />
@@ -77,7 +115,7 @@ const ConsultCard: React.FC = () => {
                 label: '의약품',
                 value:
                   consultCardData?.baseInformation?.counselPurposeAndNote
-                    ?.MedicationNote || '',
+                    ?.medicationNote || '',
               },
             ]}
           />
@@ -88,7 +126,7 @@ const ConsultCard: React.FC = () => {
                 흡연
                 <HistoryPopover>
                   <HistoryPopoverTrigger>
-                    <ClockBlackIcon />
+                    <ClockIcon className="h-4 w-4" />
                   </HistoryPopoverTrigger>
                   <HistoryPopoverContent
                     historyGroups={[
@@ -133,18 +171,6 @@ const ConsultCard: React.FC = () => {
                   ? '흡연'
                   : '비흡연',
               },
-              {
-                label: '총 흡연기간',
-                value:
-                  consultCardData?.livingInformation?.smoking
-                    ?.smokingPeriodNote || '',
-              },
-              {
-                label: '하루 평균 흡연량',
-                value:
-                  consultCardData?.livingInformation?.smoking?.smokingAmount ||
-                  '',
-              },
             ]}
           />
 
@@ -156,12 +182,6 @@ const ConsultCard: React.FC = () => {
                 value: consultCardData?.livingInformation?.drinking?.isDrinking
                   ? '음주'
                   : '비음주',
-              },
-              {
-                label: '음주 횟수',
-                value:
-                  consultCardData?.livingInformation?.drinking
-                    ?.drinkingAmount || '',
               },
             ]}
           />
@@ -264,12 +284,6 @@ const ConsultCard: React.FC = () => {
                   ? '알레르기 있음'
                   : '없음',
               },
-              {
-                label: '의심 식품/약물',
-                value:
-                  consultCardData?.healthInformation?.allergy?.allergyNote ||
-                  '',
-              },
             ]}
           />
           <CardSection
@@ -278,21 +292,9 @@ const ConsultCard: React.FC = () => {
               {
                 label: '약물 부작용 여부',
                 value: consultCardData?.healthInformation?.medicationSideEffect
-                  ?.isSideEffect
+                  ?.isMedicationSideEffect
                   ? '약물 부작용 있음'
                   : '없음',
-              },
-              {
-                label: '부작용 의심 약물',
-                value:
-                  consultCardData?.healthInformation?.medicationSideEffect
-                    ?.suspectedMedicationNote || '',
-              },
-              {
-                label: '부작용 증상',
-                value:
-                  consultCardData?.healthInformation?.medicationSideEffect
-                    ?.symptomsNote || '',
               },
             ]}
           />
@@ -321,7 +323,7 @@ const ConsultCard: React.FC = () => {
                     label: '기타',
                     value:
                       consultCardData?.independentLifeInformation?.walking
-                        ?.etcNote || '정보 없음',
+                        ?.walkingNote || '정보 없음',
                   },
                 ]}
               />
@@ -332,7 +334,7 @@ const ConsultCard: React.FC = () => {
                   {
                     label: '배변 처리 방식',
                     value:
-                      consultCardData?.independentLifeInformation?.evacuation?.evacuationMethods?.join(
+                      consultCardData?.independentLifeInformation?.evacuation?.evacuations?.join(
                         ', ',
                       ) || '정보 없음',
                   },
@@ -340,7 +342,7 @@ const ConsultCard: React.FC = () => {
                     label: '기타',
                     value:
                       consultCardData?.independentLifeInformation?.evacuation
-                        ?.etcNote || '정보 없음',
+                        ?.evacuationNote || '정보 없음',
                   },
                 ]}
               />
@@ -351,37 +353,33 @@ const ConsultCard: React.FC = () => {
                   {
                     label: '시력',
                     value:
-                      consultCardData?.independentLifeInformation?.communication?.sights?.join(
-                        ', ',
-                      ) || '정보 없음',
+                      consultCardData?.independentLifeInformation?.communication
+                        ?.sights || '정보 없음',
                   },
                   {
                     label: '청력',
                     value:
-                      consultCardData?.independentLifeInformation?.communication?.hearings?.join(
-                        ', ',
-                      ) || '정보 없음',
+                      consultCardData?.independentLifeInformation?.communication
+                        ?.hearings || '정보 없음',
                   },
                   {
                     label: '언어 소통',
                     value:
-                      consultCardData?.independentLifeInformation?.communication?.communications?.join(
-                        ', ',
-                      ) || '정보 없음',
+                      consultCardData?.independentLifeInformation?.communication
+                        ?.communications || '정보 없음',
                   },
                   {
                     label: '한글 사용',
                     value:
-                      consultCardData?.independentLifeInformation?.communication?.usingKoreans?.join(
-                        ', ',
-                      ) || '정보 없음',
+                      consultCardData?.independentLifeInformation?.communication
+                        ?.usingKoreans || '정보 없음',
                   },
                 ]}
               />
             </>
           )}
         </div>
-      </div> */}
+      </div>
     </Card>
   );
 };

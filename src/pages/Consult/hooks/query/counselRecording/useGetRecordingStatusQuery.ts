@@ -1,4 +1,4 @@
-import { AICounselSummaryControllerApi } from '@/api/api';
+import { AICounselSummaryControllerApi } from '@/api';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { useQuery } from '@tanstack/react-query';
 

@@ -1,5 +1,5 @@
+import { WasteMedicationControllerApi } from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import { WasteMedicationControllerApi } from '@/api/api';
 
 const wasteMedicationControllerApi = new WasteMedicationControllerApi();
 

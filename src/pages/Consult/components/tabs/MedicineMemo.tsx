@@ -1,17 +1,16 @@
-import { useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
-import { CardHeader } from '@/components/ui/card';
-import { CardTitle } from '@/components/ui/card';
+import { SelectMedicationRecordHistResDivisionCodeEnum } from '@/api';
+import { CardHeader, CardTitle } from '@/components/ui/card';
+import MedicineRecordTable from '@/pages/Consult/components/table/MedicineRecordTable';
 import UsableSiteList from '@/pages/Consult/components/UsableSiteList';
+import { useDeleteMedicationRecordList } from '@/pages/Consult/hooks/query/medicationRecord/useDeleteMedicationRecordList';
 import {
   MedicationRecordListDTO,
   useMedicationRecordList,
 } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordList';
-import useMedicineMemoStore from '@/store/medicineMemoStore';
 import { initSelectMedicationRecordHistRes } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
-import { SelectMedicationRecordHistResDivisionCodeEnum } from '@/api/api';
-import MedicineRecordTable from '@/pages/Consult/components/table/MedicineRecordTable';
-import { useDeleteMedicationRecordList } from '@/pages/Consult/hooks/query/medicationRecord/useDeleteMedicationRecordList';
+import useMedicineMemoStore from '@/store/medicineMemoStore';
+import { useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 
 const MedicineMemo: React.FC = () => {
   const { counselSessionId } = useParams();

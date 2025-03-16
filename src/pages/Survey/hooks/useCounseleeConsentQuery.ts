@@ -1,6 +1,6 @@
+import { CounseleeConsentControllerApi } from '@/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { CounseleeConsentControllerApi } from '../../../api/api';
 import {
   getAddCounseleeConsentReq,
   getUpdateCounseleeConsentReq,
