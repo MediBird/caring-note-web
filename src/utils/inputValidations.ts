@@ -32,3 +32,17 @@ export const validatePhoneNumber = (value: string) => {
   if (!/^\d{3}-\d{4}-\d{4}$/.test(value)) return '숫자 11자리를 입력해주세요';
   return null;
 };
+
+export const validatePassword = (value: string) => {
+  if (!value) return '비밀번호를 입력해주세요.';
+  if (value.length < 8) return '비밀번호는 8자 이상으로 입력해주세요.';
+  if (value.length > 20) return '비밀번호는 20자 이하로 입력해주세요.';
+
+  return null;
+};
+
+export const validateConfirmPassword = (value: string, password: string) => {
+  if (!value) return '비밀번호 확인을 입력해주세요.';
+  if (value !== password) return '비밀번호가 일치하지 않습니다.';
+  return null;
+};
