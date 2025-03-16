@@ -88,9 +88,6 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     if (status) updateRecordingStatus(status);
   }, [isSuccessGetRecordingStatus, getRecordingStatusData]);
 
-  useEffect(() => {
-    console.log('=== useEffect recordingStatus :', recordingStatus);
-  }, [recordingStatus]);
 
   const startRecording = async () => {
     try {

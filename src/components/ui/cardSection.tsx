@@ -1,7 +1,7 @@
 interface CardSectionProps {
   title: React.ReactNode;
   items: Array<{
-    label: string;
+    label: string | React.ReactNode;
     subLabel?: string | null;
     value: React.ReactNode | undefined;
   }>;

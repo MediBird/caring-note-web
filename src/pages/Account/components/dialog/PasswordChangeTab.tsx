@@ -83,8 +83,8 @@ export default function PasswordChangeTab({
       } else {
         setError('비밀번호 변경에 실패했습니다.');
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error('비밀번호 변경 중 오류가 발생했습니다:', error);
       setError('비밀번호 변경 중 오류가 발생했습니다.');
     } finally {
       setIsLoading(false);

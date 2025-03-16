@@ -1,5 +1,5 @@
 import {
-  AddCounselCardReqCardRecordStatusEnum,
+  CounselCardBaseInformationResCardRecordStatusEnum,
   SelectCounselSessionListItem,
   SelectCounselSessionListItemStatusEnum,
 } from '@/api/api';
@@ -25,7 +25,7 @@ export const createColumns = ({
       const counselSessionId = row.original.counselSessionId;
       return (
         <span
-          className="cursor-pointer h-full inline-block content-center px-3"
+          className="inline-block h-full cursor-pointer content-center px-3"
           onClick={() => {
             onCellClick(counselSessionId ?? '');
           }}>
@@ -42,7 +42,7 @@ export const createColumns = ({
     size: 124,
     cell: ({ row }) => {
       const scheduledDate = row.original.scheduledDate ?? '-';
-      return <span className="px-3 w-full min-w-[145px]">{scheduledDate}</span>;
+      return <span className="w-full min-w-[145px] px-3">{scheduledDate}</span>;
     },
   },
   {
@@ -85,7 +85,7 @@ export const createColumns = ({
     size: 116,
     header: () => {
       return (
-        <div className="flex items-center gap-1 relative">
+        <div className="relative flex items-center gap-1">
           상담 할당
           <Tooltip
             className="text-grayscale-40"
@@ -124,7 +124,9 @@ export const createColumns = ({
           <SurveyDialog
             counselSessionId={counselSessionId}
             counseleeId={counseleeId}
-            dialogState={dialogState as AddCounselCardReqCardRecordStatusEnum}
+            dialogState={
+              dialogState as CounselCardBaseInformationResCardRecordStatusEnum
+            }
           />
         </div>
       );
