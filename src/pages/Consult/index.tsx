@@ -17,6 +17,7 @@ import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import FinishConsultDialog from './components/FinishConsultDialog';
 import RecordingDialog from './components/recording/RecordingDialog';
 import ConsultCard from './components/tabs/ConsultCard';
@@ -168,6 +169,7 @@ export function Index() {
       medicationRecordHistList:
         medicationRecordList as unknown as AddAndUpdateMedicationRecordHistReq[],
     });
+    toast.success('작성하신 내용을 성공적으로 저장하였습니다.');
   };
 
   return (
