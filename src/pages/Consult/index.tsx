@@ -12,6 +12,7 @@ import { useGetIsRecordingPopupQuery } from '@/pages/Consult/hooks/query/counsel
 import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
 import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
+import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
@@ -22,6 +23,7 @@ import ConsultCard from './components/tabs/ConsultCard';
 import DiscardMedicine from './components/tabs/DiscardMedicine';
 import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
+import TemporarySaveDialog from './components/TemporarySaveDialog';
 
 interface InfoItemProps {
   icon: string;
@@ -44,13 +46,22 @@ const InfoItem = ({ icon, content, showDivider = true }: InfoItemProps) => (
 interface HeaderButtonsProps {
   onSave: () => void;
   onComplete: () => void;
+  recordingStatus: RecordingStatus;
 }
 
-const HeaderButtons = ({ onSave, onComplete }: HeaderButtonsProps) => (
+const HeaderButtons = ({
+  onSave,
+  onComplete,
+  recordingStatus,
+}: HeaderButtonsProps) => (
   <div className="flex gap-3">
-    <Button variant="tertiary" size="xl" onClick={onSave}>
-      임시 저장
-    </Button>
+    {recordingStatus !== RecordingStatus.AICompleted ? (
+      <TemporarySaveDialog onClickConfirm={onSave} />
+    ) : (
+      <Button variant="tertiary" size="xl" onClick={onSave}>
+        임시 저장
+      </Button>
+    )}
     <Button variant="primary" size="xl" onClick={onComplete}>
       설문 완료
     </Button>
@@ -63,12 +74,14 @@ const ConsultHeader = ({
   age,
   diseases,
   saveConsult,
+  recordingStatus,
 }: {
   counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
   consultStatus: string;
   age: string;
   diseases: React.ReactNode;
   saveConsult: () => void;
+  recordingStatus: RecordingStatus;
 }) => (
   <div className="sticky top-0 z-10">
     <div className="h-fit bg-white">
@@ -88,6 +101,7 @@ const ConsultHeader = ({
           <HeaderButtons
             onSave={saveConsult}
             onComplete={() => console.log('설문 완료')}
+            recordingStatus={recordingStatus}
           />
         </div>
       </div>
@@ -119,7 +133,7 @@ export function Index() {
   const { mutate: saveMedicationCounsel } = useSaveMedicineConsult();
   const { medicineConsult } = useMedicineConsultStore();
   const { medicationRecordList } = useMedicineMemoStore();
-  const { resetRecording } = useRecording();
+  const { recordingStatus, resetRecording } = useRecording();
   const { saveMedicationRecordList } = useMedicationRecordSave();
   const { isSuccess: isSuccessGetIsRecordingPopup, data: isPopup } =
     useGetIsRecordingPopupQuery(counselSessionId);
@@ -185,8 +199,9 @@ export function Index() {
           age={age}
           diseases={diseases}
           saveConsult={saveConsult}
+          recordingStatus={recordingStatus}
         />
-        <div className="mb-100 h-full w-full px-layout [&>*]:max-w-content [&>*]:mx-auto pt-10 pb-10">
+        <div className="mb-100 h-full w-full px-layout pb-10 pt-10 [&>*]:mx-auto [&>*]:max-w-content">
           <TabsContent value="pastConsult">
             <PastConsult />
           </TabsContent>
