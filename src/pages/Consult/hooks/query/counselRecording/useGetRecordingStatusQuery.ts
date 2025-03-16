@@ -1,5 +1,5 @@
 import { AICounselSummaryControllerApi } from '@/api/api';
-import { RecordingStatus } from '@/types/Recording.enum';
+import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { useQuery } from '@tanstack/react-query';
 
 const aiCounselSummaryControllerApi = new AICounselSummaryControllerApi();

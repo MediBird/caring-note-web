@@ -1,4 +1,4 @@
-import { AddAndUpdateWasteMedicationDisposalDTO } from '@/types/WasteMedicationDTO';
+import { AddAndUpdateWasteMedicationDisposalDTO } from '@/pages/Consult/types/WasteMedicationDTO';
 import { create } from 'zustand';
 
 export const initialWasteMedicationDisposalState: AddAndUpdateWasteMedicationDisposalDTO =

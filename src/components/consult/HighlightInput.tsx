@@ -6,9 +6,9 @@ import highlightpenBlue from '@/assets/icon/highlightpenBlue.png';
 import Tooltip from '@/components/Tooltip';
 import { cn } from '@/lib/utils';
 import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
+import { CounselRecordHighlights } from '@/pages/Consult/types/MedicineConsultDTO';
 import useCounselRecordEditorStateStore from '@/store/counselRecordEditorStateStore';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
-import { CounselRecordHighlights } from '@/types/MedicineConsultDTO';
 import {
   ContentBlock,
   ContentState,

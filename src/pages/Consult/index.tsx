@@ -157,7 +157,7 @@ export function Index() {
   const consultStatus =
     counseleeInfo?.counselCount === 0 ? '초기 상담' : '재상담';
   const age = `만 ${counseleeInfo?.age}세`;
-  const diseases = formatDiseases(counseleeInfo?.diseases);
+  const diseases = formatDiseases(Array.from(counseleeInfo?.diseases || []));
 
   const saveConsult = () => {
     saveWasteMedication();
@@ -186,7 +186,7 @@ export function Index() {
           diseases={diseases}
           saveConsult={saveConsult}
         />
-        <div className="mb-100 h-full w-full">
+        <div className="mb-100 h-full w-full px-layout [&>*]:max-w-content [&>*]:mx-auto pt-10 pb-10">
           <TabsContent value="pastConsult">
             <PastConsult />
           </TabsContent>

@@ -1,9 +1,9 @@
 import {
-  MedicationRecordHistControllerApi,
   AddAndUpdateMedicationRecordHistReqDivisionCodeEnum,
   AddAndUpdateMedicationRecordHistReqUsageStatusCodeEnum,
+  MedicationRecordHistControllerApi,
 } from '@/api/api';
-import { MedicationRecordListSaveDTO } from '@/types/MedicationRecordListDTO';
+import { MedicationRecordListSaveDTO } from '@/pages/Consult/types/MedicationRecordListDTO';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const medicationRecordHistControllerApi =

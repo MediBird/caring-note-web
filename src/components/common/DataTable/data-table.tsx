@@ -17,8 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useState } from 'react';
 import { getCommonPinningStyles } from '@/lib/getTableCellPinningStyle';
+import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -27,6 +27,7 @@ interface DataTableProps<TData, TValue> {
   sorting?: SortingState;
   SortingFns?: Record<string, SortingFn<TData>>;
   minWidth?: number;
+  onRowClick?: (rowData: TData) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -36,6 +37,7 @@ export function DataTable<TData, TValue>({
   sorting: initialSorting,
   minWidth = 1020,
   SortingFns,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>(initialSorting || []);
 
@@ -55,8 +57,14 @@ export function DataTable<TData, TValue>({
     sortingFns: SortingFns ?? {},
   });
 
+  const handleRowClick = (rowData: TData) => {
+    if (onRowClick) {
+      onRowClick(rowData);
+    }
+  };
+
   return (
-    <div className="w-full overflow-hidden border border-1 border-grayscale-10 rounded-[12px] bg-white">
+    <div className="border-1 w-full overflow-hidden rounded-[12px] border border-grayscale-10 bg-white">
       <Table
         style={{
           width: '100%',
@@ -92,17 +100,19 @@ export function DataTable<TData, TValue>({
             table.getRowModel().rows.map((row, index) => (
               <TableRow
                 key={row.id + index}
-                data-state={row.getIsSelected() && 'selected'}>
+                data-state={row.getIsSelected() && 'selected'}
+                onClick={() => handleRowClick(row.original)}
+                className={onRowClick ? `group cursor-pointer` : ''}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
                     style={{
                       width: cell.column.columnDef.size,
-                      backgroundColor: 'white',
                       ...getCommonPinningStyles({
                         column: cell.column,
                       }),
-                    }}>
+                    }}
+                    className="group-hover:bg-primary-5">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -112,7 +122,7 @@ export function DataTable<TData, TValue>({
             <TableRow>
               <TableCell
                 colSpan={columns.length}
-                className="h-12 text-sm text-center text-grayscale-30">
+                className="h-12 text-center text-sm text-grayscale-30">
                 기록 내역이 없습니다.
               </TableCell>
             </TableRow>

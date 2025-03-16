@@ -13,15 +13,15 @@
  */
 
 
-import type { Configuration } from './configuration';
-import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
+import type { AxiosInstance, AxiosPromise, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
+import type { Configuration } from './configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
 import type { RequestArgs } from './base';
+import { DUMMY_BASE_URL, assertParamExists, createRequestFunction, serializeDataIfNeeded, setBearerAuthToObject, setSearchParams, toPathString } from './common';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
+import { BASE_PATH, BaseAPI, RequiredError, operationServerMap } from './base';
 
 /**
  * 
@@ -175,58 +175,75 @@ export interface AddCounselCardReq {
      */
     'counselSessionId': string;
     /**
-     * 상담카드기록상태(RECORDING, RECORDED
+     * 상담카드기록상태(IN_PROGRESS, COMPLETED
      * @type {string}
      * @memberof AddCounselCardReq
      */
     'cardRecordStatus'?: AddCounselCardReqCardRecordStatusEnum;
     /**
      * 
-     * @type {BaseInformationDTO}
+     * @type {CounselPurposeAndNoteDTO}
      * @memberof AddCounselCardReq
      */
-    'baseInformation'?: BaseInformationDTO;
+    'counselPurposeAndNote': CounselPurposeAndNoteDTO;
     /**
      * 
-     * @type {HealthInformationDTO}
+     * @type {AllergyDTO}
      * @memberof AddCounselCardReq
      */
-    'healthInformation'?: HealthInformationDTO;
+    'allergy': AllergyDTO;
     /**
      * 
-     * @type {LivingInformationDTO}
+     * @type {DiseaseInfoDTO}
      * @memberof AddCounselCardReq
      */
-    'livingInformation'?: LivingInformationDTO;
+    'diseaseInfo': DiseaseInfoDTO;
     /**
      * 
-     * @type {IndependentLifeInformationDTO}
+     * @type {MedicationSideEffectDTO}
      * @memberof AddCounselCardReq
      */
-    'independentLifeInformation'?: IndependentLifeInformationDTO;
+    'medicationSideEffect': MedicationSideEffectDTO;
+    /**
+     * 
+     * @type {DrinkingDTO}
+     * @memberof AddCounselCardReq
+     */
+    'drinking': DrinkingDTO;
+    /**
+     * 
+     * @type {ExerciseDTO}
+     * @memberof AddCounselCardReq
+     */
+    'exercise': ExerciseDTO;
+    /**
+     * 
+     * @type {MedicationManagementDTO}
+     * @memberof AddCounselCardReq
+     */
+    'medicationManagement': MedicationManagementDTO;
+    /**
+     * 
+     * @type {NutritionDTO}
+     * @memberof AddCounselCardReq
+     */
+    'nutrition': NutritionDTO;
+    /**
+     * 
+     * @type {SmokingDTO}
+     * @memberof AddCounselCardReq
+     */
+    'smoking': SmokingDTO;
 }
 
 export const AddCounselCardReqCardRecordStatusEnum = {
-    Unrecorded: 'UNRECORDED',
-    Recording: 'RECORDING',
-    Recorded: 'RECORDED'
+    NotStarted: 'NOT_STARTED',
+    InProgress: 'IN_PROGRESS',
+    Completed: 'COMPLETED'
 } as const;
 
 export type AddCounselCardReqCardRecordStatusEnum = typeof AddCounselCardReqCardRecordStatusEnum[keyof typeof AddCounselCardReqCardRecordStatusEnum];
 
-/**
- * 
- * @export
- * @interface AddCounselCardRes
- */
-export interface AddCounselCardRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof AddCounselCardRes
-     */
-    'counselCardId'?: string;
-}
 /**
  * 
  * @export
@@ -276,7 +293,7 @@ export interface AddCounseleeReq {
      * @type {string}
      * @memberof AddCounseleeReq
      */
-    'name': string;
+    'name'?: string;
     /**
      * 
      * @type {string}
@@ -381,12 +398,6 @@ export interface AddMedicationCounselRes {
 export interface AllergyDTO {
     /**
      * 
-     * @type {boolean}
-     * @memberof AllergyDTO
-     */
-    'isAllergy'?: boolean;
-    /**
-     * 
      * @type {string}
      * @memberof AllergyDTO
      */
@@ -428,19 +439,13 @@ export interface BaseInfoDTO {
      * @type {string}
      * @memberof BaseInfoDTO
      */
-    'name'?: string;
+    'counseleeName'?: string;
     /**
      * 
      * @type {string}
      * @memberof BaseInfoDTO
      */
     'birthDate'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BaseInfoDTO
-     */
-    'counselSessionOrder'?: string;
     /**
      * 
      * @type {string}
@@ -467,31 +472,6 @@ export type BaseInfoDTOHealthInsuranceTypeEnum = typeof BaseInfoDTOHealthInsuran
 /**
  * 
  * @export
- * @interface BaseInformationDTO
- */
-export interface BaseInformationDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof BaseInformationDTO
-     */
-    'version'?: string;
-    /**
-     * 
-     * @type {BaseInfoDTO}
-     * @memberof BaseInformationDTO
-     */
-    'baseInfo'?: BaseInfoDTO;
-    /**
-     * 
-     * @type {CounselPurposeAndNoteDTO}
-     * @memberof BaseInformationDTO
-     */
-    'counselPurposeAndNote'?: CounselPurposeAndNoteDTO;
-}
-/**
- * 
- * @export
  * @interface CommonCursorResListSelectCounselSessionListItem
  */
 export interface CommonCursorResListSelectCounselSessionListItem {
@@ -513,25 +493,6 @@ export interface CommonCursorResListSelectCounselSessionListItem {
      * @memberof CommonCursorResListSelectCounselSessionListItem
      */
     'hasNext'?: boolean;
-}
-/**
- * 
- * @export
- * @interface CommonResAddCounselCardRes
- */
-export interface CommonResAddCounselCardRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof CommonResAddCounselCardRes
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {AddCounselCardRes}
-     * @memberof CommonResAddCounselCardRes
-     */
-    'data'?: AddCounselCardRes;
 }
 /**
  * 
@@ -574,6 +535,44 @@ export interface CommonResAddMedicationCounselRes {
 /**
  * 
  * @export
+ * @interface CommonResCounselCardIdRes
+ */
+export interface CommonResCounselCardIdRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResCounselCardIdRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {CounselCardIdRes}
+     * @memberof CommonResCounselCardIdRes
+     */
+    'data'?: CounselCardIdRes;
+}
+/**
+ * 
+ * @export
+ * @interface CommonResCounselCardRes
+ */
+export interface CommonResCounselCardRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResCounselCardRes
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {CounselCardRes}
+     * @memberof CommonResCounselCardRes
+     */
+    'data'?: CounselCardRes;
+}
+/**
+ * 
+ * @export
  * @interface CommonResCounselSessionStatRes
  */
 export interface CommonResCounselSessionStatRes {
@@ -608,25 +607,6 @@ export interface CommonResCreateCounselReservationRes {
      * @memberof CommonResCreateCounselReservationRes
      */
     'data'?: CreateCounselReservationRes;
-}
-/**
- * 
- * @export
- * @interface CommonResDeleteCounselCardRes
- */
-export interface CommonResDeleteCounselCardRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof CommonResDeleteCounselCardRes
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {DeleteCounselCardRes}
-     * @memberof CommonResDeleteCounselCardRes
-     */
-    'data'?: DeleteCounselCardRes;
 }
 /**
  * 
@@ -859,25 +839,6 @@ export interface CommonResListSelectPreviousCounselSessionListRes {
 /**
  * 
  * @export
- * @interface CommonResListSelectPreviousItemListByInformationNameAndItemNameRes
- */
-export interface CommonResListSelectPreviousItemListByInformationNameAndItemNameRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof CommonResListSelectPreviousItemListByInformationNameAndItemNameRes
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {Array<SelectPreviousItemListByInformationNameAndItemNameRes>}
-     * @memberof CommonResListSelectPreviousItemListByInformationNameAndItemNameRes
-     */
-    'data'?: Array<SelectPreviousItemListByInformationNameAndItemNameRes>;
-}
-/**
- * 
- * @export
  * @interface CommonResListSelectSpeakerListRes
  */
 export interface CommonResListSelectSpeakerListRes {
@@ -931,6 +892,25 @@ export interface CommonResListString {
      * @memberof CommonResListString
      */
     'data'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface CommonResListTimeRecordedDTOObject
+ */
+export interface CommonResListTimeRecordedDTOObject {
+    /**
+     * 
+     * @type {string}
+     * @memberof CommonResListTimeRecordedDTOObject
+     */
+    'message'?: string;
+    /**
+     * 
+     * @type {Array<TimeRecordedDTOObject>}
+     * @memberof CommonResListTimeRecordedDTOObject
+     */
+    'data'?: Array<TimeRecordedDTOObject>;
 }
 /**
  * 
@@ -1007,25 +987,6 @@ export interface CommonResSelectAnalysedTextRes {
      * @memberof CommonResSelectAnalysedTextRes
      */
     'data'?: SelectAnalysedTextRes;
-}
-/**
- * 
- * @export
- * @interface CommonResSelectCounselCardRes
- */
-export interface CommonResSelectCounselCardRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof CommonResSelectCounselCardRes
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {SelectCounselCardRes}
-     * @memberof CommonResSelectCounselCardRes
-     */
-    'data'?: SelectCounselCardRes;
 }
 /**
  * 
@@ -1163,25 +1124,6 @@ export interface CommonResSelectMedicationCounselRes {
 /**
  * 
  * @export
- * @interface CommonResSelectPreviousCounselCardRes
- */
-export interface CommonResSelectPreviousCounselCardRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof CommonResSelectPreviousCounselCardRes
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {SelectPreviousCounselCardRes}
-     * @memberof CommonResSelectPreviousCounselCardRes
-     */
-    'data'?: SelectPreviousCounselCardRes;
-}
-/**
- * 
- * @export
  * @interface CommonResSelectPreviousMedicationCounselRes
  */
 export interface CommonResSelectPreviousMedicationCounselRes {
@@ -1216,25 +1158,6 @@ export interface CommonResString {
      * @memberof CommonResString
      */
     'data'?: string;
-}
-/**
- * 
- * @export
- * @interface CommonResUpdateCounselCardRes
- */
-export interface CommonResUpdateCounselCardRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof CommonResUpdateCounselCardRes
-     */
-    'message'?: string;
-    /**
-     * 
-     * @type {UpdateCounselCardRes}
-     * @memberof CommonResUpdateCounselCardRes
-     */
-    'data'?: UpdateCounselCardRes;
 }
 /**
  * 
@@ -1372,37 +1295,6 @@ export interface CommonResWasteMedicationDisposalRes {
 /**
  * 
  * @export
- * @interface CommunicationDTO
- */
-export interface CommunicationDTO {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof CommunicationDTO
-     */
-    'sights'?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof CommunicationDTO
-     */
-    'hearings'?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof CommunicationDTO
-     */
-    'communications'?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof CommunicationDTO
-     */
-    'usingKoreans'?: Array<string>;
-}
-/**
- * 
- * @export
  * @interface ConvertSpeechToTextReq
  */
 export interface ConvertSpeechToTextReq {
@@ -1416,28 +1308,134 @@ export interface ConvertSpeechToTextReq {
 /**
  * 
  * @export
+ * @interface CounselCardIdRes
+ */
+export interface CounselCardIdRes {
+    /**
+     * 
+     * @type {string}
+     * @memberof CounselCardIdRes
+     */
+    'counselCardId'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface CounselCardRes
+ */
+export interface CounselCardRes {
+    /**
+     * 
+     * @type {BaseInfoDTO}
+     * @memberof CounselCardRes
+     */
+    'baseInfo'?: BaseInfoDTO;
+    /**
+     * 
+     * @type {string}
+     * @memberof CounselCardRes
+     */
+    'cardRecordStatus'?: CounselCardResCardRecordStatusEnum;
+    /**
+     * 
+     * @type {CounselPurposeAndNoteDTO}
+     * @memberof CounselCardRes
+     */
+    'counselPurposeAndNote'?: CounselPurposeAndNoteDTO;
+    /**
+     * 
+     * @type {AllergyDTO}
+     * @memberof CounselCardRes
+     */
+    'allergy'?: AllergyDTO;
+    /**
+     * 
+     * @type {DiseaseInfoDTO}
+     * @memberof CounselCardRes
+     */
+    'diseaseInfo'?: DiseaseInfoDTO;
+    /**
+     * 
+     * @type {MedicationSideEffectDTO}
+     * @memberof CounselCardRes
+     */
+    'medicationSideEffect'?: MedicationSideEffectDTO;
+    /**
+     * 
+     * @type {DrinkingDTO}
+     * @memberof CounselCardRes
+     */
+    'drinking'?: DrinkingDTO;
+    /**
+     * 
+     * @type {ExerciseDTO}
+     * @memberof CounselCardRes
+     */
+    'exercise'?: ExerciseDTO;
+    /**
+     * 
+     * @type {MedicationManagementDTO}
+     * @memberof CounselCardRes
+     */
+    'medicationManagement'?: MedicationManagementDTO;
+    /**
+     * 
+     * @type {NutritionDTO}
+     * @memberof CounselCardRes
+     */
+    'nutrition'?: NutritionDTO;
+    /**
+     * 
+     * @type {SmokingDTO}
+     * @memberof CounselCardRes
+     */
+    'smoking'?: SmokingDTO;
+}
+
+export const CounselCardResCardRecordStatusEnum = {
+    NotStarted: 'NOT_STARTED',
+    InProgress: 'IN_PROGRESS',
+    Completed: 'COMPLETED'
+} as const;
+
+export type CounselCardResCardRecordStatusEnum = typeof CounselCardResCardRecordStatusEnum[keyof typeof CounselCardResCardRecordStatusEnum];
+
+/**
+ * 
+ * @export
  * @interface CounselPurposeAndNoteDTO
  */
 export interface CounselPurposeAndNoteDTO {
     /**
      * 
-     * @type {Array<string>}
+     * @type {Set<string>}
      * @memberof CounselPurposeAndNoteDTO
      */
-    'counselPurpose'?: Array<string>;
+    'counselPurpose'?: Set<CounselPurposeAndNoteDTOCounselPurposeEnum>;
     /**
      * 
      * @type {string}
      * @memberof CounselPurposeAndNoteDTO
      */
-    'SignificantNote'?: string;
+    'significantNote'?: string;
     /**
      * 
      * @type {string}
      * @memberof CounselPurposeAndNoteDTO
      */
-    'MedicationNote'?: string;
+    'medicationNote'?: string;
 }
+
+export const CounselPurposeAndNoteDTOCounselPurposeEnum = {
+    MedicationSideEffect: 'MEDICATION_SIDE_EFFECT',
+    LifestyleManagement: 'LIFESTYLE_MANAGEMENT',
+    SymptomDiseaseUnderstanding: 'SYMPTOM_DISEASE_UNDERSTANDING',
+    MedicationReview: 'MEDICATION_REVIEW',
+    Other: 'OTHER'
+} as const;
+
+export type CounselPurposeAndNoteDTOCounselPurposeEnum = typeof CounselPurposeAndNoteDTOCounselPurposeEnum[keyof typeof CounselPurposeAndNoteDTOCounselPurposeEnum];
+
 /**
  * 
  * @export
@@ -1472,6 +1470,65 @@ export interface CounselSessionStatRes {
 /**
  * 
  * @export
+ * @interface CounselorListItem
+ */
+export interface CounselorListItem {
+    /**
+     * 
+     * @type {string}
+     * @memberof CounselorListItem
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CounselorListItem
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CounselorListItem
+     */
+    'roleType'?: CounselorListItemRoleTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof CounselorListItem
+     */
+    'username'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CounselorListItem
+     */
+    'phoneNumber'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CounselorListItem
+     */
+    'registrationDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CounselorListItem
+     */
+    'description'?: string;
+}
+
+export const CounselorListItemRoleTypeEnum = {
+    Admin: 'ROLE_ADMIN',
+    User: 'ROLE_USER',
+    Assistant: 'ROLE_ASSISTANT',
+    None: 'ROLE_NONE'
+} as const;
+
+export type CounselorListItemRoleTypeEnum = typeof CounselorListItemRoleTypeEnum[keyof typeof CounselorListItemRoleTypeEnum];
+
+/**
+ * 
+ * @export
  * @interface CounselorNameListRes
  */
 export interface CounselorNameListRes {
@@ -1481,6 +1538,25 @@ export interface CounselorNameListRes {
      * @memberof CounselorNameListRes
      */
     'counselorNames'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface CounselorPageRes
+ */
+export interface CounselorPageRes {
+    /**
+     * 
+     * @type {Array<CounselorListItem>}
+     * @memberof CounselorPageRes
+     */
+    'counselors'?: Array<CounselorListItem>;
+    /**
+     * 
+     * @type {PageRes}
+     * @memberof CounselorPageRes
+     */
+    'pageInfo'?: PageRes;
 }
 /**
  * 
@@ -1526,32 +1602,6 @@ export interface DeleteAICounselSummaryReq {
      * @memberof DeleteAICounselSummaryReq
      */
     'counselSessionId': string;
-}
-/**
- * 
- * @export
- * @interface DeleteCounselCardReq
- */
-export interface DeleteCounselCardReq {
-    /**
-     * 
-     * @type {string}
-     * @memberof DeleteCounselCardReq
-     */
-    'counselCardId': string;
-}
-/**
- * 
- * @export
- * @interface DeleteCounselCardRes
- */
-export interface DeleteCounselCardRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof DeleteCounselCardRes
-     */
-    'deletedCounselId'?: string;
 }
 /**
  * 
@@ -1658,10 +1708,10 @@ export interface DeleteMedicationCounselRes {
 export interface DiseaseInfoDTO {
     /**
      * 
-     * @type {Array<string>}
+     * @type {Set<string>}
      * @memberof DiseaseInfoDTO
      */
-    'diseases'?: Array<string>;
+    'diseases'?: Set<DiseaseInfoDTODiseasesEnum>;
     /**
      * 
      * @type {string}
@@ -1675,6 +1725,32 @@ export interface DiseaseInfoDTO {
      */
     'mainInconvenienceNote'?: string;
 }
+
+export const DiseaseInfoDTODiseasesEnum = {
+    Hypertension: 'HYPERTENSION',
+    Hyperlipidemia: 'HYPERLIPIDEMIA',
+    CerebrovascularDisease: 'CEREBROVASCULAR_DISEASE',
+    HeartDisease: 'HEART_DISEASE',
+    Diabetes: 'DIABETES',
+    ThyroidDisease: 'THYROID_DISEASE',
+    GastrointestinalDisease: 'GASTROINTESTINAL_DISEASE',
+    ParkinsonsDisease: 'PARKINSONS_DISEASE',
+    Dementia: 'DEMENTIA',
+    SleepDisorder: 'SLEEP_DISORDER',
+    DepressionAnxiety: 'DEPRESSION_ANXIETY',
+    KidneyDisease: 'KIDNEY_DISEASE',
+    LiverDisease: 'LIVER_DISEASE',
+    UrogenitalDisease: 'UROGENITAL_DISEASE',
+    Cancer: 'CANCER',
+    Stroke: 'STROKE',
+    SpineJointNeuropathy: 'SPINE_JOINT_NEUROPATHY',
+    RespiratoryDisease: 'RESPIRATORY_DISEASE',
+    EyeDisease: 'EYE_DISEASE',
+    EntDisease: 'ENT_DISEASE'
+} as const;
+
+export type DiseaseInfoDTODiseasesEnum = typeof DiseaseInfoDTODiseasesEnum[keyof typeof DiseaseInfoDTODiseasesEnum];
+
 /**
  * 
  * @export
@@ -1683,17 +1759,23 @@ export interface DiseaseInfoDTO {
 export interface DrinkingDTO {
     /**
      * 
-     * @type {boolean}
-     * @memberof DrinkingDTO
-     */
-    'isDrinking'?: boolean;
-    /**
-     * 
      * @type {string}
      * @memberof DrinkingDTO
      */
-    'drinkingAmount'?: string;
+    'drinkingAmount'?: DrinkingDTODrinkingAmountEnum;
 }
+
+export const DrinkingDTODrinkingAmountEnum = {
+    None: 'NONE',
+    OnceAWeek: 'ONCE_A_WEEK',
+    TwiceAWeek: 'TWICE_A_WEEK',
+    ThreeTimesAWeek: 'THREE_TIMES_A_WEEK',
+    FourTimesAWeek: 'FOUR_TIMES_A_WEEK',
+    FiveOrMoreTimesAWeek: 'FIVE_OR_MORE_TIMES_A_WEEK'
+} as const;
+
+export type DrinkingDTODrinkingAmountEnum = typeof DrinkingDTODrinkingAmountEnum[keyof typeof DrinkingDTODrinkingAmountEnum];
+
 /**
  * 
  * @export
@@ -1710,25 +1792,6 @@ export interface ErrorRes {
 /**
  * 
  * @export
- * @interface EvacuationDTO
- */
-export interface EvacuationDTO {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof EvacuationDTO
-     */
-    'evacuationMethods'?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof EvacuationDTO
-     */
-    'etcNote'?: string;
-}
-/**
- * 
- * @export
  * @interface ExerciseDTO
  */
 export interface ExerciseDTO {
@@ -1737,7 +1800,7 @@ export interface ExerciseDTO {
      * @type {string}
      * @memberof ExerciseDTO
      */
-    'exercisePattern'?: string;
+    'exercisePattern'?: ExerciseDTOExercisePatternEnum;
     /**
      * 
      * @type {string}
@@ -1745,6 +1808,18 @@ export interface ExerciseDTO {
      */
     'exerciseNote'?: string;
 }
+
+export const ExerciseDTOExercisePatternEnum = {
+    NoExercise: 'NO_EXERCISE',
+    OnceAWeek: 'ONCE_A_WEEK',
+    TwiceAWeek: 'TWICE_A_WEEK',
+    ThreeTimesAWeek: 'THREE_TIMES_A_WEEK',
+    FourTimesAWeek: 'FOUR_TIMES_A_WEEK',
+    FiveOrMoreTimesAWeek: 'FIVE_OR_MORE_TIMES_A_WEEK'
+} as const;
+
+export type ExerciseDTOExercisePatternEnum = typeof ExerciseDTOExercisePatternEnum[keyof typeof ExerciseDTOExercisePatternEnum];
+
 /**
  * 
  * @export
@@ -1813,111 +1888,6 @@ export type GetCounselorResRoleTypeEnum = typeof GetCounselorResRoleTypeEnum[key
 /**
  * 
  * @export
- * @interface HealthInformationDTO
- */
-export interface HealthInformationDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof HealthInformationDTO
-     */
-    'version'?: string;
-    /**
-     * 
-     * @type {DiseaseInfoDTO}
-     * @memberof HealthInformationDTO
-     */
-    'diseaseInfo'?: DiseaseInfoDTO;
-    /**
-     * 
-     * @type {AllergyDTO}
-     * @memberof HealthInformationDTO
-     */
-    'allergy'?: AllergyDTO;
-    /**
-     * 
-     * @type {MedicationSideEffectDTO}
-     * @memberof HealthInformationDTO
-     */
-    'medicationSideEffect'?: MedicationSideEffectDTO;
-}
-/**
- * 
- * @export
- * @interface IndependentLifeInformationDTO
- */
-export interface IndependentLifeInformationDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof IndependentLifeInformationDTO
-     */
-    'version'?: string;
-    /**
-     * 
-     * @type {WalkingDTO}
-     * @memberof IndependentLifeInformationDTO
-     */
-    'walking'?: WalkingDTO;
-    /**
-     * 
-     * @type {EvacuationDTO}
-     * @memberof IndependentLifeInformationDTO
-     */
-    'evacuation'?: EvacuationDTO;
-    /**
-     * 
-     * @type {CommunicationDTO}
-     * @memberof IndependentLifeInformationDTO
-     */
-    'communication'?: CommunicationDTO;
-}
-/**
- * 
- * @export
- * @interface LivingInformationDTO
- */
-export interface LivingInformationDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof LivingInformationDTO
-     */
-    'version'?: string;
-    /**
-     * 
-     * @type {SmokingDTO}
-     * @memberof LivingInformationDTO
-     */
-    'smoking'?: SmokingDTO;
-    /**
-     * 
-     * @type {DrinkingDTO}
-     * @memberof LivingInformationDTO
-     */
-    'drinking'?: DrinkingDTO;
-    /**
-     * 
-     * @type {NutritionDTO}
-     * @memberof LivingInformationDTO
-     */
-    'nutrition'?: NutritionDTO;
-    /**
-     * 
-     * @type {ExerciseDTO}
-     * @memberof LivingInformationDTO
-     */
-    'exercise'?: ExerciseDTO;
-    /**
-     * 
-     * @type {MedicationManagementDTO}
-     * @memberof LivingInformationDTO
-     */
-    'medicationManagement'?: MedicationManagementDTO;
-}
-/**
- * 
- * @export
  * @interface MedicationCounselHighlightDTO
  */
 export interface MedicationCounselHighlightDTO {
@@ -1948,35 +1918,36 @@ export interface MedicationCounselHighlightDTO {
 export interface MedicationManagementDTO {
     /**
      * 
-     * @type {boolean}
-     * @memberof MedicationManagementDTO
-     */
-    'isAlone'?: boolean;
-    /**
-     * 
      * @type {string}
      * @memberof MedicationManagementDTO
      */
     'houseMateNote'?: string;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Set<string>}
      * @memberof MedicationManagementDTO
      */
-    'medicationAssistants'?: Array<string>;
+    'medicationAssistants'?: Set<MedicationManagementDTOMedicationAssistantsEnum>;
 }
+
+export const MedicationManagementDTOMedicationAssistantsEnum = {
+    Self: 'SELF',
+    Spouse: 'SPOUSE',
+    Children: 'CHILDREN',
+    Relatives: 'RELATIVES',
+    Friend: 'FRIEND',
+    Caregiver: 'CAREGIVER',
+    Other: 'OTHER'
+} as const;
+
+export type MedicationManagementDTOMedicationAssistantsEnum = typeof MedicationManagementDTOMedicationAssistantsEnum[keyof typeof MedicationManagementDTOMedicationAssistantsEnum];
+
 /**
  * 
  * @export
  * @interface MedicationSideEffectDTO
  */
 export interface MedicationSideEffectDTO {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof MedicationSideEffectDTO
-     */
-    'isSideEffect'?: boolean;
     /**
      * 
      * @type {string}
@@ -2039,7 +2010,7 @@ export interface NutritionDTO {
      * @type {string}
      * @memberof NutritionDTO
      */
-    'mealPattern'?: string;
+    'mealPattern'?: NutritionDTOMealPatternEnum;
     /**
      * 
      * @type {string}
@@ -2047,6 +2018,16 @@ export interface NutritionDTO {
      */
     'nutritionNote'?: string;
 }
+
+export const NutritionDTOMealPatternEnum = {
+    OneRegularMeal: 'ONE_REGULAR_MEAL',
+    TwoRegularMeals: 'TWO_REGULAR_MEALS',
+    ThreeRegularMeals: 'THREE_REGULAR_MEALS',
+    IrregularMeals: 'IRREGULAR_MEALS'
+} as const;
+
+export type NutritionDTOMealPatternEnum = typeof NutritionDTOMealPatternEnum[keyof typeof NutritionDTOMealPatternEnum];
+
 /**
  * 
  * @export
@@ -2083,6 +2064,25 @@ export interface PageRes {
      * @memberof PageRes
      */
     'hasPrevious'?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface ResetPasswordReq
+ */
+export interface ResetPasswordReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResetPasswordReq
+     */
+    'newPassword': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ResetPasswordReq
+     */
+    'temporary'?: boolean;
 }
 /**
  * 
@@ -2163,58 +2163,6 @@ export interface SelectAnalysedTextRes {
 /**
  * 
  * @export
- * @interface SelectCounselCardRes
- */
-export interface SelectCounselCardRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof SelectCounselCardRes
-     */
-    'counselCardId'?: string;
-    /**
-     * 
-     * @type {BaseInformationDTO}
-     * @memberof SelectCounselCardRes
-     */
-    'baseInformation'?: BaseInformationDTO;
-    /**
-     * 
-     * @type {HealthInformationDTO}
-     * @memberof SelectCounselCardRes
-     */
-    'healthInformation'?: HealthInformationDTO;
-    /**
-     * 
-     * @type {LivingInformationDTO}
-     * @memberof SelectCounselCardRes
-     */
-    'livingInformation'?: LivingInformationDTO;
-    /**
-     * 
-     * @type {IndependentLifeInformationDTO}
-     * @memberof SelectCounselCardRes
-     */
-    'independentLifeInformation'?: IndependentLifeInformationDTO;
-    /**
-     * 
-     * @type {string}
-     * @memberof SelectCounselCardRes
-     */
-    'cardRecordStatus'?: SelectCounselCardResCardRecordStatusEnum;
-}
-
-export const SelectCounselCardResCardRecordStatusEnum = {
-    Unrecorded: 'UNRECORDED',
-    Recording: 'RECORDING',
-    Recorded: 'RECORDED'
-} as const;
-
-export type SelectCounselCardResCardRecordStatusEnum = typeof SelectCounselCardResCardRecordStatusEnum[keyof typeof SelectCounselCardResCardRecordStatusEnum];
-
-/**
- * 
- * @export
  * @interface SelectCounselSessionListItem
  */
 export interface SelectCounselSessionListItem {
@@ -2267,7 +2215,7 @@ export interface SelectCounselSessionListItem {
      */
     'status'?: SelectCounselSessionListItemStatusEnum;
     /**
-     * 상담 카드 기록 상태(UNRECORDED, RECORDING, RECORDED
+     * 상담 카드 기록 상태(NOT_STARTED, IN_PROGRESS, COMPLETED
      * @type {string}
      * @memberof SelectCounselSessionListItem
      */
@@ -2289,9 +2237,9 @@ export const SelectCounselSessionListItemStatusEnum = {
 
 export type SelectCounselSessionListItemStatusEnum = typeof SelectCounselSessionListItemStatusEnum[keyof typeof SelectCounselSessionListItemStatusEnum];
 export const SelectCounselSessionListItemCardRecordStatusEnum = {
-    Unrecorded: 'UNRECORDED',
-    Recording: 'RECORDING',
-    Recorded: 'RECORDED'
+    NotStarted: 'NOT_STARTED',
+    InProgress: 'IN_PROGRESS',
+    Completed: 'COMPLETED'
 } as const;
 
 export type SelectCounselSessionListItemCardRecordStatusEnum = typeof SelectCounselSessionListItemCardRecordStatusEnum[keyof typeof SelectCounselSessionListItemCardRecordStatusEnum];
@@ -2473,10 +2421,10 @@ export interface SelectCounseleeBaseInformationByCounseleeIdRes {
     'lastCounselDate'?: string;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Set<string>}
      * @memberof SelectCounseleeBaseInformationByCounseleeIdRes
      */
-    'diseases'?: Array<string>;
+    'diseases'?: Set<SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum>;
     /**
      * 
      * @type {string}
@@ -2506,10 +2454,34 @@ export const SelectCounseleeBaseInformationByCounseleeIdResHealthInsuranceTypeEn
 } as const;
 
 export type SelectCounseleeBaseInformationByCounseleeIdResHealthInsuranceTypeEnum = typeof SelectCounseleeBaseInformationByCounseleeIdResHealthInsuranceTypeEnum[keyof typeof SelectCounseleeBaseInformationByCounseleeIdResHealthInsuranceTypeEnum];
+export const SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum = {
+    Hypertension: 'HYPERTENSION',
+    Hyperlipidemia: 'HYPERLIPIDEMIA',
+    CerebrovascularDisease: 'CEREBROVASCULAR_DISEASE',
+    HeartDisease: 'HEART_DISEASE',
+    Diabetes: 'DIABETES',
+    ThyroidDisease: 'THYROID_DISEASE',
+    GastrointestinalDisease: 'GASTROINTESTINAL_DISEASE',
+    ParkinsonsDisease: 'PARKINSONS_DISEASE',
+    Dementia: 'DEMENTIA',
+    SleepDisorder: 'SLEEP_DISORDER',
+    DepressionAnxiety: 'DEPRESSION_ANXIETY',
+    KidneyDisease: 'KIDNEY_DISEASE',
+    LiverDisease: 'LIVER_DISEASE',
+    UrogenitalDisease: 'UROGENITAL_DISEASE',
+    Cancer: 'CANCER',
+    Stroke: 'STROKE',
+    SpineJointNeuropathy: 'SPINE_JOINT_NEUROPATHY',
+    RespiratoryDisease: 'RESPIRATORY_DISEASE',
+    EyeDisease: 'EYE_DISEASE',
+    EntDisease: 'ENT_DISEASE'
+} as const;
+
+export type SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum = typeof SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum[keyof typeof SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum];
 export const SelectCounseleeBaseInformationByCounseleeIdResCardRecordStatusEnum = {
-    Unrecorded: 'UNRECORDED',
-    Recording: 'RECORDING',
-    Recorded: 'RECORDED'
+    NotStarted: 'NOT_STARTED',
+    InProgress: 'IN_PROGRESS',
+    Completed: 'COMPLETED'
 } as const;
 
 export type SelectCounseleeBaseInformationByCounseleeIdResCardRecordStatusEnum = typeof SelectCounseleeBaseInformationByCounseleeIdResCardRecordStatusEnum[keyof typeof SelectCounseleeBaseInformationByCounseleeIdResCardRecordStatusEnum];
@@ -2879,37 +2851,6 @@ export interface SelectMedicationRecordListBySessionIdRes {
 /**
  * 
  * @export
- * @interface SelectPreviousCounselCardRes
- */
-export interface SelectPreviousCounselCardRes {
-    /**
-     * 
-     * @type {BaseInformationDTO}
-     * @memberof SelectPreviousCounselCardRes
-     */
-    'baseInformation'?: BaseInformationDTO;
-    /**
-     * 
-     * @type {HealthInformationDTO}
-     * @memberof SelectPreviousCounselCardRes
-     */
-    'healthInformation'?: HealthInformationDTO;
-    /**
-     * 
-     * @type {LivingInformationDTO}
-     * @memberof SelectPreviousCounselCardRes
-     */
-    'livingInformation'?: LivingInformationDTO;
-    /**
-     * 
-     * @type {IndependentLifeInformationDTO}
-     * @memberof SelectPreviousCounselCardRes
-     */
-    'independentLifeInformation'?: IndependentLifeInformationDTO;
-}
-/**
- * 
- * @export
  * @interface SelectPreviousCounselSessionListRes
  */
 export interface SelectPreviousCounselSessionListRes {
@@ -2921,10 +2862,10 @@ export interface SelectPreviousCounselSessionListRes {
     'counselSessionId'?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SelectPreviousCounselSessionListRes
      */
-    'CounselSessionOrder'?: string;
+    'CounselSessionOrder'?: number;
     /**
      * 
      * @type {string}
@@ -2943,25 +2884,6 @@ export interface SelectPreviousCounselSessionListRes {
      * @memberof SelectPreviousCounselSessionListRes
      */
     'isShardCaringMessage'?: boolean;
-}
-/**
- * 
- * @export
- * @interface SelectPreviousItemListByInformationNameAndItemNameRes
- */
-export interface SelectPreviousItemListByInformationNameAndItemNameRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof SelectPreviousItemListByInformationNameAndItemNameRes
-     */
-    'counselDate'?: string;
-    /**
-     * 
-     * @type {object}
-     * @memberof SelectPreviousItemListByInformationNameAndItemNameRes
-     */
-    'counselCardItem'?: object;
 }
 /**
  * 
@@ -3006,6 +2928,12 @@ export interface SelectSpeakerListRes {
      * @memberof SelectSpeakerListRes
      */
     'text'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SelectSpeakerListRes
+     */
+    'isRecommended'?: boolean;
 }
 /**
  * 
@@ -3046,12 +2974,6 @@ export interface SelectSpeechToTextRes {
 export interface SmokingDTO {
     /**
      * 
-     * @type {boolean}
-     * @memberof SmokingDTO
-     */
-    'isSmoking'?: boolean;
-    /**
-     * 
      * @type {string}
      * @memberof SmokingDTO
      */
@@ -3061,8 +2983,18 @@ export interface SmokingDTO {
      * @type {string}
      * @memberof SmokingDTO
      */
-    'smokingAmount'?: string;
+    'smokingAmount'?: SmokingDTOSmokingAmountEnum;
 }
+
+export const SmokingDTOSmokingAmountEnum = {
+    None: 'NONE',
+    OnePack: 'ONE_PACK',
+    TwoPacks: 'TWO_PACKS',
+    ThreeOrMorePacks: 'THREE_OR_MORE_PACKS'
+} as const;
+
+export type SmokingDTOSmokingAmountEnum = typeof SmokingDTOSmokingAmountEnum[keyof typeof SmokingDTOSmokingAmountEnum];
+
 /**
  * 
  * @export
@@ -3079,6 +3011,25 @@ export interface SuccessRes {
 /**
  * 
  * @export
+ * @interface TimeRecordedDTOObject
+ */
+export interface TimeRecordedDTOObject {
+    /**
+     * 
+     * @type {string}
+     * @memberof TimeRecordedDTOObject
+     */
+    'counselDate'?: string;
+    /**
+     * 
+     * @type {object}
+     * @memberof TimeRecordedDTOObject
+     */
+    'data'?: object;
+}
+/**
+ * 
+ * @export
  * @interface UpdateCounselCardReq
  */
 export interface UpdateCounselCardReq {
@@ -3087,60 +3038,77 @@ export interface UpdateCounselCardReq {
      * @type {string}
      * @memberof UpdateCounselCardReq
      */
-    'counselCardId': string;
+    'counselSessionId': string;
     /**
-     * 
-     * @type {BaseInformationDTO}
-     * @memberof UpdateCounselCardReq
-     */
-    'baseInformation'?: BaseInformationDTO;
-    /**
-     * 
-     * @type {HealthInformationDTO}
-     * @memberof UpdateCounselCardReq
-     */
-    'healthInformation'?: HealthInformationDTO;
-    /**
-     * 
-     * @type {LivingInformationDTO}
-     * @memberof UpdateCounselCardReq
-     */
-    'livingInformation'?: LivingInformationDTO;
-    /**
-     * 
-     * @type {IndependentLifeInformationDTO}
-     * @memberof UpdateCounselCardReq
-     */
-    'independentLifeInformation'?: IndependentLifeInformationDTO;
-    /**
-     * 상담카드기록상태(RECORDING, RECORDED
+     * 상담카드기록상태(IN_PROGRESS, COMPLETED
      * @type {string}
      * @memberof UpdateCounselCardReq
      */
     'cardRecordStatus'?: UpdateCounselCardReqCardRecordStatusEnum;
+    /**
+     * 
+     * @type {CounselPurposeAndNoteDTO}
+     * @memberof UpdateCounselCardReq
+     */
+    'counselPurposeAndNote'?: CounselPurposeAndNoteDTO;
+    /**
+     * 
+     * @type {AllergyDTO}
+     * @memberof UpdateCounselCardReq
+     */
+    'allergy'?: AllergyDTO;
+    /**
+     * 
+     * @type {DiseaseInfoDTO}
+     * @memberof UpdateCounselCardReq
+     */
+    'diseaseInfo'?: DiseaseInfoDTO;
+    /**
+     * 
+     * @type {MedicationSideEffectDTO}
+     * @memberof UpdateCounselCardReq
+     */
+    'medicationSideEffect'?: MedicationSideEffectDTO;
+    /**
+     * 
+     * @type {DrinkingDTO}
+     * @memberof UpdateCounselCardReq
+     */
+    'drinking'?: DrinkingDTO;
+    /**
+     * 
+     * @type {ExerciseDTO}
+     * @memberof UpdateCounselCardReq
+     */
+    'exercise'?: ExerciseDTO;
+    /**
+     * 
+     * @type {MedicationManagementDTO}
+     * @memberof UpdateCounselCardReq
+     */
+    'medicationManagement'?: MedicationManagementDTO;
+    /**
+     * 
+     * @type {NutritionDTO}
+     * @memberof UpdateCounselCardReq
+     */
+    'nutrition'?: NutritionDTO;
+    /**
+     * 
+     * @type {SmokingDTO}
+     * @memberof UpdateCounselCardReq
+     */
+    'smoking'?: SmokingDTO;
 }
 
 export const UpdateCounselCardReqCardRecordStatusEnum = {
-    Unrecorded: 'UNRECORDED',
-    Recording: 'RECORDING',
-    Recorded: 'RECORDED'
+    NotStarted: 'NOT_STARTED',
+    InProgress: 'IN_PROGRESS',
+    Completed: 'COMPLETED'
 } as const;
 
 export type UpdateCounselCardReqCardRecordStatusEnum = typeof UpdateCounselCardReqCardRecordStatusEnum[keyof typeof UpdateCounselCardReqCardRecordStatusEnum];
 
-/**
- * 
- * @export
- * @interface UpdateCounselCardRes
- */
-export interface UpdateCounselCardRes {
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateCounselCardRes
-     */
-    'updateCounselCardId'?: string;
-}
 /**
  * 
  * @export
@@ -3304,6 +3272,12 @@ export interface UpdateCounselorReq {
      * @type {string}
      * @memberof UpdateCounselorReq
      */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounselorReq
+     */
     'roleType'?: UpdateCounselorReqRoleTypeEnum;
 }
 
@@ -3392,6 +3366,29 @@ export interface UpdateMedicationCounselRes {
 /**
  * 
  * @export
+ * @interface UpdateRoleReq
+ */
+export interface UpdateRoleReq {
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateRoleReq
+     */
+    'roleType': UpdateRoleReqRoleTypeEnum;
+}
+
+export const UpdateRoleReqRoleTypeEnum = {
+    Admin: 'ROLE_ADMIN',
+    User: 'ROLE_USER',
+    Assistant: 'ROLE_ASSISTANT',
+    None: 'ROLE_NONE'
+} as const;
+
+export type UpdateRoleReqRoleTypeEnum = typeof UpdateRoleReqRoleTypeEnum[keyof typeof UpdateRoleReqRoleTypeEnum];
+
+/**
+ * 
+ * @export
  * @interface UpdateStatusInCounselSessionReq
  */
 export interface UpdateStatusInCounselSessionReq {
@@ -3462,31 +3459,6 @@ export interface ValidationErrorRes {
      * @memberof ValidationErrorRes
      */
     'errors'?: Array<ValidationError>;
-}
-/**
- * 
- * @export
- * @interface WalkingDTO
- */
-export interface WalkingDTO {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof WalkingDTO
-     */
-    'walkingMethods'?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof WalkingDTO
-     */
-    'walkingEquipments'?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof WalkingDTO
-     */
-    'etcNote'?: string;
 }
 /**
  * 
@@ -5033,6 +5005,44 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary 이전 상담 카드 조회
+         * @param {string} counseleeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectLastRecordedCounselCard: async (counseleeId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counseleeId' is not null or undefined
+            assertParamExists('selectLastRecordedCounselCard', 'counseleeId', counseleeId)
+            const localVarPath = `/v1/counsel/card/{counseleeId}/previous`
+                .replace(`{${"counseleeId"}}`, encodeURIComponent(String(counseleeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary 복약 상담 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -5150,44 +5160,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @summary 이전 상담 카드 조회
-         * @param {string} counselSessionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        selectPreviousCounselCard: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'counselSessionId' is not null or undefined
-            assertParamExists('selectPreviousCounselCard', 'counselSessionId', counselSessionId)
-            const localVarPath = `/v1/counsel/card/{counselSessionId}/previous`
-                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary 이전 상담 내역 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -5228,18 +5200,15 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * 
          * @summary 이전 상담 카드 item 목록 조회
          * @param {string} counselSessionId 
-         * @param {string} informationName 
-         * @param {string} itemName 
+         * @param {SelectPreviousItemListByInformationNameAndItemNameTypeEnum} type 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectPreviousItemListByInformationNameAndItemName: async (counselSessionId: string, informationName: string, itemName: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        selectPreviousItemListByInformationNameAndItemName: async (counselSessionId: string, type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'counselSessionId' is not null or undefined
             assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'counselSessionId', counselSessionId)
-            // verify required parameter 'informationName' is not null or undefined
-            assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'informationName', informationName)
-            // verify required parameter 'itemName' is not null or undefined
-            assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'itemName', itemName)
+            // verify required parameter 'type' is not null or undefined
+            assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'type', type)
             const localVarPath = `/v1/counsel/card/{counselSessionId}/preious/item/list`
                 .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -5257,12 +5226,8 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-            if (informationName !== undefined) {
-                localVarQueryParameter['informationName'] = informationName;
-            }
-
-            if (itemName !== undefined) {
-                localVarQueryParameter['itemName'] = itemName;
+            if (type !== undefined) {
+                localVarQueryParameter['type'] = type;
             }
 
 
@@ -5599,7 +5564,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addCounselCard(addCounselCardReq: AddCounselCardReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResAddCounselCardRes>> {
+        async addCounselCard(addCounselCardReq: AddCounselCardReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCounselCardIdRes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addCounselCard(addCounselCardReq, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.addCounselCard']?.[localVarOperationServerIndex]?.url;
@@ -5890,7 +5855,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounselCardRes>> {
+        async selectCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCounselCardRes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselCard(counselSessionId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.selectCounselCard']?.[localVarOperationServerIndex]?.url;
@@ -5903,7 +5868,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectCounselCard_1(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounselCardRes>> {
+        async selectCounselCard_1(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCounselCardRes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselCard_1(counselSessionId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.selectCounselCard_1']?.[localVarOperationServerIndex]?.url;
@@ -6009,6 +5974,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary 이전 상담 카드 조회
+         * @param {string} counseleeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectLastRecordedCounselCard(counseleeId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCounselCardRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectLastRecordedCounselCard(counseleeId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.selectLastRecordedCounselCard']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary 복약 상담 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -6048,19 +6026,6 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary 이전 상담 카드 조회
-         * @param {string} counselSessionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async selectPreviousCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectPreviousCounselCardRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.selectPreviousCounselCard(counselSessionId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.selectPreviousCounselCard']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
          * @summary 이전 상담 내역 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -6076,13 +6041,12 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * 
          * @summary 이전 상담 카드 item 목록 조회
          * @param {string} counselSessionId 
-         * @param {string} informationName 
-         * @param {string} itemName 
+         * @param {SelectPreviousItemListByInformationNameAndItemNameTypeEnum} type 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, informationName: string, itemName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListSelectPreviousItemListByInformationNameAndItemNameRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.selectPreviousItemListByInformationNameAndItemName(counselSessionId, informationName, itemName, options);
+        async selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListTimeRecordedDTOObject>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectPreviousItemListByInformationNameAndItemName(counselSessionId, type, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.selectPreviousItemListByInformationNameAndItemName']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -6107,7 +6071,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateCounselCard(updateCounselCardReq: UpdateCounselCardReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResUpdateCounselCardRes>> {
+        async updateCounselCard(updateCounselCardReq: UpdateCounselCardReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCounselCardIdRes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateCounselCard(updateCounselCardReq, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.updateCounselCard']?.[localVarOperationServerIndex]?.url;
@@ -6217,7 +6181,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addCounselCard(addCounselCardReq: AddCounselCardReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResAddCounselCardRes> {
+        addCounselCard(addCounselCardReq: AddCounselCardReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselCardIdRes> {
             return localVarFp.addCounselCard(addCounselCardReq, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6442,7 +6406,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounselCardRes> {
+        selectCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselCardRes> {
             return localVarFp.selectCounselCard(counselSessionId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6452,7 +6416,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounselCard_1(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounselCardRes> {
+        selectCounselCard_1(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselCardRes> {
             return localVarFp.selectCounselCard_1(counselSessionId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6534,6 +6498,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary 이전 상담 카드 조회
+         * @param {string} counseleeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectLastRecordedCounselCard(counseleeId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselCardRes> {
+            return localVarFp.selectLastRecordedCounselCard(counseleeId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary 복약 상담 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -6564,16 +6538,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @summary 이전 상담 카드 조회
-         * @param {string} counselSessionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        selectPreviousCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectPreviousCounselCardRes> {
-            return localVarFp.selectPreviousCounselCard(counselSessionId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary 이전 상담 내역 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -6586,13 +6550,12 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * 
          * @summary 이전 상담 카드 item 목록 조회
          * @param {string} counselSessionId 
-         * @param {string} informationName 
-         * @param {string} itemName 
+         * @param {SelectPreviousItemListByInformationNameAndItemNameTypeEnum} type 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, informationName: string, itemName: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListSelectPreviousItemListByInformationNameAndItemNameRes> {
-            return localVarFp.selectPreviousItemListByInformationNameAndItemName(counselSessionId, informationName, itemName, options).then((request) => request(axios, basePath));
+        selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListTimeRecordedDTOObject> {
+            return localVarFp.selectPreviousItemListByInformationNameAndItemName(counselSessionId, type, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -6611,7 +6574,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateCounselCard(updateCounselCardReq: UpdateCounselCardReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResUpdateCounselCardRes> {
+        updateCounselCard(updateCounselCardReq: UpdateCounselCardReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselCardIdRes> {
             return localVarFp.updateCounselCard(updateCounselCardReq, options).then((request) => request(axios, basePath));
         },
         /**
@@ -7086,6 +7049,18 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
+     * @summary 이전 상담 카드 조회
+     * @param {string} counseleeId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public selectLastRecordedCounselCard(counseleeId: string, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).selectLastRecordedCounselCard(counseleeId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary 복약 상담 조회
      * @param {string} counselSessionId 
      * @param {*} [options] Override http request option.
@@ -7122,18 +7097,6 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
-     * @summary 이전 상담 카드 조회
-     * @param {string} counselSessionId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public selectPreviousCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).selectPreviousCounselCard(counselSessionId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @summary 이전 상담 내역 조회
      * @param {string} counselSessionId 
      * @param {*} [options] Override http request option.
@@ -7148,14 +7111,13 @@ export class DefaultApi extends BaseAPI {
      * 
      * @summary 이전 상담 카드 item 목록 조회
      * @param {string} counselSessionId 
-     * @param {string} informationName 
-     * @param {string} itemName 
+     * @param {SelectPreviousItemListByInformationNameAndItemNameTypeEnum} type 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, informationName: string, itemName: string, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).selectPreviousItemListByInformationNameAndItemName(counselSessionId, informationName, itemName, options).then((request) => request(this.axios, this.basePath));
+    public selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).selectPreviousItemListByInformationNameAndItemName(counselSessionId, type, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -8602,14 +8564,15 @@ export const CounselCardControllerApiAxiosParamCreator = function (configuration
         /**
          * 
          * @summary 상담 카드 삭제
-         * @param {DeleteCounselCardReq} deleteCounselCardReq 
+         * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCounselCard: async (deleteCounselCardReq: DeleteCounselCardReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'deleteCounselCardReq' is not null or undefined
-            assertParamExists('deleteCounselCard', 'deleteCounselCardReq', deleteCounselCardReq)
-            const localVarPath = `/v1/counsel/card`;
+        deleteCounselCard: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselSessionId' is not null or undefined
+            assertParamExists('deleteCounselCard', 'counselSessionId', counselSessionId)
+            const localVarPath = `/v1/counsel/card/{counselSessionId}`
+                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -8627,12 +8590,9 @@ export const CounselCardControllerApiAxiosParamCreator = function (configuration
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(deleteCounselCardReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8680,15 +8640,15 @@ export const CounselCardControllerApiAxiosParamCreator = function (configuration
         /**
          * 
          * @summary 이전 상담 카드 조회
-         * @param {string} counselSessionId 
+         * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectPreviousCounselCard: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'counselSessionId' is not null or undefined
-            assertParamExists('selectPreviousCounselCard', 'counselSessionId', counselSessionId)
-            const localVarPath = `/v1/counsel/card/{counselSessionId}/previous`
-                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+        selectLastRecordedCounselCard: async (counseleeId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counseleeId' is not null or undefined
+            assertParamExists('selectLastRecordedCounselCard', 'counseleeId', counseleeId)
+            const localVarPath = `/v1/counsel/card/{counseleeId}/previous`
+                .replace(`{${"counseleeId"}}`, encodeURIComponent(String(counseleeId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -8719,18 +8679,15 @@ export const CounselCardControllerApiAxiosParamCreator = function (configuration
          * 
          * @summary 이전 상담 카드 item 목록 조회
          * @param {string} counselSessionId 
-         * @param {string} informationName 
-         * @param {string} itemName 
+         * @param {SelectPreviousItemListByInformationNameAndItemNameTypeEnum} type 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectPreviousItemListByInformationNameAndItemName: async (counselSessionId: string, informationName: string, itemName: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        selectPreviousItemListByInformationNameAndItemName: async (counselSessionId: string, type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'counselSessionId' is not null or undefined
             assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'counselSessionId', counselSessionId)
-            // verify required parameter 'informationName' is not null or undefined
-            assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'informationName', informationName)
-            // verify required parameter 'itemName' is not null or undefined
-            assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'itemName', itemName)
+            // verify required parameter 'type' is not null or undefined
+            assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'type', type)
             const localVarPath = `/v1/counsel/card/{counselSessionId}/preious/item/list`
                 .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -8748,12 +8705,8 @@ export const CounselCardControllerApiAxiosParamCreator = function (configuration
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-            if (informationName !== undefined) {
-                localVarQueryParameter['informationName'] = informationName;
-            }
-
-            if (itemName !== undefined) {
-                localVarQueryParameter['itemName'] = itemName;
+            if (type !== undefined) {
+                localVarQueryParameter['type'] = type;
             }
 
 
@@ -8824,7 +8777,7 @@ export const CounselCardControllerApiFp = function(configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addCounselCard(addCounselCardReq: AddCounselCardReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResAddCounselCardRes>> {
+        async addCounselCard(addCounselCardReq: AddCounselCardReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCounselCardIdRes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addCounselCard(addCounselCardReq, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounselCardControllerApi.addCounselCard']?.[localVarOperationServerIndex]?.url;
@@ -8833,12 +8786,12 @@ export const CounselCardControllerApiFp = function(configuration?: Configuration
         /**
          * 
          * @summary 상담 카드 삭제
-         * @param {DeleteCounselCardReq} deleteCounselCardReq 
+         * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteCounselCard(deleteCounselCardReq: DeleteCounselCardReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResDeleteCounselCardRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCounselCard(deleteCounselCardReq, options);
+        async deleteCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCounselCardIdRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCounselCard(counselSessionId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounselCardControllerApi.deleteCounselCard']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -8850,7 +8803,7 @@ export const CounselCardControllerApiFp = function(configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounselCardRes>> {
+        async selectCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCounselCardRes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselCard(counselSessionId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounselCardControllerApi.selectCounselCard']?.[localVarOperationServerIndex]?.url;
@@ -8859,27 +8812,26 @@ export const CounselCardControllerApiFp = function(configuration?: Configuration
         /**
          * 
          * @summary 이전 상담 카드 조회
-         * @param {string} counselSessionId 
+         * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectPreviousCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectPreviousCounselCardRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.selectPreviousCounselCard(counselSessionId, options);
+        async selectLastRecordedCounselCard(counseleeId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCounselCardRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectLastRecordedCounselCard(counseleeId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CounselCardControllerApi.selectPreviousCounselCard']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['CounselCardControllerApi.selectLastRecordedCounselCard']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary 이전 상담 카드 item 목록 조회
          * @param {string} counselSessionId 
-         * @param {string} informationName 
-         * @param {string} itemName 
+         * @param {SelectPreviousItemListByInformationNameAndItemNameTypeEnum} type 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, informationName: string, itemName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListSelectPreviousItemListByInformationNameAndItemNameRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.selectPreviousItemListByInformationNameAndItemName(counselSessionId, informationName, itemName, options);
+        async selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListTimeRecordedDTOObject>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectPreviousItemListByInformationNameAndItemName(counselSessionId, type, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounselCardControllerApi.selectPreviousItemListByInformationNameAndItemName']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -8891,7 +8843,7 @@ export const CounselCardControllerApiFp = function(configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateCounselCard(updateCounselCardReq: UpdateCounselCardReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResUpdateCounselCardRes>> {
+        async updateCounselCard(updateCounselCardReq: UpdateCounselCardReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResCounselCardIdRes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateCounselCard(updateCounselCardReq, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounselCardControllerApi.updateCounselCard']?.[localVarOperationServerIndex]?.url;
@@ -8914,18 +8866,18 @@ export const CounselCardControllerApiFactory = function (configuration?: Configu
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addCounselCard(addCounselCardReq: AddCounselCardReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResAddCounselCardRes> {
+        addCounselCard(addCounselCardReq: AddCounselCardReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselCardIdRes> {
             return localVarFp.addCounselCard(addCounselCardReq, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary 상담 카드 삭제
-         * @param {DeleteCounselCardReq} deleteCounselCardReq 
+         * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteCounselCard(deleteCounselCardReq: DeleteCounselCardReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResDeleteCounselCardRes> {
-            return localVarFp.deleteCounselCard(deleteCounselCardReq, options).then((request) => request(axios, basePath));
+        deleteCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselCardIdRes> {
+            return localVarFp.deleteCounselCard(counselSessionId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -8934,30 +8886,29 @@ export const CounselCardControllerApiFactory = function (configuration?: Configu
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounselCardRes> {
+        selectCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselCardRes> {
             return localVarFp.selectCounselCard(counselSessionId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary 이전 상담 카드 조회
-         * @param {string} counselSessionId 
+         * @param {string} counseleeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectPreviousCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectPreviousCounselCardRes> {
-            return localVarFp.selectPreviousCounselCard(counselSessionId, options).then((request) => request(axios, basePath));
+        selectLastRecordedCounselCard(counseleeId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselCardRes> {
+            return localVarFp.selectLastRecordedCounselCard(counseleeId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary 이전 상담 카드 item 목록 조회
          * @param {string} counselSessionId 
-         * @param {string} informationName 
-         * @param {string} itemName 
+         * @param {SelectPreviousItemListByInformationNameAndItemNameTypeEnum} type 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, informationName: string, itemName: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListSelectPreviousItemListByInformationNameAndItemNameRes> {
-            return localVarFp.selectPreviousItemListByInformationNameAndItemName(counselSessionId, informationName, itemName, options).then((request) => request(axios, basePath));
+        selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListTimeRecordedDTOObject> {
+            return localVarFp.selectPreviousItemListByInformationNameAndItemName(counselSessionId, type, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -8966,7 +8917,7 @@ export const CounselCardControllerApiFactory = function (configuration?: Configu
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateCounselCard(updateCounselCardReq: UpdateCounselCardReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResUpdateCounselCardRes> {
+        updateCounselCard(updateCounselCardReq: UpdateCounselCardReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResCounselCardIdRes> {
             return localVarFp.updateCounselCard(updateCounselCardReq, options).then((request) => request(axios, basePath));
         },
     };
@@ -8994,13 +8945,13 @@ export class CounselCardControllerApi extends BaseAPI {
     /**
      * 
      * @summary 상담 카드 삭제
-     * @param {DeleteCounselCardReq} deleteCounselCardReq 
+     * @param {string} counselSessionId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CounselCardControllerApi
      */
-    public deleteCounselCard(deleteCounselCardReq: DeleteCounselCardReq, options?: RawAxiosRequestConfig) {
-        return CounselCardControllerApiFp(this.configuration).deleteCounselCard(deleteCounselCardReq, options).then((request) => request(this.axios, this.basePath));
+    public deleteCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig) {
+        return CounselCardControllerApiFp(this.configuration).deleteCounselCard(counselSessionId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9018,27 +8969,26 @@ export class CounselCardControllerApi extends BaseAPI {
     /**
      * 
      * @summary 이전 상담 카드 조회
-     * @param {string} counselSessionId 
+     * @param {string} counseleeId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CounselCardControllerApi
      */
-    public selectPreviousCounselCard(counselSessionId: string, options?: RawAxiosRequestConfig) {
-        return CounselCardControllerApiFp(this.configuration).selectPreviousCounselCard(counselSessionId, options).then((request) => request(this.axios, this.basePath));
+    public selectLastRecordedCounselCard(counseleeId: string, options?: RawAxiosRequestConfig) {
+        return CounselCardControllerApiFp(this.configuration).selectLastRecordedCounselCard(counseleeId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary 이전 상담 카드 item 목록 조회
      * @param {string} counselSessionId 
-     * @param {string} informationName 
-     * @param {string} itemName 
+     * @param {SelectPreviousItemListByInformationNameAndItemNameTypeEnum} type 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CounselCardControllerApi
      */
-    public selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, informationName: string, itemName: string, options?: RawAxiosRequestConfig) {
-        return CounselCardControllerApiFp(this.configuration).selectPreviousItemListByInformationNameAndItemName(counselSessionId, informationName, itemName, options).then((request) => request(this.axios, this.basePath));
+    public selectPreviousItemListByInformationNameAndItemName(counselSessionId: string, type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum, options?: RawAxiosRequestConfig) {
+        return CounselCardControllerApiFp(this.configuration).selectPreviousItemListByInformationNameAndItemName(counselSessionId, type, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9054,6 +9004,21 @@ export class CounselCardControllerApi extends BaseAPI {
     }
 }
 
+/**
+ * @export
+ */
+export const SelectPreviousItemListByInformationNameAndItemNameTypeEnum = {
+    Smoking: 'SMOKING',
+    Drinking: 'DRINKING',
+    Nutrition: 'NUTRITION',
+    Exercise: 'EXERCISE',
+    MedicationManagement: 'MEDICATION_MANAGEMENT',
+    DiseaseInfo: 'DISEASE_INFO',
+    Allergy: 'ALLERGY',
+    MedicationSideEffect: 'MEDICATION_SIDE_EFFECT',
+    CounselPurposeAndNote: 'COUNSEL_PURPOSE_AND_NOTE'
+} as const;
+export type SelectPreviousItemListByInformationNameAndItemNameTypeEnum = typeof SelectPreviousItemListByInformationNameAndItemNameTypeEnum[keyof typeof SelectPreviousItemListByInformationNameAndItemNameTypeEnum];
 
 
 /**
@@ -11123,7 +11088,7 @@ export class CounseleeControllerApi extends BaseAPI {
 export const CounselorControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 상담사를 삭제한다.
+         * 상담사를 삭제한다. Keycloak에서도 해당 사용자를 삭제한다.
          * @summary 상담사 삭제
          * @param {string} counselorId 
          * @param {*} [options] Override http request option.
@@ -11195,6 +11160,50 @@ export const CounselorControllerApiAxiosParamCreator = function (configuration?:
             };
         },
         /**
+         * 상담사 목록을 페이지네이션 형태로 조회한다.
+         * @summary 상담사 목록 페이지네이션 조회
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCounselorsByPage: async (page?: number, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/counselor/page`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 내 정보를 조회한다.
          * @summary 내 정보 조회
          * @param {*} [options] Override http request option.
@@ -11222,6 +11231,50 @@ export const CounselorControllerApiAxiosParamCreator = function (configuration?:
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 상담사의 비밀번호를 초기화한다. Keycloak에서 해당 사용자의 비밀번호를 초기화한다.
+         * @summary 상담사 비밀번호 초기화
+         * @param {string} counselorId 
+         * @param {ResetPasswordReq} resetPasswordReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        resetPassword: async (counselorId: string, resetPasswordReq: ResetPasswordReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselorId' is not null or undefined
+            assertParamExists('resetPassword', 'counselorId', counselorId)
+            // verify required parameter 'resetPasswordReq' is not null or undefined
+            assertParamExists('resetPassword', 'resetPasswordReq', resetPasswordReq)
+            const localVarPath = `/v1/counselor/{counselorId}/reset-password`
+                .replace(`{${"counselorId"}}`, encodeURIComponent(String(counselorId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(resetPasswordReq, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11272,6 +11325,50 @@ export const CounselorControllerApiAxiosParamCreator = function (configuration?:
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 상담사의 권한을 변경한다. DB와 Keycloak 모두에서 권한을 업데이트한다.
+         * @summary 상담사 권한 변경
+         * @param {string} counselorId 
+         * @param {UpdateRoleReq} updateRoleReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateRole: async (counselorId: string, updateRoleReq: UpdateRoleReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselorId' is not null or undefined
+            assertParamExists('updateRole', 'counselorId', counselorId)
+            // verify required parameter 'updateRoleReq' is not null or undefined
+            assertParamExists('updateRole', 'updateRoleReq', updateRoleReq)
+            const localVarPath = `/v1/counselor/{counselorId}/role`
+                .replace(`{${"counselorId"}}`, encodeURIComponent(String(counselorId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateRoleReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -11283,7 +11380,7 @@ export const CounselorControllerApiFp = function(configuration?: Configuration) 
     const localVarAxiosParamCreator = CounselorControllerApiAxiosParamCreator(configuration)
     return {
         /**
-         * 상담사를 삭제한다.
+         * 상담사를 삭제한다. Keycloak에서도 해당 사용자를 삭제한다.
          * @summary 상담사 삭제
          * @param {string} counselorId 
          * @param {*} [options] Override http request option.
@@ -11308,6 +11405,20 @@ export const CounselorControllerApiFp = function(configuration?: Configuration) 
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * 상담사 목록을 페이지네이션 형태로 조회한다.
+         * @summary 상담사 목록 페이지네이션 조회
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCounselorsByPage(page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CounselorPageRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCounselorsByPage(page, size, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.getCounselorsByPage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * 내 정보를 조회한다.
          * @summary 내 정보 조회
          * @param {*} [options] Override http request option.
@@ -11317,6 +11428,20 @@ export const CounselorControllerApiFp = function(configuration?: Configuration) 
             const localVarAxiosArgs = await localVarAxiosParamCreator.getMyInfo(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.getMyInfo']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 상담사의 비밀번호를 초기화한다. Keycloak에서 해당 사용자의 비밀번호를 초기화한다.
+         * @summary 상담사 비밀번호 초기화
+         * @param {string} counselorId 
+         * @param {ResetPasswordReq} resetPasswordReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async resetPassword(counselorId: string, resetPasswordReq: ResetPasswordReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.resetPassword(counselorId, resetPasswordReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.resetPassword']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -11333,6 +11458,20 @@ export const CounselorControllerApiFp = function(configuration?: Configuration) 
             const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.updateCounselor']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 상담사의 권한을 변경한다. DB와 Keycloak 모두에서 권한을 업데이트한다.
+         * @summary 상담사 권한 변경
+         * @param {string} counselorId 
+         * @param {UpdateRoleReq} updateRoleReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateRole(counselorId: string, updateRoleReq: UpdateRoleReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateCounselorRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateRole(counselorId, updateRoleReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.updateRole']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -11344,7 +11483,7 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
     const localVarFp = CounselorControllerApiFp(configuration)
     return {
         /**
-         * 상담사를 삭제한다.
+         * 상담사를 삭제한다. Keycloak에서도 해당 사용자를 삭제한다.
          * @summary 상담사 삭제
          * @param {string} counselorId 
          * @param {*} [options] Override http request option.
@@ -11363,6 +11502,17 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
             return localVarFp.getCounselorNames(options).then((request) => request(axios, basePath));
         },
         /**
+         * 상담사 목록을 페이지네이션 형태로 조회한다.
+         * @summary 상담사 목록 페이지네이션 조회
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCounselorsByPage(page?: number, size?: number, options?: RawAxiosRequestConfig): AxiosPromise<CounselorPageRes> {
+            return localVarFp.getCounselorsByPage(page, size, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 내 정보를 조회한다.
          * @summary 내 정보 조회
          * @param {*} [options] Override http request option.
@@ -11370,6 +11520,17 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
          */
         getMyInfo(options?: RawAxiosRequestConfig): AxiosPromise<GetCounselorRes> {
             return localVarFp.getMyInfo(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 상담사의 비밀번호를 초기화한다. Keycloak에서 해당 사용자의 비밀번호를 초기화한다.
+         * @summary 상담사 비밀번호 초기화
+         * @param {string} counselorId 
+         * @param {ResetPasswordReq} resetPasswordReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        resetPassword(counselorId: string, resetPasswordReq: ResetPasswordReq, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.resetPassword(counselorId, resetPasswordReq, options).then((request) => request(axios, basePath));
         },
         /**
          * 상담사 정보를 업데이트한다.
@@ -11382,6 +11543,17 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
         updateCounselor(counselorId: string, updateCounselorReq: UpdateCounselorReq, options?: RawAxiosRequestConfig): AxiosPromise<UpdateCounselorRes> {
             return localVarFp.updateCounselor(counselorId, updateCounselorReq, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 상담사의 권한을 변경한다. DB와 Keycloak 모두에서 권한을 업데이트한다.
+         * @summary 상담사 권한 변경
+         * @param {string} counselorId 
+         * @param {UpdateRoleReq} updateRoleReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateRole(counselorId: string, updateRoleReq: UpdateRoleReq, options?: RawAxiosRequestConfig): AxiosPromise<UpdateCounselorRes> {
+            return localVarFp.updateRole(counselorId, updateRoleReq, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -11393,7 +11565,7 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
  */
 export class CounselorControllerApi extends BaseAPI {
     /**
-     * 상담사를 삭제한다.
+     * 상담사를 삭제한다. Keycloak에서도 해당 사용자를 삭제한다.
      * @summary 상담사 삭제
      * @param {string} counselorId 
      * @param {*} [options] Override http request option.
@@ -11416,6 +11588,19 @@ export class CounselorControllerApi extends BaseAPI {
     }
 
     /**
+     * 상담사 목록을 페이지네이션 형태로 조회한다.
+     * @summary 상담사 목록 페이지네이션 조회
+     * @param {number} [page] 
+     * @param {number} [size] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselorControllerApi
+     */
+    public getCounselorsByPage(page?: number, size?: number, options?: RawAxiosRequestConfig) {
+        return CounselorControllerApiFp(this.configuration).getCounselorsByPage(page, size, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * 내 정보를 조회한다.
      * @summary 내 정보 조회
      * @param {*} [options] Override http request option.
@@ -11424,6 +11609,19 @@ export class CounselorControllerApi extends BaseAPI {
      */
     public getMyInfo(options?: RawAxiosRequestConfig) {
         return CounselorControllerApiFp(this.configuration).getMyInfo(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 상담사의 비밀번호를 초기화한다. Keycloak에서 해당 사용자의 비밀번호를 초기화한다.
+     * @summary 상담사 비밀번호 초기화
+     * @param {string} counselorId 
+     * @param {ResetPasswordReq} resetPasswordReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselorControllerApi
+     */
+    public resetPassword(counselorId: string, resetPasswordReq: ResetPasswordReq, options?: RawAxiosRequestConfig) {
+        return CounselorControllerApiFp(this.configuration).resetPassword(counselorId, resetPasswordReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11437,6 +11635,19 @@ export class CounselorControllerApi extends BaseAPI {
      */
     public updateCounselor(counselorId: string, updateCounselorReq: UpdateCounselorReq, options?: RawAxiosRequestConfig) {
         return CounselorControllerApiFp(this.configuration).updateCounselor(counselorId, updateCounselorReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 상담사의 권한을 변경한다. DB와 Keycloak 모두에서 권한을 업데이트한다.
+     * @summary 상담사 권한 변경
+     * @param {string} counselorId 
+     * @param {UpdateRoleReq} updateRoleReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselorControllerApi
+     */
+    public updateRole(counselorId: string, updateRoleReq: UpdateRoleReq, options?: RawAxiosRequestConfig) {
+        return CounselorControllerApiFp(this.configuration).updateRole(counselorId, updateRoleReq, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

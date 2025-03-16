@@ -1,5 +1,5 @@
 import { SelectMedicationRecordHistRes } from '@/api/api';
-import { WasteMedicationListDTO } from '@/types/WasteMedicationDTO';
+import { WasteMedicationListDTO } from '@/pages/Consult/types/WasteMedicationDTO';
 import { create } from 'zustand';
 
 export const useWasteMedicationListStore = create<{

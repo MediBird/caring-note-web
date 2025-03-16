@@ -1,8 +1,8 @@
-import { create } from 'zustand';
 import {
   CounselRecordHighlights,
   MedicineConsultDTO,
-} from '@/types/MedicineConsultDTO';
+} from '@/pages/Consult/types/MedicineConsultDTO';
+import { create } from 'zustand';
 
 interface MedicineConsultState {
   medicineConsult: MedicineConsultDTO;
