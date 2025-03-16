@@ -42,7 +42,6 @@ export const createColumns = ({
           options={USAGE_STATUS_CODE_OPTIONS}
           placeholder="사용 상태를 선택하세요"
           onValueChange={(value) => {
-            console.log(value);
             handleUpdateCell(
               row.original.id as string,
               'usageStatusCode',

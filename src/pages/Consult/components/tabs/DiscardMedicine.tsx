@@ -1,7 +1,7 @@
 import {
   WasteMedicationDisposalDrugRemainActionTypeEnum,
   WasteMedicationDisposalReqUnusedReasonTypesEnum,
-} from '@/api/api';
+} from '@/api';
 import Badge from '@/components/common/Badge';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import WasteMedicationTable from '@/pages/Consult/components/table/WasteMedicationTable';

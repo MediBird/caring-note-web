@@ -1,9 +1,9 @@
 import {
-    CounselorControllerApi,
-    CounselorPageRes,
-    ResetPasswordReq,
-    UpdateCounselorReq
-} from '@/api/api';
+  CounselorControllerApi,
+  type CounselorPageRes,
+  type ResetPasswordReq,
+  type UpdateCounselorReq,
+} from '@/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CounselorFetchParams } from '../store/useCounselorStore';
 

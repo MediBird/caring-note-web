@@ -1,4 +1,4 @@
-import { SelectMedicationRecordHistRes } from '@/api/api';
+import { SelectMedicationRecordHistRes } from '@/api';
 import { WasteMedicationListDTO } from '@/pages/Consult/types/WasteMedicationDTO';
 import { create } from 'zustand';
 

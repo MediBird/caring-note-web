@@ -1,4 +1,4 @@
-import { CounselorListItem, CounselorListItemRoleTypeEnum } from '@/api/api';
+import { CounselorListItem, CounselorListItemRoleTypeEnum } from '@/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Textarea } from '../../../../components/ui/textarea';
 
 interface BasicInfoTabProps {
   editedCounselor: CounselorListItem;
@@ -102,10 +103,10 @@ export default function BasicInfoTab({
                 관리자
               </SelectItem>
               <SelectItem value={CounselorListItemRoleTypeEnum.User}>
-                사용자
+                상담 약사
               </SelectItem>
               <SelectItem value={CounselorListItemRoleTypeEnum.Assistant}>
-                보조 상담사
+                기초 상담사
               </SelectItem>
               <SelectItem value={CounselorListItemRoleTypeEnum.None}>
                 권한 없음
@@ -119,7 +120,7 @@ export default function BasicInfoTab({
         <Label htmlFor="description" className="mb-2 block font-medium">
           비고
         </Label>
-        <textarea
+        <Textarea
           id="description"
           className="min-h-[100px] w-full rounded border p-2"
           value={editedCounselor.description || ''}

@@ -2,7 +2,7 @@ import {
   AddAndUpdateMedicationRecordHistReqDivisionCodeEnum,
   AddAndUpdateMedicationRecordHistReqUsageStatusCodeEnum,
   MedicationRecordHistControllerApi,
-} from '@/api/api';
+} from '@/api';
 import { MedicationRecordListSaveDTO } from '@/pages/Consult/types/MedicationRecordListDTO';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { CounselorControllerApiFactory, GetCounselorRes } from '@/api/api';
+import { CounselorControllerApiFactory, GetCounselorRes } from '@/api';
 import { useState } from 'react';
 
 import { useKeycloak } from '@react-keycloak/web';

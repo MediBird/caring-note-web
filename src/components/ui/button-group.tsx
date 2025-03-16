@@ -8,9 +8,10 @@ export interface ButtonGroupOption {
 
 interface ButtonGroupProps {
   options: ButtonGroupOption[];
-  value: string;
+  value: string | string[];
   onChange: (value: string) => void;
   className?: string;
+  multiple?: boolean;
 }
 
 export function ButtonGroup({
@@ -18,14 +19,21 @@ export function ButtonGroup({
   value,
   onChange,
   className,
+  multiple = false,
 }: ButtonGroupProps) {
+  const values = multiple
+    ? Array.isArray(value)
+      ? value
+      : value.split(',').filter(Boolean)
+    : [value];
+
   return (
-    <div className={cn('flex rounded-md gap-2', className)}>
+    <div className={cn('flex gap-2 rounded-md', className)}>
       {options.map((option) => (
         <Button
           key={option.value}
           type="button"
-          variant={value === option.value ? 'tertiary' : 'nonpressed'}
+          variant={values.includes(option.value) ? 'tertiary' : 'nonpressed'}
           className="font-medium"
           onClick={() => onChange(option.value)}>
           {option.label}

@@ -1,4 +1,4 @@
-import { AddCounseleeReqGenderTypeEnum } from '@/api/api';
+import { AddCounseleeReqGenderTypeEnum } from '@/api';
 import { create } from 'zustand';
 
 // 기본 타입 정의

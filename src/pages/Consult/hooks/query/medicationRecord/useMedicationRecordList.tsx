@@ -1,7 +1,7 @@
 import {
   MedicationRecordHistControllerApi,
   SelectMedicationRecordHistRes,
-} from '@/api/api';
+} from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
 export type MedicationRecordListDTO = SelectMedicationRecordHistRes & {

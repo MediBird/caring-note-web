@@ -1,4 +1,4 @@
-import { AddCounseleeReqGenderTypeEnum, SelectCounseleeRes } from '@/api/api';
+import { AddCounseleeReqGenderTypeEnum, SelectCounseleeRes } from '@/api';
 import personAddIcon from '@/assets/icon/20/personadd.svg';
 import { InfoIcon } from '@/components/icon/InfoIcon';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { FormInput } from '@/components/ui/form-input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -21,14 +22,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip-triangle';
-import { XIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { FormInput } from '@/components/ui/form-input';
 import {
   validateDateOfBirth,
   validateName,
   validatePhoneNumber,
 } from '@/utils/inputValidations';
+import { XIcon } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 interface AddCounseleeDialogProps {
   onSubmit: (data: AddCounseleeFormData) => void;

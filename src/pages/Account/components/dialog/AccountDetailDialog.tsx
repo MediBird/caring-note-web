@@ -1,4 +1,4 @@
-import { CounselorListItem, UpdateCounselorReq } from '@/api/api';
+import { CounselorListItem, UpdateCounselorReq } from '@/api';
 import {
   Dialog,
   DialogClose,

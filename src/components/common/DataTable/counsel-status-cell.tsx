@@ -1,4 +1,4 @@
-import { SelectCounselSessionListItemStatusEnum } from '@/api/api';
+import { SelectCounselSessionListItemStatusEnum } from '@/api';
 import { cn } from '@/lib/utils';
 
 interface CounselStatusCellProps {
@@ -19,7 +19,7 @@ const CounselStatusCell = ({ status }: CounselStatusCellProps) => {
         return 'text-grayscale-100';
       case SelectCounselSessionListItemStatusEnum.Scheduled:
         return 'text-grayscale-50';
-      case SelectCounselSessionListItemStatusEnum.Progress:
+      case SelectCounselSessionListItemStatusEnum.InProgress:
         return 'text-primary-50';
       case SelectCounselSessionListItemStatusEnum.Canceled:
         return 'text-error-50';

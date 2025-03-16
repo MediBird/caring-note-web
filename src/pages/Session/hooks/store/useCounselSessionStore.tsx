@@ -2,7 +2,7 @@ import {
   CreateCounselReservationReq,
   ModifyCounselReservationReq,
   SelectCounselSessionListItem,
-} from '@/api/api';
+} from '@/api';
 import { create } from 'zustand';
 
 // 상담 세션 조회 파라미터 저장소

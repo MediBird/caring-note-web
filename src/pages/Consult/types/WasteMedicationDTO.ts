@@ -1,8 +1,8 @@
 import {
-  WasteMedicationDisposalReqUnusedReasonTypesEnum,
   WasteMedicationDisposalReqDrugRemainActionTypeEnum,
   WasteMedicationDisposalReqRecoveryAgreementTypeEnum,
-} from '@/api/api';
+  WasteMedicationDisposalReqUnusedReasonTypesEnum,
+} from '@/api';
 
 export const WasteMedicationDisposalDrugRemainActionDetailEnum = {
   Stacked: '쌓아둠', //쌓아둠

@@ -1,4 +1,4 @@
-import { SelectCounseleeRes } from '@/api/api';
+import { SelectCounseleeRes } from '@/api';
 import {
   DataTablePagination,
   PaginationInfo,
@@ -58,7 +58,7 @@ export const CounseleeTableSection = ({
           onOpenChange={(open) => !open && setEditingCounselee(null)}
         />
       )}
-      <div className="flex justify-center mt-4">
+      <div className="mt-4 flex justify-center">
         <DataTablePagination
           pagination={pagination}
           onPageChange={onPageChange}

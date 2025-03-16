@@ -1,10 +1,10 @@
-import { ResetPasswordReq, UpdateCounselorReq } from '@/api/api';
+import { ResetPasswordReq, UpdateCounselorReq } from '@/api';
 import { useCallback, useEffect, useState } from 'react';
 import {
-    useDeleteCounselor,
-    useGetCounselorsByPage,
-    useResetPassword,
-    useUpdateCounselor
+  useDeleteCounselor,
+  useGetCounselorsByPage,
+  useResetPassword,
+  useUpdateCounselor,
 } from './queries/useCounselorQuery';
 import { useCounselorStore } from './store/useCounselorStore';
 
@@ -24,13 +24,13 @@ export const useCounselorManagement = () => {
     setSelectedCounselorId,
     setLoading,
     setError,
-    resetState
+    resetState,
   } = useCounselorStore();
 
   // React Query 사용
   const { data, isLoading, isError, refetch } = useGetCounselorsByPage({
     page,
-    size
+    size,
   });
 
   // 뮤테이션 훅 사용
@@ -70,7 +70,7 @@ export const useCounselorManagement = () => {
       try {
         await updateCounselorMutation.mutateAsync({
           counselorId,
-          updateCounselorReq: updateData
+          updateCounselorReq: updateData,
         });
         return true;
       } catch (error) {
@@ -78,7 +78,7 @@ export const useCounselorManagement = () => {
         return false;
       }
     },
-    [updateCounselorMutation]
+    [updateCounselorMutation],
   );
 
   // 상담사 삭제 핸들러
@@ -95,7 +95,7 @@ export const useCounselorManagement = () => {
       }
       return false;
     },
-    [deleteCounselorMutation]
+    [deleteCounselorMutation],
   );
 
   // 비밀번호 초기화 핸들러
@@ -104,7 +104,7 @@ export const useCounselorManagement = () => {
       try {
         await resetPasswordMutation.mutateAsync({
           counselorId,
-          resetPasswordReq: resetData
+          resetPasswordReq: resetData,
         });
         return true;
       } catch (error) {
@@ -112,7 +112,7 @@ export const useCounselorManagement = () => {
         return false;
       }
     },
-    [resetPasswordMutation]
+    [resetPasswordMutation],
   );
 
   // 선택된 상담사 변경 핸들러
@@ -120,7 +120,7 @@ export const useCounselorManagement = () => {
     (counselorId: string | null) => {
       setSelectedCounselorId(counselorId);
     },
-    [setSelectedCounselorId]
+    [setSelectedCounselorId],
   );
 
   // 페이지 크기 변경 핸들러
@@ -143,7 +143,7 @@ export const useCounselorManagement = () => {
     error,
     page,
     size,
-    
+
     // 핸들러
     handlePageChange,
     handleSizeChange,
@@ -152,8 +152,8 @@ export const useCounselorManagement = () => {
     handleResetPassword,
     handleSelectCounselor,
     handleRefresh,
-    
+
     // 기타
-    resetState
+    resetState,
   };
-}; 
+};

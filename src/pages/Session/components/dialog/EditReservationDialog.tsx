@@ -1,4 +1,4 @@
-import { SelectCounselSessionListItem } from '@/api/api';
+import { SelectCounselSessionListItem } from '@/api';
 import { Button } from '@/components/ui/button';
 import DatePickerComponent from '@/components/ui/datepicker';
 import {
@@ -12,6 +12,8 @@ import {
 } from '@/components/ui/dialog';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import TimepickerComponent from '@/components/ui/time-picker';
+import { cn } from '@/lib/utils';
+import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 import { DialogTrigger } from '@radix-ui/react-dialog';
 import { AlertCircle, XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -21,8 +23,6 @@ import {
   extractDateTimeFromIso,
 } from '../../utils/dateTimeUtils';
 import CounseleeSearchInput from './CounseleeSearchInput';
-import { cn } from '@/lib/utils';
-import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 
 interface EditReservationDialogProps {
   session: SelectCounselSessionListItem;
@@ -106,8 +106,6 @@ export const EditReservationDialog = ({
         sessionDate,
         sessionTime,
       );
-
-      console.log(scheduledDateTime);
 
       if (!scheduledDateTime) {
         setError('날짜와 시간 형식이 유효하지 않습니다.');

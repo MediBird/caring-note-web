@@ -1,4 +1,4 @@
-import { AICounselSummaryControllerApi, AnalyseTextReq } from '@/api/api';
+import { AICounselSummaryControllerApi, AnalyseTextReq } from '@/api';
 import { useMutation } from '@tanstack/react-query';
 
 const aiCounselSummaryControllerApi = new AICounselSummaryControllerApi();

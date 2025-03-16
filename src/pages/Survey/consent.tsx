@@ -7,9 +7,12 @@ import {
 } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useCreateCounseleeConsentMutation } from './hooks/useCounseleeConsentQuery';
 
 // 동의서 섹션 타입 정의
 interface ContentSection {
@@ -60,7 +63,7 @@ const consentItems: ConsentItem[] = [
       {
         type: 'notice',
         content:
-          '위와 같이 개인정보 제공 동의를 거부할 권리가 있으나, 동의를 거부하는 경우에는 사업 참여가 불가함을 알려 드립니다. 「개인정보 보호법」에 따라 개인정보처리자가 준수해야 할 개인정보보호 규정을 준수하고, 관련 법령에 따라 대상자의 권익보호에 최선을 다하고 있으며 허가된 이용 목적 외에는 사용하지 않을 것을 약속드립니다.',
+          '위와 같이 개인정보 제공 동의를 거부할 권리가 있으나, 동의를 거부하는 경우에는 사업 참여가 불가함을 알려 드립니다. "개인정보 보호법"에 따라 개인정보처리자가 준수해야 할 개인정보보호 규정을 준수하고, 관련 법령에 따라 대상자의 권익보호에 최선을 다하고 있으며 허가된 이용 목적 외에는 사용하지 않을 것을 약속드립니다.',
       },
       {
         type: 'notice',
@@ -147,10 +150,23 @@ function ConsentContent({ sections }: { sections: ContentSection[] }) {
 }
 
 export default function Consent() {
+  const navigate = useNavigate();
+  const { counselSessionId } = useParams<{ counselSessionId: string }>();
+  const createConsentMutation = useCreateCounseleeConsentMutation();
+  const { data: counseleeInfo } = useSelectCounseleeInfo(
+    counselSessionId ?? '',
+  );
   const [selectedConsent, setSelectedConsent] = useState<ConsentItem | null>(
     null,
   );
   const [consents, setConsents] = useState<number[]>([]);
+
+  // counselSessionId가 없으면 리다이렉트
+  useEffect(() => {
+    if (!counselSessionId) {
+      navigate('/');
+    }
+  }, [counselSessionId, navigate]);
 
   // 동의 항목 클릭 시 상세 내용 표시
   const handleConsentClick = (consent: ConsentItem) => {
@@ -248,9 +264,26 @@ export default function Consent() {
             <CardFooter className="w-full">
               <Button
                 className="w-full"
-                disabled={!allConsented}
+                disabled={!allConsented || !counselSessionId || !counseleeInfo}
                 size="xl"
-                variant={allConsented ? 'primary' : 'secondary'}>
+                variant={allConsented ? 'primary' : 'secondary'}
+                onClick={async () => {
+                  if (!counselSessionId || !counseleeInfo) {
+                    console.error('상담 세션 ID 또는 내담자 정보가 없습니다.');
+                    return;
+                  }
+
+                  try {
+                    await createConsentMutation.mutateAsync({
+                      counselSessionId,
+                      counseleeId: counseleeInfo.counseleeId || '',
+                      consent: true,
+                    });
+                    navigate(`/survey/${counselSessionId}`);
+                  } catch (error) {
+                    console.error('동의서 제출 중 오류가 발생했습니다:', error);
+                  }
+                }}>
                 전부 동의하고 시작하기
               </Button>
             </CardFooter>

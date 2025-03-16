@@ -1,4 +1,7 @@
-import { AddCounselCardReqCardRecordStatusEnum } from '@/api/api';
+import {
+  CounselCardBaseInformationResCardRecordStatusEnum,
+  UpdateCounselCardStatusReqStatusEnum,
+} from '@/api';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -10,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useCounselCardStatusMutation } from '@/pages/Survey/hooks/useCounselCardQuery';
 import { useCounseleeConsentQuery } from '@/pages/Survey/hooks/useCounseleeConsentQuery';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { XIcon } from 'lucide-react';
@@ -17,7 +21,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface SurveyDialogProps {
-  dialogState: AddCounselCardReqCardRecordStatusEnum;
+  dialogState: CounselCardBaseInformationResCardRecordStatusEnum;
   counselSessionId: string;
   counseleeId: string;
 }
@@ -29,6 +33,7 @@ function SurveyDialog({
 }: SurveyDialogProps) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const { mutate: updateStatus } = useCounselCardStatusMutation();
 
   // 내담자 개인정보 수집 동의 여부 조회
   const { data, isLoading } = useCounseleeConsentQuery(
@@ -38,9 +43,19 @@ function SurveyDialog({
   // 상담 세션 상세 정보 조회
   const { setDetail } = useDetailCounselSessionStore();
 
-  // 작성하기 버튼 클릭시
   const handleStartSurvey = () => {
     setDetail({ counselSessionId, counseleeId });
+
+    // COMPLETED나 CANCELED 상태가 아닐 때만 IN_PROGRESS로 업데이트
+    if (
+      dialogState ===
+      CounselCardBaseInformationResCardRecordStatusEnum.NotStarted
+    ) {
+      updateStatus({
+        counselSessionId,
+        status: UpdateCounselCardStatusReqStatusEnum.InProgress,
+      });
+    }
 
     if (!isLoading && data) {
       // 동의 한사람인 경우 기초 설문 작성 페이지로 이동
@@ -54,15 +69,15 @@ function SurveyDialog({
   };
 
   const buttonConfig = {
-    [AddCounselCardReqCardRecordStatusEnum.NotStarted]: {
+    [CounselCardBaseInformationResCardRecordStatusEnum.NotStarted]: {
       variant: 'primary' as const,
       text: '설문 작성',
     },
-    [AddCounselCardReqCardRecordStatusEnum.InProgress]: {
+    [CounselCardBaseInformationResCardRecordStatusEnum.InProgress]: {
       variant: 'secondary' as const,
       text: '작성 중',
     },
-    [AddCounselCardReqCardRecordStatusEnum.Completed]: {
+    [CounselCardBaseInformationResCardRecordStatusEnum.Completed]: {
       variant: 'primary' as const,
       text: '작성 완료',
     },
@@ -74,7 +89,8 @@ function SurveyDialog({
       type="button"
       variant={buttonConfig[dialogState].variant}
       disabled={
-        dialogState === AddCounselCardReqCardRecordStatusEnum.Completed
+        dialogState ===
+        CounselCardBaseInformationResCardRecordStatusEnum.Completed
       }>
       {buttonConfig[dialogState].text}
     </Button>
@@ -114,12 +130,6 @@ function SurveyDialog({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {/* <UserInfoDialog
-        isOpen={isUserInfoOpen}
-        handleOpen={() => setIsUserInfoOpen(!isUserInfoOpen)}
-        counselSessionId={counselSessionId}
-        counseleeId={counseleeId}
-      /> */}
     </div>
   );
 }
