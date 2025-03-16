@@ -27,7 +27,7 @@ function DeleteRecordingDialog() {
           <DialogTitle>음성 녹음을 삭제하시겠어요?</DialogTitle>
           <DialogClose
             asChild
-            className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6">
+            className="!mt-0 h-6 w-6 cursor-pointer border-none bg-transparent !p-0 text-grayscale-100">
             <XIcon />
           </DialogClose>
         </DialogHeader>
@@ -43,7 +43,7 @@ function DeleteRecordingDialog() {
               </Button>
             </>
           </DialogClose>
-          <Button variant="destructive" onClick={resetRecording}>
+          <Button variant="primaryError" onClick={resetRecording}>
             삭제
           </Button>
         </DialogFooter>

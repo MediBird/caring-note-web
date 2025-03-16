@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
 
 export interface TimePickerProps {
@@ -71,11 +71,15 @@ const TimepickerComponent = ({
         onValueChange={(value) => handleSelect(value)}
         open={open}
         onOpenChange={setOpen}>
-        <SelectTrigger className="flex w-full gap-2 text-base text-left justify-normal h-[36px]">
-          <CalendarIcon className="w-4 h-4 mr-0" />
+        <SelectTrigger
+          className={cn(
+            'flex h-[42px] w-full justify-between gap-2 rounded border border-grayscale-30 text-left text-base font-medium text-grayscale-40 focus:border-grayscale-30',
+            time && 'text-grayscale-90',
+            open && 'border-primary-50 ring-1 ring-primary-50',
+          )}>
           <SelectValue
             placeholder={placeholder || time}
-            className="justify-between w-full"
+            className="w-full justify-between"
           />
         </SelectTrigger>
         <SelectContent className="w-full" ref={scrollRef}>

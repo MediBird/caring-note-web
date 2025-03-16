@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-1 whitespace-nowrap font-bold ring-offset-white transition-colors disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-1 whitespace-nowrap font-bold ring-offset-white transition-colors disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 ',
   {
     variants: {
       size: {
@@ -14,8 +14,8 @@ const buttonVariants = cva(
       variant: {
         primary:
           'text-white border-[1.5px] border-transparent bg-primary-50 hover:bg-primary-60 active:bg-primary-70 disabled:bg-grayscale-20 disabled:text-grayscale-40 dark:bg-neutral-50 dark:text-neutral-900 dark:hover:bg-neutral-50/90',
-        destructive:
-          'bg-red-500 border-[1.5px]  text-neutral-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/90',
+        primaryError:
+          'bg-red-500 border-[1.5px] text-neutral-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/90 disabled:bg-grayscale-20 disabled:text-grayscale-40',
         outline:
           'border border-neutral-200 bg-white hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:hover:text-neutral-50',
         secondary:
@@ -24,7 +24,7 @@ const buttonVariants = cva(
           'hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-50',
         link: 'text-neutral-900 underline-offset-4 hover:underline dark:text-neutral-50',
         secondaryError:
-          'bg-white border-[1.5px] border-error-50 text-error-50 hover:bg-error-10 active:bg-error-20 active:border-error-60 disabled:bg-grayscale-10 disabled:border-grayscale-40 disabled:text-grayscale-30 dark:bg-neutral-800 dark:text-neutral-50 dark:hover:bg-neutral-800/80',
+          'bg-white border-[1.5px] border-error-50 text-error-50 hover:bg-error-10 active:bg-error-20 active:border-error-60 disabled:bg-grayscale-20 disabled:text-grayscale-40 dark:bg-neutral-800 dark:text-neutral-50 dark:hover:bg-neutral-800/80',
         pressed:
           'bg-primary-20 border-primary-40 text-primary-60 hover:bg-primary-10 active:bg-primary-20 active:border-primary-60 disabled:bg-grayscale-10 disabled:border-grayscale-40 disabled:text-grayscale-30 dark:bg-neutral-800 dark:text-neutral-50 dark:hover:bg-neutral-800/80',
         nonpressed:

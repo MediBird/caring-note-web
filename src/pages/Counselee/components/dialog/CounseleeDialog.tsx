@@ -13,7 +13,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -23,7 +22,13 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip-triangle';
 import { XIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { FormInput } from '@/components/ui/form-input';
+import {
+  validateDateOfBirth,
+  validateName,
+  validatePhoneNumber,
+} from '@/utils/inputValidations';
 
 interface AddCounseleeDialogProps {
   onSubmit: (data: AddCounseleeFormData) => void;
@@ -98,6 +103,32 @@ export const CounseleeDialog = ({
     handleOpenChange(false);
   };
 
+  const isSubmitDisabled = useMemo(() => {
+    const isNameValid = validateName(formData.name);
+    const isDateOfBirthValid = validateDateOfBirth(formData.dateOfBirth);
+    const isPhoneNumberValid = validatePhoneNumber(formData.phoneNumber);
+    const isCareManagerNameValid = validateName(formData.careManagerName);
+
+    if (
+      !formData.name ||
+      !formData.dateOfBirth ||
+      !formData.phoneNumber ||
+      isNameValid !== null ||
+      isDateOfBirthValid !== null ||
+      isPhoneNumberValid !== null ||
+      (formData.careManagerName && isCareManagerNameValid !== null)
+    ) {
+      return true;
+    }
+
+    return false;
+  }, [
+    formData.name,
+    formData.dateOfBirth,
+    formData.phoneNumber,
+    formData.careManagerName,
+  ]);
+
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       {mode === 'add' && (
@@ -108,7 +139,7 @@ export const CounseleeDialog = ({
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent className="w-[31.25rem]">
+      <DialogContent className="w-[500px]">
         <DialogHeader>
           <DialogTitle>
             {mode === 'add' ? '신규 내담자 등록' : '내담자 정보 수정'}
@@ -116,7 +147,7 @@ export const CounseleeDialog = ({
           <DialogDescription className="text-sm text-grayscale-60"></DialogDescription>
           <DialogClose
             asChild
-            className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6">
+            className="!mt-0 h-6 w-6 cursor-pointer border-none bg-transparent !p-0 text-grayscale-100">
             <XIcon />
           </DialogClose>
         </DialogHeader>
@@ -127,20 +158,21 @@ export const CounseleeDialog = ({
               <Label>
                 성명<span className="text-red-500">*</span>
               </Label>
-              <Input
+              <FormInput
                 placeholder="성명"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
                 maxLength={30}
+                validation={validateName}
               />
             </div>
             <div className="space-y-2">
               <Label>
                 생년월일<span className="text-red-500">*</span>
               </Label>
-              <Input
+              <FormInput
                 placeholder="YYYY-MM-DD"
                 value={formData.dateOfBirth}
                 onChange={(e) => {
@@ -161,6 +193,7 @@ export const CounseleeDialog = ({
                   setFormData({ ...formData, dateOfBirth: formattedDate });
                 }}
                 maxLength={10}
+                validation={validateDateOfBirth}
               />
             </div>
           </div>
@@ -195,7 +228,7 @@ export const CounseleeDialog = ({
               <Label>
                 전화번호<span className="text-red-500">*</span>
               </Label>
-              <Input
+              <FormInput
                 placeholder="000-0000-0000"
                 value={formData.phoneNumber}
                 onChange={(e) => {
@@ -216,11 +249,12 @@ export const CounseleeDialog = ({
                   setFormData({ ...formData, phoneNumber: formattedNumber });
                 }}
                 maxLength={13}
+                validation={validatePhoneNumber}
               />
             </div>
             <div className="space-y-2">
               <Label>행정동</Label>
-              <Input
+              <FormInput
                 placeholder="행정동"
                 value={formData.address}
                 onChange={(e) =>
@@ -233,7 +267,7 @@ export const CounseleeDialog = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>생활지원사</Label>
-              <Input
+              <FormInput
                 placeholder="성명"
                 value={formData.careManagerName}
                 onChange={(e) =>
@@ -250,7 +284,7 @@ export const CounseleeDialog = ({
                       <InfoIcon className="h-5 w-5 text-grayscale-50" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <ul className="list-disc marker:text-white pl-5 text-caption1 font-light space-y-0.5">
+                      <ul className="list-disc space-y-0.5 pl-5 text-caption1 font-light marker:text-white">
                         <li className="ml-[-0.6rem]">
                           사회복지관: 신림, 강감찬, 봉천, 관악 장애인
                         </li>
@@ -263,7 +297,7 @@ export const CounseleeDialog = ({
                   </Tooltip>
                 </TooltipProvider>
               </div>
-              <Input
+              <FormInput
                 placeholder="기관명 (띄어쓰기 생략)"
                 value={formData.affiliatedWelfareInstitution}
                 onChange={(e) =>
@@ -307,7 +341,15 @@ export const CounseleeDialog = ({
           </div>
         </div>
         <DialogFooter className="flex justify-end">
-          <Button onClick={handleSubmit}>
+          <Button
+            onClick={() => {
+              if (isSubmitDisabled) {
+                return;
+              }
+
+              handleSubmit();
+            }}
+            variant={isSubmitDisabled ? 'primaryError' : 'primary'}>
             {mode === 'add' ? '완료' : '수정'}
           </Button>
         </DialogFooter>
