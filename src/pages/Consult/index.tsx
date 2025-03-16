@@ -3,7 +3,6 @@ import {
   SelectCounseleeBaseInformationByCounseleeIdRes,
 } from '@/api/api';
 import Spinner from '@/components/common/Spinner';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useRecording } from '@/hooks/useRecording';
@@ -18,6 +17,7 @@ import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import FinishConsultDialog from './components/FinishConsultDialog';
 import RecordingDialog from './components/recording/RecordingDialog';
 import ConsultCard from './components/tabs/ConsultCard';
 import DiscardMedicine from './components/tabs/DiscardMedicine';
@@ -46,25 +46,13 @@ const InfoItem = ({ icon, content, showDivider = true }: InfoItemProps) => (
 interface HeaderButtonsProps {
   onSave: () => void;
   onComplete: () => void;
-  recordingStatus: RecordingStatus;
+  name?: string;
 }
 
-const HeaderButtons = ({
-  onSave,
-  onComplete,
-  recordingStatus,
-}: HeaderButtonsProps) => (
+const HeaderButtons = ({ onSave, onComplete, name }: HeaderButtonsProps) => (
   <div className="flex gap-3">
-    {recordingStatus !== RecordingStatus.AICompleted ? (
-      <TemporarySaveDialog onClickConfirm={onSave} />
-    ) : (
-      <Button variant="tertiary" size="xl" onClick={onSave}>
-        임시 저장
-      </Button>
-    )}
-    <Button variant="primary" size="xl" onClick={onComplete}>
-      설문 완료
-    </Button>
+    <TemporarySaveDialog onSave={onSave} />
+    <FinishConsultDialog name={name} onComplete={onComplete} />
   </div>
 );
 
@@ -74,7 +62,6 @@ const ConsultHeader = ({
   age,
   diseases,
   saveConsult,
-  recordingStatus,
 }: {
   counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
   consultStatus: string;
@@ -101,7 +88,7 @@ const ConsultHeader = ({
           <HeaderButtons
             onSave={saveConsult}
             onComplete={() => console.log('설문 완료')}
-            recordingStatus={recordingStatus}
+            name={counseleeInfo?.name}
           />
         </div>
       </div>
