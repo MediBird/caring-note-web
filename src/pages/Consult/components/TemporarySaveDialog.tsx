@@ -10,9 +10,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useRecording } from '@/hooks/useRecording';
+import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
-import { RecordingStatus } from '../types/Recording.enum';
 
 interface TemporarySaveDialogProps {
   onSave: () => void;
@@ -48,10 +48,8 @@ const TemporarySaveDialog = ({ onSave }: TemporarySaveDialogProps) => {
             <div className="h-[1px] bg-grayscale-20" />
             <DialogDescription asChild className="m-0 px-5 pt-2">
               <p className="text-body1 font-medium text-grayscale-100">
-                아직 녹음이 저장되지 않았습니다.
-                <br />
-                녹음 저장을 원하시면 녹음 저장 버튼을 먼저 눌러주세요.
-                <br />
+                아직 녹음이 저장되지 않았습니다. <br />
+                녹음 저장을 원하시면 녹음 저장 버튼을 먼저 눌러주세요. <br />
                 텍스트만 임시 저장하시겠어요?
               </p>
             </DialogDescription>
