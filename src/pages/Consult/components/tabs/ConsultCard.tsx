@@ -12,7 +12,21 @@ import {
   useCounselCardIndependentLifeInfoQuery,
   useCounselCardLivingInfoQuery,
 } from '@/pages/Survey/hooks/useCounselCardQuery';
-import { HEALTH_INSURANCE_TYPE_MAP } from '@/utils/constants';
+import {
+  COMMUNICATIONS_MAP,
+  COUNSEL_PURPOSE_MAP,
+  DISEASE_MAP,
+  EVACUATIONS_MAP,
+  EXERCISE_PATTERN_MAP,
+  HEALTH_INSURANCE_TYPE_MAP,
+  HEARINGS_MAP,
+  MEAL_PATTERN_MAP,
+  MEDICATION_ASSISTANTS_MAP,
+  SIGHTS_MAP,
+  USING_KOREANS_MAP,
+  WALKING_EQUIPMENTS_MAP,
+  WALKING_METHODS_MAP,
+} from '@/utils/constants';
 import { ClockIcon } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -89,11 +103,10 @@ const ConsultCard: React.FC = () => {
                   consultCardData?.baseInformation?.counselPurposeAndNote
                     ?.counselPurpose,
                 )
-                  ? consultCardData?.baseInformation?.counselPurposeAndNote.counselPurpose.join(
-                      ', ',
-                    )
-                  : consultCardData?.baseInformation?.counselPurposeAndNote
-                      ?.counselPurpose,
+                  ? consultCardData?.baseInformation?.counselPurposeAndNote.counselPurpose
+                      .map((purpose) => COUNSEL_PURPOSE_MAP[purpose])
+                      .join(', ')
+                  : '',
               },
             ]}
           />
@@ -191,9 +204,12 @@ const ConsultCard: React.FC = () => {
             items={[
               {
                 label: '하루 식사 패턴',
-                value:
-                  consultCardData?.livingInformation?.nutrition?.mealPattern ||
-                  '',
+                value: consultCardData?.livingInformation?.nutrition
+                  ?.mealPattern
+                  ? MEAL_PATTERN_MAP[
+                      consultCardData.livingInformation.nutrition.mealPattern
+                    ]
+                  : '',
               },
               {
                 label: '식생활 특이사항',
@@ -209,9 +225,12 @@ const ConsultCard: React.FC = () => {
             items={[
               {
                 label: '주간 운동 패턴',
-                value:
-                  consultCardData?.livingInformation?.exercise
-                    ?.exercisePattern || '',
+                value: consultCardData?.livingInformation?.exercise
+                  ?.exercisePattern
+                  ? EXERCISE_PATTERN_MAP[
+                      consultCardData.livingInformation.exercise.exercisePattern
+                    ]
+                  : '',
               },
               {
                 label: '운동 종류',
@@ -241,9 +260,9 @@ const ConsultCard: React.FC = () => {
               {
                 label: '복용자 및 투약 보조자',
                 value:
-                  consultCardData?.livingInformation?.medicationManagement?.medicationAssistants?.join(
-                    ', ',
-                  ) || '',
+                  consultCardData?.livingInformation?.medicationManagement?.medicationAssistants
+                    ?.map((assistant) => MEDICATION_ASSISTANTS_MAP[assistant])
+                    .join(', ') || '',
               },
             ]}
           />
@@ -256,9 +275,9 @@ const ConsultCard: React.FC = () => {
               {
                 label: '질병',
                 value:
-                  consultCardData?.healthInformation?.diseaseInfo?.diseases?.join(
-                    ' · ',
-                  ) || '',
+                  consultCardData?.healthInformation?.diseaseInfo?.diseases
+                    ?.map((disease) => DISEASE_MAP[disease])
+                    .join(' · ') || '',
               },
               {
                 label: '질병 및 수술 이력',
@@ -308,16 +327,16 @@ const ConsultCard: React.FC = () => {
                   {
                     label: '보행 여부',
                     value:
-                      consultCardData?.independentLifeInformation?.walking?.walkingMethods?.join(
-                        ', ',
-                      ) || '정보 없음',
+                      consultCardData?.independentLifeInformation?.walking?.walkingMethods
+                        ?.map((method) => WALKING_METHODS_MAP[method])
+                        .join(', ') || '정보 없음',
                   },
                   {
                     label: '이동 장비',
                     value:
-                      consultCardData?.independentLifeInformation?.walking?.walkingEquipments?.join(
-                        ', ',
-                      ) || '정보 없음',
+                      consultCardData?.independentLifeInformation?.walking?.walkingEquipments
+                        ?.map((equipment) => WALKING_EQUIPMENTS_MAP[equipment])
+                        .join(', ') || '정보 없음',
                   },
                   {
                     label: '기타',
@@ -334,9 +353,9 @@ const ConsultCard: React.FC = () => {
                   {
                     label: '배변 처리 방식',
                     value:
-                      consultCardData?.independentLifeInformation?.evacuation?.evacuations?.join(
-                        ', ',
-                      ) || '정보 없음',
+                      consultCardData?.independentLifeInformation?.evacuation?.evacuations
+                        ?.map((evacuation) => EVACUATIONS_MAP[evacuation])
+                        .join(', ') || '정보 없음',
                   },
                   {
                     label: '기타',
@@ -353,26 +372,33 @@ const ConsultCard: React.FC = () => {
                   {
                     label: '시력',
                     value:
-                      consultCardData?.independentLifeInformation?.communication
-                        ?.sights || '정보 없음',
+                      consultCardData?.independentLifeInformation?.communication?.sights
+                        ?.map((sight) => SIGHTS_MAP[sight])
+                        .join(', ') || '정보 없음',
                   },
                   {
                     label: '청력',
                     value:
-                      consultCardData?.independentLifeInformation?.communication
-                        ?.hearings || '정보 없음',
+                      consultCardData?.independentLifeInformation?.communication?.hearings
+                        ?.map((hearing) => HEARINGS_MAP[hearing])
+                        .join(', ') || '정보 없음',
                   },
                   {
                     label: '언어 소통',
-                    value:
-                      consultCardData?.independentLifeInformation?.communication
-                        ?.communications || '정보 없음',
+                    value: consultCardData?.independentLifeInformation
+                      ?.communication?.communications
+                      ? COMMUNICATIONS_MAP[
+                          consultCardData.independentLifeInformation
+                            .communication.communications
+                        ]
+                      : '정보 없음',
                   },
                   {
                     label: '한글 사용',
                     value:
-                      consultCardData?.independentLifeInformation?.communication
-                        ?.usingKoreans || '정보 없음',
+                      consultCardData?.independentLifeInformation?.communication?.usingKoreans
+                        ?.map((korean) => USING_KOREANS_MAP[korean])
+                        .join(', ') || '정보 없음',
                   },
                 ]}
               />

@@ -11,6 +11,15 @@ import { ButtonGroup } from '@/components/ui/button-group';
 import { Card } from '@/components/ui/card';
 import CardSection from '@/components/ui/card-section';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  COMMUNICATIONS_OPTIONS,
+  EVACUATIONS_OPTIONS,
+  HEARINGS_OPTIONS,
+  SIGHTS_OPTIONS,
+  USING_KOREANS_OPTIONS,
+  WALKING_EQUIPMENTS_OPTIONS,
+  WALKING_METHODS_OPTIONS,
+} from '@/utils/constants';
 import { useCounselCardStore } from '../../hooks/counselCardStore';
 import { useCounselCardIndependentLifeInfoQuery } from '../../hooks/useCounselCardQuery';
 
@@ -172,20 +181,7 @@ export default function IndependentLivingAssessment({
             subLabel: '여러 개를 동시에 선택할 수 있어요.',
             value: (
               <ButtonGroup
-                options={[
-                  {
-                    label: '와상 및 보행불가',
-                    value: WalkingDTOWalkingMethodsEnum.Bedridden,
-                  },
-                  {
-                    label: '자립보행 가능',
-                    value: WalkingDTOWalkingMethodsEnum.IndependentWalk,
-                  },
-                  {
-                    label: '보조기구 필요',
-                    value: WalkingDTOWalkingMethodsEnum.NeedsMobilityAid,
-                  },
-                ]}
+                options={WALKING_METHODS_OPTIONS}
                 value={Array.from(
                   independentLifeInfo?.walking?.walkingMethods || [],
                 )}
@@ -199,24 +195,7 @@ export default function IndependentLivingAssessment({
             subLabel: '여러 개를 동시에 선택할 수 있어요.',
             value: (
               <ButtonGroup
-                options={[
-                  {
-                    label: '지팡이',
-                    value: WalkingDTOWalkingEquipmentsEnum.Cane,
-                  },
-                  {
-                    label: '워커',
-                    value: WalkingDTOWalkingEquipmentsEnum.Walker,
-                  },
-                  {
-                    label: '휠체어',
-                    value: WalkingDTOWalkingEquipmentsEnum.Wheelchair,
-                  },
-                  {
-                    label: '기타',
-                    value: WalkingDTOWalkingEquipmentsEnum.Other,
-                  },
-                ]}
+                options={WALKING_EQUIPMENTS_OPTIONS}
                 value={Array.from(
                   independentLifeInfo?.walking?.walkingEquipments || [],
                 )}
@@ -254,29 +233,7 @@ export default function IndependentLivingAssessment({
             subLabel: '여러 개를 동시에 선택할 수 있어요.',
             value: (
               <ButtonGroup
-                options={[
-                  {
-                    label: '자립 화장실 사용',
-                    value: EvacuationDTOEvacuationsEnum.Independent,
-                  },
-                  {
-                    label: '화장실 유도',
-                    value: EvacuationDTOEvacuationsEnum.Guided,
-                  },
-                  {
-                    label: '이동식 변기 사용',
-                    value: EvacuationDTOEvacuationsEnum.PortableToilet,
-                  },
-                  {
-                    label: '기저귀 사용',
-                    value: EvacuationDTOEvacuationsEnum.Diaper,
-                  },
-                  {
-                    label: '소변통 사용',
-                    value: EvacuationDTOEvacuationsEnum.Urinal,
-                  },
-                  { label: '기타', value: EvacuationDTOEvacuationsEnum.Other },
-                ]}
+                options={EVACUATIONS_OPTIONS}
                 value={Array.from(
                   independentLifeInfo?.evacuation?.evacuations || [],
                 )}
@@ -314,24 +271,7 @@ export default function IndependentLivingAssessment({
             subLabel: '여러 개를 동시에 선택할 수 있어요.',
             value: (
               <ButtonGroup
-                options={[
-                  {
-                    label: '잘 보임',
-                    value: CommunicationDTOSightsEnum.WellSeen,
-                  },
-                  {
-                    label: '잘 안보임',
-                    value: CommunicationDTOSightsEnum.PoorlySeen,
-                  },
-                  {
-                    label: '전혀 안보임',
-                    value: CommunicationDTOSightsEnum.NotSeen,
-                  },
-                  {
-                    label: '안경 사용',
-                    value: CommunicationDTOSightsEnum.UsingGlasses,
-                  },
-                ]}
+                options={SIGHTS_OPTIONS}
                 value={Array.from(
                   independentLifeInfo?.communication?.sights || [],
                 )}
@@ -345,24 +285,7 @@ export default function IndependentLivingAssessment({
             subLabel: '여러 개를 동시에 선택할 수 있어요.',
             value: (
               <ButtonGroup
-                options={[
-                  {
-                    label: '잘 들림',
-                    value: CommunicationDTOHearingsEnum.WellHeard,
-                  },
-                  {
-                    label: '잘 안들림',
-                    value: CommunicationDTOHearingsEnum.PoorlyHeard,
-                  },
-                  {
-                    label: '전혀 안들림',
-                    value: CommunicationDTOHearingsEnum.NotHeard,
-                  },
-                  {
-                    label: '보청기 사용',
-                    value: CommunicationDTOHearingsEnum.UsingHearingAid,
-                  },
-                ]}
+                options={HEARINGS_OPTIONS}
                 value={Array.from(
                   independentLifeInfo?.communication?.hearings || [],
                 )}
@@ -375,20 +298,7 @@ export default function IndependentLivingAssessment({
             label: '언어 소통',
             value: (
               <ButtonGroup
-                options={[
-                  {
-                    label: '소통 가능함',
-                    value: CommunicationDTOCommunicationsEnum.WellCommunicate,
-                  },
-                  {
-                    label: '대강 가능함',
-                    value: CommunicationDTOCommunicationsEnum.SemiCommunicate,
-                  },
-                  {
-                    label: '불가능',
-                    value: CommunicationDTOCommunicationsEnum.NotCommunicate,
-                  },
-                ]}
+                options={COMMUNICATIONS_OPTIONS}
                 value={independentLifeInfo?.communication?.communications || ''}
                 onChange={handleCommunicationsChange}
                 multiple={false}
@@ -400,16 +310,7 @@ export default function IndependentLivingAssessment({
             subLabel: '여러 개를 동시에 선택할 수 있어요.',
             value: (
               <ButtonGroup
-                options={[
-                  {
-                    label: '읽기 가능',
-                    value: CommunicationDTOUsingKoreansEnum.Read,
-                  },
-                  {
-                    label: '쓰기 가능',
-                    value: CommunicationDTOUsingKoreansEnum.Write,
-                  },
-                ]}
+                options={USING_KOREANS_OPTIONS}
                 value={Array.from(
                   independentLifeInfo?.communication?.usingKoreans || [],
                 )}

@@ -1,8 +1,9 @@
 import { DiseaseInfoDTODiseasesEnum } from '@/api';
-import { ButtonGroup, ButtonGroupOption } from '@/components/ui/button-group';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { Card } from '@/components/ui/card';
 import CardSection from '@/components/ui/card-section';
 import { Textarea } from '@/components/ui/textarea';
+import { DISEASE_OPTIONS } from '@/utils/constants';
 import { useCounselCardStore } from '../../hooks/counselCardStore';
 import { useCounselCardHealthInfoQuery } from '../../hooks/useCounselCardQuery';
 
@@ -10,94 +11,11 @@ interface HealthInfoProps {
   counselSessionId: string;
 }
 
-const diseaseOptions: ButtonGroupOption[] = [
-  {
-    label: '고혈압',
-    value: DiseaseInfoDTODiseasesEnum.Hypertension,
-  },
-  {
-    label: '고지혈증',
-    value: DiseaseInfoDTODiseasesEnum.Hyperlipidemia,
-  },
-  {
-    label: '뇌혈관질환',
-    value: DiseaseInfoDTODiseasesEnum.CerebrovascularDisease,
-  },
-  {
-    label: '심장질환',
-    value: DiseaseInfoDTODiseasesEnum.HeartDisease,
-  },
-  {
-    label: '당뇨병',
-    value: DiseaseInfoDTODiseasesEnum.Diabetes,
-  },
-  {
-    label: '갑상선질환',
-    value: DiseaseInfoDTODiseasesEnum.ThyroidDisease,
-  },
-  {
-    label: '위장관질환',
-    value: DiseaseInfoDTODiseasesEnum.GastrointestinalDisease,
-  },
-  {
-    label: '파킨슨병',
-    value: DiseaseInfoDTODiseasesEnum.ParkinsonsDisease,
-  },
-  {
-    label: '치매, 인지장애',
-    value: DiseaseInfoDTODiseasesEnum.Dementia,
-  },
-  {
-    label: '수면장애',
-    value: DiseaseInfoDTODiseasesEnum.SleepDisorder,
-  },
-  {
-    label: '우울/불안장애',
-    value: DiseaseInfoDTODiseasesEnum.DepressionAnxiety,
-  },
-  {
-    label: '신장질환',
-    value: DiseaseInfoDTODiseasesEnum.KidneyDisease,
-  },
-  {
-    label: '간질환',
-    value: DiseaseInfoDTODiseasesEnum.LiverDisease,
-  },
-  {
-    label: '비뇨·생식기질환(전립선비대증, 자궁내막염, 방광염 등)',
-    value: DiseaseInfoDTODiseasesEnum.UrogenitalDisease,
-  },
-  {
-    label: '암질환',
-    value: DiseaseInfoDTODiseasesEnum.Cancer,
-  },
-  {
-    label: '뇌경색',
-    value: DiseaseInfoDTODiseasesEnum.Stroke,
-  },
-  {
-    label: '척추·관절염/신경통·근육통',
-    value: DiseaseInfoDTODiseasesEnum.SpineJointNeuropathy,
-  },
-  {
-    label: '호흡기질환(천식, COPD 등)',
-    value: DiseaseInfoDTODiseasesEnum.RespiratoryDisease,
-  },
-  {
-    label: '안과질환(백내장, 녹내장, 안구건조증 등)',
-    value: DiseaseInfoDTODiseasesEnum.EyeDisease,
-  },
-  {
-    label: '이비인후과질환',
-    value: DiseaseInfoDTODiseasesEnum.EntDisease,
-  },
-];
-
-const allergyOptions: ButtonGroupOption[] = [
+const allergyOptions = [
   { label: '알레르기 있음', value: 'true' },
   { label: '알레르기 없음', value: 'false' },
 ];
-const medicationSideEffectOptions: ButtonGroupOption[] = [
+const medicationSideEffectOptions = [
   { label: '약물 부작용 있음', value: 'true' },
   { label: '약물 부작용 없음', value: 'false' },
 ];
@@ -170,7 +88,7 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
             subLabel: '여러 개를 동시에 선택할 수 있어요',
             value: (
               <ButtonGroup
-                options={diseaseOptions}
+                options={DISEASE_OPTIONS}
                 value={Array.from(healthInfo?.diseaseInfo?.diseases || [])}
                 onChange={handleDiseaseChange}
                 className="flex-wrap"

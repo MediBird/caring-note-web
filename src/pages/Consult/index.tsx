@@ -1,6 +1,7 @@
 import {
   AddAndUpdateMedicationRecordHistReq,
   SelectCounseleeBaseInformationByCounseleeIdRes,
+  SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum,
 } from '@/api';
 import Spinner from '@/components/common/Spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,6 +16,7 @@ import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
+import { DISEASE_MAP } from '@/utils/constants';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -139,18 +141,30 @@ export function Index() {
     );
   }
 
-  const formatDiseases = (diseases: string[] | undefined) => {
-    if (!diseases?.length) return '';
+  const formatDiseases = (
+    diseases:
+      | SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum[]
+      | Set<SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum>
+      | undefined,
+  ) => {
+    if (!diseases) return '';
 
-    if (diseases.length <= 3) {
-      return diseases.join(' · ');
+    const diseaseArray = Array.isArray(diseases)
+      ? diseases
+      : Array.from(diseases);
+    if (!diseaseArray.length) return '';
+
+    const mappedDiseases = diseaseArray.map((disease) => DISEASE_MAP[disease]);
+
+    if (mappedDiseases.length <= 3) {
+      return mappedDiseases.join(' · ');
     }
 
     return (
       <>
-        {diseases.slice(0, 3).join(' · ')}
+        {mappedDiseases.slice(0, 3).join(' · ')}
         <span className="text-grayscale-30">
-          {` 외 ${diseases.length - 3}개의 질병`}
+          {` 외 ${mappedDiseases.length - 3}개의 질병`}
         </span>
       </>
     );
@@ -159,7 +173,8 @@ export function Index() {
   const consultStatus =
     counseleeInfo?.counselCount === 0 ? '초기 상담' : '재상담';
   const age = `만 ${counseleeInfo?.age}세`;
-  const diseases = formatDiseases(Array.from(counseleeInfo?.diseases || []));
+  console.log('counseleeInfo:', counseleeInfo);
+  const diseases = formatDiseases(counseleeInfo?.diseases);
 
   const saveConsult = () => {
     saveWasteMedication();

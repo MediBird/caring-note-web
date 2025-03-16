@@ -1,13 +1,16 @@
 import {
   CounselCardLivingInformationRes,
-  ExerciseDTOExercisePatternEnum,
   MedicationManagementDTOMedicationAssistantsEnum,
-  NutritionDTOMealPatternEnum,
 } from '@/api';
-import { ButtonGroup, ButtonGroupOption } from '@/components/ui/button-group';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { Card } from '@/components/ui/card';
 import CardSection from '@/components/ui/card-section';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  EXERCISE_PATTERN_OPTIONS,
+  MEAL_PATTERN_OPTIONS,
+  MEDICATION_ASSISTANTS_OPTIONS,
+} from '@/utils/constants';
 import { useCounselCardStore } from '../../hooks/counselCardStore';
 import { useCounselCardLivingInfoQuery } from '../../hooks/useCounselCardQuery';
 
@@ -39,15 +42,15 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
     return <div>로딩 중...</div>;
   }
 
-  const smokingAmountOptions: ButtonGroupOption[] = [
+  const smokingAmountOptions = [
     { label: '흡연', value: 'true' },
     { label: '비흡연', value: 'false' },
   ];
-  const drinkingAmountOptions: ButtonGroupOption[] = [
+  const drinkingAmountOptions = [
     { label: '음주', value: 'true' },
     { label: '비음주', value: 'false' },
   ];
-  const houseMateOptions: ButtonGroupOption[] = [
+  const houseMateOptions = [
     { label: '독거', value: 'true' },
     { label: '동거인 있음', value: 'false' },
   ];
@@ -98,24 +101,7 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
             label: '하루 식사 패턴',
             value: (
               <ButtonGroup
-                options={[
-                  {
-                    label: '하루 1회 규칙적',
-                    value: NutritionDTOMealPatternEnum.OneRegularMeal,
-                  },
-                  {
-                    label: '하루 2회 규칙적',
-                    value: NutritionDTOMealPatternEnum.TwoRegularMeals,
-                  },
-                  {
-                    label: '하루 3회 규칙적',
-                    value: NutritionDTOMealPatternEnum.ThreeRegularMeals,
-                  },
-                  {
-                    label: '불규칙적',
-                    value: NutritionDTOMealPatternEnum.IrregularMeals,
-                  },
-                ]}
+                options={MEAL_PATTERN_OPTIONS}
                 value={livingInfo?.nutrition?.mealPattern || ''}
                 onChange={(value) =>
                   handleUpdateLivingInfo('nutrition.mealPattern', value)
@@ -148,32 +134,7 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
             label: '주간 운동 패턴',
             value: (
               <ButtonGroup
-                options={[
-                  {
-                    label: '운동 안함',
-                    value: ExerciseDTOExercisePatternEnum.NoExercise,
-                  },
-                  {
-                    label: '주 1회',
-                    value: ExerciseDTOExercisePatternEnum.OnceAWeek,
-                  },
-                  {
-                    label: '주 2회',
-                    value: ExerciseDTOExercisePatternEnum.TwiceAWeek,
-                  },
-                  {
-                    label: '주 3회',
-                    value: ExerciseDTOExercisePatternEnum.ThreeTimesAWeek,
-                  },
-                  {
-                    label: '주 4회',
-                    value: ExerciseDTOExercisePatternEnum.FourTimesAWeek,
-                  },
-                  {
-                    label: '주 5회 이상',
-                    value: ExerciseDTOExercisePatternEnum.FiveOrMoreTimesAWeek,
-                  },
-                ]}
+                options={EXERCISE_PATTERN_OPTIONS}
                 value={livingInfo?.exercise?.exercisePattern || ''}
                 onChange={(value) =>
                   handleUpdateLivingInfo('exercise.exercisePattern', value)
@@ -240,42 +201,7 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
             subLabel: '여러 개를 동시에 선택 할 수 있어요.',
             value: (
               <ButtonGroup
-                options={[
-                  {
-                    label: '본인',
-                    value: MedicationManagementDTOMedicationAssistantsEnum.Self,
-                  },
-                  {
-                    label: '배우자',
-                    value:
-                      MedicationManagementDTOMedicationAssistantsEnum.Spouse,
-                  },
-                  {
-                    label: '자녀',
-                    value:
-                      MedicationManagementDTOMedicationAssistantsEnum.Children,
-                  },
-                  {
-                    label: '친척',
-                    value:
-                      MedicationManagementDTOMedicationAssistantsEnum.Relatives,
-                  },
-                  {
-                    label: '친구',
-                    value:
-                      MedicationManagementDTOMedicationAssistantsEnum.Friend,
-                  },
-                  {
-                    label: '간병인',
-                    value:
-                      MedicationManagementDTOMedicationAssistantsEnum.Caregiver,
-                  },
-                  {
-                    label: '기타',
-                    value:
-                      MedicationManagementDTOMedicationAssistantsEnum.Other,
-                  },
-                ]}
+                options={MEDICATION_ASSISTANTS_OPTIONS}
                 value={Array.from(
                   livingInfo?.medicationManagement?.medicationAssistants || [],
                 )}
