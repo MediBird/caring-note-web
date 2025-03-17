@@ -67,7 +67,6 @@ export default function BasicInfo({ counselSessionId }: BasicInfoProps) {
       />
       <CardSection
         title="상담 목적 및 특이사항"
-        variant="grayscale"
         items={[
           {
             label: (
@@ -83,16 +82,23 @@ export default function BasicInfo({ counselSessionId }: BasicInfoProps) {
                   baseInfo?.counselPurposeAndNote?.counselPurpose || [],
                 )}
                 onChange={(value) => {
+                  const currentPurposes =
+                    baseInfo?.counselPurposeAndNote?.counselPurpose || [];
+                  const valueAsEnum =
+                    value as CounselPurposeAndNoteDTOCounselPurposeEnum;
+
+                  // 이미 선택된 항목이면 제거, 아니면 추가
+                  const updatedPurposes = currentPurposes.includes(valueAsEnum)
+                    ? currentPurposes.filter(
+                        (purpose) => purpose !== valueAsEnum,
+                      )
+                    : [...currentPurposes, valueAsEnum];
+
                   setBaseInfo({
                     ...baseInfo,
                     counselPurposeAndNote: {
                       ...baseInfo?.counselPurposeAndNote,
-                      counselPurpose: [
-                        ...(
-                          baseInfo?.counselPurposeAndNote?.counselPurpose || []
-                        ).filter((purpose) => purpose !== value),
-                        value as CounselPurposeAndNoteDTOCounselPurposeEnum,
-                      ],
+                      counselPurpose: updatedPurposes,
                     },
                   });
                 }}

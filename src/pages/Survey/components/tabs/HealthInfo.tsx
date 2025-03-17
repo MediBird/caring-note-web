@@ -136,12 +136,15 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
               <ButtonGroup
                 options={allergyOptions}
                 value={healthInfo?.allergy?.isAllergy ? 'true' : 'false'}
-                onChange={(value) =>
-                  handleTextChange(
-                    'healthInfo.allergy.isAllergy',
-                    value === 'true',
-                  )
-                }
+                onChange={(value) => {
+                  setHealthInfo({
+                    ...healthInfo,
+                    allergy: {
+                      ...healthInfo?.allergy,
+                      isAllergy: value === 'true',
+                    },
+                  });
+                }}
                 className="flex-wrap"
               />
             ),
@@ -161,12 +164,15 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
                     ? 'true'
                     : 'false'
                 }
-                onChange={(value) =>
-                  handleTextChange(
-                    'healthInfo.medicationSideEffect.isMedicationSideEffect',
-                    value === 'true',
-                  )
-                }
+                onChange={(value) => {
+                  setHealthInfo({
+                    ...healthInfo,
+                    medicationSideEffect: {
+                      ...healthInfo?.medicationSideEffect,
+                      isMedicationSideEffect: value === 'true',
+                    },
+                  });
+                }}
                 className="flex-wrap"
               />
             ),
