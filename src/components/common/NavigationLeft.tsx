@@ -4,7 +4,7 @@ import HomeIcon from '@/assets/icon/24/home.filled.svg?react';
 import LogoutIcon from '@/assets/icon/24/logout.outline.svg?react';
 import MenuIcon from '@/assets/icon/24/menu.svg?react';
 import NoteIcon from '@/assets/icon/24/note.fiiled.svg?react';
-import PaperPlainIcon from '@/assets/icon/24/paperplane.svg?react';
+// import PaperPlainIcon from '@/assets/icon/24/paperplane.svg?react';
 import PatientIcon from '@/assets/icon/24/patient.fiiled.svg?react';
 import TextLogo from '@/assets/text-logo.webp';
 import {
@@ -66,12 +66,13 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         route: '/admin/session',
         roles: ['ROLE_ADMIN'],
       },
-      {
-        name: '메세지 보관함',
-        collapsedName: '메세지 보관함',
-        icon: <PaperPlainIcon width={24} height={24} />,
-        roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
-      },
+      // 기능 구현 전 임시 주석 처리
+      // {
+      //   name: '메세지 보관함',
+      //   collapsedName: '메세지 보관함',
+      //   icon: <PaperPlainIcon width={24} height={24} />,
+      //   roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
+      // },
       {
         name: '내담자 관리',
         collapsedName: '내담자 관리',
