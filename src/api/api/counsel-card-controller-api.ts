@@ -31,7 +31,6 @@ import {
 import {
   BASE_PATH,
   BaseAPI,
-  RequiredError,
   operationServerMap,
   type RequestArgs,
 } from '../base';
