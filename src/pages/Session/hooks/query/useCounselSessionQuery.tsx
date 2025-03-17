@@ -1,8 +1,4 @@
-import {
-  CounselorControllerApiFactory,
-  CounselSessionControllerApiFactory,
-  DefaultApiFactory,
-} from '@/api/api';
+import { CounselorControllerApi, CounselSessionControllerApi } from '@/api';
 import {
   COUNSEL_SESSION_KEYS,
   useCreateCounselSession,
@@ -20,6 +16,9 @@ export { useUpdateCounselSession };
 // 상담 세션 삭제 - 중앙 라이브러리에서 가져옴
 export { useDeleteCounselSession };
 
+const counselSessionControllerApi = new CounselSessionControllerApi();
+const counselorControllerApi = new CounselorControllerApi();
+
 // 상담 세션 목록 조회 (페이지네이션)
 export const useCounselSessionList = (
   baseDate?: string,
@@ -30,7 +29,7 @@ export const useCounselSessionList = (
   return useQuery({
     queryKey: COUNSEL_SESSION_KEYS.list({ baseDate, cursor, size }),
     queryFn: () =>
-      DefaultApiFactory().selectCounselSessionListByBaseDateAndCursorAndSize(
+      counselSessionControllerApi.selectCounselSessionListByBaseDateAndCursorAndSize(
         baseDate,
         cursor,
         size,
@@ -89,7 +88,7 @@ export const useSearchCounselSessions = (
       scheduledDates,
     }),
     queryFn: () =>
-      DefaultApiFactory().searchCounselSessions(
+      counselSessionControllerApi.searchCounselSessions(
         page,
         size,
         counseleeNameKeyword,
@@ -105,7 +104,7 @@ export const useSearchCounselSessions = (
 export const useCounselorList = (enabled = true) => {
   return useQuery({
     queryKey: ['counselorNames'],
-    queryFn: () => CounselorControllerApiFactory().getCounselorNames(),
+    queryFn: () => counselorControllerApi.getCounselorNames(),
     enabled: enabled,
     select: (response) => response.data?.counselorNames,
   });
@@ -120,10 +119,7 @@ export const useSessionDatesByMonth = (
   return useQuery({
     queryKey: ['sessionDates', year, month],
     queryFn: () =>
-      CounselSessionControllerApiFactory().getSessionDatesByYearAndMonth(
-        year,
-        month,
-      ),
+      counselSessionControllerApi.getSessionDatesByYearAndMonth(year, month),
     enabled: enabled,
     select: (response) => response.data?.data,
   });

@@ -1,4 +1,4 @@
-import { CounselorListItem, CounselorListItemRoleTypeEnum } from '@/api/api';
+import { CounselorListItem, CounselorListItemRoleTypeEnum } from '@/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Textarea } from '../../../../components/ui/textarea';
 
 interface BasicInfoTabProps {
   editedCounselor: CounselorListItem;
@@ -32,58 +33,33 @@ export default function BasicInfoTab({
   isPendingDelete,
 }: BasicInfoTabProps) {
   return (
-    <div className="mb-5 space-y-4 px-5">
-      {/* 이메일 계정 */}
+    <div className="mb-5 space-y-5 px-5">
       <div className="mb-4">
-        <Label className="mb-2 block font-medium">사용자 ID</Label>
-        <div className="py-2">{editedCounselor.username || ''}</div>
-      </div>
-
-      {/* 이름과 권한을 가로로 배치 */}
-      <div className="mb-4 grid grid-cols-2 gap-4">
-        <div>
-          <Label className="mb-2 block font-medium">이름</Label>
-          <div className="py-2">{editedCounselor.name}</div>
-        </div>
-
-        <div>
-          <Label className="mb-2 block font-medium">권한</Label>
-          <Select
-            value={editedCounselor.roleType}
-            onValueChange={(value) =>
-              setEditedCounselor({
-                ...editedCounselor,
-                roleType: value as CounselorListItemRoleTypeEnum,
-              })
-            }>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="권한 미등록" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={CounselorListItemRoleTypeEnum.Admin}>
-                관리자
-              </SelectItem>
-              <SelectItem value={CounselorListItemRoleTypeEnum.User}>
-                사용자
-              </SelectItem>
-              <SelectItem value={CounselorListItemRoleTypeEnum.Assistant}>
-                보조 상담사
-              </SelectItem>
-              <SelectItem value={CounselorListItemRoleTypeEnum.None}>
-                권한 없음
-              </SelectItem>
-            </SelectContent>
-          </Select>
+        <Label className="block font-bold leading-6">이메일 계정</Label>
+        <div className="font-medium leading-9">
+          {editedCounselor.username || ''}
         </div>
       </div>
 
-      {/* 휴대폰/가입일 */}
       <div className="mb-4 grid grid-cols-2 gap-4">
         <div>
-          <Label className="mb-2 block font-medium">휴대폰</Label>
+          <Label className="block font-medium">이름</Label>
+          <div className="font-medium leading-10">{editedCounselor.name}</div>
+        </div>
+        <div>
+          <Label className="block font-medium">가입일</Label>
+          <div className="font-medium leading-10">
+            {editedCounselor.registrationDate || '2024-10-18'}
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-4 grid grid-cols-2 gap-4">
+        <div>
+          <Label className="mb-3 block font-medium">휴대폰</Label>
           <Input
             placeholder="000-0000-0000"
-            className="border py-2"
+            className="py-2"
             value={editedCounselor.phoneNumber || ''}
             onChange={(e) => {
               const value = e.target.value?.replace(/[^0-9]/g, '') || '';
@@ -110,10 +86,33 @@ export default function BasicInfoTab({
         </div>
 
         <div>
-          <Label className="mb-2 block font-medium">가입일</Label>
-          <div className="py-2">
-            {editedCounselor.registrationDate || '2024-10-18'}
-          </div>
+          <Label className="mb-3 block font-medium">권한</Label>
+          <Select
+            value={editedCounselor.roleType}
+            onValueChange={(value) =>
+              setEditedCounselor({
+                ...editedCounselor,
+                roleType: value as CounselorListItemRoleTypeEnum,
+              })
+            }>
+            <SelectTrigger className="w-full text-base">
+              <SelectValue placeholder="권한 미등록" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={CounselorListItemRoleTypeEnum.Admin}>
+                관리자
+              </SelectItem>
+              <SelectItem value={CounselorListItemRoleTypeEnum.User}>
+                상담 약사
+              </SelectItem>
+              <SelectItem value={CounselorListItemRoleTypeEnum.Assistant}>
+                기초 상담사
+              </SelectItem>
+              <SelectItem value={CounselorListItemRoleTypeEnum.None}>
+                권한 없음
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -121,7 +120,7 @@ export default function BasicInfoTab({
         <Label htmlFor="description" className="mb-2 block font-medium">
           비고
         </Label>
-        <textarea
+        <Textarea
           id="description"
           className="min-h-[100px] w-full rounded border p-2"
           value={editedCounselor.description || ''}

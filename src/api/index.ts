@@ -13,6 +13,23 @@
  */
 
 
-export * from "./api";
-export * from "./configuration";
+// API 컨트롤러 export
+export * from './api/aicounsel-summary-controller-api';
+export * from './api/counsel-card-controller-api';
+export * from './api/counsel-session-controller-api';
+export * from './api/counselee-consent-controller-api';
+export * from './api/counselee-controller-api';
+export * from './api/counselor-controller-api';
+export * from './api/medication-controller-api';
+export * from './api/medication-counsel-controller-api';
+export * from './api/medication-record-hist-controller-api';
+export * from './api/waste-medication-controller-api';
+
+// 모델 타입 export
+export * from './models';
+
+// 공통 설정 export
+export * from './base';
+export * from './common';
+export * from './configuration';
 

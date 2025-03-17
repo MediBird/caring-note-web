@@ -1,4 +1,4 @@
-import { SelectCounselSessionRes } from '@/api/api';
+import { SelectCounselSessionRes } from '@/api';
 import { DataTable } from '@/components/common/DataTable/data-table';
 import { createScheduleColumns } from './CounselSessionColumns';
 interface ScheduleTableProps {

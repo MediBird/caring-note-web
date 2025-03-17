@@ -1,4 +1,4 @@
-import { CounselorListItem, UpdateCounselorReq } from '@/api/api';
+import { CounselorListItem, UpdateCounselorReq } from '@/api';
 import {
   Dialog,
   DialogClose,
@@ -78,8 +78,8 @@ export function AccountDetailDialog({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent
-        className="h-[554px] sm:max-w-[500px]"
-        onOpenAutoFocus={(e) => e.preventDefault()}>
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        className="w-full max-w-[504px]">
         <DialogHeader>
           <DialogTitle>계정 정보</DialogTitle>
           <DialogClose
@@ -92,9 +92,13 @@ export function AccountDetailDialog({
 
         {editedCounselor ? (
           <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="mb-4 grid w-full grid-cols-2">
-              <TabsTrigger value="basic">기본 정보</TabsTrigger>
-              <TabsTrigger value="password">비밀번호 변경</TabsTrigger>
+            <TabsList className="mb-5 flex h-10 w-full justify-start gap-5 px-5">
+              <TabsTrigger className="w-fit" value="basic">
+                기본 정보
+              </TabsTrigger>
+              <TabsTrigger className="w-fit" value="password">
+                비밀번호 변경
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="basic">

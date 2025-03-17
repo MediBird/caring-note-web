@@ -1,122 +1,125 @@
 import {
-  AddCounselCardReq,
-  AllergyDTO,
-  CounselCardRes,
-  CounselPurposeAndNoteDTO,
-  DiseaseInfoDTO,
-  DrinkingDTO,
-  ExerciseDTO,
-  MedicationManagementDTO,
-  MedicationSideEffectDTO,
-  NutritionDTO,
-  SmokingDTO,
-  UpdateCounselCardReq,
-} from '@/api/api';
+  CounselCardBaseInformationRes,
+  CounselCardHealthInformationRes,
+  CounselCardIndependentLifeInformationRes,
+  CounselCardLivingInformationRes,
+} from '@/api';
 import { create } from 'zustand';
 
 export interface CounselCardState {
-  counselCardData: Partial<CounselCardRes> | null;
-  isLoading: boolean;
-  error: string | null;
-  setCounselCardData: (data: Partial<CounselCardRes>) => void;
-  clearCounselCardData: () => void;
-  setLoading: (isLoading: boolean) => void;
-  setError: (error: string | null) => void;
+  baseInfo: Partial<CounselCardBaseInformationRes> | null;
+  healthInfo: Partial<CounselCardHealthInformationRes> | null;
+  independentLifeInfo: Partial<CounselCardIndependentLifeInformationRes> | null;
+  livingInfo: Partial<CounselCardLivingInformationRes> | null;
+  isDirty: {
+    base: boolean;
+    health: boolean;
+    independentLife: boolean;
+    living: boolean;
+  };
+  isLoading: {
+    base: boolean;
+    health: boolean;
+    independentLife: boolean;
+    living: boolean;
+  };
+  error: {
+    base: string | null;
+    health: string | null;
+    independentLife: string | null;
+    living: string | null;
+  };
+  setBaseInfo: (data: Partial<CounselCardBaseInformationRes>) => void;
+  setHealthInfo: (data: Partial<CounselCardHealthInformationRes>) => void;
+  setIndependentLifeInfo: (
+    data: Partial<CounselCardIndependentLifeInformationRes>,
+  ) => void;
+  setLivingInfo: (data: Partial<CounselCardLivingInformationRes>) => void;
+  clearAll: () => void;
+  setLoading: (
+    key: 'base' | 'health' | 'independentLife' | 'living',
+    isLoading: boolean,
+  ) => void;
+  setError: (
+    key: 'base' | 'health' | 'independentLife' | 'living',
+    error: string | null,
+  ) => void;
+  resetDirty: () => void;
 }
 
 export const useCounselCardStore = create<CounselCardState>((set) => ({
-  counselCardData: null,
-  isLoading: false,
-  error: null,
-  setCounselCardData: (data) => set({ counselCardData: data }),
-  clearCounselCardData: () => set({ counselCardData: null }),
-  setLoading: (isLoading) => set({ isLoading }),
-  setError: (error) => set({ error }),
+  baseInfo: null,
+  healthInfo: null,
+  independentLifeInfo: null,
+  livingInfo: null,
+  isDirty: {
+    base: false,
+    health: false,
+    independentLife: false,
+    living: false,
+  },
+  isLoading: {
+    base: false,
+    health: false,
+    independentLife: false,
+    living: false,
+  },
+  error: {
+    base: null,
+    health: null,
+    independentLife: null,
+    living: null,
+  },
+  setBaseInfo: (data) =>
+    set((state) => ({
+      baseInfo: data,
+      isDirty: { ...state.isDirty, base: true },
+    })),
+  setHealthInfo: (data) =>
+    set((state) => ({
+      healthInfo: data,
+      isDirty: { ...state.isDirty, health: true },
+    })),
+  setIndependentLifeInfo: (data) =>
+    set((state) => ({
+      independentLifeInfo: data,
+      isDirty: { ...state.isDirty, independentLife: true },
+    })),
+  setLivingInfo: (data) =>
+    set((state) => ({
+      livingInfo: data,
+      isDirty: { ...state.isDirty, living: true },
+    })),
+  clearAll: () =>
+    set({
+      baseInfo: null,
+      healthInfo: null,
+      independentLifeInfo: null,
+      livingInfo: null,
+      isDirty: {
+        base: false,
+        health: false,
+        independentLife: false,
+        living: false,
+      },
+    }),
+  setLoading: (key, isLoading) =>
+    set((state) => ({
+      isLoading: { ...state.isLoading, [key]: isLoading },
+    })),
+  setError: (key, error) =>
+    set((state) => ({
+      error: { ...state.error, [key]: error },
+    })),
+  resetDirty: () =>
+    set(() => ({
+      isDirty: {
+        base: false,
+        health: false,
+        independentLife: false,
+        living: false,
+      },
+    })),
 }));
 
-// 각 DTO의 기본값 생성
-const getEmptyCounselPurposeAndNote = (): CounselPurposeAndNoteDTO => ({
-  counselPurpose: new Set(),
-  significantNote: '',
-  medicationNote: '',
-});
 
-const getEmptyAllergyDTO = (): AllergyDTO => ({
-  allergyNote: '',
-});
-
-const getEmptyDiseaseInfoDTO = (): DiseaseInfoDTO => ({
-  diseases: new Set(),
-  historyNote: '',
-  mainInconvenienceNote: '',
-});
-
-const getEmptyMedicationSideEffectDTO = (): MedicationSideEffectDTO => ({
-  suspectedMedicationNote: '',
-  symptomsNote: '',
-});
-
-const getEmptyDrinkingDTO = (): DrinkingDTO => ({
-  drinkingAmount: undefined,
-});
-
-const getEmptyExerciseDTO = (): ExerciseDTO => ({
-  exercisePattern: undefined,
-  exerciseNote: '',
-});
-
-const getEmptyMedicationManagementDTO = (): MedicationManagementDTO => ({
-  houseMateNote: '',
-  medicationAssistants: new Set(),
-});
-
-const getEmptyNutritionDTO = (): NutritionDTO => ({
-  mealPattern: undefined,
-  nutritionNote: '',
-});
-
-const getEmptySmokingDTO = (): SmokingDTO => ({
-  smokingPeriodNote: '',
-  smokingAmount: undefined,
-});
-
-export const getAddCounselCardReq = (
-  counselSessionId: string,
-  data: Partial<CounselCardRes>,
-): AddCounselCardReq => {
-  return {
-    counselSessionId,
-    cardRecordStatus: data.cardRecordStatus,
-    counselPurposeAndNote:
-      data.counselPurposeAndNote || getEmptyCounselPurposeAndNote(),
-    allergy: data.allergy || getEmptyAllergyDTO(),
-    diseaseInfo: data.diseaseInfo || getEmptyDiseaseInfoDTO(),
-    medicationSideEffect:
-      data.medicationSideEffect || getEmptyMedicationSideEffectDTO(),
-    drinking: data.drinking || getEmptyDrinkingDTO(),
-    exercise: data.exercise || getEmptyExerciseDTO(),
-    medicationManagement:
-      data.medicationManagement || getEmptyMedicationManagementDTO(),
-    nutrition: data.nutrition || getEmptyNutritionDTO(),
-    smoking: data.smoking || getEmptySmokingDTO(),
-  };
-};
-
-export const getUpdateCounselCardReq = (
-  counselSessionId: string,
-  data: Partial<CounselCardRes>,
-): UpdateCounselCardReq => {
-  return {
-    counselSessionId,
-    cardRecordStatus: data.cardRecordStatus,
-    counselPurposeAndNote: data.counselPurposeAndNote,
-    allergy: data.allergy,
-    diseaseInfo: data.diseaseInfo,
-    medicationSideEffect: data.medicationSideEffect,
-    drinking: data.drinking,
-    exercise: data.exercise,
-    medicationManagement: data.medicationManagement,
-    nutrition: data.nutrition,
-    smoking: data.smoking,
-  };
-};

@@ -1,9 +1,9 @@
 import {
   AddAndUpdateMedicationRecordHistReq,
   SelectCounseleeBaseInformationByCounseleeIdRes,
-} from '@/api/api';
+  SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum,
+} from '@/api';
 import Spinner from '@/components/common/Spinner';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { useRecording } from '@/hooks/useRecording';
@@ -12,16 +12,21 @@ import { useGetIsRecordingPopupQuery } from '@/pages/Consult/hooks/query/counsel
 import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
 import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
+import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
+import { DISEASE_MAP } from '@/utils/constants';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
+import FinishConsultDialog from './components/FinishConsultDialog';
 import RecordingDialog from './components/recording/RecordingDialog';
 import ConsultCard from './components/tabs/ConsultCard';
 import DiscardMedicine from './components/tabs/DiscardMedicine';
 import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
+import TemporarySaveDialog from './components/TemporarySaveDialog';
 
 interface InfoItemProps {
   icon: string;
@@ -44,16 +49,13 @@ const InfoItem = ({ icon, content, showDivider = true }: InfoItemProps) => (
 interface HeaderButtonsProps {
   onSave: () => void;
   onComplete: () => void;
+  name?: string;
 }
 
-const HeaderButtons = ({ onSave, onComplete }: HeaderButtonsProps) => (
+const HeaderButtons = ({ onSave, onComplete, name }: HeaderButtonsProps) => (
   <div className="flex gap-3">
-    <Button variant="tertiary" size="xl" onClick={onSave}>
-      임시 저장
-    </Button>
-    <Button variant="primary" size="xl" onClick={onComplete}>
-      설문 완료
-    </Button>
+    <TemporarySaveDialog onSave={onSave} />
+    <FinishConsultDialog name={name} onComplete={onComplete} />
   </div>
 );
 
@@ -69,6 +71,7 @@ const ConsultHeader = ({
   age: string;
   diseases: React.ReactNode;
   saveConsult: () => void;
+  recordingStatus: RecordingStatus;
 }) => (
   <div className="sticky top-0 z-10">
     <div className="h-fit bg-white">
@@ -88,6 +91,7 @@ const ConsultHeader = ({
           <HeaderButtons
             onSave={saveConsult}
             onComplete={() => console.log('설문 완료')}
+            name={counseleeInfo?.name}
           />
         </div>
       </div>
@@ -119,7 +123,7 @@ export function Index() {
   const { mutate: saveMedicationCounsel } = useSaveMedicineConsult();
   const { medicineConsult } = useMedicineConsultStore();
   const { medicationRecordList } = useMedicineMemoStore();
-  const { resetRecording } = useRecording();
+  const { recordingStatus, resetRecording } = useRecording();
   const { saveMedicationRecordList } = useMedicationRecordSave();
   const { isSuccess: isSuccessGetIsRecordingPopup, data: isPopup } =
     useGetIsRecordingPopupQuery(counselSessionId);
@@ -137,18 +141,30 @@ export function Index() {
     );
   }
 
-  const formatDiseases = (diseases: string[] | undefined) => {
-    if (!diseases?.length) return '';
+  const formatDiseases = (
+    diseases:
+      | SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum[]
+      | Set<SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum>
+      | undefined,
+  ) => {
+    if (!diseases) return '';
 
-    if (diseases.length <= 3) {
-      return diseases.join(' · ');
+    const diseaseArray = Array.isArray(diseases)
+      ? diseases
+      : Array.from(diseases);
+    if (!diseaseArray.length) return '';
+
+    const mappedDiseases = diseaseArray.map((disease) => DISEASE_MAP[disease]);
+
+    if (mappedDiseases.length <= 3) {
+      return mappedDiseases.join(' · ');
     }
 
     return (
       <>
-        {diseases.slice(0, 3).join(' · ')}
+        {mappedDiseases.slice(0, 3).join(' · ')}
         <span className="text-grayscale-30">
-          {` 외 ${diseases.length - 3}개의 질병`}
+          {` 외 ${mappedDiseases.length - 3}개의 질병`}
         </span>
       </>
     );
@@ -157,7 +173,8 @@ export function Index() {
   const consultStatus =
     counseleeInfo?.counselCount === 0 ? '초기 상담' : '재상담';
   const age = `만 ${counseleeInfo?.age}세`;
-  const diseases = formatDiseases(Array.from(counseleeInfo?.diseases || []));
+  console.log('counseleeInfo:', counseleeInfo);
+  const diseases = formatDiseases(counseleeInfo?.diseases);
 
   const saveConsult = () => {
     saveWasteMedication();
@@ -167,6 +184,7 @@ export function Index() {
       medicationRecordHistList:
         medicationRecordList as unknown as AddAndUpdateMedicationRecordHistReq[],
     });
+    toast.success('작성하신 내용을 성공적으로 저장하였습니다.');
   };
 
   return (
@@ -185,8 +203,9 @@ export function Index() {
           age={age}
           diseases={diseases}
           saveConsult={saveConsult}
+          recordingStatus={recordingStatus}
         />
-        <div className="mb-100 h-full w-full px-layout [&>*]:max-w-content [&>*]:mx-auto pt-10 pb-10">
+        <div className="mb-100 h-full w-full px-layout pb-10 pt-10 [&>*]:mx-auto [&>*]:max-w-content">
           <TabsContent value="pastConsult">
             <PastConsult />
           </TabsContent>

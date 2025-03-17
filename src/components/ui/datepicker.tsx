@@ -22,6 +22,8 @@ export interface DatePickerProps {
   selectedMonth?: Date;
   onMonthChange?: Dispatch<SetStateAction<Date>>;
   isLoading?: boolean;
+  showBorderWithOpen?: boolean;
+  align?: 'start' | 'end';
 }
 
 export function DatePickerComponent({
@@ -34,6 +36,8 @@ export function DatePickerComponent({
   selectedMonth,
   onMonthChange,
   isLoading = false,
+  align = 'end',
+  showBorderWithOpen = false,
 }: DatePickerProps) {
   const [date, setDate] = React.useState<Date | undefined>(initialDate);
   const [isOpen, setIsOpen] = React.useState(false); // Popover 열림 상태 관리
@@ -71,16 +75,20 @@ export function DatePickerComponent({
           React.cloneElement(trigger as React.ReactElement, {
             className: cn(
               (trigger as React.ReactElement).props.className,
-              isOpen && '!text-primary-50',
+              isOpen && 'text-primary-50',
+              showBorderWithOpen && 'border-primary-50',
             ),
           })
         ) : (
           <Button
-            variant={'outline'}
+            variant="outline"
             className={cn(
-              'w-[280px] h-[2.25rem] justify-start border-none items-center text-left font-normal bg-transparent hover:bg-transparent text-base',
+              'h-full w-[280px] items-center justify-start border-transparent bg-transparent text-left text-base font-normal hover:bg-transparent',
               !date && 'text-muted-foreground',
-              isOpen && '!text-primary-50',
+              isOpen && 'text-primary-50',
+              showBorderWithOpen &&
+                isOpen &&
+                '!border-primary-50 ring-1 ring-primary-50',
               className,
             )}>
             {date ? (
@@ -93,7 +101,7 @@ export function DatePickerComponent({
       </PopoverTrigger>
       <PopoverContent
         className="w-auto border-none !shadow-cell-shadow"
-        align="end"
+        align={align}
         side="bottom"
         onInteractOutside={(e) => {
           e.preventDefault();
@@ -103,8 +111,8 @@ export function DatePickerComponent({
           setIsOpen(false);
         }}>
         {isLoading ? (
-          <div className="flex items-center justify-center h-[289px] w-[252px]">
-            <Spinner className="w-6 h-6" />
+          <div className="flex h-[289px] w-[252px] items-center justify-center">
+            <Spinner className="h-6 w-6" />
           </div>
         ) : (
           <Calendar

@@ -1,4 +1,4 @@
-import { UpdateCounseleeConsentReq } from '@/api/api';
+import { UpdateCounseleeConsentReq } from '@/api';
 import { create } from 'zustand';
 
 // 정보 제공 동의 관련 상태 관리

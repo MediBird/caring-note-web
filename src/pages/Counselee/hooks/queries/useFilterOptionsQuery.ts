@@ -1,7 +1,7 @@
-import { DefaultApi } from '@/api/api';
+import { CounseleeControllerApi } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
-const defaultApi = new DefaultApi();
+const counseleeControllerApi = new CounseleeControllerApi();
 
 export interface FilterOption {
   label: string;
@@ -10,7 +10,7 @@ export interface FilterOption {
 
 const fetchBirthDates = async (): Promise<FilterOption[]> => {
   try {
-    const response = await defaultApi.getBirthDates();
+    const response = await counseleeControllerApi.getBirthDates();
     return (
       response.data.data?.map((date: string) => ({
         label: date.replace(
@@ -28,7 +28,8 @@ const fetchBirthDates = async (): Promise<FilterOption[]> => {
 
 const fetchInstitutions = async (): Promise<FilterOption[]> => {
   try {
-    const response = await defaultApi.getAffiliatedWelfareInstitutions();
+    const response =
+      await counseleeControllerApi.getAffiliatedWelfareInstitutions();
     return (
       response.data.data?.map((institution: string) => ({
         label: institution,

@@ -1,5 +1,6 @@
-import { CounselorListItem, CounselorListItemRoleTypeEnum } from '@/api/api';
+import { CounselorListItem, CounselorListItemRoleTypeEnum } from '@/api';
 import { TableCell } from '@/components/common/DataTable/table-cell';
+import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';
 
 export const CreateCounselorColumns = (): ColumnDef<CounselorListItem>[] => [
@@ -55,7 +56,7 @@ export const CreateCounselorColumns = (): ColumnDef<CounselorListItem>[] => [
     size: 150,
     cell: ({ row }) => {
       const username = row.original.username;
-      return <TableCell text={username ?? ''} />;
+      return <TableCell text={formatDisplayText(username)} />;
     },
   },
   {
@@ -65,7 +66,7 @@ export const CreateCounselorColumns = (): ColumnDef<CounselorListItem>[] => [
     size: 150,
     cell: ({ row }) => {
       const phoneNumber = row.original.phoneNumber;
-      return <TableCell text={phoneNumber ?? ''} />;
+      return <TableCell text={formatDisplayText(phoneNumber)} />;
     },
   },
   {
@@ -75,17 +76,17 @@ export const CreateCounselorColumns = (): ColumnDef<CounselorListItem>[] => [
     size: 150,
     cell: ({ row }) => {
       const registrationDate = row.original.registrationDate;
-      return <TableCell text={registrationDate ?? ''} />;
+      return <TableCell text={formatDisplayText(registrationDate)} />;
     },
   },
   {
     id: 'description',
     accessorKey: 'description',
-    header: '설명',
+    header: '비고',
     size: 200,
     cell: ({ row }) => {
       const description = row.original.description;
-      return <TableCell text={description ?? ''} />;
+      return <TableCell text={formatDisplayText(description)} />;
     },
   },
-]; 
+];

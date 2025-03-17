@@ -1,13 +1,14 @@
-import { MedicationCounselControllerApi } from '@/api/api';
+import { MedicationCounselControllerApi } from '@/api';
 import { MedicineConsultDTO } from '@/pages/Consult/types/MedicineConsultDTO';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const medicationCounselControllerApi = new MedicationCounselControllerApi();
 
 const selectMedicationCounsel = async (counselSessionId: string) => {
-  const response = await medicationCounselControllerApi.selectMedicationCounsel(
-    counselSessionId,
-  );
+  const response =
+    await medicationCounselControllerApi.selectMedicationCounsel(
+      counselSessionId,
+    );
 
   return (
     response.data.data || {

@@ -1,4 +1,4 @@
-import { WasteMedicationControllerApi } from '@/api/api';
+import { WasteMedicationControllerApi } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
 export interface AddAndUpdateWasteMedicationDisposalDTO {

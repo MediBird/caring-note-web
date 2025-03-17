@@ -1,4 +1,4 @@
-import { SelectCounselSessionListItem } from '@/api/api';
+import { SelectCounselSessionListItem } from '@/api';
 import background from '@/assets/home/home-bg.webp';
 import logoWide from '@/assets/home/logo-wide.webp';
 import tableEmpty from '@/assets/home/table-empty.webp';
@@ -43,11 +43,11 @@ function Home() {
   return (
     <div
       style={{ backgroundImage: `url(${background})` }}
-      className="bg-cover bg-center bg-no-repeat h-full">
-      <div className="flex flex-col items-center justify-start h-full pt-[40px] pb-6 max-w-layout mx-auto px-layout [&>*]:max-w-content">
-        <div className="w-full flex justify-between items-center">
+      className="h-full bg-cover bg-center bg-no-repeat">
+      <div className="mx-auto flex h-full max-w-layout flex-col items-center justify-start px-layout pb-6 pt-[40px] [&>*]:max-w-content">
+        <div className="flex w-full items-center justify-between">
           <img src={logoWide} alt="logo" width={310} />
-          <div className="flex items-center gap-4 text-primary-50 font-medium">
+          <div className="flex items-center gap-4 font-medium text-primary-50">
             <a className="border-b-2 border-primary-50" href="/">
               내 정보
             </a>
@@ -59,22 +59,22 @@ function Home() {
             </a>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-between w-full gap-6 mt-3 hd:items-start hd:flex-row pb-10">
+        <div className="mt-3 flex w-full flex-col items-center justify-between gap-6 pb-10 hd:flex-row hd:items-start">
           {/* min-width 1440px 이상 */}
-          <div className="flex-col gap-4 hidden hd:flex w-full max-w-[314px]">
+          <div className="hidden w-full max-w-[314px] flex-col gap-4 hd:flex">
             <ConsultCountContainer />
             <CollegeMessages />
           </div>
-          <div className="flex flex-col items-center justify-center flex-grow w-full ">
-            <div className="w-full h-auto p-6 gap-6 bg-white rounded-xl shadow-container min-h-[824px] flex flex-col">
-              <div className="flex items-center justify-between w-full">
+          <div className="flex w-full flex-grow flex-col items-center justify-center">
+            <div className="flex h-auto min-h-[824px] w-full flex-col gap-6 rounded-xl bg-white p-6 shadow-container">
+              <div className="flex w-full items-center justify-between">
                 <span className="text-2xl font-bold">상담 일정</span>
                 <DatePickerComponent
                   isLoading={isCounselActiveDateLoading}
                   trigger={
                     <button
                       className={cn(
-                        'text-right flex items-center gap-0.5 font-bold px-2',
+                        'flex items-center gap-0.5 px-2 text-right font-bold',
                       )}>
                       <CalendarIcon />
                       날짜 선택
@@ -89,9 +89,9 @@ function Home() {
                   enabledDates={counselActiveDate ?? []}
                 />
               </div>
-              <div className="flex flex-col items-center justify-start flex-1">
+              <div className="flex flex-1 flex-col items-center justify-start">
                 {formattedCounselList?.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center flex-1">
+                  <div className="flex flex-1 flex-col items-center justify-center">
                     <img src={tableEmpty} alt="table-empty" />
                     <span className="text-2xl font-bold">
                       오늘은 예정된 상담 일정이 없어요
@@ -109,7 +109,7 @@ function Home() {
             </div>
           </div>
           {/* min-width 1440px 이하 */}
-          <div className="flex flex-col gap-4 justify-center hd:hidden w-full">
+          <div className="flex w-full flex-col justify-center gap-4 hd:hidden">
             <ConsultCountContainer />
             <CollegeMessages />
           </div>

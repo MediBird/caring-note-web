@@ -1,7 +1,7 @@
 import {
   SelectCounselSessionListItemStatusEnum,
   SelectCounselSessionRes,
-} from '@/api/api';
+} from '@/api';
 import { TableCell } from '@/components/common/DataTable/table-cell';
 import {
   DropdownMenu,
@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
 import { EditReservationDialog } from '../dialog/EditReservationDialog';
@@ -45,7 +46,7 @@ export const createScheduleColumns = ({
     size: 150,
     cell: ({ row }) => {
       const counselorName = row.original.counselorName;
-      return <TableCell text={counselorName ?? ''} />;
+      return <TableCell text={formatDisplayText(counselorName)} />;
     },
   },
   {
@@ -81,7 +82,7 @@ export const createScheduleColumns = ({
         case SelectCounselSessionListItemStatusEnum.Scheduled:
           statusText = '예정';
           break;
-        case SelectCounselSessionListItemStatusEnum.Progress:
+        case SelectCounselSessionListItemStatusEnum.InProgress:
           statusText = '진행';
           break;
         case SelectCounselSessionListItemStatusEnum.Completed:
@@ -100,11 +101,11 @@ export const createScheduleColumns = ({
           textColor={`${
             status === SelectCounselSessionListItemStatusEnum.Scheduled
               ? 'text-grayscale-50'
-              : status === SelectCounselSessionListItemStatusEnum.Progress
-              ? 'text-primary-50'
-              : status === SelectCounselSessionListItemStatusEnum.Completed
-              ? 'text-grayscale-100'
-              : 'text-error-50'
+              : status === SelectCounselSessionListItemStatusEnum.InProgress
+                ? 'text-primary-50'
+                : status === SelectCounselSessionListItemStatusEnum.Completed
+                  ? 'text-grayscale-100'
+                  : 'text-error-50'
           }`}
         />
       );
@@ -116,9 +117,9 @@ export const createScheduleColumns = ({
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="flex justify-center items-center w-full">
-              <button className="hover:bg-grayscale-5 text-center content-center rounded-[4px] text-grayscale-60 p-1">
-                <Ellipsis className="w-4 h-4" />
+            <div className="flex w-full items-center justify-center">
+              <button className="content-center rounded-[4px] p-1 text-center text-grayscale-60 hover:bg-grayscale-5">
+                <Ellipsis className="h-4 w-4" />
               </button>
             </div>
           </DropdownMenuTrigger>

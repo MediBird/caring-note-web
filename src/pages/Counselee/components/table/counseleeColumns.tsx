@@ -1,4 +1,4 @@
-import { SelectCounseleeRes } from '@/api/api';
+import { SelectCounseleeRes } from '@/api';
 import { TableCell } from '@/components/common/DataTable/table-cell';
 import {
   DropdownMenu,
@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
 
@@ -23,7 +24,7 @@ export const createCounseleeColumns = ({
     size: 100,
     cell: ({ row }) => {
       const name = row.original.name;
-      return <TableCell text={name ?? ''} />;
+      return <TableCell text={formatDisplayText(name)} />;
     },
   },
   {
@@ -60,7 +61,7 @@ export const createCounseleeColumns = ({
     size: 150,
     cell: ({ row }) => {
       const phoneNumber = row.getValue('phoneNumber') as string;
-      return <TableCell text={phoneNumber ?? ''} />;
+      return <TableCell text={formatDisplayText(phoneNumber)} />;
     },
   },
   {
@@ -72,7 +73,9 @@ export const createCounseleeColumns = ({
       const affiliatedWelfareInstitution = row.getValue(
         'affiliatedWelfareInstitution',
       ) as string;
-      return <TableCell text={affiliatedWelfareInstitution ?? ''} />;
+      return (
+        <TableCell text={formatDisplayText(affiliatedWelfareInstitution)} />
+      );
     },
   },
   {
@@ -82,7 +85,7 @@ export const createCounseleeColumns = ({
     size: 100,
     cell: ({ row }) => {
       const address = row.getValue('address') as string;
-      return <TableCell text={address ?? ''} />;
+      return <TableCell text={formatDisplayText(address)} />;
     },
   },
   {
@@ -92,7 +95,7 @@ export const createCounseleeColumns = ({
     size: 100,
     cell: ({ row }) => {
       const careManagerName = row.getValue('careManagerName') as string;
-      return <TableCell text={careManagerName ?? ''} />;
+      return <TableCell text={formatDisplayText(careManagerName)} />;
     },
   },
   {
@@ -102,7 +105,7 @@ export const createCounseleeColumns = ({
     size: 200,
     cell: ({ row }) => {
       const note = row.getValue('note') as string;
-      return <TableCell text={note ?? ''} />;
+      return <TableCell text={formatDisplayText(note)} />;
     },
   },
   {
@@ -111,9 +114,9 @@ export const createCounseleeColumns = ({
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="flex justify-center items-center w-full">
-              <button className="hover:bg-grayscale-5 text-center content-center rounded-[4px] text-grayscale-60 p-1">
-                <Ellipsis className="w-4 h-4" />
+            <div className="flex w-full items-center justify-center">
+              <button className="content-center rounded-[4px] p-1 text-center text-grayscale-60 hover:bg-grayscale-5">
+                <Ellipsis className="h-4 w-4" />
               </button>
             </div>
           </DropdownMenuTrigger>

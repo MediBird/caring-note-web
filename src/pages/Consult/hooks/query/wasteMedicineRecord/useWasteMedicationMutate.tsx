@@ -1,4 +1,4 @@
-import { WasteMedicationControllerApi } from '@/api/api';
+import { WasteMedicationControllerApi } from '@/api';
 import {
   AddAndUpdateWasteMedicationDisposalDTO,
   AddAndUpdateWasteMedicationDisposalSaveDTO,

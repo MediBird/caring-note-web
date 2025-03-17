@@ -1,7 +1,7 @@
 import {
   CounselSessionControllerApi,
   UpdateCounselorInCounselSessionReq,
-} from '@/api/api';
+} from '@/api';
 import { COUNSEL_SESSION_KEYS } from '@/hooks/useCounselSessionQuery';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

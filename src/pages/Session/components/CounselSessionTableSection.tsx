@@ -1,4 +1,4 @@
-import { SelectCounselSessionRes } from '@/api/api';
+import { SelectCounselSessionRes } from '@/api';
 import {
   DataTablePagination,
   PaginationInfo,
@@ -54,7 +54,7 @@ export function CounselSessionTableSection() {
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex w-full flex-col gap-4">
       <CounselSessionTable data={sessionData} onDelete={handleDelete} />
       <DataTablePagination
         pagination={pagination}

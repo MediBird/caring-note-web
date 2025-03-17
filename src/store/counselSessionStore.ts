@@ -1,4 +1,4 @@
-import { SelectCounselSessionListItem } from '@/api/api';
+import { SelectCounselSessionListItem } from '@/api';
 import { create } from 'zustand';
 
 interface FetchParams {

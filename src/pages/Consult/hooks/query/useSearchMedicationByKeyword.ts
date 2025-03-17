@@ -1,4 +1,4 @@
-import { MedicationControllerApi } from '@/api/api';
+import { MedicationControllerApi } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
 const medicationApi = new MedicationControllerApi();

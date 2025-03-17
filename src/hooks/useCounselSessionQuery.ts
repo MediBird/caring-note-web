@@ -3,7 +3,7 @@ import {
   CreateCounselReservationReq,
   DeleteCounselSessionReq,
   ModifyCounselReservationReq,
-} from '@/api/api';
+} from '@/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface FetchParams {
