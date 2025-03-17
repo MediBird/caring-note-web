@@ -24,7 +24,7 @@ export const useGetRecordingStatusQuery = (
     refetchInterval:
       recordingStatus === RecordingStatus.STTLoading ||
       recordingStatus === RecordingStatus.AILoading
-        ? 1000
+        ? 3000
         : false,
   });
 
