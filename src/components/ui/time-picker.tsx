@@ -19,10 +19,16 @@ const TimepickerComponent = ({
   className,
   handleClicked,
 }: TimePickerProps) => {
-  const [time, setTime] = useState<string | undefined>();
-  const [open, setOpen] = useState(false);
   const defaultTime = '12:00';
+  const [time, setTime] = useState<string | undefined>(defaultTime);
+  const [open, setOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // 컴포넌트 마운트 시 기본값 설정
+  useEffect(() => {
+    // 초기값을 handleClicked에 전달하여 부모 컴포넌트에서도 기본값을 사용하도록 함
+    handleClicked?.(defaultTime);
+  }, []);
 
   // 30분 단위로 시간 생성
   const times = Array.from({ length: 24 * 2 }, (_, i) => {
@@ -42,25 +48,31 @@ const TimepickerComponent = ({
   // Select가 열릴 때 스크롤 위치 조정
   useEffect(() => {
     if (open && scrollRef.current) {
-      const container = scrollRef.current.querySelector(
-        '[data-radix-scroll-area-viewport]',
-      );
-      if (container) {
-        const targetTime = time || defaultTime;
-        const targetElement = scrollRef.current.querySelector(
-          `[data-value="${targetTime}"]`,
+      const targetTime = time || defaultTime;
+
+      // 더 긴 지연 시간을 사용하여 컴포넌트가 완전히 렌더링될 시간을 확보
+      setTimeout(() => {
+        // 선택자를 직접 사용하여 스크롤 가능한 컨테이너 찾기
+        const scrollContainer = document.querySelector(
+          '.select-content .overflow-y-auto',
+        );
+        const targetElement = document.querySelector(
+          `.select-content [data-value="${targetTime}"]`,
         );
 
-        if (targetElement) {
+        if (scrollContainer && targetElement) {
           // 스크롤을 목표 요소로 이동
-          setTimeout(() => {
-            targetElement.scrollIntoView({
-              block: 'center',
-              behavior: 'smooth',
-            });
-          }, 0);
+          const containerRect = scrollContainer.getBoundingClientRect();
+          const targetRect = targetElement.getBoundingClientRect();
+
+          // 스크롤 컨테이너 내에서 요소의 상대적 위치 계산
+          const relativePosition = targetRect.top - containerRect.top;
+
+          // 스크롤 컨테이너의 중앙에 요소가 오도록 스크롤 위치 조정
+          scrollContainer.scrollTop =
+            relativePosition - containerRect.height / 2 + targetRect.height / 2;
         }
-      }
+      }, 100);
     }
   }, [open, time]);
 
@@ -82,7 +94,7 @@ const TimepickerComponent = ({
             className="w-full justify-between"
           />
         </SelectTrigger>
-        <SelectContent className="w-full" ref={scrollRef}>
+        <SelectContent ref={scrollRef} className="select-content w-full">
           {times.map((timeOption) => (
             <SelectItem
               key={timeOption}

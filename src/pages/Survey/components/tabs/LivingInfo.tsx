@@ -1,15 +1,22 @@
 import {
   CounselCardLivingInformationRes,
+  DrinkingDTODrinkingAmountEnum,
   MedicationManagementDTOMedicationAssistantsEnum,
+  SmokingDTOSmokingAmountEnum,
 } from '@/api';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Card } from '@/components/ui/card';
 import CardSection from '@/components/ui/card-section';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
+  DRINKING_FREQUENCY_OPTIONS,
+  DRINKING_OPTIONS,
   EXERCISE_PATTERN_OPTIONS,
   MEAL_PATTERN_OPTIONS,
   MEDICATION_ASSISTANTS_OPTIONS,
+  SMOKING_AMOUNT_OPTIONS,
+  SMOKING_OPTIONS,
 } from '@/utils/constants';
 import { useCounselCardStore } from '../../hooks/counselCardStore';
 import { useCounselCardLivingInfoQuery } from '../../hooks/useCounselCardQuery';
@@ -42,18 +49,24 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
     return <div>로딩 중...</div>;
   }
 
-  const smokingAmountOptions = [
-    { label: '흡연', value: 'true' },
-    { label: '비흡연', value: 'false' },
-  ];
-  const drinkingAmountOptions = [
-    { label: '음주', value: 'true' },
-    { label: '비음주', value: 'false' },
-  ];
+  const smokingAmountOptions = SMOKING_OPTIONS;
+  const smokingPackOptions = SMOKING_AMOUNT_OPTIONS;
+  const drinkingAmountOptions = DRINKING_OPTIONS;
+  const drinkingFrequencyOptions = DRINKING_FREQUENCY_OPTIONS;
+
   const houseMateOptions = [
     { label: '독거', value: 'true' },
     { label: '동거인 있음', value: 'false' },
   ];
+
+  const isSmoker =
+    livingInfo?.smoking?.smokingAmount !== undefined &&
+    livingInfo.smoking.smokingAmount !== SmokingDTOSmokingAmountEnum.None;
+
+  const isDrinker =
+    livingInfo?.drinking?.drinkingAmount !== undefined &&
+    livingInfo?.drinking?.drinkingAmount !== 'NONE';
+
   return (
     <Card className="flex w-full flex-col gap-5">
       <CardSection
@@ -65,15 +78,106 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
             value: (
               <ButtonGroup
                 options={smokingAmountOptions}
-                value={livingInfo?.smoking?.isSmoking ? 'true' : 'false'}
-                onChange={(value) =>
-                  handleUpdateLivingInfo('smoking.isSmoking', value === 'true')
-                }
+                value={isSmoker ? 'true' : 'false'}
+                onChange={(value) => {
+                  if (value === 'false') {
+                    // 비흡연인 경우 smokingAmount를 NONE으로 설정
+                    handleUpdateLivingInfo(
+                      'smoking.smokingAmount',
+                      SmokingDTOSmokingAmountEnum.None,
+                    );
+                  } else {
+                    // 흡연인 경우 기본값 설정
+                    handleUpdateLivingInfo(
+                      'smoking.smokingAmount',
+                      SmokingDTOSmokingAmountEnum.OnePack,
+                    );
+                  }
+                }}
               />
             ),
           },
+          ...(isSmoker
+            ? [
+                {
+                  label: '흡연 기간',
+                  value: (
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number"
+                        className="w-20"
+                        placeholder="년"
+                        min="0"
+                        max="100"
+                        value={
+                          livingInfo?.smoking?.smokingPeriodNote?.split(
+                            '년',
+                          )[0] || ''
+                        }
+                        onChange={(e) => {
+                          const years = e.target.value;
+                          const months =
+                            livingInfo?.smoking?.smokingPeriodNote
+                              ?.split('년')[1]
+                              ?.split('개월')[0]
+                              ?.trim() || '';
+                          const periodNote = `${years}년 ${months}개월`;
+                          handleUpdateLivingInfo(
+                            'smoking.smokingPeriodNote',
+                            periodNote,
+                          );
+                        }}
+                      />
+                      <span>년</span>
+                      <Input
+                        type="number"
+                        className="w-20"
+                        placeholder="개월"
+                        min="0"
+                        max="11"
+                        value={
+                          livingInfo?.smoking?.smokingPeriodNote
+                            ?.split('년')[1]
+                            ?.split('개월')[0]
+                            ?.trim() || ''
+                        }
+                        onChange={(e) => {
+                          const years =
+                            livingInfo?.smoking?.smokingPeriodNote?.split(
+                              '년',
+                            )[0] || '';
+                          const months = e.target.value;
+                          const periodNote = `${years}년 ${months}개월`;
+                          handleUpdateLivingInfo(
+                            'smoking.smokingPeriodNote',
+                            periodNote,
+                          );
+                        }}
+                      />
+                      <span>개월</span>
+                    </div>
+                  ),
+                },
+                {
+                  label: '흡연량',
+                  value: (
+                    <ButtonGroup
+                      options={smokingPackOptions}
+                      value={
+                        livingInfo?.smoking?.smokingAmount ||
+                        SmokingDTOSmokingAmountEnum.OnePack
+                      }
+                      onChange={(value) =>
+                        handleUpdateLivingInfo('smoking.smokingAmount', value)
+                      }
+                    />
+                  ),
+                },
+              ]
+            : []),
         ]}
       />
+
       <CardSection
         title="음주"
         items={[
@@ -82,16 +186,41 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
             value: (
               <ButtonGroup
                 options={drinkingAmountOptions}
-                value={livingInfo?.drinking?.isDrinking ? 'true' : 'false'}
+                value={
+                  livingInfo?.drinking?.drinkingAmount !==
+                  DrinkingDTODrinkingAmountEnum.None
+                    ? 'true'
+                    : 'false'
+                }
                 onChange={(value) =>
                   handleUpdateLivingInfo(
-                    'drinking.isDrinking',
-                    value === 'true',
+                    'drinking.drinkingAmount',
+                    value === 'true'
+                      ? DrinkingDTODrinkingAmountEnum.OnceAWeek
+                      : DrinkingDTODrinkingAmountEnum.None,
                   )
                 }
               />
             ),
           },
+          ...(isDrinker
+            ? [
+                {
+                  label: '음주 빈도',
+                  value: (
+                    <ButtonGroup
+                      options={drinkingFrequencyOptions}
+                      value={
+                        livingInfo?.drinking?.drinkingAmount || 'ONCE_A_WEEK'
+                      }
+                      onChange={(value) =>
+                        handleUpdateLivingInfo('drinking.drinkingAmount', value)
+                      }
+                    />
+                  ),
+                },
+              ]
+            : []),
         ]}
       />
       <CardSection

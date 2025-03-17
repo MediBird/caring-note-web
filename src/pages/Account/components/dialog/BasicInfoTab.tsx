@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { COUNSELOR_ROLE_TYPE_OPTIONS } from '@/utils/constants';
 import { Textarea } from '../../../../components/ui/textarea';
 
 interface BasicInfoTabProps {
@@ -99,18 +100,11 @@ export default function BasicInfoTab({
               <SelectValue placeholder="권한 미등록" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={CounselorListItemRoleTypeEnum.Admin}>
-                관리자
-              </SelectItem>
-              <SelectItem value={CounselorListItemRoleTypeEnum.User}>
-                상담 약사
-              </SelectItem>
-              <SelectItem value={CounselorListItemRoleTypeEnum.Assistant}>
-                기초 상담사
-              </SelectItem>
-              <SelectItem value={CounselorListItemRoleTypeEnum.None}>
-                권한 없음
-              </SelectItem>
+              {COUNSELOR_ROLE_TYPE_OPTIONS.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

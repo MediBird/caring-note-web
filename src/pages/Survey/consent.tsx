@@ -80,15 +80,37 @@ const consentItems: ConsentItem[] = [
         type: 'text',
         content: '개인정보의 제 3자 제공 동의에 관한 상세 내용입니다.',
       },
-      { type: 'heading', content: '1. 제공받는 자' },
-      { type: 'list', content: '제휴 업체 및 파트너사' },
-      { type: 'heading', content: '2. 제공 목적' },
-      { type: 'list', content: '서비스 제공 및 개선' },
-      { type: 'list', content: '마케팅 활용' },
-      { type: 'heading', content: '3. 제공 항목' },
-      { type: 'list', content: '이름, 연락처, 이메일 등' },
-      { type: 'heading', content: '4. 보유 및 이용 기간' },
-      { type: 'list', content: '제공 목적 달성 시까지' },
+      { type: 'heading', content: '제공 받는 자' },
+      { type: 'list', content: '신림종합사회복지관, 강감찬종합사회복지관' },
+      { type: 'heading', content: '제공 항목' },
+      {
+        type: 'list',
+        content:
+          '성명, 생년월일, 주소, 연락처, 건강정보, 복용약물 및 기타 건강상태에 대한 사항',
+      },
+      { type: 'heading', content: '제공 목적' },
+      { type: 'list', content: '사회 복지 서비스 연계' },
+      { type: 'heading', content: '보유 및 이용기간' },
+      { type: 'list', content: '해당 사업 제공기간 및 사업 종료일로부터 3년' },
+      { type: 'divider', content: '' },
+      { type: 'heading', content: '제공 받는 자' },
+      { type: 'list', content: '정다운우리의원' },
+      { type: 'heading', content: '제공 항목' },
+      {
+        type: 'list',
+        content:
+          '성명, 생년월일, 주소, 연락처, 건강정보, 복용약물 및 기타 건강상태에 대한 사항',
+      },
+      { type: 'heading', content: '제공 목적' },
+      { type: 'list', content: '진료 의뢰' },
+      { type: 'heading', content: '보유 및 이용기간' },
+      { type: 'list', content: '해당 사업 제공기간 및 사업 종료일로부터 3년' },
+      { type: 'divider', content: '' },
+      {
+        type: 'notice',
+        content:
+          '위와 같이 개인정보 제공 동의를 거부할 권리가 있으나, 동의를 거부하는 경우에는 일부 사업 참여가 불가함을 알려 드립니다.',
+      },
     ],
   },
   {
@@ -137,7 +159,9 @@ function ConsentContent({ sections }: { sections: ContentSection[] }) {
             return <hr key={index} className="my-4 border-grayscale-10" />;
           case 'notice':
             return (
-              <p key={index} className="text-body2 font-medium text-error-50">
+              <p
+                key={index}
+                className="text-body2 font-medium text-grayscale-50">
                 ※ {section.content}
               </p>
             );

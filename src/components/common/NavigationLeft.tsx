@@ -21,9 +21,17 @@ import {
 } from '@/components/ui/sidebar';
 import { useAuthContext } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
+import { ROLE_TYPE_MAP } from '@/utils/constants';
 import { useKeycloak } from '@react-keycloak/web';
 import { useLayoutEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+// HTML 엔티티와 특수문자를 제거하는 함수
+const cleanName = (name?: string): string => {
+  if (!name) return '';
+  // HTML 엔티티(&shy; 등) 및 특수 문자 제거
+  return name.trim().replace(/&shy;|­|[\u00AD]/g, '');
+};
 
 interface NavigationLeftProps {
   initialOpen?: boolean;
@@ -115,16 +123,16 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
   }, [initialOpen, setOpen]);
 
   return (
-    <Sidebar collapsible="icon" className="shadow-nav-left !border-0 z-50 ">
+    <Sidebar collapsible="icon" className="z-50 !border-0 shadow-nav-left">
       <SidebarHeader
         className={cn(
-          'border-b border-grayscale-10 flex flex-col gap-4 text-left',
+          'flex flex-col gap-4 border-b border-grayscale-10 text-left',
           !open && 'gap-0 border-b-0',
         )}>
         <button
           onClick={toggleSidebar}
           className={cn(
-            'p-0 h-fit flex justify-start items-center',
+            'flex h-fit items-center justify-start p-0',
             !open && 'justify-center',
           )}>
           <MenuIcon width={24} height={24} />
@@ -132,17 +140,15 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         {user && (
           <div
             className={cn(
-              'flex flex-wrap max-w-[156px] transition-opacity duration-1000 items-end gap-1.5',
+              'flex max-w-[156px] flex-wrap items-end gap-1.5 transition-opacity duration-1000',
               open ? 'opacity-100' : 'max-h-[0px] opacity-0 duration-0',
             )}>
-            <span className="text-subtitle2 font-bold break-words">
-              {user?.name?.trim() ?? ''}
+            <span className="break-words text-subtitle2 font-bold">
+              {cleanName(user?.name)}
             </span>
-            <span className="text-body1 font-medium break-keep">
+            <span className="break-keep text-body1 font-medium">
               {`${
-                roleNameMapByRoleType[
-                  user?.roleType as keyof typeof roleNameMapByRoleType
-                ]
+                ROLE_TYPE_MAP[user?.roleType as keyof typeof ROLE_TYPE_MAP]
               }님`}
             </span>
           </div>
@@ -158,9 +164,9 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                     isActive={getIsActive(item.route ?? '')}
                     onClick={() => handleMenuClick(item.route, item.action)}
                     className={cn(
-                      'flex items-center gap-2 flex-row',
+                      'flex flex-row items-center gap-2',
                       !open
-                        ? 'justify-center flex-col text-xs text-center p-[3px] overflow-hidden gap-1 font-bold text-grayscale-50 hover:!text-grayscale-70 [&>svg]:text-grayscale-90'
+                        ? 'flex-col justify-center gap-1 overflow-hidden p-[3px] text-center text-xs font-bold text-grayscale-50 hover:!text-grayscale-70 [&>svg]:text-grayscale-90'
                         : 'text-grayscale-90',
                       getIsActive(item.route ?? '') &&
                         'text-primary-50 [&>svg]:text-primary-50',
@@ -168,8 +174,8 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                     {item.icon}
                     <span
                       className={cn(
-                        'overflow-hidden whitespace-nowrap w-full',
-                        !open && 'text-center w-full whitespace-pre-wrap',
+                        'w-full overflow-hidden whitespace-nowrap',
+                        !open && 'w-full whitespace-pre-wrap text-center',
                       )}>
                       {open ? item.name : item.collapsedName}
                     </span>
@@ -177,16 +183,16 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-            {user && <div className="h-[1px] my-2.5 bg-grayscale-10 w-full" />}
+            {user && <div className="my-2.5 h-[1px] w-full bg-grayscale-10" />}
             <SidebarMenu>
               {menuItems.slice(5).map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton
                     onClick={() => handleMenuClick(item.route, item.action)}
                     className={cn(
-                      'flex items-center gap-2 flex-row',
+                      'flex flex-row items-center gap-2',
                       !open
-                        ? 'justify-center flex-col text-xs text-center p-[3px] overflow-hidden gap-1 font-bold text-grayscale-50 hover:!text-grayscale-70 [&>svg]:text-grayscale-90'
+                        ? 'flex-col justify-center gap-1 overflow-hidden p-[3px] text-center text-xs font-bold text-grayscale-50 hover:!text-grayscale-70 [&>svg]:text-grayscale-90'
                         : 'text-grayscale-90',
                       getIsActive(item.route ?? '') &&
                         'text-primary-50 [&>svg]:text-primary-50',
@@ -194,8 +200,8 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                     {item.icon}
                     <span
                       className={cn(
-                        'overflow-hidden whitespace-nowrap w-full',
-                        !open && 'text-center w-full whitespace-pre-wrap',
+                        'w-full overflow-hidden whitespace-nowrap',
+                        !open && 'w-full whitespace-pre-wrap text-center',
                       )}>
                       {open ? item.name : item.collapsedName}
                     </span>
@@ -211,7 +217,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
           <img
             src={TextLogo}
             alt="logo"
-            className="h-10 w-auto object-contain mb-2"
+            className="mb-2 h-10 w-auto object-contain"
             height={40}
           />
         )}
@@ -221,10 +227,3 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
 };
 
 export default NavigationLeft;
-
-const roleNameMapByRoleType: Record<string, string> = {
-  ROLE_NONE: '',
-  ROLE_ADMIN: '관리자',
-  ROLE_ASSISTANT: '상담사',
-  ROLE_USER: '약사',
-};

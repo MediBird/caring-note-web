@@ -22,9 +22,25 @@
 export interface SmokingDTO {
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof SmokingDTO
      */
-    'isSmoking'?: boolean;
+    'smokingPeriodNote'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SmokingDTO
+     */
+    'smokingAmount'?: SmokingDTOSmokingAmountEnum;
 }
+
+export const SmokingDTOSmokingAmountEnum = {
+    None: 'NONE',
+    OnePack: 'ONE_PACK',
+    TwoPacks: 'TWO_PACKS',
+    ThreeOrMorePacks: 'THREE_OR_MORE_PACKS'
+} as const;
+
+export type SmokingDTOSmokingAmountEnum = typeof SmokingDTOSmokingAmountEnum[keyof typeof SmokingDTOSmokingAmountEnum];
+
 

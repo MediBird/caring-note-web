@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { COUNSELOR_ROLE_TYPE_MAP } from '@/utils/constants';
 import { XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
@@ -41,6 +42,14 @@ export function AccountDetailDialog({
 
   const handleSave = () => {
     if (!editedCounselor) return;
+
+    // roleType이 COUNSELOR_ROLE_TYPE_MAP에 존재하는지 확인
+    if (
+      editedCounselor.roleType &&
+      !COUNSELOR_ROLE_TYPE_MAP[editedCounselor.roleType]
+    ) {
+      console.warn(`Invalid role type: ${editedCounselor.roleType}`);
+    }
 
     const updateData: UpdateCounselorReq = {
       roleType: editedCounselor.roleType,

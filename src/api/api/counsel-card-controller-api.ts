@@ -13,14 +13,28 @@
  */
 
 
-import type { Configuration } from '../configuration';
-import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
+import type { AxiosInstance, AxiosPromise, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
+import type { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from '../common';
+import {
+  DUMMY_BASE_URL,
+  assertParamExists,
+  createRequestFunction,
+  serializeDataIfNeeded,
+  setBearerAuthToObject,
+  setSearchParams,
+  toPathString,
+} from '../common';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
+import {
+  BASE_PATH,
+  BaseAPI,
+  RequiredError,
+  operationServerMap,
+  type RequestArgs,
+} from '../base';
 // @ts-ignore
 import type { CommonResCounselCardBaseInformationRes } from '../models';
 // @ts-ignore
@@ -36,9 +50,7 @@ import type { CommonResCounselCardRes } from '../models';
 // @ts-ignore
 import type { CommonResListTimeRecordedResObject } from '../models';
 // @ts-ignore
-import type { DeleteCounselor400Response } from '../models';
 // @ts-ignore
-import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { UpdateBaseInformationReq } from '../models';
 // @ts-ignore
@@ -297,7 +309,7 @@ export const CounselCardControllerApiAxiosParamCreator = function (configuration
             assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'counselSessionId', counselSessionId)
             // verify required parameter 'type' is not null or undefined
             assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'type', type)
-            const localVarPath = `/v1/counsel/card/{counselSessionId}/preious/item/list`
+            const localVarPath = `/v1/counsel/card/{counselSessionId}/previous/item/list`
                 .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);

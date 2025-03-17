@@ -8,6 +8,7 @@ import {
 } from '@/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { useCounselCardStore } from './counselCardStore';
 
@@ -15,7 +16,15 @@ const counselCardApi = new CounselCardControllerApi();
 
 // 기본 정보 쿼리 훅
 export const useCounselCardBaseInfoQuery = (counselSessionId: string) => {
-  const { setBaseInfo, setLoading, isDirty } = useCounselCardStore();
+  const { setBaseInfo, setLoading, isDirty, setCounselSessionId } =
+    useCounselCardStore();
+
+  // counselSessionId가 변경될 때마다 스토어의 ID 갱신
+  useEffect(() => {
+    if (counselSessionId) {
+      setCounselSessionId(counselSessionId);
+    }
+  }, [counselSessionId, setCounselSessionId]);
 
   return useQuery({
     queryKey: ['counselCardBaseInfo', counselSessionId],
@@ -30,12 +39,22 @@ export const useCounselCardBaseInfoQuery = (counselSessionId: string) => {
       return response.data.data;
     },
     enabled: !!counselSessionId,
+    staleTime: 0,
+    gcTime: 0,
   });
 };
 
 // 건강 정보 쿼리 훅
 export const useCounselCardHealthInfoQuery = (counselSessionId: string) => {
-  const { setHealthInfo, setLoading, isDirty } = useCounselCardStore();
+  const { setHealthInfo, setLoading, isDirty, setCounselSessionId } =
+    useCounselCardStore();
+
+  // counselSessionId가 변경될 때마다 스토어의 ID 갱신
+  useEffect(() => {
+    if (counselSessionId) {
+      setCounselSessionId(counselSessionId);
+    }
+  }, [counselSessionId, setCounselSessionId]);
 
   return useQuery({
     queryKey: ['counselCardHealthInfo', counselSessionId],
@@ -52,6 +71,8 @@ export const useCounselCardHealthInfoQuery = (counselSessionId: string) => {
       return response.data.data;
     },
     enabled: !!counselSessionId,
+    staleTime: 0,
+    gcTime: 0,
   });
 };
 
@@ -59,8 +80,20 @@ export const useCounselCardHealthInfoQuery = (counselSessionId: string) => {
 export const useCounselCardIndependentLifeInfoQuery = (
   counselSessionId: string,
 ) => {
-  const { setIndependentLifeInfo, setLoading, setError, isDirty } =
-    useCounselCardStore();
+  const {
+    setIndependentLifeInfo,
+    setLoading,
+    setError,
+    isDirty,
+    setCounselSessionId,
+  } = useCounselCardStore();
+
+  // counselSessionId가 변경될 때마다 스토어의 ID 갱신
+  useEffect(() => {
+    if (counselSessionId) {
+      setCounselSessionId(counselSessionId);
+    }
+  }, [counselSessionId, setCounselSessionId]);
 
   return useQuery({
     queryKey: ['counselCardIndependentLifeInfo', counselSessionId],
@@ -94,13 +127,22 @@ export const useCounselCardIndependentLifeInfoQuery = (
       }
     },
     enabled: !!counselSessionId,
+    staleTime: 0,
+    gcTime: 0,
   });
 };
 
 // 생활 정보 쿼리 훅
 export const useCounselCardLivingInfoQuery = (counselSessionId: string) => {
-  const { setLivingInfo, setLoading, setError, isDirty } =
+  const { setLivingInfo, setLoading, setError, isDirty, setCounselSessionId } =
     useCounselCardStore();
+
+  // counselSessionId가 변경될 때마다 스토어의 ID 갱신
+  useEffect(() => {
+    if (counselSessionId) {
+      setCounselSessionId(counselSessionId);
+    }
+  }, [counselSessionId, setCounselSessionId]);
 
   return useQuery({
     queryKey: ['counselCardLivingInfo', counselSessionId],
@@ -134,6 +176,8 @@ export const useCounselCardLivingInfoQuery = (counselSessionId: string) => {
       }
     },
     enabled: !!counselSessionId,
+    staleTime: 0,
+    gcTime: 0,
   });
 };
 
@@ -337,6 +381,21 @@ export const useSaveCounselCardDraft = () => {
   const saveDraft = async (counselSessionId: string) => {
     const promises = [];
 
+    // 운동과 영양 상태 데이터 검증
+    if (store.isDirty.living && store.livingInfo) {
+      // 영양 상태 패턴이 비어있는지 확인
+      if (!store.livingInfo.nutrition?.mealPattern) {
+        toast.error('영양 상태의 하루 식사 패턴을 선택해주세요.');
+        return false;
+      }
+
+      // 운동 패턴이 비어있는지 확인
+      if (!store.livingInfo.exercise?.exercisePattern) {
+        toast.error('운동의 주간 운동 패턴을 선택해주세요.');
+        return false;
+      }
+    }
+
     if (store.isDirty.base && store.baseInfo) {
       const baseInfoReq = {
         baseInfo: store.baseInfo.baseInfo || {},
@@ -430,7 +489,7 @@ export const useCompleteCounselCard = () => {
       }
 
       // 3. 상태를 COMPLETED로 변경
-      if (currentStatus !== 'IN_PROGRESS') {
+      if (currentStatus === 'IN_PROGRESS') {
         await statusMutation.mutateAsync({
           counselSessionId,
           status: 'COMPLETED',
