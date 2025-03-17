@@ -22,9 +22,21 @@
 export interface DrinkingDTO {
     /**
      * 
-     * @type {boolean}
+     * @type {string}
      * @memberof DrinkingDTO
      */
-    'isDrinking'?: boolean;
+    'drinkingAmount'?: DrinkingDTODrinkingAmountEnum;
 }
+
+export const DrinkingDTODrinkingAmountEnum = {
+    None: 'NONE',
+    OnceAWeek: 'ONCE_A_WEEK',
+    TwiceAWeek: 'TWICE_A_WEEK',
+    ThreeTimesAWeek: 'THREE_TIMES_A_WEEK',
+    FourTimesAWeek: 'FOUR_TIMES_A_WEEK',
+    FiveOrMoreTimesAWeek: 'FIVE_OR_MORE_TIMES_A_WEEK'
+} as const;
+
+export type DrinkingDTODrinkingAmountEnum = typeof DrinkingDTODrinkingAmountEnum[keyof typeof DrinkingDTODrinkingAmountEnum];
+
 

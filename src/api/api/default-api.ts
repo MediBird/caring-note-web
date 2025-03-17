@@ -1953,7 +1953,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'counselSessionId', counselSessionId)
             // verify required parameter 'type' is not null or undefined
             assertParamExists('selectPreviousItemListByInformationNameAndItemName', 'type', type)
-            const localVarPath = `/v1/counsel/card/{counselSessionId}/preious/item/list`
+            const localVarPath = `/v1/counsel/card/{counselSessionId}/previous/item/list`
                 .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
