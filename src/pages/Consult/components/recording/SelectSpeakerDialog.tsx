@@ -68,6 +68,19 @@ function SelectSpeakerDialog() {
     );
   };
 
+  // 발화자 선택화면 테스트용 더미 데이터 (QA이후 삭제하겠습니다)
+  // function generateMockData(count: number) {
+  //   return {
+  //     message: 'Mock data response',
+  //     data: Array.from({ length: count }, (_, index) => ({
+  //       speaker: String.fromCharCode(65 + (index % 26)), // A, B, C ... Z 반복
+  //       text: `Sample text ${index + 1}`,
+  //       isRecommended: Math.random() > 0.5, // 랜덤 true/false 값
+  //     })),
+  //   };
+  // }
+  // const mockData = generateMockData(7);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -125,7 +138,11 @@ function SelectSpeakerDialog() {
           </ScrollArea>
         </DialogDescription>
         <DialogFooter className="m-0 flex items-center justify-end p-5">
-          <Button variant="primary" size="md" onClick={handleClickConfirm}>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={handleClickConfirm}
+            disabled={!selectedSpeakers.length}>
             확인
           </Button>
         </DialogFooter>
