@@ -173,7 +173,6 @@ export function Index() {
   const consultStatus =
     counseleeInfo?.counselCount === 0 ? '초기 상담' : '재상담';
   const age = `만 ${counseleeInfo?.age}세`;
-  console.log('counseleeInfo:', counseleeInfo);
   const diseases = formatDiseases(counseleeInfo?.diseases);
 
   const saveConsult = () => {
