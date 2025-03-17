@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Tooltip,
   TooltipContent,
@@ -72,7 +73,7 @@ function SelectSpeakerDialog() {
       <DialogTrigger asChild>
         <Button variant={'primary'}>내용 확인</Button>
       </DialogTrigger>
-      <DialogContent className="z-50 w-[520px]">
+      <DialogContent className="z-50 max-h-[680px] w-[520px]">
         <DialogHeader className="my-3 flex items-center pr-2">
           <DialogTitle>
             <div>
@@ -94,8 +95,8 @@ function SelectSpeakerDialog() {
         <div className="h-[1px] bg-grayscale-20" />
         <DialogDescription
           asChild
-          className="m-0 flex flex-col items-center p-0">
-          <div>
+          className="m-0 flex max-h-[530px] flex-col items-center overflow-y-auto p-0">
+          <ScrollArea>
             {isSuccessGetSpeakerList &&
               speakerList?.map((data, index) => {
                 return (
@@ -121,7 +122,7 @@ function SelectSpeakerDialog() {
                   </div>
                 );
               })}
-          </div>
+          </ScrollArea>
         </DialogDescription>
         <DialogFooter className="m-0 flex items-center justify-end p-5">
           <Button variant="primary" size="md" onClick={handleClickConfirm}>
