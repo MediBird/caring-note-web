@@ -60,7 +60,7 @@ const ConsultCard: React.FC = () => {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>기초 상담 내역</CardTitle>
+          <CardTitle>기초 설문</CardTitle>
           <Button
             variant="secondary"
             onClick={() => navigate(`/survey/${counselSessionId}`)}>
