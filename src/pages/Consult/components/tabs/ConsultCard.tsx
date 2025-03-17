@@ -1,3 +1,4 @@
+import { SmokingDTOSmokingAmountEnum } from '@/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import CardSection from '@/components/ui/card-section';
@@ -16,6 +17,7 @@ import {
   COMMUNICATIONS_MAP,
   COUNSEL_PURPOSE_MAP,
   DISEASE_MAP,
+  DRINKING_FREQUENCY_MAP,
   EVACUATIONS_MAP,
   EXERCISE_PATTERN_MAP,
   HEALTH_INSURANCE_TYPE_MAP,
@@ -23,6 +25,7 @@ import {
   MEAL_PATTERN_MAP,
   MEDICATION_ASSISTANTS_MAP,
   SIGHTS_MAP,
+  SMOKING_AMOUNT_MAP,
   USING_KOREANS_MAP,
   WALKING_EQUIPMENTS_MAP,
   WALKING_METHODS_MAP,
@@ -108,22 +111,12 @@ const ConsultCard: React.FC = () => {
                       .join(', ')
                   : '',
               },
-            ]}
-          />
-          <CardSection
-            title="특이사항"
-            items={[
               {
                 label: '특이사항',
                 value:
                   consultCardData?.baseInformation?.counselPurposeAndNote
                     ?.significantNote || '',
               },
-            ]}
-          />
-          <CardSection
-            title="의약품"
-            items={[
               {
                 label: '의약품',
                 value:
@@ -132,7 +125,6 @@ const ConsultCard: React.FC = () => {
               },
             ]}
           />
-
           <CardSection
             title={
               <div className="flex items-center gap-2">
@@ -180,10 +172,33 @@ const ConsultCard: React.FC = () => {
             items={[
               {
                 label: '흡연 여부',
-                value: consultCardData?.livingInformation?.smoking?.isSmoking
-                  ? '흡연'
-                  : '비흡연',
+                value:
+                  consultCardData?.livingInformation?.smoking?.smokingAmount !==
+                  SmokingDTOSmokingAmountEnum.None
+                    ? '흡연'
+                    : '비흡연',
               },
+              ...(consultCardData?.livingInformation?.smoking?.smokingAmount !==
+              SmokingDTOSmokingAmountEnum.None
+                ? [
+                    {
+                      label: '총 흡연기간',
+                      value:
+                        consultCardData?.livingInformation?.smoking
+                          ?.smokingPeriodNote || '-',
+                    },
+                    {
+                      label: '하루 평균 흡연량',
+                      value: consultCardData?.livingInformation?.smoking
+                        ?.smokingAmount
+                        ? SMOKING_AMOUNT_MAP[
+                            consultCardData.livingInformation.smoking
+                              .smokingAmount
+                          ]
+                        : '-',
+                    },
+                  ]
+                : []),
             ]}
           />
 
@@ -192,10 +207,27 @@ const ConsultCard: React.FC = () => {
             items={[
               {
                 label: '음주 여부',
-                value: consultCardData?.livingInformation?.drinking?.isDrinking
-                  ? '음주'
-                  : '비음주',
+                value:
+                  consultCardData?.livingInformation?.drinking
+                    ?.drinkingAmount !== 'NONE'
+                    ? '음주'
+                    : '비음주',
               },
+              ...(consultCardData?.livingInformation?.drinking
+                ?.drinkingAmount !== 'NONE'
+                ? [
+                    {
+                      label: '음주 횟수',
+                      value: consultCardData?.livingInformation?.drinking
+                        ?.drinkingAmount
+                        ? DRINKING_FREQUENCY_MAP[
+                            consultCardData.livingInformation.drinking
+                              .drinkingAmount
+                          ]
+                        : '-',
+                    },
+                  ]
+                : []),
             ]}
           />
 

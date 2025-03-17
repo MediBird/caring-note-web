@@ -4,12 +4,16 @@ import {
   CommunicationDTOHearingsEnum,
   CommunicationDTOSightsEnum,
   CommunicationDTOUsingKoreansEnum,
+  CounselorListItemRoleTypeEnum,
   CounselPurposeAndNoteDTOCounselPurposeEnum,
+  DrinkingDTODrinkingAmountEnum,
   EvacuationDTOEvacuationsEnum,
   ExerciseDTOExercisePatternEnum,
+  GetCounselorResRoleTypeEnum,
   MedicationManagementDTOMedicationAssistantsEnum,
   NutritionDTOMealPatternEnum,
   SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum,
+  SmokingDTOSmokingAmountEnum,
   WalkingDTOWalkingEquipmentsEnum,
   WalkingDTOWalkingMethodsEnum,
 } from '@/api';
@@ -474,3 +478,85 @@ export const USING_KOREANS_MAP: Record<
   }),
   {} as Record<CommunicationDTOUsingKoreansEnum, string>,
 );
+
+export const SMOKING_AMOUNT_OPTIONS: ButtonGroupOption[] = [
+  { label: '1갑', value: SmokingDTOSmokingAmountEnum.OnePack },
+  { label: '2갑', value: SmokingDTOSmokingAmountEnum.TwoPacks },
+  { label: '3갑 이상', value: SmokingDTOSmokingAmountEnum.ThreeOrMorePacks },
+] as const;
+
+export const SMOKING_AMOUNT_MAP: Record<SmokingDTOSmokingAmountEnum, string> = {
+  [SmokingDTOSmokingAmountEnum.None]: '비흡연',
+  [SmokingDTOSmokingAmountEnum.OnePack]: '1갑',
+  [SmokingDTOSmokingAmountEnum.TwoPacks]: '2갑',
+  [SmokingDTOSmokingAmountEnum.ThreeOrMorePacks]: '3갑 이상',
+} as const;
+
+export const DRINKING_FREQUENCY_OPTIONS: ButtonGroupOption[] = [
+  { label: '주 1회', value: DrinkingDTODrinkingAmountEnum.OnceAWeek },
+  { label: '주 2회', value: DrinkingDTODrinkingAmountEnum.TwiceAWeek },
+  { label: '주 3회', value: DrinkingDTODrinkingAmountEnum.ThreeTimesAWeek },
+  { label: '주 4회', value: DrinkingDTODrinkingAmountEnum.FourTimesAWeek },
+  {
+    label: '주 5회 이상',
+    value: DrinkingDTODrinkingAmountEnum.FiveOrMoreTimesAWeek,
+  },
+] as const;
+
+export const DRINKING_FREQUENCY_MAP: Record<
+  DrinkingDTODrinkingAmountEnum,
+  string
+> = {
+  [DrinkingDTODrinkingAmountEnum.None]: '비음주',
+  [DrinkingDTODrinkingAmountEnum.OnceAWeek]: '주 1회',
+  [DrinkingDTODrinkingAmountEnum.TwiceAWeek]: '주 2회',
+  [DrinkingDTODrinkingAmountEnum.ThreeTimesAWeek]: '주 3회',
+  [DrinkingDTODrinkingAmountEnum.FourTimesAWeek]: '주 4회',
+  [DrinkingDTODrinkingAmountEnum.FiveOrMoreTimesAWeek]: '주 5회 이상',
+} as const;
+
+export const SMOKING_OPTIONS: ButtonGroupOption[] = [
+  { label: '흡연', value: 'true' },
+  { label: '비흡연', value: 'false' },
+] as const;
+
+export const DRINKING_OPTIONS: ButtonGroupOption[] = [
+  { label: '음주', value: 'true' },
+  { label: '비음주', value: 'false' },
+] as const;
+
+export const ROLE_TYPE_MAP: Record<string, string> = {
+  [GetCounselorResRoleTypeEnum.None]: '',
+  [GetCounselorResRoleTypeEnum.Admin]: '관리자',
+  [GetCounselorResRoleTypeEnum.Assistant]: '상담사',
+  [GetCounselorResRoleTypeEnum.User]: '약사',
+} as const;
+
+export const COUNSELOR_ROLE_TYPE_OPTIONS: ButtonGroupOption[] = [
+  { label: '관리자', value: CounselorListItemRoleTypeEnum.Admin },
+  { label: '상담약사', value: CounselorListItemRoleTypeEnum.User },
+  { label: '기록보조자', value: CounselorListItemRoleTypeEnum.Assistant },
+  { label: '권한없음', value: CounselorListItemRoleTypeEnum.None },
+] as const;
+
+export const COUNSELOR_ROLE_TYPE_MAP: Record<
+  CounselorListItemRoleTypeEnum,
+  { label: string; textColor: string }
+> = {
+  [CounselorListItemRoleTypeEnum.Admin]: {
+    label: '관리자',
+    textColor: 'text-grayscale-100',
+  },
+  [CounselorListItemRoleTypeEnum.User]: {
+    label: '상담약사',
+    textColor: 'text-grayscale-100',
+  },
+  [CounselorListItemRoleTypeEnum.Assistant]: {
+    label: '기록보조자',
+    textColor: 'text-primary-60',
+  },
+  [CounselorListItemRoleTypeEnum.None]: {
+    label: '권한미등록',
+    textColor: 'text-error-60',
+  },
+} as const;

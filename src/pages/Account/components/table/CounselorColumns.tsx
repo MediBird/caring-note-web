@@ -1,5 +1,6 @@
 import { CounselorListItem, CounselorListItemRoleTypeEnum } from '@/api';
 import { TableCell } from '@/components/common/DataTable/table-cell';
+import { COUNSELOR_ROLE_TYPE_MAP } from '@/utils/constants';
 import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';
 
@@ -20,33 +21,13 @@ export const CreateCounselorColumns = (): ColumnDef<CounselorListItem>[] => [
     header: '권한',
     size: 120,
     cell: ({ row }) => {
-      const roleType = row.original.roleType;
-      let roleText = '';
-      let textColor = '';
+      const roleType = row.original.roleType as CounselorListItemRoleTypeEnum;
+      const roleInfo = COUNSELOR_ROLE_TYPE_MAP[roleType] || {
+        label: '',
+        textColor: '',
+      };
 
-      switch (roleType) {
-        case CounselorListItemRoleTypeEnum.Admin:
-          roleText = '관리자';
-          textColor = 'text-grayscale-100';
-          break;
-        case CounselorListItemRoleTypeEnum.User:
-          roleText = '상담약사';
-          textColor = 'text-grayscale-100';
-          break;
-        case CounselorListItemRoleTypeEnum.Assistant:
-          roleText = '기초상담사';
-          textColor = 'text-primary-60';
-          break;
-        case CounselorListItemRoleTypeEnum.None:
-          roleText = '권한미등록';
-          textColor = 'text-error-60';
-          break;
-        default:
-          roleText = '';
-          break;
-      }
-
-      return <TableCell text={roleText} textColor={textColor} />;
+      return <TableCell text={roleInfo.label} textColor={roleInfo.textColor} />;
     },
   },
   {

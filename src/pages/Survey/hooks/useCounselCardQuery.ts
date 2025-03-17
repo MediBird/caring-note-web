@@ -381,6 +381,21 @@ export const useSaveCounselCardDraft = () => {
   const saveDraft = async (counselSessionId: string) => {
     const promises = [];
 
+    // 운동과 영양 상태 데이터 검증
+    if (store.isDirty.living && store.livingInfo) {
+      // 영양 상태 패턴이 비어있는지 확인
+      if (!store.livingInfo.nutrition?.mealPattern) {
+        toast.error('영양 상태의 하루 식사 패턴을 선택해주세요.');
+        return false;
+      }
+
+      // 운동 패턴이 비어있는지 확인
+      if (!store.livingInfo.exercise?.exercisePattern) {
+        toast.error('운동의 주간 운동 패턴을 선택해주세요.');
+        return false;
+      }
+    }
+
     if (store.isDirty.base && store.baseInfo) {
       const baseInfoReq = {
         baseInfo: store.baseInfo.baseInfo || {},
@@ -474,7 +489,7 @@ export const useCompleteCounselCard = () => {
       }
 
       // 3. 상태를 COMPLETED로 변경
-      if (currentStatus !== 'IN_PROGRESS') {
+      if (currentStatus === 'IN_PROGRESS') {
         await statusMutation.mutateAsync({
           counselSessionId,
           status: 'COMPLETED',
