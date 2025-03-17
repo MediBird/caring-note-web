@@ -17,6 +17,7 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  month,
   ...props
 }: CalendarProps) {
   return (
@@ -24,7 +25,7 @@ function Calendar({
       locale={ko}
       captionLayout="dropdown"
       showOutsideDays={showOutsideDays}
-      defaultMonth={new Date()}
+      defaultMonth={month ?? new Date()}
       className={cn('', className)}
       formatters={{
         formatCaption,
@@ -103,13 +104,13 @@ function Calendar({
         // },
         Dropdown: () => null,
         IconLeft: () => (
-          <span className="w-6 h-6 text-grayscale-100">
-            <LeftArrow className="w-6 h-6" />
+          <span className="h-6 w-6 text-grayscale-100">
+            <LeftArrow className="h-6 w-6" />
           </span>
         ),
         IconRight: () => (
-          <span className="w-6 h-6 text-grayscale-100">
-            <RightArrow className="w-6 h-6" />
+          <span className="h-6 w-6 text-grayscale-100">
+            <RightArrow className="h-6 w-6" />
           </span>
         ),
       }}
