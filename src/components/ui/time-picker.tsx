@@ -24,11 +24,6 @@ const TimepickerComponent = ({
   const [open, setOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // 컴포넌트 마운트 시 기본값 설정
-  useEffect(() => {
-    // 초기값을 handleClicked에 전달하여 부모 컴포넌트에서도 기본값을 사용하도록 함
-    handleClicked?.(defaultTime);
-  }, []);
 
   // 30분 단위로 시간 생성
   const times = Array.from({ length: 24 * 2 }, (_, i) => {

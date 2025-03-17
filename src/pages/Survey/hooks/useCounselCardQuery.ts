@@ -497,6 +497,7 @@ export const useCompleteCounselCard = () => {
       }
 
       return true;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_) {
       toast.error('설문 완료 처리 중 오류가 발생했습니다.');
       return false;
