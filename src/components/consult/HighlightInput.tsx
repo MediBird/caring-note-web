@@ -23,9 +23,13 @@ import { useParams } from 'react-router-dom';
 
 interface HighlightInputProps {
   className?: string;
+  inputClassName?: string;
 }
 
-const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
+const HighlightInput: React.FC<HighlightInputProps> = ({
+  className,
+  inputClassName,
+}) => {
   const { editorState, setEditorState } = useCounselRecordEditorStateStore();
 
   const { counselSessionId } = useParams();
@@ -235,7 +239,10 @@ const HighlightInput: React.FC<HighlightInputProps> = ({ className }) => {
         className,
       )}>
       <div
-        className="flex-1 border-b border-grayscale-30 p-2"
+        className={cn(
+          'flex-1 overflow-y-auto border-b border-grayscale-30 p-2',
+          inputClassName,
+        )}
         onClick={() => getHighlightedText()}>
         <Editor
           editorState={editorState}
