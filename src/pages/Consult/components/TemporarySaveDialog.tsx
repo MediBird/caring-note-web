@@ -29,7 +29,9 @@ const TemporarySaveDialog = ({ onSave }: TemporarySaveDialogProps) => {
 
   return (
     <>
-      {recordingStatus !== RecordingStatus.AICompleted ? (
+      {recordingStatus !== RecordingStatus.Ready &&
+      recordingStatus !== RecordingStatus.STTCompleted &&
+      recordingStatus !== RecordingStatus.AICompleted ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button variant={'secondary'} size={'xl'}>
