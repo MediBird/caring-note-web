@@ -10,7 +10,7 @@ const selectAICounselSummaryStatus = async (counselSessionId: string) => {
       counselSessionId,
     );
 
-  return response.data.data;
+  return response.data.data || {};
 };
 
 export const useGetRecordingStatusQuery = (
@@ -20,10 +20,7 @@ export const useGetRecordingStatusQuery = (
   const { data, isSuccess } = useQuery({
     queryKey: ['selectAICounselSummaryStatus', counselSessionId],
     queryFn: () => selectAICounselSummaryStatus(counselSessionId),
-    enabled:
-      !!counselSessionId &&
-      (recordingStatus === RecordingStatus.STTLoading ||
-        recordingStatus === RecordingStatus.AILoading),
+    enabled: !!counselSessionId,
     refetchInterval:
       recordingStatus === RecordingStatus.STTLoading ||
       recordingStatus === RecordingStatus.AILoading

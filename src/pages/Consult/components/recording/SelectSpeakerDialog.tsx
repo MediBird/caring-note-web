@@ -138,11 +138,7 @@ function SelectSpeakerDialog() {
           </ScrollArea>
         </DialogDescription>
         <DialogFooter className="m-0 flex items-center justify-end p-5">
-          <Button
-            variant="primary"
-            size="md"
-            onClick={handleClickConfirm}
-            disabled={!selectedSpeakers.length}>
+          <Button variant="primary" size="md" onClick={handleClickConfirm}>
             확인
           </Button>
         </DialogFooter>

@@ -1,12 +1,11 @@
 import { AICounselSummaryControllerApi } from '@/api';
-import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetRecordingStatusQuery';
 import { useSendSpeakersQuery } from '@/pages/Consult/hooks/query/counselRecording/useSendSpeakersQuery';
 import {
   MediaRecorderStatus,
   RecordingFileInfo,
   RecordingStatus,
 } from '@/pages/Consult/types/Recording.enum';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { create } from 'zustand';
 
 // store's state
@@ -62,32 +61,7 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     () => new AICounselSummaryControllerApi(),
     [],
   );
-  const {
-    data: getRecordingStatusData,
-    isSuccess: isSuccessGetRecordingStatus,
-  } = useGetRecordingStatusQuery(counselSessionId, recordingStatus);
   const { sendSpeakers } = useSendSpeakersQuery();
-
-  useEffect(() => {
-    if (
-      !isSuccessGetRecordingStatus ||
-      !getRecordingStatusData?.aiCounselSummaryStatus
-    ) {
-      return;
-    }
-
-    const statusMapping: { [key: string]: RecordingStatus } = {
-      STT_COMPLETE: RecordingStatus.STTCompleted,
-      STT_FAILED: RecordingStatus.Error,
-      GPT_COMPLETE: RecordingStatus.AICompleted,
-      GPT_FAILED: RecordingStatus.Error,
-    };
-
-    const status = statusMapping[getRecordingStatusData.aiCounselSummaryStatus];
-
-    if (status) updateRecordingStatus(status);
-  }, [isSuccessGetRecordingStatus, getRecordingStatusData]);
-
 
   const startRecording = async () => {
     try {
@@ -216,6 +190,13 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     sendSpeakers({ counselSessionId, speakers });
   };
 
+  const updateRecordingStatusByResponse = useCallback(
+    (status: RecordingStatus) => {
+      updateRecordingStatus(status);
+    },
+    [],
+  );
+
   return {
     startRecording,
     pauseRecording,
@@ -225,5 +206,6 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     submitSpeakers,
     recordingStatus,
     recordingTime,
+    updateRecordingStatusByResponse,
   };
 };
