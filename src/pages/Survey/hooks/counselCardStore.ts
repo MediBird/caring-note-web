@@ -7,6 +7,7 @@ import {
 import { create } from 'zustand';
 
 export interface CounselCardState {
+  counselSessionId: string | null;
   baseInfo: Partial<CounselCardBaseInformationRes> | null;
   healthInfo: Partial<CounselCardHealthInformationRes> | null;
   independentLifeInfo: Partial<CounselCardIndependentLifeInformationRes> | null;
@@ -29,6 +30,7 @@ export interface CounselCardState {
     independentLife: string | null;
     living: string | null;
   };
+  setCounselSessionId: (id: string) => void;
   setBaseInfo: (data: Partial<CounselCardBaseInformationRes>) => void;
   setHealthInfo: (data: Partial<CounselCardHealthInformationRes>) => void;
   setIndependentLifeInfo: (
@@ -48,6 +50,7 @@ export interface CounselCardState {
 }
 
 export const useCounselCardStore = create<CounselCardState>((set) => ({
+  counselSessionId: null,
   baseInfo: null,
   healthInfo: null,
   independentLifeInfo: null,
@@ -70,6 +73,21 @@ export const useCounselCardStore = create<CounselCardState>((set) => ({
     independentLife: null,
     living: null,
   },
+  setCounselSessionId: (id) =>
+    set((state) => {
+      if (state.counselSessionId !== id) {
+        return {
+          counselSessionId: id,
+          isDirty: {
+            base: false,
+            health: false,
+            independentLife: false,
+            living: false,
+          },
+        };
+      }
+      return { counselSessionId: id };
+    }),
   setBaseInfo: (data) =>
     set((state) => ({
       baseInfo: data,
