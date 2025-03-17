@@ -80,21 +80,14 @@ export default {
           90: '#303031',
           100: '#121212',
         },
-        purple: {
-          10: '#ECDDFF',
-          100: '#8A68E7',
-        },
-        blue: {
-          10: '#CEEFF8',
-          100: '#00A0BD',
-        },
-        pink: {
-          10: '#FFD8E4',
-          100: '#DD5984',
-        },
-        green: {
-          10: '#D7F7CF',
-          100: '#1BB200',
+        pfp: {
+          1: '#9ED5FF',
+          2: '#5069F8',
+          3: '#001A90',
+          4: '#0BC69B',
+          5: '#FFBE44',
+          6: '#F57D65',
+          7: '#B56AFF',
         },
         white: '#FFFFFF',
         sidebar: {
@@ -114,8 +107,8 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       boxShadow: {
-        'nav-right': '-4px 0 8px rgba(0,0,0,0.2)',
-        'nav-left': '4px 0 8px rgba(0,0,0,0.2)',
+        'nav-right': '-4px 0 20px rgba(0,0,0,0.08)',
+        'nav-left': '4px 0 20px rgba(0,0,0,0.08)',
         container: '0px 0px 20px 0px rgba(0,0,0,0.1)',
         'cell-shadow': '0px 2px 8px 0px #12121233',
       },

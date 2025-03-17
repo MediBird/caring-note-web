@@ -30,16 +30,14 @@ const TotalRecordings: React.FC = () => {
           speechToTextList?.map((data, index) => (
             <div
               key={index}
-              className="flex flex-row items-center justify-between">
+              className={cn(
+                'flex flex-row items-center justify-between rounded-sm border-l-[6px] pl-2',
+                getColorForSpeaker(data.name),
+              )}>
               <div className="flex flex-row items-center gap-3">
-                <div
-                  className={cn(
-                    'flex min-h-[24px] min-w-[24px] items-center justify-center rounded-full text-sm font-medium',
-                    getColorForSpeaker(data.name),
-                  )}>
-                  {data.name}
-                </div>
-                <p className="text-body1 text-grayscale-90">{data.text}</p>
+                <p className="max-w-[340px] break-words text-body1 text-grayscale-90">
+                  {data.text}
+                </p>
               </div>
               <p className="ml-2 text-body2 text-grayscale-30">
                 {data.startTime}

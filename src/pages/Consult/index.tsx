@@ -16,6 +16,7 @@ import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
+import useRightNavigationStore from '@/store/navigationStore';
 import { DISEASE_MAP } from '@/utils/constants';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
@@ -27,6 +28,7 @@ import DiscardMedicine from './components/tabs/DiscardMedicine';
 import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
 import TemporarySaveDialog from './components/TemporarySaveDialog';
+import { useGetRecordingStatusQuery } from './hooks/query/counselRecording/useGetRecordingStatusQuery';
 
 interface InfoItemProps {
   icon: string;
@@ -123,15 +125,54 @@ export function Index() {
   const { mutate: saveMedicationCounsel } = useSaveMedicineConsult();
   const { medicineConsult } = useMedicineConsultStore();
   const { medicationRecordList } = useMedicineMemoStore();
-  const { recordingStatus, resetRecording } = useRecording();
+  const { recordingStatus, resetRecording, updateRecordingStatusByResponse } =
+    useRecording();
   const { saveMedicationRecordList } = useMedicationRecordSave();
   const { isSuccess: isSuccessGetIsRecordingPopup, data: isPopup } =
     useGetIsRecordingPopupQuery(counselSessionId);
+  const {
+    data: getRecordingStatusData,
+    isSuccess: isSuccessGetRecordingStatus,
+  } = useGetRecordingStatusQuery(counselSessionId ?? '', recordingStatus);
   const { activeTab, setActiveTab } = useConsultTabStore();
+  const { openRightNav } = useRightNavigationStore();
 
   useEffect(() => {
-    resetRecording();
-  }, [resetRecording]);
+    if (!isSuccessGetRecordingStatus) {
+      return;
+    }
+    if (!getRecordingStatusData?.aiCounselSummaryStatus) {
+      resetRecording();
+      return;
+    }
+
+    const statusMapping: { [key: string]: RecordingStatus } = {
+      STT_COMPLETE: RecordingStatus.STTCompleted,
+      STT_FAILED: RecordingStatus.Error,
+      GPT_COMPLETE: RecordingStatus.AICompleted,
+      GPT_FAILED: RecordingStatus.Error,
+    };
+
+    const status = statusMapping[getRecordingStatusData.aiCounselSummaryStatus];
+
+    if (status) {
+      updateRecordingStatusByResponse(status);
+    }
+  }, [
+    resetRecording,
+    isSuccessGetRecordingStatus,
+    getRecordingStatusData,
+    updateRecordingStatusByResponse,
+  ]);
+
+  useEffect(() => {
+    if (
+      recordingStatus === RecordingStatus.STTCompleted ||
+      recordingStatus === RecordingStatus.AICompleted
+    ) {
+      openRightNav();
+    }
+  }, [recordingStatus, openRightNav]);
 
   if (isLoading) {
     return (
@@ -173,7 +214,6 @@ export function Index() {
   const consultStatus =
     counseleeInfo?.counselCount === 0 ? '초기 상담' : '재상담';
   const age = `만 ${counseleeInfo?.age}세`;
-  console.log('counseleeInfo:', counseleeInfo);
   const diseases = formatDiseases(counseleeInfo?.diseases);
 
   const saveConsult = () => {

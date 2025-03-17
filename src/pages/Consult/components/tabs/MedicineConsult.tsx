@@ -1,4 +1,3 @@
-import { useAppSelector } from '@/app/reduxHooks';
 import warning from '@/assets/warning.webp';
 import HighlightInput from '@/components/consult/HighlightInput';
 import Recording from '@/components/consult/Recording';
@@ -7,12 +6,11 @@ import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import RecordingResult from '@/pages/Consult/components/recording/RecordingResult';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
+import useRightNavigationStore from '@/store/navigationStore';
 
 const MedicineConsult: React.FC = () => {
-  const isRightNavigationOpen = useAppSelector(
-    (state) => state.navigation.isOpenRightNavigation,
-  );
   const { recordingStatus } = useRecording();
+  const { isOpen: isRightNavOpen } = useRightNavigationStore();
 
   const ViewWarningImage = () => {
     const heightClass =
@@ -46,18 +44,18 @@ const MedicineConsult: React.FC = () => {
       </CardHeader>
 
       <div className="flex w-full flex-row space-x-5">
-        <div className="flex min-h-[600px] min-w-[600px] flex-1 flex-col">
-          {isRightNavigationOpen ? (
+        <div className="flex min-h-[600px] min-w-[600px] flex-col">
+          {isRightNavOpen ? (
             <ViewWarningImage />
           ) : (
             <HighlightInput className="h-full" />
           )}
         </div>
 
-        <div className="flex w-full flex-1 justify-center">
-          {!isRightNavigationOpen &&
+        <div className="flex justify-center">
+          {!isRightNavOpen &&
             recordingStatus !== RecordingStatus.AICompleted && (
-              <Recording className="w-full" />
+              <Recording className="w-[348px]" />
             )}
           <RecordingResult className="-mt-[54px] w-full min-w-[456px]" />
         </div>

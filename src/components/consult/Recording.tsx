@@ -1,4 +1,3 @@
-import { useAppDispatch } from '@/app/reduxHooks';
 import PauseIcon from '@/assets/icon/24/pause.fill.black.svg?react';
 import PlayIcon from '@/assets/icon/24/record.fill.red.svg?react';
 import StopIcon from '@/assets/icon/24/stop.fill.black.svg?react';
@@ -12,8 +11,8 @@ import { cn } from '@/lib/utils';
 import DeleteRecordingDialog from '@/pages/Consult/components/recording/DeleteRecordingDialog';
 import SelectSpeakerDialog from '@/pages/Consult/components/recording/SelectSpeakerDialog';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
-import { toggleRightNavigation } from '@/reducers/navigationReducer';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
+import useRightNavigationStore from '@/store/navigationStore';
 import { Circle } from 'lucide-react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -32,12 +31,8 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     recordingStatus,
     recordingTime,
   } = useRecording(counselSessionId);
-  const dispatch = useAppDispatch();
-
-  const toggleMenu = () => {
-    dispatch(toggleRightNavigation());
-  };
   const { setActiveTab } = useConsultTabStore();
+  const { closeRightNav } = useRightNavigationStore();
 
   const circleColorClass =
     recordingStatus === RecordingStatus.Recording
@@ -96,7 +91,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
   };
 
   const showAiSummaryView = () => {
-    toggleMenu();
+    closeRightNav();
     setActiveTab(ConsultTab.consultNote);
   };
 
@@ -105,7 +100,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
       {
         <div
           className={cn(
-            'flex h-[166px] min-w-[348px] flex-col items-center justify-center gap-1 rounded-xl border border-grayscale-10 bg-grayscale-3',
+            'flex h-[166px] w-[348px] flex-col items-center justify-center gap-1 rounded-xl border border-grayscale-10 bg-grayscale-3',
             className,
           )}>
           {recordingStatus === RecordingStatus.STTLoading ? (
