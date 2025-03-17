@@ -25,9 +25,12 @@ export enum MediaRecorderStatus {
 
 // 기획에서 정의한 여러 발화자의 랜덤 색상 리스트
 export enum SpeakersColor {
-  Purple = 'text-purple-100 bg-purple-10',
-  Blue = 'text-blue-100 bg-blue-10',
-  Pink = 'text-pink-100 bg-pink-10',
-  Green = 'text-green-100 bg-green-10',
+  FIRST = 'border-pfp-1',
+  SECOND = 'border-pfp-2',
+  THIRD = 'border-pfp-3',
+  FOURTH = 'border-pfp-4',
+  FIFTH = 'border-pfp-5',
+  SIXTH = 'border-pfp-6',
+  SEVENTH = 'border-pfp-7',
 }
 export const SPEAKER_COLOR_LIST = Object.values(SpeakersColor);
