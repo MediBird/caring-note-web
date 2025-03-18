@@ -47,7 +47,10 @@ const NavigationRight = () => {
               />
             </div>
             <div className="flex w-full flex-col items-center justify-between gap-4 px-4 py-4">
-              <HighlightInput className="h-[450px] w-full" />
+              <HighlightInput
+                className="w-full"
+                inputClassName="max-h-[400px] min-h-[240px]"
+              />
               <Recording className="w-full" />
             </div>
           </div>

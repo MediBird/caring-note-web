@@ -43,12 +43,12 @@ const FinishConsultDialog = ({
           <DialogHeader className="mt-4 h-[80px] items-center justify-center">
             <DialogTitle>
               <p className="center text-center text-h3 font-bold">
-                {recordingStatus === RecordingStatus.AICompleted ? (
-                  `${name}님, 상담을 완료하시겠어요?`
+                {recordingStatus === RecordingStatus.STTCompleted ||
+                recordingStatus === RecordingStatus.AICompleted ? (
+                  <>{name}님, 상담을 완료하시겠어요?</>
                 ) : (
                   <>
-                    녹음을 저장하지 않은 채로
-                    <br />
+                    녹음을 저장하지 않은 채로 <br />
                     상담을 완료하시겠어요?
                   </>
                 )}
@@ -63,7 +63,8 @@ const FinishConsultDialog = ({
                 alt="finishConsult"
               />
               <p className="text-center text-body1 font-medium text-grayscale-100">
-                {recordingStatus === RecordingStatus.AICompleted ? (
+                {recordingStatus === RecordingStatus.STTCompleted ||
+                recordingStatus === RecordingStatus.AICompleted ? (
                   <>
                     상담 완료 후, 상담 내역에서 기록하신 내용을 확인할 수
                     있습니다.
