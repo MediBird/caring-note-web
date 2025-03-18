@@ -88,7 +88,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
   const renderActionButtons = () => {
     if (dialogState.UNASSIGNED) {
       return (
-        <>
+        <div className="flex w-full justify-between gap-3">
           <Button type="button" variant="secondary" onClick={handleAssign}>
             나에게 할당하기
           </Button>
@@ -99,7 +99,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
             onClick={handleAssignAndConsult}>
             할당하고 상담하기
           </Button>
-        </>
+        </div>
       );
     }
     if (dialogState.ASSIGNED_TO_ME) {
