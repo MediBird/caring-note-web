@@ -2,6 +2,7 @@ import {
   AddAndUpdateMedicationRecordHistReq,
   SelectCounseleeBaseInformationByCounseleeIdRes,
   SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum,
+  UpdateStatusInCounselSessionReqStatusEnum,
 } from '@/api';
 import Spinner from '@/components/common/Spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -29,6 +30,9 @@ import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
 import TemporarySaveDialog from './components/TemporarySaveDialog';
 import { useGetRecordingStatusQuery } from './hooks/query/counselRecording/useGetRecordingStatusQuery';
+import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
+import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
+import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
 
 interface InfoItemProps {
   icon: string;
@@ -52,28 +56,42 @@ interface HeaderButtonsProps {
   onSave: () => void;
   onComplete: () => void;
   name?: string;
+  sessionStatus: UpdateStatusInCounselSessionReqStatusEnum | undefined;
 }
 
-const HeaderButtons = ({ onSave, onComplete, name }: HeaderButtonsProps) => (
+const HeaderButtons = ({
+  onSave,
+  onComplete,
+  name,
+  sessionStatus,
+}: HeaderButtonsProps) => (
   <div className="flex gap-3">
-    <TemporarySaveDialog onSave={onSave} />
-    <FinishConsultDialog name={name} onComplete={onComplete} />
+    {sessionStatus !== 'COMPLETED' && <TemporarySaveDialog onSave={onSave} />}
+    {sessionStatus === 'COMPLETED' ? (
+      <EditConsultDialog onEdit={onComplete} />
+    ) : (
+      <FinishConsultDialog name={name} onComplete={onComplete} />
+    )}
   </div>
 );
 
 const ConsultHeader = ({
   counseleeInfo,
+  sessionStatus,
   consultStatus,
   age,
   diseases,
   saveConsult,
+  completeConsult,
 }: {
   counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
   consultStatus: string;
+  sessionStatus: UpdateStatusInCounselSessionReqStatusEnum | undefined;
   age: string;
   diseases: React.ReactNode;
   saveConsult: () => void;
   recordingStatus: RecordingStatus;
+  completeConsult: () => void;
 }) => (
   <div className="sticky top-0 z-10">
     <div className="h-fit bg-white">
@@ -92,8 +110,9 @@ const ConsultHeader = ({
           </div>
           <HeaderButtons
             onSave={saveConsult}
-            onComplete={() => console.log('설문 완료')}
+            onComplete={completeConsult}
             name={counseleeInfo?.name}
+            sessionStatus={sessionStatus}
           />
         </div>
       </div>
@@ -119,6 +138,10 @@ export function Index() {
   const { data: counseleeInfo, isLoading } = useSelectCounseleeInfo(
     counselSessionId ?? '',
   );
+  const { data: counselSessionInfo } = useCounselSessionQueryById(
+    counselSessionId ?? '',
+  );
+
   const { saveWasteMedication } = useSaveWasteMedication(
     counselSessionId ?? '',
   );
@@ -136,6 +159,10 @@ export function Index() {
   } = useGetRecordingStatusQuery(counselSessionId ?? '', recordingStatus);
   const { activeTab, setActiveTab } = useConsultTabStore();
   const { openRightNav } = useRightNavigationStore();
+
+  const { mutate: updateCounselSessionStatus } = useUpdateCounselSessionStatus({
+    counselSessionId: counselSessionId ?? '',
+  });
 
   useEffect(() => {
     if (!isSuccessGetRecordingStatus) {
@@ -227,6 +254,14 @@ export function Index() {
     toast.success('작성하신 내용을 성공적으로 저장하였습니다.');
   };
 
+  const completeConsult = () => {
+    saveConsult();
+
+    if (counselSessionInfo?.status !== 'COMPLETED') {
+      updateCounselSessionStatus('COMPLETED');
+    }
+  };
+
   return (
     <>
       <Tabs
@@ -239,11 +274,13 @@ export function Index() {
           counseleeInfo={
             counseleeInfo as SelectCounseleeBaseInformationByCounseleeIdRes
           }
+          sessionStatus={counselSessionInfo?.status}
           consultStatus={consultStatus}
           age={age}
           diseases={diseases}
           saveConsult={saveConsult}
           recordingStatus={recordingStatus}
+          completeConsult={completeConsult}
         />
         <div className="mb-100 h-full w-full px-layout pb-10 pt-6 [&>*]:mx-auto [&>*]:max-w-content">
           <TabsContent value="pastConsult">
