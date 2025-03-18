@@ -29,9 +29,10 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
   const [open, setOpen] = useState(false);
 
   const dialogState = {
-    UNASSIGNED: counselorId === null,
+    UNASSIGNED: counselorId === null || counselorId === '',
     ASSIGNED_TO_ME: counselorId === user?.id,
-    ASSIGNED_TO_OTHER: counselorId !== null && counselorId !== user?.id,
+    ASSIGNED_TO_OTHER:
+      counselorId !== null && counselorId !== user?.id && counselorId !== '',
   };
 
   const dialogContent = {
@@ -87,7 +88,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
   const renderActionButtons = () => {
     if (dialogState.UNASSIGNED) {
       return (
-        <>
+        <div className="flex w-full justify-between gap-3">
           <Button type="button" variant="secondary" onClick={handleAssign}>
             나에게 할당하기
           </Button>
@@ -98,7 +99,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
             onClick={handleAssignAndConsult}>
             할당하고 상담하기
           </Button>
-        </>
+        </div>
       );
     }
     if (dialogState.ASSIGNED_TO_ME) {
@@ -119,7 +120,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{renderTriggerButton()}</DialogTrigger>
       <DialogContent>
-        <DialogHeader className="flex justify-between items-center">
+        <DialogHeader className="flex items-center justify-between">
           <DialogTitle>
             {dialogState.UNASSIGNED && dialogContent.title.UNASSIGNED}
             {dialogState.ASSIGNED_TO_ME && dialogContent.title.ASSIGNED_TO_ME}
@@ -128,7 +129,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
           </DialogTitle>
           <DialogClose
             asChild
-            className="cursor-pointer border-none bg-transparent text-grayscale-100 !mt-0 !p-0 w-6 h-6">
+            className="!mt-0 h-6 w-6 cursor-pointer border-none bg-transparent !p-0 text-grayscale-100">
             <XIcon />
           </DialogClose>
         </DialogHeader>

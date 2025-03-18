@@ -24,6 +24,7 @@ export interface DatePickerProps {
   isLoading?: boolean;
   showBorderWithOpen?: boolean;
   align?: 'start' | 'end';
+  activeAllDates?: boolean;
 }
 
 export function DatePickerComponent({
@@ -38,7 +39,10 @@ export function DatePickerComponent({
   isLoading = false,
   align = 'end',
   showBorderWithOpen = false,
+  activeAllDates = true,
 }: DatePickerProps) {
+  const [month, setMonth] = React.useState<Date | undefined>(selectedMonth);
+
   const [date, setDate] = React.useState<Date | undefined>(initialDate);
   const [isOpen, setIsOpen] = React.useState(false); // Popover 열림 상태 관리
 
@@ -59,13 +63,18 @@ export function DatePickerComponent({
 
   const isDateDisabled = useCallback(
     (date: Date) => {
-      if (enabledDatesSet.size === 0) {
+      if (enabledDatesSet.size === 0 && activeAllDates) {
         return false;
       }
+
+      if (!activeAllDates && enabledDatesSet.size === 0) {
+        return true;
+      }
+
       const formattedDate = format(date, 'yyyy-MM-dd');
       return !enabledDatesSet.has(formattedDate);
     },
-    [enabledDatesSet],
+    [enabledDatesSet, activeAllDates],
   );
 
   return (
@@ -111,7 +120,7 @@ export function DatePickerComponent({
           setIsOpen(false);
         }}>
         {isLoading ? (
-          <div className="flex h-[289px] w-[252px] items-center justify-center">
+          <div className="flex min-h-[224px] min-w-[224px] items-center justify-center p-0">
             <Spinner className="h-6 w-6" />
           </div>
         ) : (
@@ -124,8 +133,8 @@ export function DatePickerComponent({
             fromYear={1960}
             toYear={2050}
             initialFocus
-            month={selectedMonth}
-            onMonthChange={onMonthChange}
+            month={selectedMonth ? selectedMonth : month}
+            onMonthChange={onMonthChange ? onMonthChange : setMonth}
             disabled={isDateDisabled}
           />
         )}

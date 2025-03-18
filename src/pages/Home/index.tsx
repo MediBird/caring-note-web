@@ -70,6 +70,7 @@ function Home() {
               <div className="flex w-full items-center justify-between">
                 <span className="text-2xl font-bold">상담 일정</span>
                 <DatePickerComponent
+                  activeAllDates={false}
                   isLoading={isCounselActiveDateLoading}
                   trigger={
                     <button
