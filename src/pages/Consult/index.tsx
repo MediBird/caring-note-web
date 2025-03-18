@@ -105,7 +105,7 @@ const ConsultHeader = ({
 const ConsultTabs = () => (
   <TabsList className="w-full border-b border-grayscale-10">
     <div className="mx-auto flex h-full w-full max-w-layout justify-start gap-5 px-layout [&>*]:max-w-content">
-      <TabsTrigger value="pastConsult">이전 상담 내역</TabsTrigger>
+      <TabsTrigger value="pastConsult">상담 히스토리</TabsTrigger>
       <TabsTrigger value="survey">기초 설문 내역</TabsTrigger>
       <TabsTrigger value="medicine">의약물 기록</TabsTrigger>
       <TabsTrigger value="note">중재 기록 작성</TabsTrigger>
