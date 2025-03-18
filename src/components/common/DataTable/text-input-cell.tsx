@@ -37,7 +37,7 @@ function TextInputCell<T extends { id: string }>({
   };
 
   return isEditing ? (
-    <div className="relative w-full h-full shadow-cell-shadow rounded-[8px] bg-white content-center px-3">
+    <div className="relative h-full w-full content-center rounded-[8px] bg-white px-3 shadow-cell-shadow">
       <Input
         value={inputValue}
         onChange={(e) => {
@@ -51,7 +51,7 @@ function TextInputCell<T extends { id: string }>({
         autoFocus
         onBlur={handleBlur}
         onFocus={handleFocus}
-        className="w-full h-7 border-0 border-b-2 border-b-primary-50 rounded-none px-3 !focus:outline-none !focus:ring-0 !focus:ring-offset-0"
+        className="!focus:outline-none !focus:ring-0 !focus:ring-offset-0 h-7 w-full rounded-none border-0 border-b-2 border-b-primary-50 px-0"
       />
       {unit && (
         <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500">
@@ -62,7 +62,7 @@ function TextInputCell<T extends { id: string }>({
   ) : (
     <div
       onClick={handleFocus}
-      className={`cursor-pointer px-3 w-full h-full flex items-center justify-start ${
+      className={`flex h-full w-full cursor-pointer items-center justify-start px-3 ${
         value ? 'text-grayscale-70' : 'text-grayscale-30'
       }`}>
       {value ? value : placeholder}
