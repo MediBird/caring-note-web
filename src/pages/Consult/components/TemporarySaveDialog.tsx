@@ -34,7 +34,7 @@ const TemporarySaveDialog = ({ onSave }: TemporarySaveDialogProps) => {
       recordingStatus !== RecordingStatus.AICompleted ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant={'secondary'} size={'xl'}>
+            <Button variant={'tertiary'} size={'xl'}>
               임시 저장
             </Button>
           </DialogTrigger>
@@ -75,7 +75,7 @@ const TemporarySaveDialog = ({ onSave }: TemporarySaveDialogProps) => {
           </DialogContent>
         </Dialog>
       ) : (
-        <Button variant="secondary" size="xl" onClick={onSave}>
+        <Button variant="tertiary" size="xl" onClick={onSave}>
           임시 저장
         </Button>
       )}
