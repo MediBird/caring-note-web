@@ -19,7 +19,7 @@ import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
 import useRightNavigationStore from '@/store/navigationStore';
 import { DISEASE_MAP } from '@/utils/constants';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import FinishConsultDialog from './components/FinishConsultDialog';
@@ -83,6 +83,7 @@ const ConsultHeader = ({
   diseases,
   saveConsult,
   completeConsult,
+  hasPreviousConsult,
 }: {
   counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
   consultStatus: string;
@@ -92,6 +93,7 @@ const ConsultHeader = ({
   saveConsult: () => void;
   recordingStatus: RecordingStatus;
   completeConsult: () => void;
+  hasPreviousConsult: boolean;
 }) => (
   <div className="sticky top-0 z-10">
     <div className="h-fit bg-white">
@@ -116,15 +118,21 @@ const ConsultHeader = ({
           />
         </div>
       </div>
-      <ConsultTabs />
+      <ConsultTabs hasPreviousConsult={hasPreviousConsult} />
     </div>
   </div>
 );
 
-const ConsultTabs = () => (
+const ConsultTabs = ({
+  hasPreviousConsult,
+}: {
+  hasPreviousConsult: boolean;
+}) => (
   <TabsList className="w-full border-b border-grayscale-10">
     <div className="mx-auto flex h-full w-full max-w-layout justify-start gap-5 px-layout [&>*]:max-w-content">
-      <TabsTrigger value="pastConsult">상담 히스토리</TabsTrigger>
+      {hasPreviousConsult && (
+        <TabsTrigger value="pastConsult">상담 히스토리</TabsTrigger>
+      )}
       <TabsTrigger value="survey">기초 설문 내역</TabsTrigger>
       <TabsTrigger value="medicine">의약물 기록</TabsTrigger>
       <TabsTrigger value="note">중재 기록 작성</TabsTrigger>
@@ -138,6 +146,7 @@ export function Index() {
   const { data: counseleeInfo, isLoading } = useSelectCounseleeInfo(
     counselSessionId ?? '',
   );
+
   const { data: counselSessionInfo } = useCounselSessionQueryById(
     counselSessionId ?? '',
   );
@@ -163,6 +172,24 @@ export function Index() {
   const { mutate: updateCounselSessionStatus } = useUpdateCounselSessionStatus({
     counselSessionId: counselSessionId ?? '',
   });
+
+  const hasPreviousConsult = useMemo(() => {
+    if (!counseleeInfo) return false;
+
+    if (
+      counseleeInfo?.counselCount === undefined ||
+      counseleeInfo?.counselCount === 0
+    )
+      return false;
+
+    return counseleeInfo.counselCount > 0;
+  }, [counseleeInfo]);
+
+  useEffect(() => {
+    if (!hasPreviousConsult) {
+      setActiveTab(ConsultTab.consultCard);
+    }
+  }, [hasPreviousConsult, setActiveTab]);
 
   useEffect(() => {
     if (!isSuccessGetRecordingStatus) {
@@ -238,8 +265,7 @@ export function Index() {
     );
   };
 
-  const consultStatus =
-    counseleeInfo?.counselCount === 0 ? '초기 상담' : '재상담';
+  const consultStatus = hasPreviousConsult ? '재상담' : '초기 상담';
   const age = `만 ${counseleeInfo?.age}세`;
   const diseases = formatDiseases(counseleeInfo?.diseases);
 
@@ -281,11 +307,14 @@ export function Index() {
           saveConsult={saveConsult}
           recordingStatus={recordingStatus}
           completeConsult={completeConsult}
+          hasPreviousConsult={hasPreviousConsult}
         />
         <div className="mb-100 h-full w-full px-layout pb-10 pt-6 [&>*]:mx-auto [&>*]:max-w-content">
-          <TabsContent value="pastConsult">
-            <PastConsult />
-          </TabsContent>
+          {hasPreviousConsult && (
+            <TabsContent value="pastConsult">
+              <PastConsult />
+            </TabsContent>
+          )}
           <TabsContent value="survey">
             <ConsultCard />
           </TabsContent>
