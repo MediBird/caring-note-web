@@ -5,6 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 
 interface SelectCellProps {
@@ -29,7 +30,7 @@ function SelectCell({
     <div className="flex flex-col gap-1">
       <Select value={initialValue} onValueChange={onValueChange}>
         <SelectTrigger
-          className={`cursor-pointer border-none text-md bg-transparent data-[state=open]:shadow-cell-shadow focus:outline-none ${
+          className={`text-md cursor-pointer border-none bg-transparent focus:outline-none data-[state=open]:shadow-cell-shadow ${
             initialValue === '' && 'text-grayscale-40'
           }`}>
           <SelectValue placeholder={placeholder} className="cursor-pointer" />
@@ -39,7 +40,10 @@ function SelectCell({
             <SelectItem
               key={option.value}
               value={option.value}
-              className="text-md cursor-pointer">
+              className={cn(
+                'text-md cursor-pointer',
+                initialValue === option.value && '!text-primary-50',
+              )}>
               {option.label}
             </SelectItem>
           ))}
