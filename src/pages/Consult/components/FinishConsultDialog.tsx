@@ -36,7 +36,7 @@ const FinishConsultDialog = ({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant={'primary'} size={'xl'}>
-            설문 완료
+            상담 완료
           </Button>
         </DialogTrigger>
         <DialogContent className="w-[480px]">
