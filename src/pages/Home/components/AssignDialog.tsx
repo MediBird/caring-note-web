@@ -14,6 +14,8 @@ import { XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCounselAssign } from '../hooks/query/useCounselAssign';
+import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
+import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
 
 interface AssignDialogProps {
   counselSessionId: string;
@@ -23,8 +25,16 @@ interface AssignDialogProps {
 // TODO: counselorId 활용 상담 담당 약사 할당 다이얼로그 구현 필요
 
 function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
-  const { mutate } = useCounselAssign();
   const { user } = useAuthContext();
+  const { data: counselSessionInfo } = useCounselSessionQueryById(
+    counselSessionId ?? '',
+  );
+
+  const { mutate } = useCounselAssign();
+  const { mutate: updateCounselSessionStatus } = useUpdateCounselSessionStatus({
+    counselSessionId,
+  });
+
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -49,6 +59,9 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
   };
 
   const handleStartConsult = () => {
+    if (counselSessionInfo?.status === 'SCHEDULED') {
+      updateCounselSessionStatus('IN_PROGRESS');
+    }
     navigate(`/consult/${counselSessionId}`);
   };
 
