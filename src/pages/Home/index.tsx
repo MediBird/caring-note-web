@@ -9,9 +9,10 @@ import { cn } from '@/lib/utils';
 import CollegeMessages from '@/pages/Home/components/CollegeMessages';
 import ConsultCountContainer from '@/pages/Home/components/ConsultCountContainer';
 import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
+import useRightNavigationStore from '@/store/navigationStore';
 import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 import { addMonths } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
 
 function Home() {
@@ -20,6 +21,8 @@ function Home() {
   const thisMonth = addMonths(today, 0);
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedMonth, setSelectedMonth] = useState(thisMonth);
+
+  const { closeRightNav } = useRightNavigationStore();
 
   const { data: counselList } = useSelectCounselSessionList({
     baseDate: formatDateToHyphen(selectedDate),
@@ -39,6 +42,11 @@ function Home() {
       };
     });
   }, [counselList]);
+
+  useEffect(() => {
+    closeRightNav();
+    sessionStorage.setItem('autoNavigationOpen', 'false');
+  }, [closeRightNav]);
 
   return (
     <div
