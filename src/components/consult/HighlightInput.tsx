@@ -256,27 +256,31 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
         />
       </div>
       <div className="flex h-[48px] items-center">
-        <img
+        <button
           className="m-2 inline-block h-8 w-8 cursor-pointer"
-          src={isHoverHighlightButton ? highlightpenBlue : highlightpenBlack}
-          alt="하이라이트"
-          onClick={applyHighlight}
+          onClick={() => {
+            applyHighlight();
+          }}
           onMouseEnter={() => setIsHoverHighlightButton(true)}
-          onMouseLeave={() => setIsHoverHighlightButton(false)}
-        />
-        <img
-          className="inline-block h-8 w-8 cursor-pointer"
-          src={isHoverEraserButton ? eraserBlue : eraserBlack}
-          alt="하이라이트 지우기"
+          onMouseLeave={() => setIsHoverHighlightButton(false)}>
+          <img
+            src={isHoverHighlightButton ? highlightpenBlue : highlightpenBlack}
+            alt="하이라이트"
+          />
+        </button>
+        <button
+          className="m-2 ml-0 inline-block h-8 w-8 cursor-pointer"
           onClick={removeHighlight}
           onMouseEnter={() => setIsHoverEraserButton(true)}
-          onMouseLeave={() => setIsHoverEraserButton(false)}
-        />
+          onMouseLeave={() => setIsHoverEraserButton(false)}>
+          <img
+            src={isHoverEraserButton ? eraserBlue : eraserBlack}
+            alt="하이라이트 지우기"
+          />
+        </button>
         <Tooltip
-          className="ml-3"
           id="highlight"
-          text={`왼쪽 형광펜으로 원하는 내용을 강조하고, 
-          오른쪽 지우개로 다시 지울 수 있어요`}
+          text={`왼쪽 형광펜으로 원하는 내용을 강조하고, 오른쪽 지우개로 다시 지울 수 있어요`}
           eventType="hover"
           key={'highlight'}
           place="right"
