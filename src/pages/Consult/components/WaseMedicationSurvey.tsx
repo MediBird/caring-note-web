@@ -172,27 +172,43 @@ const WasteMedicationSurvey = ({
                       재처방 받음
                     </Label>
                   </InputContainer>
-
-                  <InputContainer>
-                    <Checkbox
-                      id={WasteMedicationDisposalReqUnusedReasonTypesEnum.Etc}
-                      checked={wasteMedicationDisposal.unusedReasonTypes?.includes(
-                        WasteMedicationDisposalReqUnusedReasonTypesEnum.Etc,
-                      )}
-                      onCheckedChange={(value) => {
-                        handleUnusedReasonTypesChange(
+                  <div className="flex flex-col gap-2">
+                    <InputContainer>
+                      <Checkbox
+                        id={WasteMedicationDisposalReqUnusedReasonTypesEnum.Etc}
+                        checked={wasteMedicationDisposal.unusedReasonTypes?.includes(
                           WasteMedicationDisposalReqUnusedReasonTypesEnum.Etc,
-                          value,
-                        );
-                      }}
-                    />
-                    <Label
-                      htmlFor={
-                        WasteMedicationDisposalReqUnusedReasonTypesEnum.Etc
-                      }>
-                      기타
-                    </Label>
-                  </InputContainer>
+                        )}
+                        onCheckedChange={(value) => {
+                          handleUnusedReasonTypesChange(
+                            WasteMedicationDisposalReqUnusedReasonTypesEnum.Etc,
+                            value,
+                          );
+                        }}
+                      />
+                      <Label
+                        htmlFor={
+                          WasteMedicationDisposalReqUnusedReasonTypesEnum.Etc
+                        }>
+                        기타
+                      </Label>
+                    </InputContainer>
+                    {wasteMedicationDisposal.unusedReasonTypes?.includes(
+                      WasteMedicationDisposalReqUnusedReasonTypesEnum.Etc,
+                    ) && (
+                      <Input
+                        className="ml-6 w-[540px]"
+                        placeholder="내용을 작성해 주세요."
+                        value={wasteMedicationDisposal.unusedReasonDetail}
+                        onChange={(e) => {
+                          setWasteMedicationDisposal({
+                            ...wasteMedicationDisposal,
+                            unusedReasonDetail: e.target.value,
+                          });
+                        }}
+                      />
+                    )}
+                  </div>
                 </div>
                 <div className="space-y-4">
                   <InputContainer>
@@ -400,8 +416,12 @@ const WasteMedicationSurvey = ({
               <span className="flex flex-row items-center justify-start gap-1">
                 <Input
                   placeholder="00"
-                  className="h-[26px] w-24 border-b border-grayscale-30 bg-transparent p-0 pr-[2px] text-right"
-                  value={wasteMedicationDisposal.wasteMedicationGram}
+                  className="h-[26px] w-24 rounded-none !border-0 !border-b !border-grayscale-30 bg-transparent p-0 pr-[2px] text-right"
+                  value={
+                    wasteMedicationDisposal.wasteMedicationGram
+                      ? wasteMedicationDisposal.wasteMedicationGram
+                      : ''
+                  }
                   onChange={(e) => {
                     setWasteMedicationDisposal({
                       ...wasteMedicationDisposal,

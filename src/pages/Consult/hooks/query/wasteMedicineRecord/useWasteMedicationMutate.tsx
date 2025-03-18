@@ -24,10 +24,16 @@ const saveWasteMedicationDisposal = async (
   counselSessionId: string,
   wasteMedicationDisposal: AddAndUpdateWasteMedicationDisposalDTO,
 ) => {
+  // 기타를 선택하지 않으면 unusedReasonDetail을 빈 문자열로 설정
+  const modifiedDisposal = { ...wasteMedicationDisposal };
+  if (!modifiedDisposal.unusedReasonTypes?.includes('ETC')) {
+    modifiedDisposal.unusedReasonDetail = '';
+  }
+
   const response =
     await wasteMedicationControllerApi.addWasteMedicationDisposal(
       counselSessionId,
-      wasteMedicationDisposal,
+      modifiedDisposal,
     );
 
   return response.data;
