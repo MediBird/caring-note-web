@@ -4,7 +4,10 @@ import {
   PaginationInfo,
 } from '@/components/common/DataTable/pagination';
 import { useCallback } from 'react';
-import { useSearchCounselSessions } from '../hooks/query/useCounselSessionQuery';
+import {
+  useDeleteCounselSession,
+  useSearchCounselSessions,
+} from '../hooks/query/useCounselSessionQuery';
 import { useCounselSessionParamsStore } from '../hooks/store/useCounselSessionStore';
 import { CounselSessionTable } from './table/CounselSessionTable';
 
@@ -16,6 +19,8 @@ interface ApiResponse {
 
 export function CounselSessionTableSection() {
   const { params, setParams } = useCounselSessionParamsStore();
+
+  const { mutate: deleteCounselSession } = useDeleteCounselSession();
 
   const { data, isLoading } = useSearchCounselSessions(
     params.page || 0,
@@ -44,10 +49,9 @@ export function CounselSessionTableSection() {
   );
 
   // 삭제 핸들러
-  const handleDelete = useCallback((id: string) => {
-    // TODO: 삭제 로직 구현
-    console.log('삭제할 ID:', id);
-  }, []);
+  const handleDelete = (id: string) => {
+    deleteCounselSession({ counselSessionId: id });
+  };
 
   if (isLoading) {
     return <div className="flex justify-center py-10">데이터 로딩 중...</div>;
