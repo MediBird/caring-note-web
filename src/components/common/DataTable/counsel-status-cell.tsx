@@ -8,7 +8,7 @@ interface CounselStatusCellProps {
 const counselSessionStatus = {
   COMPLETED: '완료',
   SCHEDULED: '예정',
-  PROGRESS: '진행',
+  IN_PROGRESS: '진행',
   CANCELED: '취소',
 };
 
