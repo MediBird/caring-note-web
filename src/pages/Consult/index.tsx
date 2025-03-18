@@ -245,7 +245,7 @@ export function Index() {
           saveConsult={saveConsult}
           recordingStatus={recordingStatus}
         />
-        <div className="mb-100 h-full w-full px-layout pb-10 pt-10 [&>*]:mx-auto [&>*]:max-w-content">
+        <div className="mb-100 h-full w-full px-layout pb-10 pt-6 [&>*]:mx-auto [&>*]:max-w-content">
           <TabsContent value="pastConsult">
             <PastConsult />
           </TabsContent>
