@@ -7,6 +7,7 @@ import Tooltip from '@/components/Tooltip';
 import CounselStatusCell from '@/components/common/DataTable/counsel-status-cell';
 import AssignDialog from '@/pages/Home/components/AssignDialog';
 import SurveyDialog from '@/pages/Home/components/SurveyDialog';
+import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';
 
 interface TodayScheduleTableColumnProps {
@@ -75,7 +76,7 @@ export const createColumns = ({
     header: '담당약사',
     size: 102,
     cell: ({ row }) => {
-      const counselorName = row.original.counselorName ?? '-';
+      const counselorName = formatDisplayText(row.original.counselorName);
       return <span className="px-3">{counselorName}</span>;
     },
   },
