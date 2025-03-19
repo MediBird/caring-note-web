@@ -19,9 +19,8 @@ import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
 import useRightNavigationStore from '@/store/navigationStore';
 import { DISEASE_MAP } from '@/utils/constants';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 import FinishConsultDialog from './components/FinishConsultDialog';
 import RecordingDialog from './components/recording/RecordingDialog';
 import ConsultCard from './components/tabs/ConsultCard';
@@ -33,6 +32,7 @@ import { useGetRecordingStatusQuery } from './hooks/query/counselRecording/useGe
 import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
 import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
+import { InfoToast } from '@/components/ui/costom-toast';
 
 interface InfoItemProps {
   icon: string;
@@ -136,7 +136,7 @@ const ConsultTabs = ({
       <TabsTrigger value="survey">기초 설문 내역</TabsTrigger>
       <TabsTrigger value="medicine">의약물 기록</TabsTrigger>
       <TabsTrigger value="note">중재 기록 작성</TabsTrigger>
-      <TabsTrigger value="wasteMedication">폐의약물 기록</TabsTrigger>
+      <TabsTrigger value="wasteMedication">폐의약품 처리</TabsTrigger>
     </div>
   </TabsList>
 );
@@ -151,15 +151,38 @@ export function Index() {
     counselSessionId ?? '',
   );
 
-  const { saveWasteMedication } = useSaveWasteMedication(
-    counselSessionId ?? '',
-  );
-  const { mutate: saveMedicationCounsel } = useSaveMedicineConsult();
   const { medicineConsult } = useMedicineConsultStore();
   const { medicationRecordList } = useMedicineMemoStore();
+
   const { recordingStatus, resetRecording, updateRecordingStatusByResponse } =
     useRecording();
-  const { saveMedicationRecordList } = useMedicationRecordSave();
+
+  const { saveWasteMedication, isSuccessWasteMedication } =
+    useSaveWasteMedication(counselSessionId ?? '');
+
+  const {
+    mutate: saveMedicationCounsel,
+    isSuccess: isSuccessSaveMedicationCounsel,
+  } = useSaveMedicineConsult();
+  const {
+    mutate: saveMedicationRecordList,
+    isSuccess: isSuccessSaveMedicationRecordList,
+  } = useMedicationRecordSave();
+
+  useEffect(() => {
+    if (
+      isSuccessSaveMedicationCounsel &&
+      isSuccessSaveMedicationRecordList &&
+      isSuccessWasteMedication
+    ) {
+      InfoToast({ message: '작성하신 내용을 성공적으로 저장하였습니다.' });
+    }
+  }, [
+    isSuccessSaveMedicationCounsel,
+    isSuccessSaveMedicationRecordList,
+    isSuccessWasteMedication,
+  ]);
+
   const { isSuccess: isSuccessGetIsRecordingPopup, data: isPopup } =
     useGetIsRecordingPopupQuery(counselSessionId);
   const {
@@ -221,6 +244,51 @@ export function Index() {
 
   useEffect(() => {
     if (
+      isSuccessSaveMedicationCounsel &&
+      isSuccessSaveMedicationRecordList &&
+      isSuccessWasteMedication
+    ) {
+      InfoToast({ message: '작성하신 내용을 성공적으로 저장하였습니다.' });
+    }
+  }, [
+    isSuccessSaveMedicationCounsel,
+    isSuccessSaveMedicationRecordList,
+    isSuccessWasteMedication,
+  ]);
+
+  const saveConsult = useCallback(async () => {
+    try {
+      await Promise.all([
+        saveWasteMedication(),
+        saveMedicationCounsel(medicineConsult),
+        saveMedicationRecordList({
+          counselSessionId: counselSessionId ?? '',
+          medicationRecordHistList:
+            medicationRecordList as unknown as AddAndUpdateMedicationRecordHistReq[],
+        }),
+      ]);
+    } catch (error) {
+      console.error('저장 중 오류가 발생했습니다:', error);
+    }
+  }, [
+    saveWasteMedication,
+    saveMedicationCounsel,
+    medicineConsult,
+    saveMedicationRecordList,
+    counselSessionId,
+    medicationRecordList,
+  ]);
+
+  const completeConsult = async () => {
+    await saveConsult();
+
+    if (counselSessionInfo?.status !== 'COMPLETED') {
+      updateCounselSessionStatus('COMPLETED');
+    }
+  };
+
+  useEffect(() => {
+    if (
       sessionStorage.getItem('autoNavigationOpen') === 'true' &&
       (recordingStatus === RecordingStatus.STTCompleted ||
         recordingStatus === RecordingStatus.AICompleted)
@@ -271,25 +339,6 @@ export function Index() {
   const consultStatus = hasPreviousConsult ? '재상담' : '초기 상담';
   const age = `만 ${counseleeInfo?.age}세`;
   const diseases = formatDiseases(counseleeInfo?.diseases);
-
-  const saveConsult = () => {
-    saveWasteMedication();
-    saveMedicationCounsel(medicineConsult);
-    saveMedicationRecordList({
-      counselSessionId: counselSessionId ?? '',
-      medicationRecordHistList:
-        medicationRecordList as unknown as AddAndUpdateMedicationRecordHistReq[],
-    });
-    toast.success('작성하신 내용을 성공적으로 저장하였습니다.');
-  };
-
-  const completeConsult = () => {
-    saveConsult();
-
-    if (counselSessionInfo?.status !== 'COMPLETED') {
-      updateCounselSessionStatus('COMPLETED');
-    }
-  };
 
   return (
     <>
