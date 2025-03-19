@@ -19,14 +19,18 @@ import { combineToFormattedDateTime } from '../../utils/dateTimeUtils';
 import CounseleeSearchInput from './CounseleeSearchInput';
 import { cn } from '@/lib/utils';
 import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
+import ChevronDownIcon from '@/assets/icon/24/arrowdropdown.black.svg?react';
+
+const DEFAULT_SESSION_TIME = '10:00';
+const DEFAULT_SESSION_DATE = formatDateToHyphen(new Date());
 
 export const CreateReservationDialog = () => {
   // 로컬 상태
   const [dialogOpen, setDialogOpen] = useState(false);
   const [counseleeId, setCounseleeId] = useState('');
   const [counseleeName, setCounselee] = useState('');
-  const [sessionDate, setSessionDate] = useState('');
-  const [sessionTime, setSessionTime] = useState('');
+  const [sessionDate, setSessionDate] = useState(DEFAULT_SESSION_DATE);
+  const [sessionTime, setSessionTime] = useState(DEFAULT_SESSION_TIME);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -47,8 +51,8 @@ export const CreateReservationDialog = () => {
   const resetFormFields = () => {
     setCounselee('');
     setCounseleeId('');
-    setSessionDate('');
-    setSessionTime('');
+    setSessionDate(DEFAULT_SESSION_DATE);
+    setSessionTime(DEFAULT_SESSION_TIME);
     setError(null);
     setIsSubmitting(false);
   };
@@ -193,6 +197,19 @@ export const CreateReservationDialog = () => {
                   sessionDate && 'text-grayscale-90',
                 )}
                 selectedMonth={sessionDate ? new Date(sessionDate) : new Date()}
+                initialDate={new Date()}
+                trigger={
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className={cn(
+                      'h-full w-full justify-between rounded border !border-grayscale-30 px-3 py-2 !text-left !text-base font-medium text-grayscale-40 hover:bg-transparent',
+                      sessionDate && 'text-grayscale-90',
+                    )}>
+                    {sessionDate ?? '상담 일자 선택'}
+                    <ChevronDownIcon className="h-5 w-5" />
+                  </Button>
+                }
                 placeholder="상담 일자 선택"
                 showBorderWithOpen={true}
                 handleClicked={(date) => {
@@ -205,6 +222,7 @@ export const CreateReservationDialog = () => {
                     }
                   }
                 }}
+                disablePastDates={true}
               />
             </div>
             <div className="grid gap-2">
@@ -219,6 +237,7 @@ export const CreateReservationDialog = () => {
                     setError(null);
                   }
                 }}
+                initialTime={sessionTime}
               />
             </div>
           </div>
