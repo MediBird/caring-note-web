@@ -242,20 +242,6 @@ export function Index() {
     updateRecordingStatusByResponse,
   ]);
 
-  useEffect(() => {
-    if (
-      isSuccessSaveMedicationCounsel &&
-      isSuccessSaveMedicationRecordList &&
-      isSuccessWasteMedication
-    ) {
-      InfoToast({ message: '작성하신 내용을 성공적으로 저장하였습니다.' });
-    }
-  }, [
-    isSuccessSaveMedicationCounsel,
-    isSuccessSaveMedicationRecordList,
-    isSuccessWasteMedication,
-  ]);
-
   const saveConsult = useCallback(async () => {
     try {
       await Promise.all([
