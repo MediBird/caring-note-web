@@ -1,7 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 import { Button } from '../../components/ui/button';
 import { Header } from '../../components/ui/Header';
 import BasicInfo from './components/tabs/BasicInfo';
@@ -12,6 +11,7 @@ import {
   useCompleteCounselCard,
   useSaveCounselCardDraft,
 } from './hooks/useCounselCardQuery';
+import { InfoToast } from '@/components/ui/costom-toast';
 
 const tabItems = [
   { id: 'basicInfo', name: '기본 정보', component: BasicInfo },
@@ -33,14 +33,14 @@ export default function Survey() {
   const handleSaveDraft = async () => {
     const success = await saveDraft(counselSessionId ?? '');
     if (success) {
-      toast.success('임시 저장되었습니다.');
+      InfoToast({ message: '임시 저장되었습니다.' });
     }
   };
 
   const handleComplete = async () => {
     const success = await complete(counselSessionId ?? '');
     if (success) {
-      toast.success('설문이 완료되었습니다.');
+      InfoToast({ message: '설문이 완료되었습니다.' });
     }
     navigate('/');
   };
