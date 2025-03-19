@@ -42,7 +42,7 @@ const saveWasteMedicationDisposal = async (
 export const useWasteMedicationMutate = () => {
   const queryClient = useQueryClient();
 
-  const { mutate: mutateWasteMedicationList } = useMutation({
+  const mutateWasteMedicationList = useMutation({
     mutationFn: (wasteMedicationListSaveDTO: WasteMedicationListSaveDTO) => {
       return saveWasteMedicationList(wasteMedicationListSaveDTO);
     },
@@ -51,7 +51,7 @@ export const useWasteMedicationMutate = () => {
     },
   });
 
-  const { mutate: mutateWasteMedicationDisposal } = useMutation({
+  const mutateWasteMedicationDisposal = useMutation({
     mutationFn: (
       wasteMedicationDisposalSaveDTO: AddAndUpdateWasteMedicationDisposalSaveDTO,
     ) => {
