@@ -86,7 +86,7 @@ export default function CounseleeSearchInput({
           asChild
           ref={triggerRef}
           onClick={handleTriggerClick}
-          className="!h-10 content-center rounded border border-grayscale-30 bg-transparent focus:outline-none data-[state=open]:border-transparent data-[state=open]:ring-2 data-[state=open]:ring-primary-50">
+          className="!h-10 content-center rounded border border-grayscale-30 bg-transparent focus:outline-none data-[state=open]:border-transparent data-[state=open]:shadow-cell-shadow data-[state=open]:ring-1 data-[state=open]:ring-primary-50">
           <div className="flex h-full w-full items-center gap-2 p-1">
             <SearchIcon className="h-6 w-6" />
             <Input

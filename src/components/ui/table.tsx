@@ -22,7 +22,7 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      '[&_tr]:border-b [&_tr:hover]:bg-grayscale-5 bg-grayscale-5 !text-grayscale-80 font-bold',
+      'bg-grayscale-5 font-bold !text-grayscale-80 [&_tr:hover]:bg-grayscale-5 [&_tr]:border-b',
       className,
     )}
     {...props}
@@ -37,7 +37,7 @@ const TableBody = React.forwardRef<
   <tbody
     ref={ref}
     className={cn(
-      '[&_tr:last-child]:border-0 font-medium text-[16px]',
+      'text-[16px] font-medium [&_tr:last-child]:border-0',
       className,
     )}
     {...props}
@@ -52,7 +52,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      'border-t font-medium [&>tr]:last:border-b-0 bg-white hover:bg-primary-5',
+      'border-t bg-white font-medium hover:bg-primary-5 [&>tr]:last:border-b-0',
       className,
     )}
     {...props}
@@ -67,7 +67,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      'transition-colors hover:bg-primary-5 data-[state=selected]:bg-primary-10 dark:hover:bg-neutral-800/50 dark:data-[state=selected]:bg-neutral-800 border-b border-grayscale-5 max-h-[48px]',
+      'max-h-[48px] border-b border-grayscale-5 bg-white transition-colors hover:bg-primary-5 data-[state=selected]:bg-primary-10 dark:hover:bg-neutral-800/50 dark:data-[state=selected]:bg-neutral-800',
       className,
     )}
     {...props}
@@ -82,7 +82,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-12 px-4 text-left align-middle font-medium bg-grayscale-5 [&:has([role=checkbox])]:pr-0 dark:text-neutral-400 break-keep whitespace-nowrap',
+      'h-12 whitespace-nowrap break-keep bg-grayscale-5 px-4 text-left align-middle font-medium dark:text-neutral-400 [&:has([role=checkbox])]:pr-0',
       className,
     )}
     {...props}
@@ -97,7 +97,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'align-middle [&:has([role=checkbox])]:pr-0 leading-6 h-12 px-1 break-keep bg-white relative whitespace-nowrap',
+      'relative h-12 whitespace-nowrap break-keep bg-white px-1 align-middle leading-6 [&:has([role=checkbox])]:pr-0',
       className,
     )}
     style={{

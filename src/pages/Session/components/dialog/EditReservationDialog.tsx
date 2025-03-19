@@ -23,11 +23,14 @@ import {
   extractDateTimeFromIso,
 } from '../../utils/dateTimeUtils';
 import CounseleeSearchInput from './CounseleeSearchInput';
+import ChevronDownIcon from '@/assets/icon/24/arrowdropdown.black.svg?react';
 
 interface EditReservationDialogProps {
   session: SelectCounselSessionListItem;
   triggerComponent?: React.ReactNode;
 }
+
+const DEFAULT_SESSION_TIME = '10:00';
 
 export const EditReservationDialog = ({
   session,
@@ -36,7 +39,7 @@ export const EditReservationDialog = ({
   const [counseleeId, setCounseleeId] = useState('');
   const [counseleeName, setCounselee] = useState('');
   const [sessionDate, setSessionDate] = useState('');
-  const [sessionTime, setSessionTime] = useState('');
+  const [sessionTime, setSessionTime] = useState(DEFAULT_SESSION_TIME);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sessionId, setSessionId] = useState('');
@@ -119,8 +122,6 @@ export const EditReservationDialog = ({
           counseleeId: counseleeId,
           scheduledStartDateTime: scheduledDateTime,
         });
-        console.log('상담 일정이 수정되었습니다.');
-        // 성공 후 다이얼로그 닫기
         setDialogOpen(false);
       } else {
         setError('수정할 상담 세션 정보가 없습니다.');
@@ -252,7 +253,22 @@ export const EditReservationDialog = ({
                 selectedMonth={sessionDate ? new Date(sessionDate) : new Date()}
                 initialDate={sessionDate ? new Date(sessionDate) : undefined}
                 placeholder="상담 일자 선택"
+                trigger={
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className={cn(
+                      'h-full w-full justify-between rounded border !border-grayscale-30 px-3 py-2 !text-left !text-base font-medium text-grayscale-40 hover:bg-transparent',
+                      sessionDate && 'text-grayscale-90',
+                    )}>
+                    {sessionDate
+                      ? formatDateToHyphen(new Date(sessionDate))
+                      : '상담 일자 선택'}
+                    <ChevronDownIcon className="h-5 w-5" />
+                  </Button>
+                }
                 showBorderWithOpen={true}
+                disablePastDates={true}
                 handleClicked={(date) => {
                   if (date) {
                     const formattedDate = formatDateToHyphen(date);
@@ -277,6 +293,7 @@ export const EditReservationDialog = ({
               </label>
               <TimepickerComponent
                 placeholder={sessionTime || '예약 시각 선택'}
+                initialTime={sessionTime}
                 handleClicked={(time: string | undefined) => {
                   setSessionTime(time || '');
                   if (error === '상담 시간을 선택해주세요.') {

@@ -25,6 +25,7 @@ export interface DatePickerProps {
   showBorderWithOpen?: boolean;
   align?: 'start' | 'end';
   activeAllDates?: boolean;
+  disablePastDates?: boolean;
 }
 
 export function DatePickerComponent({
@@ -40,6 +41,7 @@ export function DatePickerComponent({
   align = 'end',
   showBorderWithOpen = false,
   activeAllDates = true,
+  disablePastDates = false,
 }: DatePickerProps) {
   const [month, setMonth] = React.useState<Date | undefined>(selectedMonth);
 
@@ -63,6 +65,14 @@ export function DatePickerComponent({
 
   const isDateDisabled = useCallback(
     (date: Date) => {
+      if (disablePastDates) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (date < today) {
+          return true;
+        }
+      }
+
       if (enabledDatesSet.size === 0 && activeAllDates) {
         return false;
       }
@@ -74,7 +84,7 @@ export function DatePickerComponent({
       const formattedDate = format(date, 'yyyy-MM-dd');
       return !enabledDatesSet.has(formattedDate);
     },
-    [enabledDatesSet, activeAllDates],
+    [enabledDatesSet, activeAllDates, disablePastDates],
   );
 
   return (

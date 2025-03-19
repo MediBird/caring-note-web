@@ -12,24 +12,22 @@ export interface TimePickerProps {
   placeholder?: string;
   className?: string;
   handleClicked?: (value?: string) => void;
+  initialTime?: string;
 }
 
 const TimepickerComponent = ({
   placeholder,
   className,
   handleClicked,
+  initialTime,
 }: TimePickerProps) => {
-  const defaultTime = '12:00';
-  const [time, setTime] = useState<string | undefined>(defaultTime);
+  const [time, setTime] = useState<string>(initialTime || '');
   const [open, setOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-
-  // 30분 단위로 시간 생성
-  const times = Array.from({ length: 24 * 2 }, (_, i) => {
-    const hour = Math.floor(i / 2)
-      .toString()
-      .padStart(2, '0');
+  // 08:00부터 22:00까지 30분 단위로 시간 생성 (22:30 제외)
+  const times = Array.from({ length: (22 - 8) * 2 + 1 }, (_, i) => {
+    const hour = (Math.floor(i / 2) + 8).toString().padStart(2, '0');
     const minute = i % 2 === 0 ? '00' : '30';
     return `${hour}:${minute}`;
   });
@@ -43,7 +41,7 @@ const TimepickerComponent = ({
   // Select가 열릴 때 스크롤 위치 조정
   useEffect(() => {
     if (open && scrollRef.current) {
-      const targetTime = time || defaultTime;
+      const targetTime = time;
 
       // 더 긴 지연 시간을 사용하여 컴포넌트가 완전히 렌더링될 시간을 확보
       setTimeout(() => {
@@ -81,7 +79,7 @@ const TimepickerComponent = ({
         <SelectTrigger
           className={cn(
             'flex h-[42px] w-full justify-between gap-2 rounded border border-grayscale-30 text-left text-base font-medium text-grayscale-40 focus:border-grayscale-30',
-            time && 'text-grayscale-90',
+            (time || initialTime) && '!text-grayscale-90',
             open && 'border-primary-50 ring-1 ring-primary-50',
           )}>
           <SelectValue

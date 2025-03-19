@@ -4,6 +4,7 @@ import {
   DeleteCounselSessionReq,
   ModifyCounselReservationReq,
 } from '@/api';
+import { InfoToast } from '@/components/ui/costom-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface FetchParams {
@@ -11,6 +12,8 @@ interface FetchParams {
   cursor?: string;
   size?: number;
 }
+
+const HIGHLIGHT_DURATION = 2000;
 
 const counselSessionControllerApi = new CounselSessionControllerApi();
 
@@ -48,13 +51,28 @@ export const useCreateCounselSession = () => {
     mutationFn: (newSession: CreateCounselReservationReq) => {
       return counselSessionControllerApi.createCounselReservation(newSession);
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
+      // 새로 생성된 세션의 ID 가져오기
+      const newSessionId = response.data.data?.id;
+
       // 상담 세션 목록 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: COUNSEL_SESSION_KEYS.all });
       // 검색 쿼리도 함께 무효화 (Schedule 페이지에서 사용하는 쿼리)
       queryClient.invalidateQueries({
         queryKey: ['counselSession', 'search'],
       });
+
+      // 새로 생성된 세션 ID를 캐시에 저장
+      if (newSessionId) {
+        queryClient.setQueryData(['highlightedSession'], newSessionId);
+
+        // 일정 시간 후 하이라이트 제거
+        setTimeout(() => {
+          queryClient.setQueryData(['highlightedSession'], null);
+        }, HIGHLIGHT_DURATION); // 3초 후 하이라이트 제거
+      }
+
+      InfoToast({ message: '상담 일정이 생성되었습니다.' });
     },
   });
 };
@@ -67,13 +85,28 @@ export const useUpdateCounselSession = () => {
     mutationFn: (updateParams: ModifyCounselReservationReq) => {
       return counselSessionControllerApi.modifyCounselReservation(updateParams);
     },
-    onSuccess: () => {
+    onSuccess: (_response, variables) => {
+      // 수정된 세션의 ID 가져오기
+      const updatedSessionId = variables.counselSessionId;
+
       // 상담 세션 목록 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: COUNSEL_SESSION_KEYS.all });
       // 검색 쿼리도 함께 무효화 (Schedule 페이지에서 사용하는 쿼리)
       queryClient.invalidateQueries({
         queryKey: ['counselSession', 'search'],
       });
+
+      // 수정된 세션 ID를 캐시에 저장
+      if (updatedSessionId) {
+        queryClient.setQueryData(['highlightedSession'], updatedSessionId);
+
+        // 일정 시간 후 하이라이트 제거
+        setTimeout(() => {
+          queryClient.setQueryData(['highlightedSession'], null);
+        }, HIGHLIGHT_DURATION); // 3초 후 하이라이트 제거
+      }
+
+      InfoToast({ message: '상담 일정이 수정되었습니다.' });
     },
   });
 };
@@ -93,6 +126,7 @@ export const useDeleteCounselSession = () => {
       queryClient.invalidateQueries({
         queryKey: ['counselSession', 'search'],
       });
+      InfoToast({ message: '상담 일정이 삭제되었습니다.' });
     },
   });
 };
@@ -128,4 +162,13 @@ export const useSelectPreviousCounselSessionList = (
   });
 
   return { data, isLoading };
+};
+
+// 하이라이트된 세션 ID를 가져오는 훅
+export const useHighlightedSession = () => {
+  return useQuery({
+    queryKey: ['highlightedSession'],
+    queryFn: () => null,
+    initialData: null,
+  });
 };

@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { COUNSELOR_ROLE_TYPE_OPTIONS } from '@/utils/constants';
-import { Textarea } from '../../../../components/ui/textarea';
+import { Textarea } from '@/components/ui/textarea';
 
 interface BasicInfoTabProps {
   editedCounselor: CounselorListItem;

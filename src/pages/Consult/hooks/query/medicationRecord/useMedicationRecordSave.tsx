@@ -40,13 +40,11 @@ const saveMedicationRecord = async ({
 export const useMedicationRecordSave = () => {
   const queryClient = useQueryClient();
 
-  const { mutate: saveMedicationRecordList } = useMutation({
+  return useMutation({
     mutationFn: (data: MedicationRecordListSaveDTO) =>
       saveMedicationRecord(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['medicationRecordList'] });
     },
   });
-
-  return { saveMedicationRecordList };
 };

@@ -10,6 +10,7 @@ import {
 } from '../hooks/query/useCounselSessionQuery';
 import { useCounselSessionParamsStore } from '../hooks/store/useCounselSessionStore';
 import { CounselSessionTable } from './table/CounselSessionTable';
+import { useHighlightedSession } from '@/hooks/useCounselSessionQuery';
 
 // API 응답 타입 확장
 interface ApiResponse {
@@ -21,6 +22,7 @@ export function CounselSessionTableSection() {
   const { params, setParams } = useCounselSessionParamsStore();
 
   const { mutate: deleteCounselSession } = useDeleteCounselSession();
+  const { data: highlightedSession } = useHighlightedSession();
 
   const { data, isLoading } = useSearchCounselSessions(
     params.page || 0,
@@ -59,7 +61,11 @@ export function CounselSessionTableSection() {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <CounselSessionTable data={sessionData} onDelete={handleDelete} />
+      <CounselSessionTable
+        data={sessionData}
+        onDelete={handleDelete}
+        highlightedSession={highlightedSession}
+      />
       <DataTablePagination
         pagination={pagination}
         onPageChange={handlePageChange}

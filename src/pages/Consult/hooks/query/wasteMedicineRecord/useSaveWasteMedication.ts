@@ -9,27 +9,24 @@ export const useSaveWasteMedication = (counselSessionId: string) => {
   const { wasteMedicationDisposal } = useWasteMedicationDisposalStore();
   const { wasteMedicationList } = useWasteMedicationListStore();
 
-  // export interface WasteMedicationListDTO {
-  //   id: string;
-  //   rowId?: string;
-  //   medicationId: string;
-  //   medicationName: string;
-  //   unit: number;
-  //   disposalReason: string;
-  // }
-
   const saveWasteMedication = () => {
-    mutateWasteMedicationList({
+    mutateWasteMedicationList.mutate({
       counselSessionId,
       wasteMedicationList: wasteMedicationList,
     });
-    mutateWasteMedicationDisposal({
+    mutateWasteMedicationDisposal.mutate({
       counselSessionId,
       wasteMedicationDisposal,
     });
   };
 
+  // 두 mutate가 모두 성공했는지 확인하는 통합 플래그
+  const isSuccessWasteMedication =
+    mutateWasteMedicationList.isSuccess &&
+    mutateWasteMedicationDisposal.isSuccess;
+
   return {
     saveWasteMedication,
+    isSuccessWasteMedication,
   };
 };
