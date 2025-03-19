@@ -7,7 +7,7 @@ import {
   validatePassword,
 } from '@/utils/inputValidations';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { InfoToast } from '@/components/ui/costom-toast';
 import { useCounselorManagement } from '../../hooks/useCounselorManagement';
 
 export default function PasswordChangeTab({
@@ -74,7 +74,7 @@ export default function PasswordChangeTab({
       });
 
       if (success) {
-        toast.success('비밀번호가 성공적으로 변경되었습니다.');
+        InfoToast({ message: '비밀번호가 성공적으로 변경되었습니다.' });
         // 입력 필드 초기화
         setNewPassword('');
         setConfirmPassword('');
