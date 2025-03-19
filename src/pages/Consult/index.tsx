@@ -221,10 +221,13 @@ export function Index() {
 
   useEffect(() => {
     if (
-      recordingStatus === RecordingStatus.STTCompleted ||
-      recordingStatus === RecordingStatus.AICompleted
+      sessionStorage.getItem('autoNavigationOpen') === 'true' &&
+      (recordingStatus === RecordingStatus.STTCompleted ||
+        recordingStatus === RecordingStatus.AICompleted)
     ) {
       openRightNav();
+    } else {
+      sessionStorage.setItem('autoNavigationOpen', 'true');
     }
   }, [recordingStatus, openRightNav]);
 
