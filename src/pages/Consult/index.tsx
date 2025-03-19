@@ -135,7 +135,7 @@ export function Index() {
     isSuccess: isSuccessGetRecordingStatus,
   } = useGetRecordingStatusQuery(counselSessionId ?? '', recordingStatus);
   const { activeTab, setActiveTab } = useConsultTabStore();
-  const { openRightNav } = useRightNavigationStore();
+  const { openRightNav, closeRightNav } = useRightNavigationStore();
 
   useEffect(() => {
     if (!isSuccessGetRecordingStatus) {
@@ -175,7 +175,12 @@ export function Index() {
     } else {
       sessionStorage.setItem('autoNavigationOpen', 'true');
     }
-  }, [recordingStatus, openRightNav]);
+
+    return () => {
+      closeRightNav();
+      sessionStorage.setItem('autoNavigationOpen', 'false');
+    };
+  }, [recordingStatus, openRightNav, closeRightNav]);
 
   if (isLoading) {
     return (
