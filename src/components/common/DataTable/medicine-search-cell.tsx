@@ -112,7 +112,7 @@ function MedicineSearchCell<T extends { id: string }>({
                   }}
                   key={item.id}
                   className={cn(
-                    'line-clamp-1 flex cursor-pointer items-center justify-between rounded-sm p-1 hover:bg-grayscale-5',
+                    'flex cursor-pointer items-center justify-between rounded-sm p-1 hover:bg-grayscale-5',
                     item.itemName === value && 'text-primary-50',
                   )}>
                   {item.itemName}

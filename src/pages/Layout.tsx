@@ -29,12 +29,12 @@ function Layout() {
 
   return (
     <SidebarProvider defaultOpen={isSidebarOpen}>
-      <div className="flex justify-start w-full h-auto">
+      <div className="flex h-auto w-full justify-start bg-white">
         <NavigationLeft />
         <main
           className={cn(
             'flex-1 overflow-x-auto overflow-y-hidden',
-            isRightSideBarActive ? 'pr-[50px]' : '',
+            isRightSideBarActive ? 'pr-[64px]' : '',
           )}>
           <Outlet />
         </main>

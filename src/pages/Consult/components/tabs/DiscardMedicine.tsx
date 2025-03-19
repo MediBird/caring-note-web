@@ -122,17 +122,17 @@ const DiscardMedicine = () => {
                 <CardTitle className="!text-grayscale-40">
                   폐의약품 목록
                 </CardTitle>
-                <span className="text-grayscale-40 !mt-0">(해당 없음)</span>
+                <span className="!mt-0 text-grayscale-40">(해당 없음)</span>
               </CardHeader>
             )}
 
             {!showTable && (
-              <CardHeader className="flex items-center justify-center gap-3 flex-row">
-                <CardTitle className="!text-grayscale-40 leading-1">
+              <CardHeader className="flex flex-row items-center justify-center gap-3">
+                <CardTitle className="leading-1 !text-grayscale-40">
                   폐의약품 목록
                 </CardTitle>
                 <Badge
-                  className="!mt-0 px-[6px] py-[6px] gap-[2px]"
+                  className="!mt-0 gap-[2px] px-[6px] py-[6px]"
                   variant="tint"
                   customIcon={<InfoIcon width={20} height={20} />}>
                   상단 선택지를 먼저 골라주세요
