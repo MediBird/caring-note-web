@@ -4,6 +4,7 @@ import {
   DeleteCounselSessionReq,
   ModifyCounselReservationReq,
 } from '@/api';
+import { InfoToast } from '@/components/ui/costom-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface FetchParams {
@@ -55,6 +56,7 @@ export const useCreateCounselSession = () => {
       queryClient.invalidateQueries({
         queryKey: ['counselSession', 'search'],
       });
+      InfoToast({ message: '상담 일정이 생성되었습니다.' });
     },
   });
 };
@@ -74,6 +76,7 @@ export const useUpdateCounselSession = () => {
       queryClient.invalidateQueries({
         queryKey: ['counselSession', 'search'],
       });
+      InfoToast({ message: '상담 일정이 수정되었습니다.' });
     },
   });
 };
@@ -93,6 +96,7 @@ export const useDeleteCounselSession = () => {
       queryClient.invalidateQueries({
         queryKey: ['counselSession', 'search'],
       });
+      InfoToast({ message: '상담 일정이 삭제되었습니다.' });
     },
   });
 };
