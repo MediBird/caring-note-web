@@ -44,11 +44,11 @@ const MedicineConsult: React.FC = () => {
       </CardHeader>
 
       <div className="flex w-full flex-row space-x-5">
-        <div className="flex min-h-[600px] min-w-[600px] flex-col">
+        <div className="flex min-h-[600px] w-full min-w-[600px] flex-col">
           {isRightNavOpen ? (
             <ViewWarningImage />
           ) : (
-            <HighlightInput className="h-full" />
+            <HighlightInput className="h-full w-full" />
           )}
         </div>
 
