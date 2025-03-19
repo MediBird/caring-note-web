@@ -16,6 +16,7 @@ import {
 } from '../../hooks/queries/useCounselorQuery';
 import BasicInfoTab from './BasicInfoTab';
 import PasswordChangeTab from './PasswordChangeTab';
+import { InfoToast } from '@/components/ui/costom-toast';
 
 interface AccountDetailDialogProps {
   isOpen: boolean;
@@ -65,6 +66,7 @@ export function AccountDetailDialog({
       {
         onSuccess: () => {
           onOpenChange(false);
+          InfoToast({ message: '계정 정보가 수정되었습니다.' });
         },
       },
     );
@@ -76,6 +78,7 @@ export function AccountDetailDialog({
     deleteCounselorMutation.mutate(editedCounselor.id || '', {
       onSuccess: () => {
         onOpenChange(false);
+        InfoToast({ message: '계정 정보가 삭제되었습니다.' });
       },
     });
   };
