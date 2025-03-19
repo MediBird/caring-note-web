@@ -177,7 +177,6 @@ export function Index() {
     }
 
     return () => {
-      console.log('closeRightNav');
       closeRightNav();
       sessionStorage.setItem('autoNavigationOpen', 'false');
     };
