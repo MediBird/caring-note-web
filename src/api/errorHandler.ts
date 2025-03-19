@@ -3,6 +3,12 @@ import { toast } from 'sonner';
 
 interface ApiErrorResponse {
   message: string;
+  data?: {
+    errors: {
+      field: string;
+      message: string;
+    }[];
+  };
 }
 
 export const handleApiError = (
@@ -12,11 +18,12 @@ export const handleApiError = (
   const status = error.response?.status;
   const message =
     error.response?.data?.message || '알 수 없는 오류가 발생했습니다';
+  const messageList = error.response?.data?.data?.errors || [];
 
   switch (status) {
     case 400:
       toast.error('잘못된 요청입니다', {
-        description: message,
+        description: messageList.length > 0 ? messageList[0].message : message,
       });
       break;
     case 401:
