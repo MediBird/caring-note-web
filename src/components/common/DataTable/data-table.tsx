@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/table';
 import { getCommonPinningStyles } from '@/lib/getTableCellPinningStyle';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -28,6 +29,8 @@ interface DataTableProps<TData, TValue> {
   SortingFns?: Record<string, SortingFn<TData>>;
   minWidth?: number;
   onRowClick?: (rowData: TData) => void;
+  highlightedRowId?: string | null;
+  idField?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -38,6 +41,8 @@ export function DataTable<TData, TValue>({
   minWidth = 1020,
   SortingFns,
   onRowClick,
+  highlightedRowId,
+  idField = 'counselSessionId',
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>(initialSorting || []);
 
@@ -97,27 +102,43 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row, index) => (
-              <TableRow
-                key={row.id + index}
-                data-state={row.getIsSelected() && 'selected'}
-                onClick={() => handleRowClick(row.original)}
-                className={onRowClick ? `group cursor-pointer` : ''}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    style={{
-                      width: cell.column.columnDef.size,
-                      ...getCommonPinningStyles({
-                        column: cell.column,
-                      }),
-                    }}
-                    className="group-hover:bg-primary-5">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+            table.getRowModel().rows.map((row, index) => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const rowData = row.original as any;
+
+              return (
+                <TableRow
+                  key={row.id + index}
+                  data-state={row.getIsSelected() && 'selected'}
+                  onClick={() => handleRowClick(row.original)}
+                  className={cn(
+                    onRowClick ? `group cursor-pointer` : '',
+                    'transition-colors duration-300 ease-in-out',
+                    highlightedRowId &&
+                      idField in rowData &&
+                      highlightedRowId === rowData[idField]
+                      ? '!bg-secondary-5 [&_td]:bg-secondary-5'
+                      : '',
+                  )}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      style={{
+                        width: cell.column.columnDef.size,
+                        ...getCommonPinningStyles({
+                          column: cell.column,
+                        }),
+                      }}
+                      className="transition-colors duration-200 ease-in-out group-hover:bg-primary-5">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })
           ) : (
             <TableRow>
               <TableCell
