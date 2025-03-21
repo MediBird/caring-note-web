@@ -101,7 +101,7 @@ export default function Survey() {
           : '설문이 완료되었습니다.',
       });
     }
-    navigate('/');
+    navigate(-1);
   };
 
   return (
