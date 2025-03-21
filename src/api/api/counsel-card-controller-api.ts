@@ -13,27 +13,14 @@
  */
 
 
-import type { AxiosInstance, AxiosPromise, RawAxiosRequestConfig } from 'axios';
-import globalAxios from 'axios';
 import type { Configuration } from '../configuration';
+import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
+import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import {
-  DUMMY_BASE_URL,
-  assertParamExists,
-  createRequestFunction,
-  serializeDataIfNeeded,
-  setBearerAuthToObject,
-  setSearchParams,
-  toPathString,
-} from '../common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from '../common';
 // @ts-ignore
-import {
-  BASE_PATH,
-  BaseAPI,
-  operationServerMap,
-  type RequestArgs,
-} from '../base';
+import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
 import type { CommonResCounselCardBaseInformationRes } from '../models';
 // @ts-ignore
@@ -49,7 +36,9 @@ import type { CommonResCounselCardRes } from '../models';
 // @ts-ignore
 import type { CommonResListTimeRecordedResObject } from '../models';
 // @ts-ignore
+import type { DeleteCounselor400Response } from '../models';
 // @ts-ignore
+import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { UpdateBaseInformationReq } from '../models';
 // @ts-ignore

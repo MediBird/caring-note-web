@@ -331,10 +331,20 @@ const ConsultCard: React.FC = () => {
             items={[
               {
                 label: '알레르기 여부',
-                value: consultCardData?.healthInformation?.allergy?.isAllergy
+                value: consultCardData?.healthInformation?.allergy?.isAllergic
                   ? '알레르기 있음'
                   : '없음',
               },
+              ...(consultCardData?.healthInformation?.allergy?.isAllergic
+                ? [
+                    {
+                      label: '의심 식품/약물',
+                      value:
+                        consultCardData?.healthInformation?.allergy
+                          ?.allergyNote || '',
+                    },
+                  ]
+                : []),
             ]}
           />
           <CardSection
@@ -347,6 +357,23 @@ const ConsultCard: React.FC = () => {
                   ? '약물 부작용 있음'
                   : '없음',
               },
+              ...(consultCardData?.healthInformation?.medicationSideEffect
+                ?.isMedicationSideEffect
+                ? [
+                    {
+                      label: '부작용 증상',
+                      value:
+                        consultCardData?.healthInformation?.medicationSideEffect
+                          ?.symptomsNote || '',
+                    },
+                    {
+                      label: '부작용 의심 약물',
+                      value:
+                        consultCardData?.healthInformation?.medicationSideEffect
+                          ?.suspectedMedicationNote || '',
+                    },
+                  ]
+                : []),
             ]}
           />
 

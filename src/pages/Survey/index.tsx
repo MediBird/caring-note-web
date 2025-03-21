@@ -1,5 +1,10 @@
+import {
+  CounselCardBaseInformationResCardRecordStatusEnum,
+  CounseleeControllerApi,
+} from '@/api';
+import { InfoToast } from '@/components/ui/costom-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Header } from '../../components/ui/Header';
@@ -9,9 +14,11 @@ import IndependentLivingAssessment from './components/tabs/IndependentLivingAsse
 import LivingInfo from './components/tabs/LivingInfo';
 import {
   useCompleteCounselCard,
+  useCounselCardBaseInfoQuery,
   useSaveCounselCardDraft,
 } from './hooks/useCounselCardQuery';
-import { InfoToast } from '@/components/ui/costom-toast';
+
+const counseleeControllerApi = new CounseleeControllerApi();
 
 const tabItems = [
   { id: 'basicInfo', name: '기본 정보', component: BasicInfo },
@@ -21,15 +28,63 @@ const tabItems = [
     id: 'independentLiving',
     name: '자립생활 역량',
     component: IndependentLivingAssessment,
+    showOnlyForDisabled: true,
   },
 ];
 
 export default function Survey() {
   const { counselSessionId } = useParams<{ counselSessionId: string }>();
   const [activeTab, setActiveTab] = useState(tabItems[0].id);
+  const [isDisability, setIsDisability] = useState<boolean | null>(null);
+  const [filteredTabItems, setFilteredTabItems] = useState(tabItems);
   const { saveDraft } = useSaveCounselCardDraft();
   const { complete } = useCompleteCounselCard();
+  const { data: baseInfoData } = useCounselCardBaseInfoQuery(
+    counselSessionId ?? '',
+  );
   const navigate = useNavigate();
+  const isCompleted =
+    baseInfoData?.cardRecordStatus ===
+    CounselCardBaseInformationResCardRecordStatusEnum.Completed;
+
+  useEffect(() => {
+    const fetchCounseleeInfo = async () => {
+      if (baseInfoData?.baseInfo?.counseleeId) {
+        try {
+          const response =
+            await counseleeControllerApi.selectCounseleeBaseInformation(
+              counselSessionId ?? '',
+            );
+
+          if (response.data.data) {
+            setIsDisability(response.data.data.isDisability ?? false);
+          }
+        } catch (error) {
+          console.error('내담자 정보를 불러오는 데 실패했습니다.', error);
+          setIsDisability(false);
+        }
+      }
+    };
+
+    fetchCounseleeInfo();
+  }, [baseInfoData, counselSessionId]);
+
+  useEffect(() => {
+    // 장애 여부에 따라 탭 필터링
+    if (isDisability !== null) {
+      const newFilteredTabs = tabItems.filter(
+        (tab) => !tab.showOnlyForDisabled || isDisability,
+      );
+
+      setFilteredTabItems(newFilteredTabs);
+
+      // 현재 활성화된 탭이 필터링된 후에도 존재하는지 확인
+      if (activeTab === 'independentLiving' && !isDisability) {
+        setActiveTab(newFilteredTabs[0].id);
+      }
+    }
+  }, [isDisability, activeTab]);
+
   const handleSaveDraft = async () => {
     const success = await saveDraft(counselSessionId ?? '');
     if (success) {
@@ -40,7 +95,11 @@ export default function Survey() {
   const handleComplete = async () => {
     const success = await complete(counselSessionId ?? '');
     if (success) {
-      InfoToast({ message: '설문이 완료되었습니다.' });
+      InfoToast({
+        message: isCompleted
+          ? '수정이 완료되었습니다.'
+          : '설문이 완료되었습니다.',
+      });
     }
     navigate('/');
   };
@@ -52,17 +111,19 @@ export default function Survey() {
           <div className="flex w-full items-end justify-between">
             <span>기초 설문 작성</span>
             <div className="flex gap-2 text-body1 font-bold">
-              <Button
-                variant="tertiary"
-                size="xl"
-                onClick={() => handleSaveDraft()}>
-                임시 저장
-              </Button>
+              {!isCompleted && (
+                <Button
+                  variant="tertiary"
+                  size="xl"
+                  onClick={() => handleSaveDraft()}>
+                  임시 저장
+                </Button>
+              )}
               <Button
                 variant="primary"
                 size="xl"
                 onClick={() => handleComplete()}>
-                설문 완료
+                {isCompleted ? '수정 완료' : '설문 완료'}
               </Button>
             </div>
           </div>
@@ -71,7 +132,7 @@ export default function Survey() {
       />
       <TabsList className="w-full border-b border-grayscale-10">
         <div className="mx-auto flex h-full w-full max-w-layout justify-start gap-5 px-layout [&>*]:max-w-content">
-          {tabItems.map((tab) => (
+          {filteredTabItems.map((tab) => (
             <TabsTrigger key={tab.id} value={tab.id}>
               {tab.name}
             </TabsTrigger>
@@ -79,7 +140,7 @@ export default function Survey() {
         </div>
       </TabsList>
       <div className="mb-100 h-full w-full px-layout pb-10 pt-10 [&>*]:mx-auto [&>*]:max-w-content">
-        {tabItems.map((tab) => (
+        {filteredTabItems.map((tab) => (
           <TabsContent key={tab.id} value={tab.id}>
             <tab.component counselSessionId={counselSessionId ?? ''} />
           </TabsContent>

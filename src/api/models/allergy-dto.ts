@@ -25,6 +25,12 @@ export interface AllergyDTO {
      * @type {boolean}
      * @memberof AllergyDTO
      */
-    'isAllergy'?: boolean;
+    'isAllergic'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof AllergyDTO
+     */
+    'allergyNote'?: string;
 }
 

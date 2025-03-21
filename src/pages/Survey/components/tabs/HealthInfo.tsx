@@ -135,13 +135,16 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
             value: (
               <ButtonGroup
                 options={allergyOptions}
-                value={healthInfo?.allergy?.isAllergy ? 'true' : 'false'}
+                value={healthInfo?.allergy?.isAllergic ? 'true' : 'false'}
                 onChange={(value) => {
+                  const isAllergic = value === 'true';
                   setHealthInfo({
                     ...healthInfo,
                     allergy: {
-                      ...healthInfo?.allergy,
-                      isAllergy: value === 'true',
+                      isAllergic,
+                      allergyNote: isAllergic
+                        ? healthInfo?.allergy?.allergyNote || ''
+                        : '',
                     },
                   });
                 }}
@@ -149,6 +152,29 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
               />
             ),
           },
+          ...(healthInfo?.allergy?.isAllergic
+            ? [
+                {
+                  label: '의심 식품/약물',
+                  value: (
+                    <Textarea
+                      placeholder="알레르기 의심 식품/약물을 작성해주세요."
+                      className="min-h-[100px] w-full rounded border p-2"
+                      value={healthInfo?.allergy?.allergyNote || ''}
+                      onChange={(e) =>
+                        setHealthInfo({
+                          ...healthInfo,
+                          allergy: {
+                            isAllergic: true,
+                            allergyNote: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  ),
+                },
+              ]
+            : []),
         ]}
       />
       <CardSection
@@ -165,11 +191,19 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
                     : 'false'
                 }
                 onChange={(value) => {
+                  const hasSideEffect = value === 'true';
                   setHealthInfo({
                     ...healthInfo,
                     medicationSideEffect: {
                       ...healthInfo?.medicationSideEffect,
-                      isMedicationSideEffect: value === 'true',
+                      isMedicationSideEffect: hasSideEffect,
+                      symptomsNote: hasSideEffect
+                        ? healthInfo?.medicationSideEffect?.symptomsNote || ''
+                        : '',
+                      suspectedMedicationNote: hasSideEffect
+                        ? healthInfo?.medicationSideEffect
+                            ?.suspectedMedicationNote || ''
+                        : '',
                     },
                   });
                 }}
@@ -177,6 +211,47 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
               />
             ),
           },
+          ...(healthInfo?.medicationSideEffect?.isMedicationSideEffect
+            ? [
+                {
+                  label: '부작용 의심 약물',
+                  value: (
+                    <Textarea
+                      placeholder="약물 부작용이 의심되는 품목을 작성해주세요."
+                      className="min-h-[100px] w-full rounded border p-2"
+                      value={
+                        healthInfo?.medicationSideEffect
+                          ?.suspectedMedicationNote || ''
+                      }
+                      onChange={(e) =>
+                        handleTextChange(
+                          'medicationSideEffect.suspectedMedicationNote',
+                          e.target.value,
+                        )
+                      }
+                    />
+                  ),
+                },
+                {
+                  label: '부작용 증상',
+                  value: (
+                    <Textarea
+                      placeholder="증상과 상황을 설명해 주세요."
+                      className="min-h-[100px] w-full rounded border p-2"
+                      value={
+                        healthInfo?.medicationSideEffect?.symptomsNote || ''
+                      }
+                      onChange={(e) =>
+                        handleTextChange(
+                          'medicationSideEffect.symptomsNote',
+                          e.target.value,
+                        )
+                      }
+                    />
+                  ),
+                },
+              ]
+            : []),
         ]}
       />
     </Card>
