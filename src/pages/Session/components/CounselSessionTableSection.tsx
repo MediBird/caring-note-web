@@ -3,6 +3,7 @@ import {
   DataTablePagination,
   PaginationInfo,
 } from '@/components/common/DataTable/pagination';
+import { useHighlightedSession } from '@/hooks/useCounselSessionQuery';
 import { useCallback } from 'react';
 import {
   useDeleteCounselSession,
@@ -10,7 +11,6 @@ import {
 } from '../hooks/query/useCounselSessionQuery';
 import { useCounselSessionParamsStore } from '../hooks/store/useCounselSessionStore';
 import { CounselSessionTable } from './table/CounselSessionTable';
-import { useHighlightedSession } from '@/hooks/useCounselSessionQuery';
 
 // API 응답 타입 확장
 interface ApiResponse {
