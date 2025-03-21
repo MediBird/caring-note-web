@@ -14,7 +14,6 @@
 
 
 
-export * from './api/default-api';
 export * from './api/aiapi';
 export * from './api/aicounsel-summary-controller-api';
 export * from './api/counsel-card-controller-api';
