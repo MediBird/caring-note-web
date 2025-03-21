@@ -26,5 +26,17 @@ export interface MedicationSideEffectDTO {
      * @memberof MedicationSideEffectDTO
      */
     'isMedicationSideEffect'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof MedicationSideEffectDTO
+     */
+    'suspectedMedicationNote'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MedicationSideEffectDTO
+     */
+    'symptomsNote'?: string;
 }
 
