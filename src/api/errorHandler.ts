@@ -11,10 +11,7 @@ interface ApiErrorResponse {
   };
 }
 
-export const handleApiError = (
-  error: AxiosError<ApiErrorResponse>,
-  navigate?: any,
-) => {
+export const handleApiError = (error: AxiosError<ApiErrorResponse>) => {
   const status = error.response?.status;
   const message =
     error.response?.data?.message || '알 수 없는 오류가 발생했습니다';
@@ -35,11 +32,6 @@ export const handleApiError = (
       toast.error('권한이 없습니다', {
         description: message,
       });
-      if (navigate) {
-        navigate('/forbidden');
-      } else {
-        window.location.href = '/forbidden';
-      }
       break;
     case 404:
       toast.error('요청한 리소스를 찾을 수 없습니다', {
