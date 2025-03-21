@@ -33,7 +33,11 @@ export function ButtonGroup({
         <Button
           key={option.value}
           type="button"
-          variant={values.includes(option.value) ? 'tertiary' : 'nonpressed'}
+          variant={
+            values.includes(option.value)
+              ? 'selectButtonSelected'
+              : 'selectButtonNonSelected'
+          }
           className="font-medium"
           onClick={() => onChange(option.value)}>
           {option.label}
