@@ -2,9 +2,8 @@ import CloseBlackIcon from '@/assets/icon/24/close.outlined.black.svg?react';
 import PencilIcon from '@/components/consult/PencilIcon';
 import Recording from '@/components/consult/Recording';
 import { cn } from '@/lib/utils';
-import { ChevronRight } from 'lucide-react';
-import HighlightInput from './consult/HighlightInput';
 import useRightNavigationStore from '@/store/navigationStore';
+import HighlightInput from './consult/HighlightInput';
 
 const NavigationRight = () => {
   const { isOpen, toggleRightNav } = useRightNavigationStore();
@@ -29,11 +28,6 @@ const NavigationRight = () => {
       )}>
       {isOpen ? (
         <div className="flex justify-start">
-          <button
-            className="absolute left-[-1.2rem] top-1/2 z-[-1] -translate-y-1/2 transform rounded-full bg-white p-2 shadow-nav-right"
-            onClick={toggleRightNav}>
-            {isOpen && <ChevronRight size={24} className="pr-2" />}
-          </button>
           <div className="w-full bg-white">
             <div className="flex items-center justify-between border-b-2 border-grayscale-10 p-4 pt-8">
               <span className="text-subtitle2 font-bold text-grayscale-90">

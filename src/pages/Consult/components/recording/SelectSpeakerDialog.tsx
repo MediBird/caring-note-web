@@ -52,7 +52,7 @@ function SelectSpeakerDialog() {
 
   const tooltip = () => {
     return (
-      <TooltipProvider>
+      <TooltipProvider delayDuration={200}>
         <Tooltip>
           <TooltipTrigger>
             <InfoIcon className="ml-2 h-5 w-5 text-grayscale-90" />
