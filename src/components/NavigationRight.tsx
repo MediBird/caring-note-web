@@ -1,12 +1,34 @@
 import CloseBlackIcon from '@/assets/icon/24/close.outlined.black.svg?react';
 import PencilIcon from '@/components/consult/PencilIcon';
 import Recording from '@/components/consult/Recording';
+import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
+import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useRightNavigationStore from '@/store/navigationStore';
+import { useEffect } from 'react';
 import HighlightInput from './consult/HighlightInput';
 
 const NavigationRight = () => {
-  const { isOpen, toggleRightNav } = useRightNavigationStore();
+  const { isOpen, openRightNav, closeRightNav } = useRightNavigationStore();
+  const { recordingStatus } = useRecording();
+
+  useEffect(() => {
+    return () => {
+      sessionStorage.setItem('autoNavigationOpen', 'false');
+    };
+  }, []);
+
+  useEffect(() => {
+    if (
+      sessionStorage.getItem('autoNavigationOpen') === 'true' &&
+      (recordingStatus === RecordingStatus.STTCompleted ||
+        recordingStatus === RecordingStatus.AICompleted)
+    ) {
+      openRightNav();
+    } else {
+      sessionStorage.setItem('autoNavigationOpen', 'true');
+    }
+  }, [recordingStatus, openRightNav]);
 
   const defaultMenu = () => {
     return (
@@ -14,7 +36,7 @@ const NavigationRight = () => {
         className={`flex h-screen flex-col items-center justify-start ${
           isOpen ? 'w-20' : ''
         } py-8`}
-        onClick={toggleRightNav}>
+        onClick={openRightNav}>
         <PencilIcon />
       </div>
     );
@@ -37,7 +59,7 @@ const NavigationRight = () => {
                 className="cursor-pointer"
                 width={24}
                 height={24}
-                onClick={toggleRightNav}
+                onClick={closeRightNav}
               />
             </div>
             <div className="flex w-full flex-col items-center justify-between gap-4 px-4 py-4">
