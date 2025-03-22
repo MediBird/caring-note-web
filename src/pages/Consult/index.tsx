@@ -9,7 +9,7 @@ import { InfoToast } from '@/components/ui/costom-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
-import { useRecording } from '@/hooks/useRecording';
+import { updateRecordingStatus, useRecording } from '@/hooks/useRecording';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
 import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
 import PastConsult from '@/pages/Consult/components/tabs/PastConsult';
@@ -153,8 +153,7 @@ export function Index() {
   const { medicineConsult } = useMedicineConsultStore();
   const { medicationRecordList } = useMedicineMemoStore();
 
-  const { recordingStatus, resetRecording, updateRecordingStatusByResponse } =
-    useRecording();
+  const { recordingStatus, resetRecording } = useRecording();
 
   const { saveWasteMedication, isSuccessWasteMedication } =
     useSaveWasteMedication(counselSessionId ?? '');
@@ -231,14 +230,9 @@ export function Index() {
     const status = statusMapping[getRecordingStatusData.aiCounselSummaryStatus];
 
     if (status) {
-      updateRecordingStatusByResponse(status);
+      updateRecordingStatus(status);
     }
-  }, [
-    resetRecording,
-    isSuccessGetRecordingStatus,
-    getRecordingStatusData,
-    updateRecordingStatusByResponse,
-  ]);
+  }, [resetRecording, isSuccessGetRecordingStatus, getRecordingStatusData]);
 
   const saveConsult = useCallback(async () => {
     try {
