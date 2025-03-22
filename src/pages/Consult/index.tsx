@@ -5,9 +5,13 @@ import {
   UpdateStatusInCounselSessionReqStatusEnum,
 } from '@/api';
 import Spinner from '@/components/common/Spinner';
+import { InfoToast } from '@/components/ui/costom-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
+import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
 import { useRecording } from '@/hooks/useRecording';
+import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
+import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
 import PastConsult from '@/pages/Consult/components/tabs/PastConsult';
 import { useGetIsRecordingPopupQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetIsRecordingPopupQuery';
 import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
@@ -17,7 +21,6 @@ import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
-import useRightNavigationStore from '@/store/navigationStore';
 import { DISEASE_MAP } from '@/utils/constants';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -29,10 +32,6 @@ import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
 import TemporarySaveDialog from './components/TemporarySaveDialog';
 import { useGetRecordingStatusQuery } from './hooks/query/counselRecording/useGetRecordingStatusQuery';
-import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
-import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
-import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
-import { InfoToast } from '@/components/ui/costom-toast';
 
 interface InfoItemProps {
   icon: string;
@@ -190,7 +189,6 @@ export function Index() {
     isSuccess: isSuccessGetRecordingStatus,
   } = useGetRecordingStatusQuery(counselSessionId ?? '', recordingStatus);
   const { activeTab, setActiveTab } = useConsultTabStore();
-  const { openRightNav } = useRightNavigationStore();
 
   const { mutate: updateCounselSessionStatus } = useUpdateCounselSessionStatus({
     counselSessionId: counselSessionId ?? '',
@@ -272,18 +270,6 @@ export function Index() {
       updateCounselSessionStatus('COMPLETED');
     }
   };
-
-  useEffect(() => {
-    if (
-      sessionStorage.getItem('autoNavigationOpen') === 'true' &&
-      (recordingStatus === RecordingStatus.STTCompleted ||
-        recordingStatus === RecordingStatus.AICompleted)
-    ) {
-      openRightNav();
-    } else {
-      sessionStorage.setItem('autoNavigationOpen', 'true');
-    }
-  }, [recordingStatus, openRightNav]);
 
   if (isLoading) {
     return (
