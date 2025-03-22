@@ -56,11 +56,10 @@ const checkIsDisability = async (
 };
 
 // 유효성 검증 함수들
-const validateHealthInfo = (data: UpdateHealthInformationReq): boolean => {
+const validateHealthInfo = (data: UpdateHealthInformationReq): void => {
   // 알레르기가 있음으로 체크됐는데 노트가 비어있는 경우
   if (data.allergy?.isAllergic && !data.allergy?.allergyNote) {
-    toast.error('알레르기가 있는 경우 상세 내용을 작성해주세요.');
-    return false;
+    throw new Error('알레르기가 있는 경우 상세 내용을 작성해주세요.');
   }
 
   // 약물 부작용이 있음으로 체크됐는데 노트가 비어있는 경우
@@ -69,29 +68,22 @@ const validateHealthInfo = (data: UpdateHealthInformationReq): boolean => {
     (!data.medicationSideEffect?.suspectedMedicationNote ||
       !data.medicationSideEffect?.symptomsNote)
   ) {
-    toast.error(
+    throw new Error(
       '약물 부작용이 있는 경우 의심되는 약물과 증상을 모두 작성해주세요.',
     );
-    return false;
   }
-
-  return true;
 };
 
-const validateLivingInfo = (data: UpdateLivingInformationReq): boolean => {
+const validateLivingInfo = (data: UpdateLivingInformationReq): void => {
   // 영양 상태 패턴이 비어있는지 확인
   if (!data.nutrition?.mealPattern) {
-    toast.error('영양 상태의 하루 식사 패턴을 선택해주세요.');
-    return false;
+    throw new Error('영양 상태의 하루 식사 패턴을 선택해주세요.');
   }
 
   // 운동 패턴이 비어있는지 확인
   if (!data.exercise?.exercisePattern) {
-    toast.error('운동의 주간 운동 패턴을 선택해주세요.');
-    return false;
+    throw new Error('운동의 주간 운동 패턴을 선택해주세요.');
   }
-
-  return true;
 };
 
 // 기본 정보 쿼리 훅
@@ -302,7 +294,7 @@ export const useCounselCardBaseInfoMutation = () => {
 // 건강 정보 업데이트 뮤테이션 훅
 export const useCounselCardHealthInfoMutation = () => {
   const queryClient = useQueryClient();
-  const { setLoading } = useCounselCardStore();
+  const { setLoading, setError } = useCounselCardStore();
 
   return useMutation({
     mutationFn: async ({
@@ -312,13 +304,11 @@ export const useCounselCardHealthInfoMutation = () => {
       counselSessionId: string;
       data: UpdateHealthInformationReq;
     }) => {
-      // 유효성 검증
-      if (!validateHealthInfo(data)) {
-        return null;
-      }
-
-      setLoading('health', true);
       try {
+        // 유효성 검증
+        validateHealthInfo(data);
+
+        setLoading('health', true);
         const response =
           await counselCardApi.updateCounselCardHealthInformation(
             counselSessionId,
@@ -326,7 +316,12 @@ export const useCounselCardHealthInfoMutation = () => {
           );
         return response.data.data;
       } catch (error) {
-        handleError(error, 'health', '업데이트');
+        if (error instanceof Error) {
+          toast.error(error.message);
+          setError('health', error.message);
+        } else {
+          handleError(error, 'health', '업데이트');
+        }
         throw error;
       } finally {
         setLoading('health', false);
@@ -388,7 +383,7 @@ export const useCounselCardIndependentLifeInfoMutation = () => {
 // 생활 정보 업데이트 뮤테이션 훅
 export const useCounselCardLivingInfoMutation = () => {
   const queryClient = useQueryClient();
-  const { setLoading } = useCounselCardStore();
+  const { setLoading, setError } = useCounselCardStore();
 
   return useMutation({
     mutationFn: async ({
@@ -398,13 +393,11 @@ export const useCounselCardLivingInfoMutation = () => {
       counselSessionId: string;
       data: UpdateLivingInformationReq;
     }) => {
-      // 유효성 검증
-      if (!validateLivingInfo(data)) {
-        return null;
-      }
-
-      setLoading('living', true);
       try {
+        // 유효성 검증
+        validateLivingInfo(data);
+
+        setLoading('living', true);
         const response =
           await counselCardApi.updateCounselCardLivingInformation(
             counselSessionId,
@@ -412,7 +405,12 @@ export const useCounselCardLivingInfoMutation = () => {
           );
         return response.data.data;
       } catch (error) {
-        handleError(error, 'living', '업데이트');
+        if (error instanceof Error) {
+          toast.error(error.message);
+          setError('living', error.message);
+        } else {
+          handleError(error, 'living', '업데이트');
+        }
         throw error;
       } finally {
         setLoading('living', false);
@@ -484,85 +482,83 @@ export const useSaveCounselCardDraft = () => {
   const livingInfoMutation = useCounselCardLivingInfoMutation();
 
   const saveDraft = async (counselSessionId: string) => {
-    const promises = [];
+    try {
+      const mutations = [];
 
-    if (store.isDirty.base && store.baseInfo) {
-      const baseInfoReq = {
-        baseInfo: store.baseInfo.baseInfo || {},
-        counselPurposeAndNote: store.baseInfo.counselPurposeAndNote || {},
-      };
-      promises.push(
-        baseInfoMutation.mutateAsync({
-          counselSessionId,
-          data: baseInfoReq,
-        }),
-      );
-    }
-
-    if (store.isDirty.health && store.healthInfo) {
-      const healthInfoReq = {
-        diseaseInfo: store.healthInfo.diseaseInfo || {},
-        allergy: store.healthInfo.allergy || {},
-        medicationSideEffect: store.healthInfo.medicationSideEffect || {},
-      };
-
-      // 유효성 검증은 mutation 내부에서 처리
-      promises.push(
-        healthInfoMutation.mutateAsync({
-          counselSessionId,
-          data: healthInfoReq,
-        }),
-      );
-    }
-
-    if (store.isDirty.independentLife && store.independentLifeInfo) {
-      // 장애 여부 확인
-      const isDisability = await checkIsDisability(counselSessionId);
-      if (!isDisability) {
-        toast.error(
-          '장애인이 아닌 내담자는 자립생활 역량 정보를 업데이트할 수 없습니다.',
+      if (store.isDirty.base && store.baseInfo) {
+        const baseInfoReq = {
+          baseInfo: store.baseInfo.baseInfo || {},
+          counselPurposeAndNote: store.baseInfo.counselPurposeAndNote || {},
+        };
+        mutations.push(
+          baseInfoMutation.mutateAsync({
+            counselSessionId,
+            data: baseInfoReq,
+          }),
         );
-        return false;
       }
 
-      const independentLifeInfoReq = {
-        communication: store.independentLifeInfo.communication || {},
-        evacuation: store.independentLifeInfo.evacuation || {},
-        walking: store.independentLifeInfo.walking || {},
-      };
-      promises.push(
-        independentLifeInfoMutation.mutateAsync({
-          counselSessionId,
-          data: independentLifeInfoReq,
-        }),
-      );
-    }
+      if (store.isDirty.health && store.healthInfo) {
+        const healthInfoReq = {
+          diseaseInfo: store.healthInfo.diseaseInfo || {},
+          allergy: store.healthInfo.allergy || {},
+          medicationSideEffect: store.healthInfo.medicationSideEffect || {},
+        };
 
-    if (store.isDirty.living && store.livingInfo) {
-      const livingInfoReq = {
-        drinking: store.livingInfo.drinking || {},
-        smoking: store.livingInfo.smoking || {},
-        exercise: store.livingInfo.exercise || {},
-        nutrition: store.livingInfo.nutrition || {},
-        medicationManagement: store.livingInfo.medicationManagement || {},
-      };
+        mutations.push(
+          healthInfoMutation.mutateAsync({
+            counselSessionId,
+            data: healthInfoReq,
+          }),
+        );
+      }
 
-      // 유효성 검증은 mutation 내부에서 처리
-      promises.push(
-        livingInfoMutation.mutateAsync({
-          counselSessionId,
-          data: livingInfoReq,
-        }),
-      );
-    }
+      if (store.isDirty.independentLife && store.independentLifeInfo) {
+        // 장애 여부 확인
+        const isDisability = await checkIsDisability(counselSessionId);
+        if (!isDisability) {
+          toast.error(
+            '장애인이 아닌 내담자는 자립생활 역량 정보를 업데이트할 수 없습니다.',
+          );
+          return false;
+        }
 
-    try {
-      await Promise.all(promises);
+        const independentLifeInfoReq = {
+          communication: store.independentLifeInfo.communication || {},
+          evacuation: store.independentLifeInfo.evacuation || {},
+          walking: store.independentLifeInfo.walking || {},
+        };
+        mutations.push(
+          independentLifeInfoMutation.mutateAsync({
+            counselSessionId,
+            data: independentLifeInfoReq,
+          }),
+        );
+      }
+
+      if (store.isDirty.living && store.livingInfo) {
+        const livingInfoReq = {
+          drinking: store.livingInfo.drinking || {},
+          smoking: store.livingInfo.smoking || {},
+          exercise: store.livingInfo.exercise || {},
+          nutrition: store.livingInfo.nutrition || {},
+          medicationManagement: store.livingInfo.medicationManagement || {},
+        };
+
+        mutations.push(
+          livingInfoMutation.mutateAsync({
+            counselSessionId,
+            data: livingInfoReq,
+          }),
+        );
+      }
+
+      await Promise.all(mutations);
       store.resetDirty();
       return true;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error('임시 저장 중 오류가 발생했습니다.');
+      // 유효성 검증 실패 또는 API 오류
+      console.error('임시 저장 중 오류 발생:', error);
       return false;
     }
   };

@@ -5,7 +5,7 @@ import {
 import { InfoToast } from '@/components/ui/costom-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Header } from '../../components/ui/Header';
 import BasicInfo from './components/tabs/BasicInfo';
@@ -43,6 +43,7 @@ export default function Survey() {
     counselSessionId ?? '',
   );
   const navigate = useNavigate();
+  const location = useLocation();
   const isCompleted =
     baseInfoData?.cardRecordStatus ===
     CounselCardBaseInformationResCardRecordStatusEnum.Completed;
@@ -100,15 +101,15 @@ export default function Survey() {
           ? '수정이 완료되었습니다.'
           : '설문이 완료되었습니다.',
       });
-    }
 
-    const referrer = document.referrer;
+      // location.state를 통해 이전 페이지가 ConsultCard인지 확인
+      const fromConsult = location.state?.fromConsult === true;
 
-    // consult 페이지에서 왔으면 consult 페이지로 돌아가고, 그렇지 않으면 홈으로 이동
-    if (referrer.includes('/consult/')) {
-      navigate(`/consult/${counselSessionId}`);
-    } else {
-      navigate('/');
+      if (fromConsult) {
+        navigate(`/consult/${counselSessionId}`);
+      } else {
+        navigate('/');
+      }
     }
   };
 
