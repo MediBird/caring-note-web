@@ -15,18 +15,19 @@ const NavigationRight = () => {
   useEffect(() => {
     return () => {
       sessionStorage.setItem('autoNavigationOpen', 'false');
+      closeRightNav();
     };
-  }, []);
+  }, [closeRightNav]);
 
   useEffect(() => {
+    const autoNavigationOpen = sessionStorage.getItem('autoNavigationOpen');
+
     if (
-      sessionStorage.getItem('autoNavigationOpen') === 'true' &&
+      autoNavigationOpen === 'true' &&
       (recordingStatus === RecordingStatus.STTCompleted ||
         recordingStatus === RecordingStatus.AICompleted)
     ) {
       openRightNav();
-    } else {
-      sessionStorage.setItem('autoNavigationOpen', 'true');
     }
   }, [recordingStatus, openRightNav]);
 
