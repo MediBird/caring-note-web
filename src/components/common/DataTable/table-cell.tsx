@@ -20,7 +20,7 @@ export const TableCell = ({
   textColor,
 }: TableCellProps) => {
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={200}>
       <Tooltip>
         <TooltipTrigger asChild>
           <div
@@ -30,7 +30,7 @@ export const TableCell = ({
               maxWidth: width ? `${width}px` : 'auto',
             }}>
             <div
-              className={cn('text-body1 font-medium ml-3 truncate', textColor)}>
+              className={cn('ml-3 truncate text-body1 font-medium', textColor)}>
               {text}
             </div>
           </div>
