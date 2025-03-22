@@ -63,7 +63,11 @@ const ConsultCard: React.FC = () => {
           <CardTitle>기초 설문</CardTitle>
           <Button
             variant="secondary"
-            onClick={() => navigate(`/survey/${counselSessionId}`)}>
+            onClick={() =>
+              navigate(`/survey/${counselSessionId}`, {
+                state: { fromConsult: true },
+              })
+            }>
             수정하기
           </Button>
         </div>
