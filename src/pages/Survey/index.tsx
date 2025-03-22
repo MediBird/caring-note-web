@@ -101,7 +101,15 @@ export default function Survey() {
           : '설문이 완료되었습니다.',
       });
     }
-    navigate(-1);
+
+    const referrer = document.referrer;
+
+    // consult 페이지에서 왔으면 consult 페이지로 돌아가고, 그렇지 않으면 홈으로 이동
+    if (referrer.includes('/consult/')) {
+      navigate(`/consult/${counselSessionId}`);
+    } else {
+      navigate('/');
+    }
   };
 
   return (
