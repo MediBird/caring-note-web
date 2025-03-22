@@ -105,9 +105,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
           )}>
           {recordingStatus === RecordingStatus.STTLoading ? (
             <div className="flex flex-col items-center">
-              <p
-                className="text-body1 font-medium text-grayscale-50"
-                onClick={resetRecording}>
+              <p className="text-body1 font-medium text-grayscale-50">
                 녹음 저장 중...
               </p>
               <Spinner />
@@ -124,9 +122,7 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
             </div>
           ) : recordingStatus === RecordingStatus.AILoading ? (
             <div className="flex flex-col items-center">
-              <p
-                className="text-body1 font-medium text-grayscale-50"
-                onClick={resetRecording}>
+              <p className="text-body1 font-medium text-grayscale-50">
                 녹음 스크립트 생성 중...
               </p>
               <Spinner />
