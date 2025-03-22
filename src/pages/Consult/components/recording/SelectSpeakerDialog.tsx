@@ -142,7 +142,8 @@ function SelectSpeakerDialog() {
             variant="primary"
             size="md"
             onClick={handleClickConfirm}
-            disabled={!selectedSpeakers.length}>
+            // disabled={!selectedSpeakers.length}
+          >
             확인
           </Button>
         </DialogFooter>
