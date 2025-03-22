@@ -10,6 +10,7 @@ import { create } from 'zustand';
 
 // store's state
 interface RecordingState {
+  recordingCounselSessionId: string | undefined;
   recordingStatus: RecordingStatus;
   recordingTime: number;
   recordingIntervalId: number | null;
@@ -19,6 +20,7 @@ interface RecordingState {
 
 // store (ONLY for this hook)
 const useRecordingStore = create<RecordingState>(() => ({
+  recordingCounselSessionId: undefined,
   recordingStatus: RecordingStatus.Ready,
   recordingTime: 0,
   recordingIntervalId: null,
@@ -169,6 +171,8 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     // URL.revokeObjectURL(audioUrl);
 
     try {
+      sessionStorage.setItem('autoNavigationOpen', 'true');
+
       const response = await aiCounselSummaryControllerApi.convertSpeechToText(
         audioFile,
         { counselSessionId },
@@ -186,6 +190,8 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
   };
 
   const submitSpeakers = (speakers: string[]) => {
+    sessionStorage.setItem('autoNavigationOpen', 'true');
+
     updateRecordingStatus(RecordingStatus.AILoading);
     sendSpeakers({ counselSessionId, speakers });
   };

@@ -20,7 +20,11 @@ export const useGetRecordingStatusQuery = (
   const { data, isSuccess } = useQuery({
     queryKey: ['selectAICounselSummaryStatus', counselSessionId],
     queryFn: () => selectAICounselSummaryStatus(counselSessionId),
-    enabled: !!counselSessionId,
+    enabled:
+      !!counselSessionId &&
+      (recordingStatus === RecordingStatus.Ready ||
+        recordingStatus === RecordingStatus.STTLoading ||
+        recordingStatus === RecordingStatus.AILoading),
     refetchInterval:
       recordingStatus === RecordingStatus.STTLoading ||
       recordingStatus === RecordingStatus.AILoading
