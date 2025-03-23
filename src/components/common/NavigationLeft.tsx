@@ -119,10 +119,10 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
   }, [keycloak, user?.roleType]);
 
   const handleMenuClick = (route?: string, action?: () => void) => {
-    resetRecording();
-
     if (action) action();
     if (route) {
+      resetRecording();
+
       if (
         recordingStatus !== RecordingStatus.Ready &&
         recordingStatus !== RecordingStatus.STTCompleted &&
