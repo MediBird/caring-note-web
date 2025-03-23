@@ -103,7 +103,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         collapsedName: '로그아웃',
         icon: <LogoutIcon width={24} height={24} />,
         action: () => keycloak.logout(),
-        roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
+        roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER', 'ROLE_NONE'],
       },
     ];
 
