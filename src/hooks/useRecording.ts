@@ -10,7 +10,6 @@ import { create } from 'zustand';
 
 // store's state
 interface RecordingState {
-  recordingCounselSessionId: string | undefined;
   recordingStatus: RecordingStatus;
   recordingTime: number;
   recordingIntervalId: number | null;
@@ -20,7 +19,6 @@ interface RecordingState {
 
 // store
 const useRecordingStore = create<RecordingState>(() => ({
-  recordingCounselSessionId: undefined,
   recordingStatus: RecordingStatus.Ready,
   recordingTime: 0,
   recordingIntervalId: null,

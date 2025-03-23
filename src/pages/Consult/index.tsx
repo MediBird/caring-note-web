@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
 import { updateRecordingStatus, useRecording } from '@/hooks/useRecording';
+import { useRouteStore } from '@/hooks/useRouteStore';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
 import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
 import PastConsult from '@/pages/Consult/components/tabs/PastConsult';
@@ -155,6 +156,7 @@ export function Index() {
   const { medicineConsult } = useMedicineConsultStore();
   const { medicationRecordList } = useMedicineMemoStore();
 
+  const { previousPath, setPreviousPath } = useRouteStore();
   const { recordingStatus, resetRecording } = useRecording();
   const {
     isOpen: isLeaveOutDialogOpen,
@@ -222,8 +224,8 @@ export function Index() {
     if (!isSuccessGetRecordingStatus) {
       return;
     }
+
     if (!getRecordingStatusData?.aiCounselSummaryStatus) {
-      resetRecording();
       return;
     }
 
@@ -237,9 +239,19 @@ export function Index() {
     const status = statusMapping[getRecordingStatusData.aiCounselSummaryStatus];
 
     if (status) {
-      updateRecordingStatus(status);
+      if (previousPath?.startsWith('/survey')) {
+        setPreviousPath('');
+      } else {
+        updateRecordingStatus(status);
+      }
     }
-  }, [resetRecording, isSuccessGetRecordingStatus, getRecordingStatusData]);
+  }, [
+    getRecordingStatusData,
+    isSuccessGetRecordingStatus,
+    resetRecording,
+    previousPath,
+    setPreviousPath,
+  ]);
 
   const saveConsult = useCallback(async () => {
     try {

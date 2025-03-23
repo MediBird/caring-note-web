@@ -1,3 +1,4 @@
+import { RouteTracker } from '@/components/RouteTracker';
 import { BrowserRouter } from 'react-router-dom';
 import Routes from './Routes';
 const Router = () => {
@@ -7,6 +8,7 @@ const Router = () => {
         v7_relativeSplatPath: true,
         v7_startTransition: true,
       }}>
+      <RouteTracker />
       <Routes />
     </BrowserRouter>
   );

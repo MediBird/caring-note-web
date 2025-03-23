@@ -48,7 +48,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
   const { user } = useAuthContext();
   const { keycloak } = useKeycloak();
 
-  const { recordingStatus } = useRecording();
+  const { recordingStatus, resetRecording } = useRecording();
   const { openDialog, setOnConfirm } = useLeaveOutDialogStore();
 
   const getIsActive = (route: string) => {
@@ -119,6 +119,8 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
   }, [keycloak, user?.roleType]);
 
   const handleMenuClick = (route?: string, action?: () => void) => {
+    resetRecording();
+
     if (action) action();
     if (route) {
       if (
