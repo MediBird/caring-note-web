@@ -3,7 +3,7 @@ import eraserBlack from '@/assets/icon/eraserBlack.png';
 import eraserBlue from '@/assets/icon/eraserBlue.png';
 import highlightpenBlack from '@/assets/icon/highlightpenBlack.png';
 import highlightpenBlue from '@/assets/icon/highlightpenBlue.png';
-import Tooltip from '@/components/Tooltip';
+import Tooltip from '@/components/common/Tooltip';
 import { cn } from '@/lib/utils';
 import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { CounselRecordHighlights } from '@/pages/Consult/types/MedicineConsultDTO';

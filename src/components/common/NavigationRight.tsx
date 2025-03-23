@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useRightNavigationStore from '@/store/navigationStore';
 import { useEffect } from 'react';
-import HighlightInput from './consult/HighlightInput';
+import HighlightInput from '../consult/HighlightInput';
 
 const NavigationRight = () => {
   const { isOpen, openRightNav, closeRightNav } = useRightNavigationStore();

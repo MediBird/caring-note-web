@@ -1,5 +1,5 @@
 import NavigationLeft from '@/components/common/NavigationLeft';
-import NavigationRight from '@/components/NavigationRight';
+import NavigationRight from '@/components/common/NavigationRight';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
