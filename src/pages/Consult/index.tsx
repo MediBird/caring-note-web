@@ -14,6 +14,7 @@ import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus
 import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
 import PastConsult from '@/pages/Consult/components/tabs/PastConsult';
 import { useGetIsRecordingPopupQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetIsRecordingPopupQuery';
+import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetRecordingStatusQuery';
 import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
 import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
@@ -24,6 +25,7 @@ import useMedicineMemoStore from '@/store/medicineMemoStore';
 import { DISEASE_MAP } from '@/utils/constants';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import CheckLeaveOutDialog from './components/CheckLeaveOutDialog';
 import FinishConsultDialog from './components/FinishConsultDialog';
 import RecordingDialog from './components/recording/RecordingDialog';
 import ConsultCard from './components/tabs/ConsultCard';
@@ -31,7 +33,7 @@ import DiscardMedicine from './components/tabs/DiscardMedicine';
 import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
 import TemporarySaveDialog from './components/TemporarySaveDialog';
-import { useGetRecordingStatusQuery } from './hooks/query/counselRecording/useGetRecordingStatusQuery';
+import { useLeaveOutDialogStore } from './hooks/store/useLeaveOutDialogStore';
 
 interface InfoItemProps {
   icon: string;
@@ -154,6 +156,11 @@ export function Index() {
   const { medicationRecordList } = useMedicineMemoStore();
 
   const { recordingStatus, resetRecording } = useRecording();
+  const {
+    isOpen: isLeaveOutDialogOpen,
+    closeDialog,
+    onConfirm,
+  } = useLeaveOutDialogStore();
 
   const { saveWasteMedication, isSuccessWasteMedication } =
     useSaveWasteMedication(counselSessionId ?? '');
@@ -257,6 +264,12 @@ export function Index() {
     medicationRecordList,
   ]);
 
+  const handleConfirmLeave = () => {
+    onConfirm();
+    resetRecording();
+    closeDialog();
+  };
+
   const completeConsult = async () => {
     await saveConsult();
 
@@ -305,6 +318,8 @@ export function Index() {
   const consultStatus = hasPreviousConsult ? '재상담' : '초기 상담';
   const age = `만 ${counseleeInfo?.age}세`;
   const diseases = formatDiseases(counseleeInfo?.diseases);
+  const isRecordingDialogClosed =
+    sessionStorage.getItem('isRecordingDialogClosed') === 'true';
 
   return (
     <>
@@ -349,7 +364,15 @@ export function Index() {
       </Tabs>
 
       {/* 녹음 진행 여부 Dialog */}
-      {isSuccessGetIsRecordingPopup && isPopup && <RecordingDialog />}
+      {!isLeaveOutDialogOpen &&
+        !isRecordingDialogClosed &&
+        isSuccessGetIsRecordingPopup &&
+        isPopup && <RecordingDialog />}
+
+      {/* 페이지 이탈 Dialog */}
+      {isLeaveOutDialogOpen && (
+        <CheckLeaveOutDialog onConfirm={handleConfirmLeave} />
+      )}
     </>
   );
 }
