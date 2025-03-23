@@ -134,7 +134,10 @@ const Routes = () => {
         element: (
           <ProtectedRoute
             element={<CounseleeManagement />}
-            allowedRoles={[GetCounselorResRoleTypeEnum.Admin]}
+            allowedRoles={[
+              GetCounselorResRoleTypeEnum.Admin,
+              GetCounselorResRoleTypeEnum.User,
+            ]}
           />
         ),
       },
