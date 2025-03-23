@@ -64,7 +64,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         collapsedName: '상담내역',
         icon: <NoteIcon width={24} height={24} />,
         route: '/admin/session',
-        roles: ['ROLE_ADMIN'],
+        roles: ['ROLE_ADMIN', 'ROLE_USER'],
       },
       // 기능 구현 전 임시 주석 처리
       // {
@@ -78,7 +78,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         collapsedName: '내담자 관리',
         route: '/admin/counselee',
         icon: <PatientIcon width={24} height={24} />,
-        roles: ['ROLE_ADMIN', 'ROLE_USER'],
+        roles: ['ROLE_ADMIN'],
       },
       {
         name: '계정 관리',
