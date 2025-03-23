@@ -125,7 +125,10 @@ const Routes = () => {
         element: (
           <ProtectedRoute
             element={<SessionManagement />}
-            allowedRoles={[GetCounselorResRoleTypeEnum.Admin]}
+            allowedRoles={[
+              GetCounselorResRoleTypeEnum.Admin,
+              GetCounselorResRoleTypeEnum.User,
+            ]}
           />
         ),
       },
@@ -134,10 +137,7 @@ const Routes = () => {
         element: (
           <ProtectedRoute
             element={<CounseleeManagement />}
-            allowedRoles={[
-              GetCounselorResRoleTypeEnum.Admin,
-              GetCounselorResRoleTypeEnum.User,
-            ]}
+            allowedRoles={[GetCounselorResRoleTypeEnum.Admin]}
           />
         ),
       },
