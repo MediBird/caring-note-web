@@ -162,14 +162,14 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     });
 
     // FOR TEST : 만들어진 audioFile 다운로드
-    // const audioUrl = URL.createObjectURL(audioFile);
-    // const downloadLink = document.createElement('a');
-    // downloadLink.href = audioUrl;
-    // downloadLink.download = RecordingFileInfo.DownloadName;
-    // document.body.appendChild(downloadLink);
-    // downloadLink.click();
-    // document.body.removeChild(downloadLink);
-    // URL.revokeObjectURL(audioUrl);
+    const audioUrl = URL.createObjectURL(audioFile);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = audioUrl;
+    downloadLink.download = RecordingFileInfo.DownloadName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(audioUrl);
 
     try {
       sessionStorage.setItem('autoNavigationOpen', 'true');
