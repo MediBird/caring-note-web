@@ -10,29 +10,29 @@ import Layout from '@/pages/Layout';
 import SessionManagement from '@/pages/Session';
 import Survey from '@/pages/Survey';
 import ConsentPage from '@/pages/Survey/consent';
-import { ReactNode } from 'react';
+import { ROLE_ACCESS } from '@/utils/constants';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 
 type AppRouteObject = RouteObject & {
   children?: AppRouteObject[];
 };
 
-// 보호된 라우트를 위한 컴포넌트
-const ProtectedRoute = ({
-  element,
+const ProtectedLayout = ({
   allowedRoles,
 }: {
-  element: ReactNode;
   allowedRoles: Array<GetCounselorResRoleTypeEnum>;
 }) => {
-  const { user } = useAuthContext();
+  const { user, isLoading } = useAuthContext();
 
-  // 사용자가 인증되지 않았거나, 필요한 역할이 없는 경우 리다이렉트
+  if (isLoading) {
+    return null;
+  }
+
   if (!user || !user.roleType || !allowedRoles.includes(user.roleType)) {
     return <Navigate to="/forbidden" replace />;
   }
 
-  return <>{element}</>;
+  return <Layout />;
 };
 
 const Routes = () => {
@@ -60,7 +60,7 @@ const Routes = () => {
 
   const consultRoutes: AppRouteObject = {
     path: '/consult',
-    element: <Layout />,
+    element: <ProtectedLayout allowedRoles={ROLE_ACCESS.ADMIN_USER} />,
     children: [
       {
         //block route when counselSessionId is not provided
@@ -69,86 +69,48 @@ const Routes = () => {
       },
       {
         path: ':counselSessionId',
-        element: (
-          <ProtectedRoute
-            element={<Consult />}
-            allowedRoles={[
-              GetCounselorResRoleTypeEnum.Admin,
-              GetCounselorResRoleTypeEnum.User,
-            ]}
-          />
-        ),
+        element: <Consult />,
+      },
+      {
+        path: 'session',
+        element: <SessionManagement />,
       },
     ],
   };
 
   const surveyRoutes: AppRouteObject = {
     path: '/survey',
-    element: <Layout />,
+    element: <ProtectedLayout allowedRoles={ROLE_ACCESS.ALL_ROLES} />,
     children: [
       {
         path: ':counselSessionId',
-        element: (
-          <ProtectedRoute
-            element={<Survey />}
-            allowedRoles={[
-              GetCounselorResRoleTypeEnum.Admin,
-              GetCounselorResRoleTypeEnum.User,
-              GetCounselorResRoleTypeEnum.Assistant,
-            ]}
-          />
-        ),
+        element: <Survey />,
       },
     ],
   };
 
   const consentRoutes: AppRouteObject = {
     path: '/survey/:counselSessionId/consent',
-    element: (
-      <ProtectedRoute
-        element={<ConsentPage />}
-        allowedRoles={[
-          GetCounselorResRoleTypeEnum.Admin,
-          GetCounselorResRoleTypeEnum.User,
-          GetCounselorResRoleTypeEnum.Assistant,
-        ]}
-      />
-    ),
+    element: <ProtectedLayout allowedRoles={ROLE_ACCESS.ALL_ROLES} />,
+    children: [
+      {
+        path: '',
+        element: <ConsentPage />,
+      },
+    ],
   };
 
   const AdminRoutes: AppRouteObject = {
     path: '/admin',
-    element: <Layout />,
+    element: <ProtectedLayout allowedRoles={ROLE_ACCESS.ADMIN_ONLY} />,
     children: [
       {
-        path: '/admin/session',
-        element: (
-          <ProtectedRoute
-            element={<SessionManagement />}
-            allowedRoles={[
-              GetCounselorResRoleTypeEnum.Admin,
-              GetCounselorResRoleTypeEnum.User,
-            ]}
-          />
-        ),
+        path: 'counselee',
+        element: <CounseleeManagement />,
       },
       {
-        path: '/admin/counselee',
-        element: (
-          <ProtectedRoute
-            element={<CounseleeManagement />}
-            allowedRoles={[GetCounselorResRoleTypeEnum.Admin]}
-          />
-        ),
-      },
-      {
-        path: '/admin/account',
-        element: (
-          <ProtectedRoute
-            element={<AccountManagement />}
-            allowedRoles={[GetCounselorResRoleTypeEnum.Admin]}
-          />
-        ),
+        path: 'account',
+        element: <AccountManagement />,
       },
     ],
   };

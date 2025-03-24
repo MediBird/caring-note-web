@@ -4,7 +4,6 @@ import HomeIcon from '@/assets/icon/24/home.filled.svg?react';
 import LogoutIcon from '@/assets/icon/24/logout.outline.svg?react';
 import MenuIcon from '@/assets/icon/24/menu.svg?react';
 import NoteIcon from '@/assets/icon/24/note.fiiled.svg?react';
-// import PaperPlainIcon from '@/assets/icon/24/paperplane.svg?react';
 import PatientIcon from '@/assets/icon/24/patient.fiiled.svg?react';
 import TextLogo from '@/assets/text-logo.webp';
 import {
@@ -29,10 +28,8 @@ import { useKeycloak } from '@react-keycloak/web';
 import { useLayoutEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// HTML 엔티티와 특수문자를 제거하는 함수
 const cleanName = (name?: string): string => {
   if (!name) return '';
-  // HTML 엔티티(&shy; 등) 및 특수 문자 제거
   return name.trim().replace(/&shy;|­|[\u00AD]/g, '');
 };
 
@@ -64,13 +61,15 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         route: '/',
         icon: <HomeIcon width={24} height={24} />,
         roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
+        action: null,
       },
       {
         name: '상담 내역',
         collapsedName: '상담내역',
         icon: <NoteIcon width={24} height={24} />,
-        route: '/admin/session',
+        route: '/consult/session',
         roles: ['ROLE_ADMIN', 'ROLE_USER'],
+        action: null,
       },
       // 기능 구현 전 임시 주석 처리
       // {
@@ -85,6 +84,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         route: '/admin/counselee',
         icon: <PatientIcon width={24} height={24} />,
         roles: ['ROLE_ADMIN'],
+        action: null,
       },
       {
         name: '계정 관리',
@@ -92,12 +92,17 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         route: '/admin/account',
         icon: <AdminIcon width={24} height={24} />,
         roles: ['ROLE_ADMIN'],
+        action: null,
       },
+    ];
+
+    const footerMenuItems = [
       {
         name: '사용법 · 문의',
         collapsedName: '사용법',
         icon: <QuestionIcon width={24} height={24} />,
-        roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
+        roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER', 'ROLE_NONE'],
+        route: null,
         action: () =>
           window.open(
             'https://www.notion.so/yoonyounglee/19a4b68481fb802db0fef7bbf9e35afb?pvs=4',
@@ -108,17 +113,26 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         name: '로그아웃',
         collapsedName: '로그아웃',
         icon: <LogoutIcon width={24} height={24} />,
+        route: null,
         action: () => keycloak.logout(),
         roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER', 'ROLE_NONE'],
       },
     ];
 
-    return baseMenuItems.filter((item) =>
-      item.roles.includes(user?.roleType as string),
-    );
+    return {
+      mainMenuItems: baseMenuItems.filter((item) =>
+        item.roles.includes(user?.roleType as string),
+      ),
+      footerMenuItems: footerMenuItems.filter((item) =>
+        item.roles.includes(user?.roleType as string),
+      ),
+    };
   }, [keycloak, user?.roleType]);
 
-  const handleMenuClick = (route?: string, action?: () => void) => {
+  const handleMenuClick = (
+    route?: string | null,
+    action?: null | (() => void),
+  ) => {
     if (action) action();
     if (route) {
       resetRecording();
@@ -178,7 +192,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.slice(0, 5).map((item) => (
+              {menuItems.mainMenuItems.map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton
                     isActive={getIsActive(item.route ?? '')}
@@ -205,7 +219,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
             </SidebarMenu>
             {user && <div className="my-2.5 h-[1px] w-full bg-grayscale-10" />}
             <SidebarMenu>
-              {menuItems.slice(5).map((item) => (
+              {menuItems.footerMenuItems.map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton
                     onClick={() => handleMenuClick(item.route, item.action)}

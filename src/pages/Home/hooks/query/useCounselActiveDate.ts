@@ -1,4 +1,8 @@
-import { CommonResListLocalDate, CounselSessionControllerApi } from '@/api';
+import {
+  CommonResListLocalDate,
+  CounselSessionControllerApi,
+  GetCounselorResRoleTypeEnum,
+} from '@/api';
 import { useQuery } from '@tanstack/react-query';
 
 const counselSessionControllerApi = new CounselSessionControllerApi();
@@ -6,6 +10,7 @@ const counselSessionControllerApi = new CounselSessionControllerApi();
 interface CounselActiveDateQueryKeys {
   year: number;
   month: number;
+  userType?: GetCounselorResRoleTypeEnum;
 }
 
 const getCounselActiveDates = async ({
@@ -51,10 +56,14 @@ const getCounselActiveDates = async ({
 export const useCounselActiveDate = ({
   year,
   month,
+  userType,
 }: CounselActiveDateQueryKeys) => {
   const { data, isLoading } = useQuery({
     queryKey: ['counselActiveDate', year, month],
     queryFn: () => getCounselActiveDates({ year, month }),
+    enabled:
+      userType === GetCounselorResRoleTypeEnum.Admin ||
+      userType === GetCounselorResRoleTypeEnum.User,
   });
 
   return { data: data?.data ?? [], isLoading };

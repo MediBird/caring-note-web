@@ -528,9 +528,22 @@ export const DRINKING_OPTIONS: ButtonGroupOption[] = [
 export const ROLE_TYPE_MAP: Record<string, string> = {
   [GetCounselorResRoleTypeEnum.None]: '',
   [GetCounselorResRoleTypeEnum.Admin]: '관리자',
-  [GetCounselorResRoleTypeEnum.Assistant]: '상담사',
+  [GetCounselorResRoleTypeEnum.Assistant]: '지원자',
   [GetCounselorResRoleTypeEnum.User]: '약사',
 } as const;
+
+export const ROLE_ACCESS = {
+  ADMIN_ONLY: [GetCounselorResRoleTypeEnum.Admin],
+  ADMIN_USER: [
+    GetCounselorResRoleTypeEnum.Admin,
+    GetCounselorResRoleTypeEnum.User,
+  ],
+  ALL_ROLES: [
+    GetCounselorResRoleTypeEnum.Admin,
+    GetCounselorResRoleTypeEnum.User,
+    GetCounselorResRoleTypeEnum.Assistant,
+  ],
+};
 
 export const COUNSELOR_ROLE_TYPE_OPTIONS: ButtonGroupOption[] = [
   { label: '관리자', value: CounselorListItemRoleTypeEnum.Admin },
