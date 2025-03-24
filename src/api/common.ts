@@ -201,9 +201,10 @@ export const createRequestFunction = function (
     // 요청 직전에 토큰 확인 및 설정
     return (async () => {
       // 토큰이 만료되었는지 확인하고 필요시 갱신
+
       if (keycloak.token && keycloak.isTokenExpired()) {
         try {
-          await keycloak.updateToken(5);
+          await keycloak.updateToken(10);
         } catch (error) {
           console.error('토큰 갱신 실패:', error);
 
