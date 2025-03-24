@@ -1,7 +1,11 @@
-import { SelectCounselSessionListItem } from '@/api';
+import {
+  GetCounselorResRoleTypeEnum,
+  SelectCounselSessionListItem,
+} from '@/api';
 import background from '@/assets/home/home-bg.webp';
 import logoWide from '@/assets/home/logo-wide.webp';
 import tableEmpty from '@/assets/home/table-empty.webp';
+import onlypc from '@/assets/illusts/onlypc.webp';
 import CalendarIcon from '@/assets/icon/calendar.svg?react';
 import DatePickerComponent from '@/components/ui/datepicker';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
@@ -13,6 +17,7 @@ import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 import { addMonths } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
 import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
+import { useAuthContext } from '@/context/AuthContext';
 
 function Home() {
   const today = new Date();
@@ -20,6 +25,7 @@ function Home() {
   const thisMonth = addMonths(today, 0);
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedMonth, setSelectedMonth] = useState(thisMonth);
+  const { user } = useAuthContext();
 
   const { data: counselList } = useSelectCounselSessionList({
     baseDate: formatDateToHyphen(selectedDate),
@@ -29,6 +35,7 @@ function Home() {
     useCounselActiveDate({
       year: selectedMonth.getFullYear(),
       month: selectedMonth.getMonth() + 1,
+      userType: user?.roleType as GetCounselorResRoleTypeEnum,
     });
 
   useEffect(() => {
@@ -73,43 +80,73 @@ function Home() {
             <div className="flex h-auto min-h-[824px] w-full flex-col gap-6 rounded-xl bg-white p-6 shadow-container">
               <div className="flex w-full items-center justify-between">
                 <span className="text-2xl font-bold">상담 일정</span>
-                <DatePickerComponent
-                  activeAllDates={false}
-                  isLoading={isCounselActiveDateLoading}
-                  trigger={
-                    <button
-                      className={cn(
-                        'flex items-center gap-0.5 px-2 text-right font-bold',
-                      )}>
-                      <CalendarIcon />
-                      날짜 선택
-                    </button>
-                  }
-                  initialDate={selectedDate}
-                  selectedMonth={selectedMonth}
-                  onMonthChange={setSelectedMonth}
-                  handleClicked={(date?: Date) => {
-                    setSelectedDate(date ?? new Date());
-                  }}
-                  enabledDates={counselActiveDate ?? []}
-                />
+                {user &&
+                  (user.roleType === GetCounselorResRoleTypeEnum.Admin ||
+                    user.roleType === GetCounselorResRoleTypeEnum.User) && (
+                    <DatePickerComponent
+                      activeAllDates={false}
+                      isLoading={isCounselActiveDateLoading}
+                      trigger={
+                        <button
+                          className={cn(
+                            'flex items-center gap-0.5 px-2 text-right font-bold',
+                          )}>
+                          <CalendarIcon />
+                          날짜 선택
+                        </button>
+                      }
+                      initialDate={selectedDate}
+                      selectedMonth={selectedMonth}
+                      onMonthChange={setSelectedMonth}
+                      handleClicked={(date?: Date) => {
+                        setSelectedDate(date ?? new Date());
+                      }}
+                      enabledDates={counselActiveDate ?? []}
+                    />
+                  )}
               </div>
               <div className="flex flex-1 flex-col items-center justify-start">
-                {formattedCounselList?.length === 0 ? (
+                {user && user.roleType === GetCounselorResRoleTypeEnum.None && (
                   <div className="flex flex-1 flex-col items-center justify-center">
-                    <img src={tableEmpty} alt="table-empty" />
-                    <span className="text-2xl font-bold">
-                      오늘은 예정된 상담 일정이 없어요
-                    </span>
-                    <span className="text-base text-gray-500">
-                      상담 내역에서 이전 상담 기록을 볼 수 있습니다
-                    </span>
+                    <img
+                      src={onlypc}
+                      alt="onlypc-empty"
+                      width={180}
+                      height={180}
+                    />
+                    <div className="flex flex-col items-center justify-center">
+                      <span className="text-2xl font-bold">
+                        관리자 승인을 기다리고있어요
+                      </span>
+                      <span className="text-base text-gray-500">
+                        요청이 승인되면 상담 일정을 확인할 수 있어요!
+                      </span>
+                    </div>
                   </div>
-                ) : (
-                  <TodayScheduleTable
-                    counselList={formattedCounselList ?? []}
-                  />
                 )}
+                {user &&
+                  user.roleType !== GetCounselorResRoleTypeEnum.None &&
+                  formattedCounselList?.length === 0 && (
+                    <div className="flex flex-1 flex-col items-center justify-center">
+                      <img src={tableEmpty} alt="table-empty" />
+                      <span className="text-2xl font-bold">
+                        오늘은 예정된 상담 일정이 없어요
+                      </span>
+                      <span className="text-base text-gray-500">
+                        상담 내역에서 이전 상담 기록을 볼 수 있습니다
+                      </span>
+                    </div>
+                  )}
+
+                {user &&
+                  user.roleType !== GetCounselorResRoleTypeEnum.None &&
+                  formattedCounselList &&
+                  formattedCounselList.length > 0 && (
+                    <TodayScheduleTable
+                      counselList={formattedCounselList ?? []}
+                      userType={user.roleType as GetCounselorResRoleTypeEnum}
+                    />
+                  )}
               </div>
             </div>
           </div>
