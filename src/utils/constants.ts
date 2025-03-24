@@ -528,7 +528,7 @@ export const DRINKING_OPTIONS: ButtonGroupOption[] = [
 export const ROLE_TYPE_MAP: Record<string, string> = {
   [GetCounselorResRoleTypeEnum.None]: '',
   [GetCounselorResRoleTypeEnum.Admin]: '관리자',
-  [GetCounselorResRoleTypeEnum.Assistant]: '상담사',
+  [GetCounselorResRoleTypeEnum.Assistant]: '지원자',
   [GetCounselorResRoleTypeEnum.User]: '약사',
 } as const;
 
