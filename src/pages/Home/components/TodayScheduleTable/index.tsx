@@ -1,19 +1,27 @@
-import { SelectCounselSessionListItem } from '@/api';
+import {
+  GetCounselorResRoleTypeEnum,
+  SelectCounselSessionListItem,
+} from '@/api';
 import { DataTable } from '@/components/common/DataTable/data-table';
 import { useNavigate } from 'react-router-dom';
 import { createColumns } from './todayScheduleTableColumn';
 
 interface TodayScheduleTableProps {
   counselList: SelectCounselSessionListItem[];
+  userType: GetCounselorResRoleTypeEnum;
 }
 
-const TodayScheduleTable = ({ counselList }: TodayScheduleTableProps) => {
+const TodayScheduleTable = ({
+  counselList,
+  userType,
+}: TodayScheduleTableProps) => {
   const navigate = useNavigate();
 
   const columns = createColumns({
     onCellClick: (counselSessionId: string) => {
       navigate(`/consult/${counselSessionId}`);
     },
+    userType: userType,
   });
 
   return (
