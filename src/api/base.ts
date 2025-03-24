@@ -60,22 +60,6 @@ export class BaseAPI {
 
     // 인터셉터가 아직 추가되지 않은 경우에만 추가
     if (!BaseAPI.interceptorsAdded) {
-      this.axios.interceptors.request.use(async (config) => {
-        if (keycloak.token && keycloak.isTokenExpired()) {
-          try {
-            await keycloak.updateToken(5);
-          } catch (error) {
-            console.error('Token refresh failed:', error);
-          }
-        }
-
-        const token = keycloak.token;
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      });
-
       // 기존 에러 인터셉터 제거
       if (BaseAPI.errorInterceptorId !== null) {
         this.axios.interceptors.response.eject(BaseAPI.errorInterceptorId);
@@ -105,7 +89,10 @@ export class BaseAPI {
  * @extends {Error}
  */
 export class RequiredError extends Error {
-  constructor(public field: string, msg?: string) {
+  constructor(
+    public field: string,
+    msg?: string,
+  ) {
     super(msg);
     this.name = 'RequiredError';
   }
