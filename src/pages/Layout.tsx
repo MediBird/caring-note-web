@@ -4,6 +4,7 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+
 function Layout() {
   const location = useLocation();
 
