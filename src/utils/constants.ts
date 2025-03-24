@@ -207,10 +207,6 @@ export const MEAL_PATTERN_MAP: Record<NutritionDTOMealPatternEnum, string> =
 
 export const EXERCISE_PATTERN_OPTIONS: ButtonGroupOption[] = [
   {
-    label: '운동 안함',
-    value: ExerciseDTOExercisePatternEnum.NoExercise,
-  },
-  {
     label: '주 1회',
     value: ExerciseDTOExercisePatternEnum.OnceAWeek,
   },
@@ -229,6 +225,10 @@ export const EXERCISE_PATTERN_OPTIONS: ButtonGroupOption[] = [
   {
     label: '주 5회 이상',
     value: ExerciseDTOExercisePatternEnum.FiveOrMoreTimesAWeek,
+  },
+  {
+    label: '운동 안함',
+    value: ExerciseDTOExercisePatternEnum.NoExercise,
   },
 ] as const;
 
@@ -265,7 +265,7 @@ export const MEDICATION_ASSISTANTS_OPTIONS: ButtonGroupOption[] = [
     value: MedicationManagementDTOMedicationAssistantsEnum.Friend,
   },
   {
-    label: '간병인',
+    label: '요양보호사 또는 돌봄종사자',
     value: MedicationManagementDTOMedicationAssistantsEnum.Caregiver,
   },
   {

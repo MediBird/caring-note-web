@@ -56,7 +56,7 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
 
   const houseMateOptions = [
     { label: '독거', value: 'true' },
-    { label: '동거인 있음', value: 'false' },
+    { label: '동거', value: 'false' },
   ];
 
   const isSmoker =
@@ -272,10 +272,10 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
             ),
           },
           {
-            label: '운동 특이사항',
+            label: '규칙적으로 하는 운동 종류',
             value: (
-              <Textarea
-                placeholder="운동 특이사항을 작성해주세요."
+              <Input
+                placeholder="규칙적으로 실행하는 모든 운동 종류를 작성해주세요."
                 className="w-full rounded border p-2"
                 value={livingInfo?.exercise?.exerciseNote || ''}
                 onChange={(e) =>
@@ -309,22 +309,28 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
               />
             ),
           },
-          {
-            label: '동거인 구성원',
-            value: (
-              <Textarea
-                placeholder="구성원과의 관계를 작성해주세요."
-                className="w-full rounded border p-2"
-                value={livingInfo?.medicationManagement?.houseMateNote || ''}
-                onChange={(e) =>
-                  handleUpdateLivingInfo(
-                    'medicationManagement.houseMateNote',
-                    e.target.value,
-                  )
-                }
-              />
-            ),
-          },
+          ...(livingInfo?.medicationManagement?.isAlone === false
+            ? [
+                {
+                  label: '동거인 구성원',
+                  value: (
+                    <Textarea
+                      placeholder="구성원과의 관계를 작성해주세요."
+                      className="w-full rounded border p-2"
+                      value={
+                        livingInfo?.medicationManagement?.houseMateNote || ''
+                      }
+                      onChange={(e) =>
+                        handleUpdateLivingInfo(
+                          'medicationManagement.houseMateNote',
+                          e.target.value,
+                        )
+                      }
+                    />
+                  ),
+                },
+              ]
+            : []),
           {
             label: '복용자 및 투약 보조자',
             subLabel: '여러 개를 동시에 선택 할 수 있어요.',
