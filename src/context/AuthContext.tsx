@@ -13,6 +13,7 @@ const AuthContext = createContext(
   {} as {
     user: GetCounselorRes | null;
     initAuthState: () => void;
+    isLoading: boolean;
   },
 );
 
@@ -22,7 +23,10 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }) => {
   const { keycloak } = useKeycloak();
+
   const [user, setUser] = useState<GetCounselorRes | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -53,24 +57,36 @@ export const AuthContextProvider = ({
     setUser(null);
   };
 
-  useEffect(() => {
-    (async () => {
-      if (keycloak.authenticated) {
-        const user = await CounselorControllerApiFactory().getMyInfo();
-        setUser(user.data);
-      }
-    })();
-  }, [keycloak.authenticated]);
+  const getUserInfo = async () => {
+    setIsLoading(true);
+    const user = await CounselorControllerApiFactory().getMyInfo();
+    if (user.data) {
+      setUser(user.data);
+      setIsLoading(false);
+    }
+  };
 
-  if (!keycloak.authenticated) {
-    return null;
-  }
+  useEffect(() => {
+    const loadUserInfo = async () => {
+      if (keycloak.authenticated) {
+        try {
+          await getUserInfo();
+        } catch (error) {
+          console.error('사용자 정보 로드 실패:', error);
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadUserInfo();
+  }, [keycloak.authenticated]);
 
   return (
     <AuthContext.Provider
       value={{
         user,
         initAuthState,
+        isLoading,
       }}>
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
@@ -82,10 +98,11 @@ export const AuthContextProvider = ({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuthContext = () => {
-  const { user, initAuthState } = useContext(AuthContext);
+  const { user, initAuthState, isLoading } = useContext(AuthContext);
 
   return {
     user,
     initAuthState,
+    isLoading,
   };
 };
