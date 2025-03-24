@@ -10,7 +10,6 @@ import { create } from 'zustand';
 
 // store's state
 interface RecordingState {
-  recordingCounselSessionId: string | undefined;
   recordingStatus: RecordingStatus;
   recordingTime: number;
   recordingIntervalId: number | null;
@@ -18,15 +17,19 @@ interface RecordingState {
   audioChunksRef: React.MutableRefObject<Blob[]>;
 }
 
-// store (ONLY for this hook)
+// store
 const useRecordingStore = create<RecordingState>(() => ({
-  recordingCounselSessionId: undefined,
   recordingStatus: RecordingStatus.Ready,
   recordingTime: 0,
   recordingIntervalId: null,
   mediaRecorderRef: { current: null },
   audioChunksRef: { current: [] },
 }));
+
+// store's setter
+export const updateRecordingStatus = (newStatus: RecordingStatus) => {
+  useRecordingStore.setState({ recordingStatus: newStatus });
+};
 
 // helper functions
 const addRecordingInterval = () => {
@@ -44,9 +47,7 @@ const clearRecordingIntervalId = () => {
     useRecordingStore.setState({ recordingIntervalId: null });
   }
 };
-const updateRecordingStatus = (newStatus: RecordingStatus) => {
-  useRecordingStore.setState({ recordingStatus: newStatus });
-};
+
 const addOneSecond = () => {
   useRecordingStore.setState((state) => ({
     recordingTime: state.recordingTime + 1,
@@ -196,13 +197,6 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     sendSpeakers({ counselSessionId, speakers });
   };
 
-  const updateRecordingStatusByResponse = useCallback(
-    (status: RecordingStatus) => {
-      updateRecordingStatus(status);
-    },
-    [],
-  );
-
   return {
     startRecording,
     pauseRecording,
@@ -212,6 +206,5 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     submitSpeakers,
     recordingStatus,
     recordingTime,
-    updateRecordingStatusByResponse,
   };
 };

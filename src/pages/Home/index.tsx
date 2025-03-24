@@ -11,7 +11,7 @@ import ConsultCountContainer from '@/pages/Home/components/ConsultCountContainer
 import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
 import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 import { addMonths } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
 
 function Home() {
@@ -30,6 +30,10 @@ function Home() {
       year: selectedMonth.getFullYear(),
       month: selectedMonth.getMonth() + 1,
     });
+
+  useEffect(() => {
+    sessionStorage.setItem('isRecordingDialogClosed', 'false');
+  }, []);
 
   const formattedCounselList = useMemo(() => {
     return counselList?.map((item: SelectCounselSessionListItem) => {

@@ -20,7 +20,10 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useAuthContext } from '@/context/AuthContext';
+import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
+import { useLeaveOutDialogStore } from '@/pages/Consult/hooks/store/useLeaveOutDialogStore';
+import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { ROLE_TYPE_MAP } from '@/utils/constants';
 import { useKeycloak } from '@react-keycloak/web';
 import { useLayoutEffect, useMemo } from 'react';
@@ -44,6 +47,9 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
 
   const { user } = useAuthContext();
   const { keycloak } = useKeycloak();
+
+  const { recordingStatus, resetRecording } = useRecording();
+  const { openDialog, setOnConfirm } = useLeaveOutDialogStore();
 
   const getIsActive = (route: string) => {
     return location.pathname === route;
@@ -114,7 +120,20 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
 
   const handleMenuClick = (route?: string, action?: () => void) => {
     if (action) action();
-    if (route) navigate(route);
+    if (route) {
+      resetRecording();
+
+      if (
+        recordingStatus !== RecordingStatus.Ready &&
+        recordingStatus !== RecordingStatus.STTCompleted &&
+        recordingStatus !== RecordingStatus.AICompleted
+      ) {
+        openDialog();
+        setOnConfirm(() => navigate(route));
+      } else {
+        navigate(route);
+      }
+    }
   };
 
   useLayoutEffect(() => {
