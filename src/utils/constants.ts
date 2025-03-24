@@ -532,6 +532,19 @@ export const ROLE_TYPE_MAP: Record<string, string> = {
   [GetCounselorResRoleTypeEnum.User]: '약사',
 } as const;
 
+export const ROLE_ACCESS = {
+  ADMIN_ONLY: [GetCounselorResRoleTypeEnum.Admin],
+  ADMIN_USER: [
+    GetCounselorResRoleTypeEnum.Admin,
+    GetCounselorResRoleTypeEnum.User,
+  ],
+  ALL_ROLES: [
+    GetCounselorResRoleTypeEnum.Admin,
+    GetCounselorResRoleTypeEnum.User,
+    GetCounselorResRoleTypeEnum.Assistant,
+  ],
+};
+
 export const COUNSELOR_ROLE_TYPE_OPTIONS: ButtonGroupOption[] = [
   { label: '관리자', value: CounselorListItemRoleTypeEnum.Admin },
   { label: '상담약사', value: CounselorListItemRoleTypeEnum.User },

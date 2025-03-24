@@ -10,23 +10,11 @@ import Layout from '@/pages/Layout';
 import SessionManagement from '@/pages/Session';
 import Survey from '@/pages/Survey';
 import ConsentPage from '@/pages/Survey/consent';
+import { ROLE_ACCESS } from '@/utils/constants';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 
 type AppRouteObject = RouteObject & {
   children?: AppRouteObject[];
-};
-
-const RoleAccess = {
-  ADMIN_ONLY: [GetCounselorResRoleTypeEnum.Admin],
-  ADMIN_USER: [
-    GetCounselorResRoleTypeEnum.Admin,
-    GetCounselorResRoleTypeEnum.User,
-  ],
-  ALL_ROLES: [
-    GetCounselorResRoleTypeEnum.Admin,
-    GetCounselorResRoleTypeEnum.User,
-    GetCounselorResRoleTypeEnum.Assistant,
-  ],
 };
 
 const ProtectedLayout = ({
@@ -72,7 +60,7 @@ const Routes = () => {
 
   const consultRoutes: AppRouteObject = {
     path: '/consult',
-    element: <ProtectedLayout allowedRoles={RoleAccess.ADMIN_USER} />,
+    element: <ProtectedLayout allowedRoles={ROLE_ACCESS.ADMIN_USER} />,
     children: [
       {
         //block route when counselSessionId is not provided
@@ -88,7 +76,7 @@ const Routes = () => {
 
   const surveyRoutes: AppRouteObject = {
     path: '/survey',
-    element: <ProtectedLayout allowedRoles={RoleAccess.ALL_ROLES} />,
+    element: <ProtectedLayout allowedRoles={ROLE_ACCESS.ALL_ROLES} />,
     children: [
       {
         path: ':counselSessionId',
@@ -99,7 +87,7 @@ const Routes = () => {
 
   const consentRoutes: AppRouteObject = {
     path: '/survey/:counselSessionId/consent',
-    element: <ProtectedLayout allowedRoles={RoleAccess.ALL_ROLES} />,
+    element: <ProtectedLayout allowedRoles={ROLE_ACCESS.ALL_ROLES} />,
     children: [
       {
         path: '',
@@ -110,7 +98,7 @@ const Routes = () => {
 
   const AdminRoutes: AppRouteObject = {
     path: '/admin',
-    element: <ProtectedLayout allowedRoles={RoleAccess.ADMIN_ONLY} />,
+    element: <ProtectedLayout allowedRoles={ROLE_ACCESS.ADMIN_ONLY} />,
     children: [
       {
         path: 'session',
