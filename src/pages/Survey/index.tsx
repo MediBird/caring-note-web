@@ -2,10 +2,10 @@ import {
   CounselCardBaseInformationResCardRecordStatusEnum,
   CounseleeControllerApi,
 } from '@/api';
-import { InfoToast } from '@/components/ui/costom-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import { Button } from '../../components/ui/button';
 import { Header } from '../../components/ui/Header';
 import BasicInfo from './components/tabs/BasicInfo';
@@ -89,18 +89,16 @@ export default function Survey() {
   const handleSaveDraft = async () => {
     const success = await saveDraft(counselSessionId ?? '');
     if (success) {
-      InfoToast({ message: '임시 저장되었습니다.' });
+      toast.success('임시 저장되었습니다.');
     }
   };
 
   const handleComplete = async () => {
     const success = await complete(counselSessionId ?? '');
     if (success) {
-      InfoToast({
-        message: isCompleted
-          ? '수정이 완료되었습니다.'
-          : '설문이 완료되었습니다.',
-      });
+      toast.success(
+        isCompleted ? '수정이 완료되었습니다.' : '설문이 완료되었습니다.',
+      );
 
       // location.state를 통해 이전 페이지가 ConsultCard인지 확인
       const fromConsult = location.state?.fromConsult === true;
@@ -114,46 +112,53 @@ export default function Survey() {
   };
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <Header
-        title={
-          <div className="flex w-full items-end justify-between">
-            <span>기초 설문 작성</span>
-            <div className="flex gap-2 text-body1 font-bold">
-              {!isCompleted && (
+    <Tabs
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className="flex h-screen w-full flex-col">
+      <div className="flex-none">
+        <Header
+          title={
+            <div className="flex w-full items-end justify-between">
+              <span>기초 설문 작성</span>
+              <div className="flex gap-2 text-body1 font-bold">
+                {!isCompleted && (
+                  <Button
+                    variant="tertiary"
+                    size="xl"
+                    onClick={() => handleSaveDraft()}>
+                    임시 저장
+                  </Button>
+                )}
                 <Button
-                  variant="tertiary"
+                  variant="primary"
                   size="xl"
-                  onClick={() => handleSaveDraft()}>
-                  임시 저장
+                  onClick={() => handleComplete()}>
+                  {isCompleted ? '수정 완료' : '설문 완료'}
                 </Button>
-              )}
-              <Button
-                variant="primary"
-                size="xl"
-                onClick={() => handleComplete()}>
-                {isCompleted ? '수정 완료' : '설문 완료'}
-              </Button>
+              </div>
             </div>
+          }
+          description=""
+        />
+        <TabsList className="sticky top-0 z-10 w-full border-b border-grayscale-10 bg-white">
+          <div className="mx-auto flex h-full w-full max-w-layout justify-start gap-5 px-layout [&>*]:max-w-content">
+            {filteredTabItems.map((tab) => (
+              <TabsTrigger key={tab.id} value={tab.id}>
+                {tab.name}
+              </TabsTrigger>
+            ))}
           </div>
-        }
-        description=""
-      />
-      <TabsList className="w-full border-b border-grayscale-10">
-        <div className="mx-auto flex h-full w-full max-w-layout justify-start gap-5 px-layout [&>*]:max-w-content">
+        </TabsList>
+      </div>
+      <div className="flex-grow overflow-auto">
+        <div className="mb-100 w-full px-layout pb-10 pt-10 [&>*]:mx-auto [&>*]:max-w-content">
           {filteredTabItems.map((tab) => (
-            <TabsTrigger key={tab.id} value={tab.id}>
-              {tab.name}
-            </TabsTrigger>
+            <TabsContent key={tab.id} value={tab.id}>
+              <tab.component counselSessionId={counselSessionId ?? ''} />
+            </TabsContent>
           ))}
         </div>
-      </TabsList>
-      <div className="mb-100 h-full w-full px-layout pb-10 pt-10 [&>*]:mx-auto [&>*]:max-w-content">
-        {filteredTabItems.map((tab) => (
-          <TabsContent key={tab.id} value={tab.id}>
-            <tab.component counselSessionId={counselSessionId ?? ''} />
-          </TabsContent>
-        ))}
       </div>
     </Tabs>
   );

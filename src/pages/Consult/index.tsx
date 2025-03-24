@@ -20,6 +20,7 @@ import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineC
 import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
 import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
+import { useCounselCardStore } from '@/pages/Survey/hooks/counselCardStore';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { DISEASE_MAP } from '@/utils/constants';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -223,6 +224,16 @@ export function Index() {
 
     return counseleeInfo.counselCount > 0;
   }, [counseleeInfo]);
+
+  // 페이지 로드 또는 탭 변경 시 ConsultCard 데이터 갱신
+  useEffect(() => {
+    if (counselSessionId && activeTab === ConsultTab.consultCard) {
+      setShouldFetch('base', true);
+      setShouldFetch('health', true);
+      setShouldFetch('independentLife', true);
+      setShouldFetch('living', true);
+    }
+  }, [counselSessionId, activeTab, setShouldFetch]);
 
   useEffect(() => {
     if (!hasPreviousConsult) {

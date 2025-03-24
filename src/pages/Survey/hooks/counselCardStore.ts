@@ -12,6 +12,18 @@ export interface CounselCardState {
   healthInfo: Partial<CounselCardHealthInformationRes> | null;
   independentLifeInfo: Partial<CounselCardIndependentLifeInformationRes> | null;
   livingInfo: Partial<CounselCardLivingInformationRes> | null;
+  fetchedSessionIds: {
+    base: string | null;
+    health: string | null;
+    independentLife: string | null;
+    living: string | null;
+  };
+  shouldFetch: {
+    base: boolean;
+    health: boolean;
+    independentLife: boolean;
+    living: boolean;
+  };
   isDirty: {
     base: boolean;
     health: boolean;
@@ -31,6 +43,14 @@ export interface CounselCardState {
     living: string | null;
   };
   setCounselSessionId: (id: string) => void;
+  setShouldFetch: (
+    key: 'base' | 'health' | 'independentLife' | 'living',
+    shouldFetch: boolean,
+  ) => void;
+  setFetchedSessionId: (
+    key: 'base' | 'health' | 'independentLife' | 'living',
+    id: string,
+  ) => void;
   setBaseInfo: (data: Partial<CounselCardBaseInformationRes>) => void;
   setHealthInfo: (data: Partial<CounselCardHealthInformationRes>) => void;
   setIndependentLifeInfo: (
@@ -55,6 +75,18 @@ export const useCounselCardStore = create<CounselCardState>((set) => ({
   healthInfo: null,
   independentLifeInfo: null,
   livingInfo: null,
+  fetchedSessionIds: {
+    base: null,
+    health: null,
+    independentLife: null,
+    living: null,
+  },
+  shouldFetch: {
+    base: true,
+    health: true,
+    independentLife: true,
+    living: true,
+  },
   isDirty: {
     base: false,
     health: false,
@@ -75,19 +107,36 @@ export const useCounselCardStore = create<CounselCardState>((set) => ({
   },
   setCounselSessionId: (id) =>
     set((state) => {
-      if (state.counselSessionId !== id) {
-        return {
-          counselSessionId: id,
-          isDirty: {
-            base: false,
-            health: false,
-            independentLife: false,
-            living: false,
-          },
-        };
-      }
-      return { counselSessionId: id };
+      const isSameSession = state.counselSessionId === id;
+
+      return {
+        counselSessionId: id,
+        shouldFetch: isSameSession
+          ? state.shouldFetch
+          : {
+              base: true,
+              health: true,
+              independentLife: true,
+              living: true,
+            },
+        isDirty: isSameSession
+          ? state.isDirty
+          : {
+              base: false,
+              health: false,
+              independentLife: false,
+              living: false,
+            },
+      };
     }),
+  setShouldFetch: (key, shouldFetch) =>
+    set((state) => ({
+      shouldFetch: { ...state.shouldFetch, [key]: shouldFetch },
+    })),
+  setFetchedSessionId: (key, id) =>
+    set((state) => ({
+      fetchedSessionIds: { ...state.fetchedSessionIds, [key]: id },
+    })),
   setBaseInfo: (data) =>
     set((state) => ({
       baseInfo: data,
@@ -114,6 +163,18 @@ export const useCounselCardStore = create<CounselCardState>((set) => ({
       healthInfo: null,
       independentLifeInfo: null,
       livingInfo: null,
+      fetchedSessionIds: {
+        base: null,
+        health: null,
+        independentLife: null,
+        living: null,
+      },
+      shouldFetch: {
+        base: true,
+        health: true,
+        independentLife: true,
+        living: true,
+      },
       isDirty: {
         base: false,
         health: false,

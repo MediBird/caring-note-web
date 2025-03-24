@@ -1,6 +1,10 @@
 import {
+  CounselCardBaseInformationRes,
   CounselCardBaseInformationResCardRecordStatusEnum,
   CounselCardControllerApi,
+  CounselCardHealthInformationRes,
+  CounselCardIndependentLifeInformationRes,
+  CounselCardLivingInformationRes,
   CounseleeControllerApi,
   UpdateBaseInformationReq,
   UpdateCounselCardStatusReqStatusEnum,
@@ -18,7 +22,7 @@ const counselCardApi = new CounselCardControllerApi();
 const counseleeApi = new CounseleeControllerApi();
 
 // 정보 타입 정의
-type InfoType = 'base' | 'health' | 'independentLife' | 'living';
+export type InfoType = 'base' | 'health' | 'independentLife' | 'living';
 
 // 에러 핸들링 공통 함수
 const handleError = (
@@ -86,89 +90,24 @@ const validateLivingInfo = (data: UpdateLivingInformationReq): void => {
   }
 };
 
-// 기본 정보 쿼리 훅
-export const useCounselCardBaseInfoQuery = (counselSessionId: string) => {
-  const { setBaseInfo, setLoading, isDirty, setCounselSessionId } =
-    useCounselCardStore();
-
-  // counselSessionId가 변경될 때마다 스토어의 ID 갱신
-  useEffect(() => {
-    if (counselSessionId) {
-      setCounselSessionId(counselSessionId);
-    }
-  }, [counselSessionId, setCounselSessionId]);
-
-  return useQuery({
-    queryKey: ['counselCardBaseInfo', counselSessionId],
-    queryFn: async () => {
-      setLoading('base', true);
-      try {
-        const response =
-          await counselCardApi.selectCounselCardBaseInformation(
-            counselSessionId,
-          );
-        // 로컬에서 수정된 데이터가 없을 때만 서버 데이터로 업데이트
-        if (!isDirty.base) {
-          setBaseInfo(response.data.data || {});
-        }
-        return response.data.data;
-      } catch (error) {
-        handleError(error, 'base', '조회');
-        throw error;
-      } finally {
-        setLoading('base', false);
-      }
-    },
-    enabled: !!counselSessionId,
-    staleTime: 60 * 1000, // 1분 동안 캐시 유지
-    gcTime: 5 * 60 * 1000, // 5분 동안 가비지 컬렉션 방지
-  });
-};
-
-// 건강 정보 쿼리 훅
-export const useCounselCardHealthInfoQuery = (counselSessionId: string) => {
-  const { setHealthInfo, setLoading, isDirty, setCounselSessionId } =
-    useCounselCardStore();
-
-  // counselSessionId가 변경될 때마다 스토어의 ID 갱신
-  useEffect(() => {
-    if (counselSessionId) {
-      setCounselSessionId(counselSessionId);
-    }
-  }, [counselSessionId, setCounselSessionId]);
-  return useQuery({
-    queryKey: ['counselCardHealthInfo', counselSessionId],
-    queryFn: async () => {
-      setLoading('health', true);
-      try {
-        const response =
-          await counselCardApi.selectCounselCardHealthInformation(
-            counselSessionId,
-          );
-        // 로컬에서 수정된 데이터가 없을 때만 서버 데이터로 업데이트
-        if (!isDirty.health) {
-          setHealthInfo(response.data.data || {});
-        }
-        return response.data.data;
-      } catch (error) {
-        handleError(error, 'health', '조회');
-        throw error;
-      } finally {
-        setLoading('health', false);
-      }
-    },
-    enabled: !!counselSessionId,
-    staleTime: 60 * 1000,
-    gcTime: 5 * 60 * 1000,
-  });
-};
-
-// 독립생활 평가 쿼리 훅
-export const useCounselCardIndependentLifeInfoQuery = (
+// 공통 쿼리 훅
+export const useCounselCardInfoQuery = <T>(
   counselSessionId: string,
+  infoType: InfoType,
 ) => {
-  const { setIndependentLifeInfo, setLoading, isDirty, setCounselSessionId } =
-    useCounselCardStore();
+  const {
+    setBaseInfo,
+    setHealthInfo,
+    setIndependentLifeInfo,
+    setLivingInfo,
+    setLoading,
+    isDirty,
+    setCounselSessionId,
+    setShouldFetch,
+    shouldFetch,
+    fetchedSessionIds,
+    setFetchedSessionId,
+  } = useCounselCardStore();
   const [isDisabled, setIsDisabled] = useState(false);
 
   // counselSessionId가 변경될 때마다 스토어의 ID 갱신
@@ -178,88 +117,140 @@ export const useCounselCardIndependentLifeInfoQuery = (
     }
   }, [counselSessionId, setCounselSessionId]);
 
-  // 내담자의 장애 여부 확인
+  // 독립생활 평가에 필요한 장애 여부 체크
   useEffect(() => {
-    const checkDisability = async () => {
-      if (counselSessionId) {
+    const checkDisabilityStatus = async () => {
+      if (infoType === 'independentLife' && counselSessionId) {
         const result = await checkIsDisability(counselSessionId);
         setIsDisabled(result);
+        setShouldFetch('independentLife', result);
       }
     };
 
-    checkDisability();
-  }, [counselSessionId]);
+    if (infoType === 'independentLife') {
+      checkDisabilityStatus();
+    }
+  }, [counselSessionId, infoType, setShouldFetch]);
+
+  // fetch 여부 결정
+  const shouldFetchData = (() => {
+    // 세션 ID가 없으면 fetch하지 않음
+    if (!counselSessionId) return false;
+
+    // 독립생활 정보인데 장애가 없으면 fetch하지 않음
+    if (infoType === 'independentLife' && !isDisabled) return false;
+
+    // 이미 같은 세션ID로 fetch했고, 강제 fetch가 아니면 fetch하지 않음
+    if (
+      fetchedSessionIds[infoType] === counselSessionId &&
+      !shouldFetch[infoType]
+    ) {
+      return false;
+    }
+
+    return true;
+  })();
 
   return useQuery({
-    queryKey: ['counselCardIndependentLifeInfo', counselSessionId],
+    queryKey: [
+      `counselCard${infoType.charAt(0).toUpperCase() + infoType.slice(1)}Info`,
+      counselSessionId,
+    ],
     queryFn: async () => {
-      setLoading('independentLife', true);
+      setLoading(infoType, true);
       try {
-        const response =
-          await counselCardApi.selectCounselCardIndependentLifeInformation(
-            counselSessionId,
-          );
-        // 로컬에서 수정된 데이터가 없을 때만 서버 데이터로 업데이트
-        if (!isDirty.independentLife) {
-          setIndependentLifeInfo(response.data.data || {});
+        let response;
+
+        switch (infoType) {
+          case 'base':
+            response =
+              await counselCardApi.selectCounselCardBaseInformation(
+                counselSessionId,
+              );
+            if (!isDirty.base) {
+              setBaseInfo(response.data.data || {});
+            }
+            break;
+          case 'health':
+            response =
+              await counselCardApi.selectCounselCardHealthInformation(
+                counselSessionId,
+              );
+            if (!isDirty.health) {
+              setHealthInfo(response.data.data || {});
+            }
+            break;
+          case 'independentLife':
+            response =
+              await counselCardApi.selectCounselCardIndependentLifeInformation(
+                counselSessionId,
+              );
+            if (!isDirty.independentLife) {
+              setIndependentLifeInfo(response.data.data || {});
+            }
+            break;
+          case 'living':
+            response =
+              await counselCardApi.selectCounselCardLivingInformation(
+                counselSessionId,
+              );
+            if (!isDirty.living) {
+              setLivingInfo(response.data.data || {});
+            }
+            break;
         }
-        return response.data.data;
+
+        // 성공적으로 fetch했음을 표시
+        setFetchedSessionId(infoType, counselSessionId);
+        setShouldFetch(infoType, false);
+
+        return response?.data.data as T;
       } catch (error) {
-        handleError(error, 'independentLife', '조회');
+        handleError(error, infoType, '조회');
         throw error;
       } finally {
-        setLoading('independentLife', false);
+        setLoading(infoType, false);
       }
     },
-    enabled: !!counselSessionId && isDisabled,
-    staleTime: 60 * 1000,
-    gcTime: 5 * 60 * 1000,
+    enabled: shouldFetchData,
+    staleTime: 60 * 1000, // 1분 동안 캐시 유지
+    gcTime: 5 * 60 * 1000, // 5분 동안 가비지 컬렉션 방지
   });
 };
 
-// 생활 정보 쿼리 훅
+// 특화된 쿼리 훅 (하위 호환성을 위해 유지)
+export const useCounselCardBaseInfoQuery = (counselSessionId: string) => {
+  return useCounselCardInfoQuery<CounselCardBaseInformationRes>(
+    counselSessionId,
+    'base',
+  );
+};
+
+export const useCounselCardHealthInfoQuery = (counselSessionId: string) => {
+  return useCounselCardInfoQuery<CounselCardHealthInformationRes>(
+    counselSessionId,
+    'health',
+  );
+};
+
+export const useCounselCardIndependentLifeInfoQuery = (counselSessionId: string) => {
+  return useCounselCardInfoQuery<CounselCardIndependentLifeInformationRes>(
+    counselSessionId,
+    'independentLife',
+  );
+};
+
 export const useCounselCardLivingInfoQuery = (counselSessionId: string) => {
-  const { setLivingInfo, setLoading, isDirty, setCounselSessionId } =
-    useCounselCardStore();
-
-  // counselSessionId가 변경될 때마다 스토어의 ID 갱신
-  useEffect(() => {
-    if (counselSessionId) {
-      setCounselSessionId(counselSessionId);
-    }
-  }, [counselSessionId, setCounselSessionId]);
-
-  return useQuery({
-    queryKey: ['counselCardLivingInfo', counselSessionId],
-    queryFn: async () => {
-      setLoading('living', true);
-      try {
-        const response =
-          await counselCardApi.selectCounselCardLivingInformation(
-            counselSessionId,
-          );
-        // 로컬에서 수정된 데이터가 없을 때만 서버 데이터로 업데이트
-        if (!isDirty.living) {
-          setLivingInfo(response.data.data || {});
-        }
-        return response.data.data;
-      } catch (error) {
-        handleError(error, 'living', '조회');
-        throw error;
-      } finally {
-        setLoading('living', false);
-      }
-    },
-    enabled: !!counselSessionId,
-    staleTime: 60 * 1000,
-    gcTime: 5 * 60 * 1000,
-  });
+  return useCounselCardInfoQuery<CounselCardLivingInformationRes>(
+    counselSessionId,
+    'living',
+  );
 };
 
 // 기본 정보 업데이트 뮤테이션 훅
 export const useCounselCardBaseInfoMutation = () => {
   const queryClient = useQueryClient();
-  const { setLoading } = useCounselCardStore();
+  const { setLoading, setError } = useCounselCardStore();
 
   return useMutation({
     mutationFn: async ({
@@ -338,7 +329,7 @@ export const useCounselCardHealthInfoMutation = () => {
 // 독립생활 정보 업데이트 뮤테이션 훅
 export const useCounselCardIndependentLifeInfoMutation = () => {
   const queryClient = useQueryClient();
-  const { setLoading } = useCounselCardStore();
+  const { setLoading, setError } = useCounselCardStore();
 
   return useMutation({
     mutationFn: async ({
@@ -348,17 +339,16 @@ export const useCounselCardIndependentLifeInfoMutation = () => {
       counselSessionId: string;
       data: UpdateIndependentLifeInformationReq;
     }) => {
-      // 장애 여부 확인
-      const isDisabled = await checkIsDisability(counselSessionId);
-      if (!isDisabled) {
-        toast.error(
-          '장애인이 아닌 내담자는 자립생활 역량 정보를 업데이트할 수 없습니다.',
-        );
-        return null;
-      }
-
-      setLoading('independentLife', true);
       try {
+        // 독립생활 정보는 장애인 내담자만 업데이트 가능
+        const isDisabled = await checkIsDisability(counselSessionId);
+        if (!isDisabled) {
+          throw new Error(
+            '장애인인 내담자만 독립생활 역량 정보를 업데이트할 수 있습니다.',
+          );
+        }
+
+        setLoading('independentLife', true);
         const response =
           await counselCardApi.updateCounselCardIndependentLifeInformation(
             counselSessionId,
@@ -366,7 +356,12 @@ export const useCounselCardIndependentLifeInfoMutation = () => {
           );
         return response.data.data;
       } catch (error) {
-        handleError(error, 'independentLife', '업데이트');
+        if (error instanceof Error) {
+          toast.error(error.message);
+          setError('independentLife', error.message);
+        } else {
+          handleError(error, 'independentLife', '업데이트');
+        }
         throw error;
       } finally {
         setLoading('independentLife', false);
@@ -513,16 +508,12 @@ export const useSaveCounselCardDraft = () => {
         );
       }
 
-      if (store.isDirty.independentLife && store.independentLifeInfo) {
-        // 장애 여부 확인
-        const isDisability = await checkIsDisability(counselSessionId);
-        if (!isDisability) {
-          toast.error(
-            '장애인이 아닌 내담자는 자립생활 역량 정보를 업데이트할 수 없습니다.',
-          );
-          return false;
-        }
-
+      const isDisability = await checkIsDisability(counselSessionId);
+      if (
+        store.isDirty.independentLife &&
+        store.independentLifeInfo &&
+        isDisability
+      ) {
         const independentLifeInfoReq = {
           communication: store.independentLifeInfo.communication || {},
           evacuation: store.independentLifeInfo.evacuation || {},
