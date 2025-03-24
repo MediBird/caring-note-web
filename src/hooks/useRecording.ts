@@ -152,6 +152,8 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
   }, []);
 
   const submitRecording = async () => {
+    updateRecordingStatus(RecordingStatus.STTLoading);
+
     const audioBlob = new Blob(audioChunksRef.current, {
       type: RecordingFileInfo.Type,
     });
