@@ -71,6 +71,10 @@ const Routes = () => {
         path: ':counselSessionId',
         element: <Consult />,
       },
+      {
+        path: 'session',
+        element: <SessionManagement />,
+      },
     ],
   };
 
@@ -100,10 +104,6 @@ const Routes = () => {
     path: '/admin',
     element: <ProtectedLayout allowedRoles={ROLE_ACCESS.ADMIN_ONLY} />,
     children: [
-      {
-        path: 'session',
-        element: <SessionManagement />,
-      },
       {
         path: 'counselee',
         element: <CounseleeManagement />,

@@ -67,7 +67,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         name: '상담 내역',
         collapsedName: '상담내역',
         icon: <NoteIcon width={24} height={24} />,
-        route: '/admin/session',
+        route: '/consult/session',
         roles: ['ROLE_ADMIN', 'ROLE_USER'],
         action: null,
       },
