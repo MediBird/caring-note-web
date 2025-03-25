@@ -60,7 +60,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         collapsedName: '홈',
         route: '/',
         icon: <HomeIcon width={24} height={24} />,
-        roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
+        roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER', 'ROLE_NONE'],
         action: null,
       },
       {
