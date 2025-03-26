@@ -18,6 +18,7 @@ import { addMonths } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
 import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
 import { useAuthContext } from '@/context/AuthContext';
+import Spinner from '@/components/common/Spinner';
 
 function Home() {
   const today = new Date();
@@ -27,9 +28,10 @@ function Home() {
   const [selectedMonth, setSelectedMonth] = useState(thisMonth);
   const { user } = useAuthContext();
 
-  const { data: counselList } = useSelectCounselSessionList({
-    baseDate: formatDateToHyphen(selectedDate),
-  });
+  const { data: counselList, isLoading: isCounselListLoading } =
+    useSelectCounselSessionList({
+      baseDate: formatDateToHyphen(selectedDate),
+    });
 
   const { data: counselActiveDate, isLoading: isCounselActiveDateLoading } =
     useCounselActiveDate({
@@ -135,6 +137,14 @@ function Home() {
                       <span className="text-base text-gray-500">
                         상담 내역에서 이전 상담 기록을 볼 수 있습니다
                       </span>
+                    </div>
+                  )}
+
+                {user &&
+                  user.roleType !== GetCounselorResRoleTypeEnum.None &&
+                  isCounselListLoading && (
+                    <div className="flex flex-1 flex-col items-center justify-center">
+                      <Spinner className="h-10 w-10" />
                     </div>
                   )}
 
