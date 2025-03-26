@@ -4,6 +4,7 @@ import {
   MedicationRecordHistControllerApi,
 } from '@/api';
 import { MedicationRecordListSaveDTO } from '@/pages/Consult/types/MedicationRecordListDTO';
+import useMedicineMemoStore from '@/store/medicineMemoStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const medicationRecordHistControllerApi =
@@ -37,12 +38,21 @@ const saveMedicationRecord = async ({
   return response.data;
 };
 
-export const useMedicationRecordSave = () => {
+export const useMedicationRecordSave = ({
+  counselSessionId,
+}: {
+  counselSessionId: string;
+}) => {
   const queryClient = useQueryClient();
 
+  const { medicationRecordList } = useMedicineMemoStore();
+
   return useMutation({
-    mutationFn: (data: MedicationRecordListSaveDTO) =>
-      saveMedicationRecord(data),
+    mutationFn: () =>
+      saveMedicationRecord({
+        counselSessionId,
+        medicationRecordHistList: medicationRecordList,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['medicationRecordList'] });
     },
