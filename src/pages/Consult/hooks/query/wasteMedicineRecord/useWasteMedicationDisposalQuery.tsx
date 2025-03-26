@@ -12,11 +12,11 @@ const getWasteMedicationDisposal = async (counselSessionId: string) => {
 };
 
 export const useWasteMedicationDisposalQuery = (counselSessionId: string) => {
-  const { data, isSuccess } = useQuery({
+  const { data, isSuccess, isError } = useQuery({
     queryKey: ['wasteMedicationDisposal', counselSessionId],
     queryFn: () => getWasteMedicationDisposal(counselSessionId as string),
     enabled: !!counselSessionId,
   });
 
-  return { data, isSuccess };
+  return { data, isSuccess, isError };
 };

@@ -1,5 +1,6 @@
 import { MedicationCounselControllerApi } from '@/api';
 import { MedicineConsultDTO } from '@/pages/Consult/types/MedicineConsultDTO';
+import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const medicationCounselControllerApi = new MedicationCounselControllerApi();
@@ -54,9 +55,10 @@ export const useSelectMedicineConsult = (counselSessionId?: string) => {
 export const useSaveMedicineConsult = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<string | undefined, Error, MedicineConsultDTO>({
-    mutationFn: (medicineConsultDTO: MedicineConsultDTO) =>
-      saveMedicationCounsel(medicineConsultDTO),
+  const { medicineConsult } = useMedicineConsultStore();
+
+  return useMutation({
+    mutationFn: () => saveMedicationCounsel(medicineConsult),
     onSuccess: (counselSessionId) => {
       queryClient.invalidateQueries({
         queryKey: ['SelectMedicationConsult', counselSessionId],
