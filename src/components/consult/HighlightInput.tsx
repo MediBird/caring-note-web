@@ -56,6 +56,10 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
   };
 
   useEffect(() => {
+    setEditorInitialized(false);
+  }, [counselSessionId, setEditorInitialized]);
+
+  useEffect(() => {
     if (data && !isEditorInitialized) {
       setMedicationConsult({
         counselSessionId: counselSessionId || '',
@@ -64,80 +68,77 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
         counselRecordHighlights: data.counselRecordHighlights || [],
       });
 
-      const currentText = editorState.getCurrentContent().getPlainText();
-      if (!currentText) {
-        const contentState = ContentState.createFromText(
-          data.counselRecord || '',
-        );
+      const contentState = ContentState.createFromText(
+        data.counselRecord || '',
+      );
 
-        let contentStateWithHighlight = contentState;
+      let contentStateWithHighlight = contentState;
 
-        if (data.counselRecordHighlights?.length && data.counselRecord) {
-          contentStateWithHighlight = data.counselRecordHighlights.reduce(
-            (currentContent, highlight) => {
-              const start = highlight.startIndex;
-              const end = highlight.endIndex;
+      if (data.counselRecordHighlights?.length && data.counselRecord) {
+        contentStateWithHighlight = data.counselRecordHighlights.reduce(
+          (currentContent, highlight) => {
+            const start = highlight.startIndex;
+            const end = highlight.endIndex;
 
-              if (start === -1) return currentContent;
+            if (start === -1) return currentContent;
 
-              try {
-                let offset = 0;
-                let targetBlock: ContentBlock | null = null;
-                let targetStart = start;
-                let targetEnd = end;
+            try {
+              let offset = 0;
+              let targetBlock: ContentBlock | null = null;
+              let targetStart = start;
+              let targetEnd = end;
 
-                const blocks = currentContent.getBlockMap().toArray();
-                for (const block of blocks) {
-                  const length = block.getLength();
-                  if (start >= offset && start < offset + length) {
-                    targetBlock = block;
-                    targetStart = start - offset;
-                    targetEnd = end - offset;
-                    break;
-                  }
-                  offset += length + 1;
+              const blocks = currentContent.getBlockMap().toArray();
+              for (const block of blocks) {
+                const length = block.getLength();
+                if (start >= offset && start < offset + length) {
+                  targetBlock = block;
+                  targetStart = start - offset;
+                  targetEnd = end - offset;
+                  break;
                 }
+                offset += length + 1;
+              }
 
-                if (!targetBlock) return currentContent;
+              if (!targetBlock) return currentContent;
 
-                const blockKey = targetBlock.getKey();
-                const selectionState = SelectionState.createEmpty(
-                  blockKey,
-                ).merge({
+              const blockKey = targetBlock.getKey();
+              const selectionState = SelectionState.createEmpty(blockKey).merge(
+                {
                   anchorOffset: targetStart,
                   focusOffset: targetEnd,
                   hasFocus: true,
-                });
+                },
+              );
 
-                return Modifier.applyInlineStyle(
-                  currentContent,
-                  selectionState,
-                  'HIGHLIGHT',
-                );
-              } catch (error) {
-                console.error('하이라이트 스타일 적용 중 오류 발생:', error);
-                return currentContent;
-              }
-            },
-            contentState,
-          );
-        }
-
-        const newEditorState = EditorState.createWithContent(
-          contentStateWithHighlight,
+              return Modifier.applyInlineStyle(
+                currentContent,
+                selectionState,
+                'HIGHLIGHT',
+              );
+            } catch (error) {
+              console.error('하이라이트 스타일 적용 중 오류 발생:', error);
+              return currentContent;
+            }
+          },
+          contentState,
         );
-
-        setEditorState(newEditorState);
-        setEditorInitialized(true);
       }
+
+      const newEditorState = EditorState.createWithContent(
+        contentStateWithHighlight,
+      );
+
+      setEditorState(newEditorState);
+      setEditorInitialized(true);
     }
   }, [
     data,
-    setEditorState,
-    setMedicationConsult,
     counselSessionId,
     editorState,
     isEditorInitialized,
+    setEditorState,
+    setMedicationConsult,
     setEditorInitialized,
   ]);
 
