@@ -1,10 +1,8 @@
 import AddTableRowButton from '@/components/common/DataTable/add-table-row-button';
 import { DataTable } from '@/components/common/DataTable/data-table';
 import { useDeleteMedicationList } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useDeleteWasteMedicationList';
-import { useWasteMedicationList } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useWasteMedicationListQuery';
 import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
 import { WasteMedicationListDTO } from '@/pages/Consult/types/WasteMedicationDTO';
-import { useEffect } from 'react';
 import { createColumns } from './wasteMedicationColumns';
 
 interface WasteMedicationTableProps {
@@ -20,39 +18,12 @@ const WasteMedicationTable = ({
 }: WasteMedicationTableProps) => {
   const { deleteWasteMedicationListMutation } = useDeleteMedicationList();
 
-  //폐의약품 목록 조회
-  const {
-    data: wasteMedicationListData,
-    isSuccess: isSuccessWasteMedicationList,
-  } = useWasteMedicationList(counselSessionId as string);
-
   //폐의약품 목록 store
   const {
     wasteMedicationList,
     setWasteMedicationList,
     updateWasteMedicationListById,
   } = useWasteMedicationListStore();
-
-  //초기 로딩시 폐의약품 목록 저장
-  useEffect(() => {
-    if (isSuccessWasteMedicationList && wasteMedicationListData) {
-      setWasteMedicationList(
-        wasteMedicationListData.map((item) => ({
-          id: item.rowId ?? '',
-          rowId: item.rowId,
-          medicationId: item.medicationId ?? '',
-          medicationName: item.medicationName ?? '',
-          unit: item.unit ?? 0,
-          disposalReason: item.disposalReason ?? '',
-        })),
-      );
-    }
-  }, [
-    isSuccessWasteMedicationList,
-    wasteMedicationListData,
-    setWasteMedicationList,
-    counselSessionId,
-  ]);
 
   const handleUpdateCell = (
     id: string,

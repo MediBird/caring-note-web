@@ -5,18 +5,10 @@ import highlightpenBlack from '@/assets/icon/highlightpenBlack.png';
 import highlightpenBlue from '@/assets/icon/highlightpenBlue.png';
 import Tooltip from '@/components/common/Tooltip';
 import { cn } from '@/lib/utils';
-import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { CounselRecordHighlights } from '@/pages/Consult/types/MedicineConsultDTO';
 import useCounselRecordEditorStateStore from '@/store/counselRecordEditorStateStore';
 import { useMedicineConsultStore } from '@/store/medicineConsultStore';
-import {
-  ContentBlock,
-  ContentState,
-  Editor,
-  EditorState,
-  Modifier,
-  SelectionState,
-} from 'draft-js';
+import { Editor, EditorState, Modifier } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -31,17 +23,9 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
   inputClassName,
 }) => {
   const { editorState, setEditorState } = useCounselRecordEditorStateStore();
-
   const { counselSessionId } = useParams();
-  const {
-    setMedicationConsult,
-    setCounselRecordHighlights,
-    setCounselRecord,
-    isEditorInitialized,
-    setEditorInitialized,
-  } = useMedicineConsultStore();
-
-  const { data } = useSelectMedicineConsult(counselSessionId);
+  const { setCounselRecordHighlights, setCounselRecord, setEditorInitialized } =
+    useMedicineConsultStore();
 
   const [isHoverHighlightButton, setIsHoverHighlightButton] = useState(false);
   const [isHoverEraserButton, setIsHoverEraserButton] = useState(false);
@@ -58,89 +42,6 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
   useEffect(() => {
     setEditorInitialized(false);
   }, [counselSessionId, setEditorInitialized]);
-
-  useEffect(() => {
-    if (data && !isEditorInitialized) {
-      setMedicationConsult({
-        counselSessionId: counselSessionId || '',
-        medicationCounselId: data.medicationCounselId || '',
-        counselRecord: data.counselRecord || '',
-        counselRecordHighlights: data.counselRecordHighlights || [],
-      });
-
-      const contentState = ContentState.createFromText(
-        data.counselRecord || '',
-      );
-
-      let contentStateWithHighlight = contentState;
-
-      if (data.counselRecordHighlights?.length && data.counselRecord) {
-        contentStateWithHighlight = data.counselRecordHighlights.reduce(
-          (currentContent, highlight) => {
-            const start = highlight.startIndex;
-            const end = highlight.endIndex;
-
-            if (start === -1) return currentContent;
-
-            try {
-              let offset = 0;
-              let targetBlock: ContentBlock | null = null;
-              let targetStart = start;
-              let targetEnd = end;
-
-              const blocks = currentContent.getBlockMap().toArray();
-              for (const block of blocks) {
-                const length = block.getLength();
-                if (start >= offset && start < offset + length) {
-                  targetBlock = block;
-                  targetStart = start - offset;
-                  targetEnd = end - offset;
-                  break;
-                }
-                offset += length + 1;
-              }
-
-              if (!targetBlock) return currentContent;
-
-              const blockKey = targetBlock.getKey();
-              const selectionState = SelectionState.createEmpty(blockKey).merge(
-                {
-                  anchorOffset: targetStart,
-                  focusOffset: targetEnd,
-                  hasFocus: true,
-                },
-              );
-
-              return Modifier.applyInlineStyle(
-                currentContent,
-                selectionState,
-                'HIGHLIGHT',
-              );
-            } catch (error) {
-              console.error('하이라이트 스타일 적용 중 오류 발생:', error);
-              return currentContent;
-            }
-          },
-          contentState,
-        );
-      }
-
-      const newEditorState = EditorState.createWithContent(
-        contentStateWithHighlight,
-      );
-
-      setEditorState(newEditorState);
-      setEditorInitialized(true);
-    }
-  }, [
-    data,
-    counselSessionId,
-    editorState,
-    isEditorInitialized,
-    setEditorState,
-    setMedicationConsult,
-    setEditorInitialized,
-  ]);
 
   const applyHighlight = () => {
     const contentState = editorState.getCurrentContent();
