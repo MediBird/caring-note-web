@@ -6,25 +6,16 @@ import Badge from '@/components/common/Badge';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import WasteMedicationTable from '@/pages/Consult/components/table/WasteMedicationTable';
 import WasteMedicationSurvey from '@/pages/Consult/components/WaseMedicationSurvey';
-import { useWasteMedicationDisposalQuery } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useWasteMedicationDisposalQuery';
-import {
-  initialWasteMedicationDisposalState,
-  useWasteMedicationDisposalStore,
-} from '@/pages/Consult/hooks/store/useWasteMedicationDisposalStore';
-import { AddAndUpdateWasteMedicationDisposalDTO } from '@/pages/Consult/types/WasteMedicationDTO';
+
+import { useWasteMedicationDisposalStore } from '@/pages/Consult/hooks/store/useWasteMedicationDisposalStore';
+
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { InfoIcon } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 const DiscardMedicine = () => {
   const { counselSessionId } = useParams();
-
-  //폐의약품 설문 조회
-  const {
-    data: wasteMedicationDisposalData,
-    isSuccess: isSuccessWasteMedicationDisposal,
-  } = useWasteMedicationDisposalQuery(counselSessionId as string);
 
   //폐의약품 설문 store
   const { wasteMedicationDisposal, setWasteMedicationDisposal } =
@@ -62,37 +53,6 @@ const DiscardMedicine = () => {
       WasteMedicationDisposalDrugRemainActionTypeEnum.None,
     [wasteMedicationDisposal.drugRemainActionType],
   );
-
-  // 초기 로딩시 폐의약품 설문 저장
-  useEffect(() => {
-    if (isSuccessWasteMedicationDisposal && wasteMedicationDisposalData) {
-      setWasteMedicationDisposal(
-        wasteMedicationDisposalData
-          ? ({
-              unusedReasonTypes: wasteMedicationDisposalData.unusedReasons?.map(
-                (reason) =>
-                  reason as WasteMedicationDisposalReqUnusedReasonTypesEnum,
-              ),
-              unusedReasonDetail:
-                wasteMedicationDisposalData.unusedReasonDetail ?? '',
-              drugRemainActionType:
-                wasteMedicationDisposalData.drugRemainActionType ?? undefined,
-              drugRemainActionDetail:
-                wasteMedicationDisposalData.drugRemainActionDetail ?? '',
-              recoveryAgreementType:
-                wasteMedicationDisposalData.recoveryAgreementType ?? undefined,
-              wasteMedicationGram:
-                wasteMedicationDisposalData.wasteMedicationGram ?? 0,
-            } as AddAndUpdateWasteMedicationDisposalDTO)
-          : initialWasteMedicationDisposalState,
-      );
-    }
-  }, [
-    isSuccessWasteMedicationDisposal,
-    wasteMedicationDisposalData,
-    setWasteMedicationDisposal,
-    counselSessionId,
-  ]);
 
   return (
     <Card>

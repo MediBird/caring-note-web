@@ -9,6 +9,8 @@ export const useWasteMedicationListStore = create<{
     id: string,
     data: WasteMedicationListDTO,
   ) => void;
+  isWasteListInitialized: boolean;
+  setIsWasteListInitialized: (initialized: boolean) => void;
 }>((set) => ({
   wasteMedicationList: [],
   setWasteMedicationList: (data: WasteMedicationListDTO[]) =>
@@ -20,6 +22,9 @@ export const useWasteMedicationListStore = create<{
         item.id === id ? data : item,
       ),
     })),
+  isWasteListInitialized: false,
+  setIsWasteListInitialized: (initialized) =>
+    set({ isWasteListInitialized: initialized }),
 }));
 
 export const initSelectMedicationRecordHistRes: SelectMedicationRecordHistRes =

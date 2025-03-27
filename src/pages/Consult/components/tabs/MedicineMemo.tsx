@@ -3,21 +3,15 @@ import { CardHeader, CardTitle } from '@/components/ui/card';
 import MedicineRecordTable from '@/pages/Consult/components/table/MedicineRecordTable';
 import UsableSiteList from '@/pages/Consult/components/UsableSiteList';
 import { useDeleteMedicationRecordList } from '@/pages/Consult/hooks/query/medicationRecord/useDeleteMedicationRecordList';
-import {
-  MedicationRecordListDTO,
-  useMedicationRecordList,
-} from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordList';
+import { MedicationRecordListDTO } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordList';
 import { initSelectMedicationRecordHistRes } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 const MedicineMemo: React.FC = () => {
   const { counselSessionId } = useParams();
 
-  const { data: medicationRecordListData } = useMedicationRecordList({
-    counselSessionId: counselSessionId as string,
-  });
   const { deleteMedicationRecordListMutation } =
     useDeleteMedicationRecordList();
 
@@ -40,10 +34,6 @@ const MedicineMemo: React.FC = () => {
       medicationRecordList?.filter((item) => item.divisionCode === 'OTC') ?? []
     );
   }, [medicationRecordList]);
-
-  useEffect(() => {
-    setMedicationRecordList(medicationRecordListData ?? []);
-  }, [medicationRecordListData, setMedicationRecordList]);
 
   const handleAddTableRowButton = (divisionCode: string) => {
     setMedicationRecordList([
