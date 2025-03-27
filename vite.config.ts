@@ -8,7 +8,7 @@ import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig({
   plugins: [
-    react(), 
+    react(),
     svgr(),
     viteCompression({
       algorithm: 'gzip',
@@ -20,6 +20,20 @@ export default defineConfig({
       gzipSize: true,
       brotliSize: true,
     }),
+    {
+      name: 'replace-setimmediate',
+      transform(code, id) {
+        if (
+          id.includes('node_modules/draft-js') ||
+          id.includes('node_modules/fbjs')
+        ) {
+          return code.replace(
+            /var setImmediate = require\("fbjs\/lib\/setImmediate"\);/g,
+            'var setImmediate = function(fn) { return setTimeout(fn, 0); };',
+          );
+        }
+      },
+    },
   ],
   define: {
     global: {},
@@ -45,7 +59,11 @@ export default defineConfig({
             '@radix-ui/react-tooltip',
           ],
           tanstack: ['@tanstack/react-query', '@tanstack/react-table'],
-          keycloak: ['keycloak-js', '@react-keycloak/web', '@react-keycloak/core'],
+          keycloak: [
+            'keycloak-js',
+            '@react-keycloak/web',
+            '@react-keycloak/core',
+          ],
         },
         chunkFileNames: () => `assets/[name]-[hash].js`,
       },
