@@ -11,7 +11,6 @@ import { useMedicineConsultStore } from '@/store/medicineConsultStore';
 import { Editor, EditorState, Modifier } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 
 interface HighlightInputProps {
   className?: string;
@@ -23,8 +22,7 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
   inputClassName,
 }) => {
   const { editorState, setEditorState } = useCounselRecordEditorStateStore();
-  const { counselSessionId } = useParams();
-  const { setCounselRecordHighlights, setCounselRecord, setEditorInitialized } =
+  const { setCounselRecordHighlights, setCounselRecord } =
     useMedicineConsultStore();
 
   const [isHoverHighlightButton, setIsHoverHighlightButton] = useState(false);
@@ -38,10 +36,6 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
       backgroundColor: '#FFFFFF',
     },
   };
-
-  useEffect(() => {
-    setEditorInitialized(false);
-  }, [counselSessionId, setEditorInitialized]);
 
   const applyHighlight = () => {
     const contentState = editorState.getCurrentContent();
