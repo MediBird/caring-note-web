@@ -1,5 +1,4 @@
 import {
-  AddAndUpdateMedicationRecordHistReq,
   SelectCounseleeBaseInformationByCounseleeIdRes,
   SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum,
   UpdateStatusInCounselSessionReqStatusEnum,
@@ -22,8 +21,6 @@ import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicin
 import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
-import { useMedicineConsultStore } from '@/store/medicineConsultStore';
-import useMedicineMemoStore from '@/store/medicineMemoStore';
 import { DISEASE_MAP } from '@/utils/constants';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -36,6 +33,7 @@ import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
 import TemporarySaveDialog from './components/TemporarySaveDialog';
 import { useLeaveOutDialogStore } from './hooks/store/useLeaveOutDialogStore';
+import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAllTabsData';
 
 interface InfoItemProps {
   icon: string;
@@ -146,6 +144,10 @@ const ConsultTabs = ({
 
 export function Index() {
   const { counselSessionId } = useParams();
+
+  const { isLoading: isInitializeAllTabsDataLoading } =
+    useInitializeAllTabsData(counselSessionId ?? '');
+
   const { data: counseleeInfo, isLoading } = useSelectCounseleeInfo(
     counselSessionId ?? '',
   );
@@ -154,30 +156,33 @@ export function Index() {
     counselSessionId ?? '',
   );
 
-  const { medicineConsult } = useMedicineConsultStore();
-  const { medicationRecordList } = useMedicineMemoStore();
-
   const previousPath = useRouteStore((state) => state.previousPath);
   const setPreviousPath = useRouteStore((state) => state.setPreviousPath);
 
   const { resetRecording } = useRecording();
   const recordingStatus = useRecordingStore((state) => state.recordingStatus);
 
-  const isLeaveOutDialogOpen = useLeaveOutDialogStore((state) => state.isOpen);
-  const closeDialog = useLeaveOutDialogStore((state) => state.closeDialog);
-  const onConfirm = useLeaveOutDialogStore((state) => state.onConfirm);
+  const {
+    isOpen: isLeaveOutDialogOpen,
+    closeDialog,
+    onConfirm,
+  } = useLeaveOutDialogStore();
 
+  // 폐의약품 처리 저장
   const { saveWasteMedication, isSuccessWasteMedication } =
     useSaveWasteMedication(counselSessionId ?? '');
 
+  // 중재기록 저장
   const {
     mutate: saveMedicationCounsel,
     isSuccess: isSuccessSaveMedicationCounsel,
   } = useSaveMedicineConsult();
+
+  // 의약물 기록 저장
   const {
     mutate: saveMedicationRecordList,
     isSuccess: isSuccessSaveMedicationRecordList,
-  } = useMedicationRecordSave();
+  } = useMedicationRecordSave({ counselSessionId: counselSessionId ?? '' });
 
   useEffect(() => {
     if (
@@ -260,24 +265,13 @@ export function Index() {
     try {
       await Promise.all([
         saveWasteMedication(),
-        saveMedicationCounsel(medicineConsult),
-        saveMedicationRecordList({
-          counselSessionId: counselSessionId ?? '',
-          medicationRecordHistList:
-            medicationRecordList as unknown as AddAndUpdateMedicationRecordHistReq[],
-        }),
+        saveMedicationCounsel(),
+        saveMedicationRecordList(),
       ]);
     } catch (error) {
       console.error('저장 중 오류가 발생했습니다:', error);
     }
-  }, [
-    saveWasteMedication,
-    saveMedicationCounsel,
-    medicineConsult,
-    saveMedicationRecordList,
-    counselSessionId,
-    medicationRecordList,
-  ]);
+  }, [saveWasteMedication, saveMedicationCounsel, saveMedicationRecordList]);
 
   const handleConfirmLeave = () => {
     onConfirm();
@@ -357,25 +351,29 @@ export function Index() {
           completeConsult={completeConsult}
           hasPreviousConsult={hasPreviousConsult}
         />
-        <div className="mb-100 h-full w-full px-layout pb-10 pt-6 [&>*]:mx-auto [&>*]:max-w-content">
-          {hasPreviousConsult && (
-            <TabsContent value="pastConsult">
-              <PastConsult />
+        {isInitializeAllTabsDataLoading ? (
+          <Spinner />
+        ) : (
+          <div className="mb-100 h-full w-full px-layout pb-10 pt-6 [&>*]:mx-auto [&>*]:max-w-content">
+            {hasPreviousConsult && (
+              <TabsContent value="pastConsult">
+                <PastConsult />
+              </TabsContent>
+            )}
+            <TabsContent value="survey">
+              <ConsultCard />
             </TabsContent>
-          )}
-          <TabsContent value="survey">
-            <ConsultCard />
-          </TabsContent>
-          <TabsContent value="medicine">
-            <MedicineMemo />
-          </TabsContent>
-          <TabsContent value="note">
-            <MedicineConsult />
-          </TabsContent>
-          <TabsContent value="wasteMedication">
-            <DiscardMedicine />
-          </TabsContent>
-        </div>
+            <TabsContent value="medicine">
+              <MedicineMemo />
+            </TabsContent>
+            <TabsContent value="note">
+              <MedicineConsult />
+            </TabsContent>
+            <TabsContent value="wasteMedication">
+              <DiscardMedicine />
+            </TabsContent>
+          </div>
+        )}
       </Tabs>
 
       {/* 녹음 진행 여부 Dialog */}

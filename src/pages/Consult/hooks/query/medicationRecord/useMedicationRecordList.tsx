@@ -30,7 +30,7 @@ export const useMedicationRecordList = ({
 }: {
   counselSessionId: string;
 }) => {
-  const { data, isLoading, isSuccess } = useQuery({
+  const { data, isLoading, isSuccess, isError } = useQuery({
     queryKey: ['medicationRecordList', counselSessionId],
     queryFn: () => selectMedicationRecordListBySessionId({ counselSessionId }),
     enabled: !!counselSessionId,
@@ -42,5 +42,5 @@ export const useMedicationRecordList = ({
     },
   });
 
-  return { data, isLoading, isSuccess };
+  return { data, isLoading, isSuccess, isError };
 };
