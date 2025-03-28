@@ -22,6 +22,7 @@ import { useAuthContext } from '@/context/AuthContext';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import { useLeaveOutDialogStore } from '@/pages/Consult/hooks/store/useLeaveOutDialogStore';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { ROLE_TYPE_MAP } from '@/utils/constants';
 import { useKeycloak } from '@react-keycloak/web';
@@ -45,8 +46,10 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
   const { user } = useAuthContext();
   const { keycloak } = useKeycloak();
 
-  const { recordingStatus, resetRecording } = useRecording();
-  const { openDialog, setOnConfirm } = useLeaveOutDialogStore();
+  const { resetRecording } = useRecording();
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
+  const openDialog = useLeaveOutDialogStore((state) => state.openDialog);
+  const setOnConfirm = useLeaveOutDialogStore((state) => state.setOnConfirm);
 
   const getIsActive = (route: string) => {
     return location.pathname === route;

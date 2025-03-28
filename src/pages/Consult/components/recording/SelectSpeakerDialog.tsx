@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/tooltip';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { SPEAKER_COLOR_LIST } from '@/pages/Consult/types/Recording.enum';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -27,7 +28,8 @@ import { useGetRecordingSpeakersQuery } from '../../hooks/query/counselRecording
 
 function SelectSpeakerDialog() {
   const { counselSessionId } = useParams();
-  const { submitSpeakers, recordingStatus } = useRecording(counselSessionId);
+  const { submitSpeakers } = useRecording(counselSessionId);
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
   const [open, setOpen] = useState(false);
   const [selectedSpeakers, setSelectedSpeakers] = useState<string[]>([]);
   const { data: speakerList, isSuccess: isSuccessGetSpeakerList } =

@@ -10,6 +10,7 @@ import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import DeleteRecordingDialog from '@/pages/Consult/components/recording/DeleteRecordingDialog';
 import SelectSpeakerDialog from '@/pages/Consult/components/recording/SelectSpeakerDialog';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import useRightNavigationStore from '@/store/navigationStore';
@@ -28,11 +29,12 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     stopRecording,
     resetRecording,
     submitRecording,
-    recordingStatus,
-    recordingTime,
   } = useRecording(counselSessionId);
-  const { setActiveTab } = useConsultTabStore();
-  const { closeRightNav } = useRightNavigationStore();
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
+  const recordingTime = useRecordingStore((state) => state.recordingTime);
+
+  const setActiveTab = useConsultTabStore((state) => state.setActiveTab);
+  const closeRightNav = useRightNavigationStore((state) => state.closeRightNav);
 
   const circleColorClass =
     recordingStatus === RecordingStatus.Recording

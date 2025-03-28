@@ -1,37 +1,18 @@
 import { AICounselSummaryControllerApi } from '@/api';
 import { useSendSpeakersQuery } from '@/pages/Consult/hooks/query/counselRecording/useSendSpeakersQuery';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import {
   MediaRecorderStatus,
   RecordingFileInfo,
   RecordingStatus,
 } from '@/pages/Consult/types/Recording.enum';
 import { useCallback, useMemo } from 'react';
-import { create } from 'zustand';
 
-// store's state
-interface RecordingState {
-  recordingStatus: RecordingStatus;
-  recordingTime: number;
-  recordingIntervalId: number | null;
-  mediaRecorderRef: React.MutableRefObject<MediaRecorder | null>;
-  audioChunksRef: React.MutableRefObject<Blob[]>;
-}
-
-// store
-const useRecordingStore = create<RecordingState>(() => ({
-  recordingStatus: RecordingStatus.Ready,
-  recordingTime: 0,
-  recordingIntervalId: null,
-  mediaRecorderRef: { current: null },
-  audioChunksRef: { current: [] },
-}));
-
-// store's setter
-export const updateRecordingStatus = (newStatus: RecordingStatus) => {
+// helper functions
+const updateRecordingStatus = (newStatus: RecordingStatus) => {
   useRecordingStore.setState({ recordingStatus: newStatus });
 };
 
-// helper functions
 const addRecordingInterval = () => {
   const intervalId = setInterval(() => {
     addOneSecond();
@@ -40,6 +21,7 @@ const addRecordingInterval = () => {
     recordingIntervalId: Number(intervalId),
   });
 };
+
 const clearRecordingIntervalId = () => {
   const intervalId = useRecordingStore.getState().recordingIntervalId;
   if (intervalId !== null) {
@@ -56,8 +38,8 @@ const addOneSecond = () => {
 
 // hook
 export const useRecording = (counselSessionId: string | undefined = '') => {
-  const { recordingStatus, recordingTime, mediaRecorderRef, audioChunksRef } =
-    useRecordingStore();
+  const mediaRecorderRef = useRecordingStore((state) => state.mediaRecorderRef);
+  const audioChunksRef = useRecordingStore((state) => state.audioChunksRef);
 
   // api
   const aiCounselSummaryControllerApi = useMemo(
@@ -206,7 +188,5 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     resetRecording,
     submitRecording,
     submitSpeakers,
-    recordingStatus,
-    recordingTime,
   };
 };

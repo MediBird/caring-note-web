@@ -8,7 +8,7 @@ import { InfoToast } from '@/components/ui/costom-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
-import { updateRecordingStatus, useRecording } from '@/hooks/useRecording';
+import { useRecording } from '@/hooks/useRecording';
 import { useRouteStore } from '@/hooks/useRouteStore';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
 import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
@@ -18,6 +18,7 @@ import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/counselR
 import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
 import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { DISEASE_MAP } from '@/utils/constants';
@@ -155,8 +156,12 @@ export function Index() {
     counselSessionId ?? '',
   );
 
-  const { previousPath, setPreviousPath } = useRouteStore();
-  const { recordingStatus, resetRecording } = useRecording();
+  const previousPath = useRouteStore((state) => state.previousPath);
+  const setPreviousPath = useRouteStore((state) => state.setPreviousPath);
+
+  const { resetRecording } = useRecording();
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
+
   const {
     isOpen: isLeaveOutDialogOpen,
     closeDialog,
@@ -245,7 +250,7 @@ export function Index() {
       if (previousPath?.startsWith('/survey')) {
         setPreviousPath('');
       } else {
-        updateRecordingStatus(status);
+        useRecordingStore.setState({ recordingStatus: status });
       }
     }
   }, [

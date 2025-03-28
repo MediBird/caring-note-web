@@ -2,15 +2,15 @@ import warning from '@/assets/warning.webp';
 import HighlightInput from '@/components/consult/HighlightInput';
 import Recording from '@/components/consult/Recording';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import RecordingResult from '@/pages/Consult/components/recording/RecordingResult';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useRightNavigationStore from '@/store/navigationStore';
 
 const MedicineConsult: React.FC = () => {
-  const { recordingStatus } = useRecording();
-  const { isOpen: isRightNavOpen } = useRightNavigationStore();
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
+  const isRightNavOpen = useRightNavigationStore((state) => state.isOpen);
 
   const ViewWarningImage = () => {
     const heightClass =

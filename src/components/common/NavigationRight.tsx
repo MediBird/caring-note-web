@@ -1,16 +1,18 @@
 import CloseBlackIcon from '@/assets/icon/24/close.outlined.black.svg?react';
 import PencilIcon from '@/components/consult/PencilIcon';
 import Recording from '@/components/consult/Recording';
-import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useRightNavigationStore from '@/store/navigationStore';
 import { useEffect } from 'react';
 import HighlightInput from '../consult/HighlightInput';
 
 const NavigationRight = () => {
-  const { isOpen, openRightNav, closeRightNav } = useRightNavigationStore();
-  const { recordingStatus } = useRecording();
+  const isOpen = useRightNavigationStore((state) => state.isOpen);
+  const openRightNav = useRightNavigationStore((state) => state.openRightNav);
+  const closeRightNav = useRightNavigationStore((state) => state.closeRightNav);
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
 
   useEffect(() => {
     return () => {
