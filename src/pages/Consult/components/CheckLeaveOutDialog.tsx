@@ -8,17 +8,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useRecording } from '@/hooks/useRecording';
+import { useLeaveOutDialogStore } from '@/pages/Consult/hooks/store/useLeaveOutDialogStore';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { XIcon } from 'lucide-react';
-import { useLeaveOutDialogStore } from '@/pages/Consult/hooks/store/useLeaveOutDialogStore';
 
 interface CheckLeaveOutDialogProps {
   onConfirm: () => void;
 }
 
 const CheckLeaveOutDialog = ({ onConfirm }: CheckLeaveOutDialogProps) => {
-  const { recordingStatus } = useRecording();
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
   const { isOpen, closeDialog } = useLeaveOutDialogStore();
 
   return (

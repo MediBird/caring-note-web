@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useRecording } from '@/hooks/useRecording';
 import CompleteConsultDialog from '@/pages/Consult/components/CompleteConsultDialog';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +25,7 @@ const FinishConsultDialog = ({
   name = '',
   onComplete,
 }: FinishConsultDialogProps) => {
-  const { recordingStatus } = useRecording();
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
   const [open, setOpen] = useState(false);
   const [isCompleteConsultDialogOpen, setIsCompleteConsultDialogOpen] =
     useState(false);

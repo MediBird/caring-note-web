@@ -1,14 +1,14 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import { useGetSpeechToTextQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetSpeechToTextQuery';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { SPEAKER_COLOR_LIST } from '@/pages/Consult/types/Recording.enum';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
 const TotalRecordings: React.FC = () => {
   const { counselSessionId } = useParams();
-  const { recordingStatus } = useRecording(counselSessionId);
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
   const { data: speechToTextList, isSuccess } = useGetSpeechToTextQuery(
     counselSessionId,
     recordingStatus,

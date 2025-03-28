@@ -1,13 +1,13 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useRecording } from '@/hooks/useRecording';
 import { useGetAiSummaryQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetAiSummaryQuery';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import React from 'react';
 import ReactMarkDown from 'react-markdown';
 import { useParams } from 'react-router-dom';
 
 const AiSummary: React.FC = () => {
   const { counselSessionId } = useParams();
-  const { recordingStatus } = useRecording(counselSessionId);
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
   const { data: aiSummary, isSuccess } = useGetAiSummaryQuery(
     counselSessionId,
     recordingStatus,

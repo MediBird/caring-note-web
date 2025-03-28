@@ -1,12 +1,12 @@
 import PencilBlackIcon from '@/assets/icon/24/create.filled.black.svg?react';
 import PencilBlueIcon from '@/assets/icon/24/create.filled.blue.svg?react';
-import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import React from 'react';
 
 const PencilIcon: React.FC = () => {
-  const { recordingStatus } = useRecording();
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
 
   return (
     <>
@@ -14,12 +14,12 @@ const PencilIcon: React.FC = () => {
       <div className={cn('relative w-7')}>
         {recordingStatus === RecordingStatus.Recording ? (
           <>
-            <span className="absolute top-0 right-0 w-1.5 h-1.5 bg-error-50 rounded-full" />
+            <span className="absolute right-0 top-0 h-1.5 w-1.5 rounded-full bg-error-50" />
             <PencilBlueIcon width={24} height={24} className="my-1" />
           </>
         ) : recordingStatus === RecordingStatus.Paused ? (
           <>
-            <span className="absolute top-0 right-0 w-1.5 h-1.5 bg-grayscale-50 rounded-full" />
+            <span className="absolute right-0 top-0 h-1.5 w-1.5 rounded-full bg-grayscale-50" />
             <PencilBlackIcon width={24} height={24} className="my-1" />
           </>
         ) : recordingStatus === RecordingStatus.STTCompleted ? (
@@ -33,7 +33,7 @@ const PencilIcon: React.FC = () => {
 
       {/* 하단 텍스트 */}
       {recordingStatus === RecordingStatus.STTCompleted && (
-        <span className="text-caption1 text-primary-50 font-bold">
+        <span className="text-caption1 font-bold text-primary-50">
           저장 완료
         </span>
       )}

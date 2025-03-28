@@ -30,7 +30,12 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
   className,
   inputClassName,
 }) => {
-  const { editorState, setEditorState } = useCounselRecordEditorStateStore();
+  const editorState = useCounselRecordEditorStateStore(
+    (state) => state.editorState,
+  );
+  const setEditorState = useCounselRecordEditorStateStore(
+    (state) => state.setEditorState,
+  );
 
   const { counselSessionId } = useParams();
   const {

@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useRecording } from '@/hooks/useRecording';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -20,7 +20,7 @@ interface TemporarySaveDialogProps {
 
 const TemporarySaveDialog = ({ onSave }: TemporarySaveDialogProps) => {
   const [open, setOpen] = useState(false);
-  const { recordingStatus } = useRecording();
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
 
   const handleClickConfirm = () => {
     onSave();

@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import React from 'react';
 import AiSummary from './AiSummary';
@@ -8,7 +8,7 @@ import TotalRecordings from './TotalRecordings';
 
 const RecordingResultTabLists = () => {
   return (
-    <TabsList className="w-full flex justify-start gap-5">
+    <TabsList className="flex w-full justify-start gap-5">
       <TabsTrigger
         value="aiSummary"
         className="h-[30px] text-subtitle2 font-bold">
@@ -28,7 +28,7 @@ interface RecordingResultProps {
 }
 
 const RecordingResult: React.FC<RecordingResultProps> = ({ className }) => {
-  const { recordingStatus } = useRecording();
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
 
   return (
     <>

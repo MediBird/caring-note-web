@@ -1,10 +1,11 @@
+import { useRouteStore } from '@/hooks/useRouteStore';
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useRouteStore } from '@/hooks/useRouteStore';
 
 export const RouteTracker = () => {
   const location = useLocation();
-  const { setPreviousPath } = useRouteStore();
+  const setPreviousPath = useRouteStore((state) => state.setPreviousPath);
+
   const prevPathRef = useRef<string | null>(null);
 
   useEffect(() => {
