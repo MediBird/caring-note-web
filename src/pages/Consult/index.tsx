@@ -228,6 +228,8 @@ export function Index() {
   useEffect(() => {
     if (!hasPreviousConsult) {
       setActiveTab(ConsultTab.consultCard);
+    } else {
+      setActiveTab(ConsultTab.pastConsult);
     }
   }, [hasPreviousConsult, setActiveTab]);
 
