@@ -6,6 +6,7 @@ import {
   RecordingFileInfo,
   RecordingStatus,
 } from '@/pages/Consult/types/Recording.enum';
+import { format } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 
 // helper functions
@@ -34,6 +35,22 @@ const addOneSecond = () => {
   useRecordingStore.setState((state) => ({
     recordingTime: state.recordingTime + 1,
   }));
+};
+
+const downloadRecording = (audioFile: File) => {
+  const now = format(new Date(), 'yyyyMMdd_HHmmss');
+  const audioUrl = URL.createObjectURL(audioFile);
+  const downloadLink = document.createElement('a');
+  downloadLink.href = audioUrl;
+  downloadLink.download =
+    RecordingFileInfo.DownloadName +
+    '_' +
+    now +
+    RecordingFileInfo.FileExtension;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+  URL.revokeObjectURL(audioUrl);
 };
 
 // hook
@@ -134,26 +151,26 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
   }, []);
 
   const submitRecording = async () => {
+    const now = format(new Date(), 'yyyyMMdd_HHmmss');
+
     updateRecordingStatus(RecordingStatus.STTLoading);
 
     const audioBlob = new Blob(audioChunksRef.current, {
       type: RecordingFileInfo.Type,
     });
 
-    const audioFile = new File([audioBlob], RecordingFileInfo.DownloadName, {
-      type: RecordingFileInfo.Type,
-      lastModified: Date.now(),
-    });
-
-    // FOR TEST : 만들어진 audioFile 다운로드
-    const audioUrl = URL.createObjectURL(audioFile);
-    const downloadLink = document.createElement('a');
-    downloadLink.href = audioUrl;
-    downloadLink.download = RecordingFileInfo.DownloadName;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-    URL.revokeObjectURL(audioUrl);
+    const audioFile = new File(
+      [audioBlob],
+      RecordingFileInfo.DownloadName +
+        '_' +
+        now +
+        RecordingFileInfo.FileExtension,
+      {
+        type: RecordingFileInfo.Type,
+        lastModified: Date.now(),
+      },
+    );
+    downloadRecording(audioFile);
 
     try {
       sessionStorage.setItem('autoNavigationOpen', 'true');
@@ -181,12 +198,49 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     sendSpeakers({ counselSessionId, speakers });
   };
 
+  const submitRecordingForLeavingOut = async () => {
+    if (!mediaRecorderRef.current) return;
+
+    const now = format(new Date(), 'yyyyMMdd_HHmmss');
+
+    mediaRecorderRef.current.stop();
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const audioBlob = new Blob(audioChunksRef.current, {
+      type: RecordingFileInfo.Type,
+    });
+
+    const audioFile = new File(
+      [audioBlob],
+      RecordingFileInfo.DownloadName +
+        '_' +
+        now +
+        RecordingFileInfo.FileExtension,
+      {
+        type: RecordingFileInfo.Type,
+        lastModified: Date.now(),
+      },
+    );
+    // downloadRecording(audioFile);
+
+    try {
+      await aiCounselSummaryControllerApi.convertSpeechToText(audioFile, {
+        counselSessionId,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
+    updateRecordingStatus(RecordingStatus.Ready);
+  };
+
   return {
     startRecording,
     pauseRecording,
     stopRecording,
     resetRecording,
     submitRecording,
+    submitRecordingForLeavingOut,
     submitSpeakers,
   };
 };

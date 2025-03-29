@@ -138,16 +138,18 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
   ) => {
     if (action) action();
     if (route) {
-      resetRecording();
-
-      if (
+      const isRecording =
         recordingStatus !== RecordingStatus.Ready &&
         recordingStatus !== RecordingStatus.STTCompleted &&
-        recordingStatus !== RecordingStatus.AICompleted
-      ) {
+        recordingStatus !== RecordingStatus.AICompleted;
+
+      if (isRecording) {
         openDialog();
-        setOnConfirm(() => navigate(route));
+        setOnConfirm(() => {
+          navigate(route);
+        });
       } else {
+        resetRecording();
         navigate(route);
       }
     }

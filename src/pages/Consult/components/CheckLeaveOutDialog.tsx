@@ -21,6 +21,11 @@ const CheckLeaveOutDialog = ({ onConfirm }: CheckLeaveOutDialogProps) => {
   const recordingStatus = useRecordingStore((state) => state.recordingStatus);
   const { isOpen, closeDialog } = useLeaveOutDialogStore();
 
+  const isRecording =
+    recordingStatus !== RecordingStatus.Ready &&
+    recordingStatus !== RecordingStatus.STTCompleted &&
+    recordingStatus !== RecordingStatus.AICompleted;
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={closeDialog}>
@@ -36,12 +41,11 @@ const CheckLeaveOutDialog = ({ onConfirm }: CheckLeaveOutDialogProps) => {
           <div className="h-[1px] bg-grayscale-20" />
           <DialogDescription asChild className="m-0 px-5 pt-2">
             <p className="text-body1 font-medium text-grayscale-100">
-              {recordingStatus !== RecordingStatus.Ready &&
-              recordingStatus !== RecordingStatus.STTCompleted &&
-              recordingStatus !== RecordingStatus.AICompleted ? (
+              {isRecording ? (
                 <>
-                  여기서 나가시겠어요? <br />
-                  미저장된 녹음 파일은 삭제됩니다.
+                  아직 녹음과 상담이 완료되지 않았습니다. <br />
+                  지금까지 녹음된 내용만 저장됩니다. <br />
+                  수정한 내용을 저장하고 나가시겠어요?
                 </>
               ) : (
                 <>

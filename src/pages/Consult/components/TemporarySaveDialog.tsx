@@ -27,11 +27,14 @@ const TemporarySaveDialog = ({ onSave }: TemporarySaveDialogProps) => {
     setOpen(false);
   };
 
+  const isRecording =
+    recordingStatus !== RecordingStatus.Ready &&
+    recordingStatus !== RecordingStatus.STTCompleted &&
+    recordingStatus !== RecordingStatus.AICompleted;
+
   return (
     <>
-      {recordingStatus !== RecordingStatus.Ready &&
-      recordingStatus !== RecordingStatus.STTCompleted &&
-      recordingStatus !== RecordingStatus.AICompleted ? (
+      {isRecording ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button variant={'tertiary'} size={'xl'}>
@@ -50,9 +53,9 @@ const TemporarySaveDialog = ({ onSave }: TemporarySaveDialogProps) => {
             <div className="h-[1px] bg-grayscale-20" />
             <DialogDescription asChild className="m-0 px-5 pt-2">
               <p className="text-body1 font-medium text-grayscale-100">
-                아직 녹음이 저장되지 않았습니다. <br />
-                녹음 저장을 원하시면 녹음 저장 버튼을 먼저 눌러주세요. <br />
-                텍스트만 임시 저장하시겠어요?
+                아직 녹음과 상담 내용이 저장되지 않았습니다. <br />
+                녹음 파일은 상담 완료 시에 저장됩니다. <br />
+                상담 내용만 임시 저장하시겠어요?
               </p>
             </DialogDescription>
             <DialogFooter className="m-0 flex w-full items-center justify-end p-5">

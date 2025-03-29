@@ -1,6 +1,7 @@
 export enum RecordingFileInfo {
   Type = 'audio/webm',
-  DownloadName = 'TEST_YOUR_RECORDING.webm',
+  DownloadName = 'RECORDING',
+  FileExtension = '.webm',
 }
 
 export enum RecordingStatus {
