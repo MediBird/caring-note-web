@@ -57,7 +57,7 @@ export const createScheduleColumns = ({
             <TooltipTrigger>
               <InfoIcon className="h-5 w-5 text-grayscale-50" />
             </TooltipTrigger>
-            <TooltipContent>담당 약사입니다.</TooltipContent>
+            <TooltipContent>'나에게 할당'버튼 클릭 시 담당 약사로 지정됩니다.</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
