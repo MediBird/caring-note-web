@@ -112,13 +112,13 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && 'selected'}
                   onClick={() => handleRowClick(row.original)}
                   className={cn(
-                    onRowClick ? `group cursor-pointer` : '',
-                    'transition-colors duration-300 ease-in-out',
+                    'group transition-colors duration-300 ease-in-out hover:!bg-primary-5',
                     highlightedRowId &&
                       idField in rowData &&
                       highlightedRowId === rowData[idField]
                       ? '!bg-secondary-5 [&_td]:bg-secondary-5'
                       : '',
+                    onRowClick ? `cursor-pointer` : '',
                   )}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -129,7 +129,7 @@ export function DataTable<TData, TValue>({
                           column: cell.column,
                         }),
                       }}
-                      className="transition-colors duration-200 ease-in-out group-hover:bg-primary-5">
+                      className="transition-colors duration-200 ease-in-out group-hover:!bg-primary-5">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
