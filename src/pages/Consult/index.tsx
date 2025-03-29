@@ -5,14 +5,13 @@ import {
 } from '@/api';
 import Spinner from '@/components/common/Spinner';
 import { InfoToast } from '@/components/ui/costom-toast';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
 import { useRecording } from '@/hooks/useRecording';
 import { useRouteStore } from '@/hooks/useRouteStore';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
 import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
-import PastConsult from '@/pages/Consult/components/tabs/PastConsult';
 import { useGetIsRecordingPopupQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetIsRecordingPopupQuery';
 import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetRecordingStatusQuery';
 import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
@@ -23,17 +22,15 @@ import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAll
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { DISEASE_MAP } from '@/utils/constants';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CheckLeaveOutDialog from './components/CheckLeaveOutDialog';
 import FinishConsultDialog from './components/FinishConsultDialog';
 import RecordingDialog from './components/recording/RecordingDialog';
-import ConsultCard from './components/tabs/ConsultCard';
-import DiscardMedicine from './components/tabs/DiscardMedicine';
-import MedicineConsult from './components/tabs/MedicineConsult';
-import MedicineMemo from './components/tabs/MedicineMemo';
 import TemporarySaveDialog from './components/TemporarySaveDialog';
 import { useLeaveOutDialogStore } from './hooks/store/useLeaveOutDialogStore';
+import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAllTabsData';
+import TabContents from '@/pages/Consult/components/TabContents';
 
 interface InfoItemProps {
   icon: string;
@@ -85,6 +82,7 @@ const ConsultHeader = ({
   saveConsult,
   completeConsult,
   hasPreviousConsult,
+  contentWidth,
 }: {
   counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
   consultStatus: string;
@@ -95,34 +93,41 @@ const ConsultHeader = ({
   recordingStatus: RecordingStatus;
   completeConsult: () => void;
   hasPreviousConsult: boolean;
-}) => (
-  <div className="sticky top-0 z-10">
-    <div className="h-fit bg-white">
-      <div className="border-grayscale-05 border-b pb-1 pt-12">
-        <div className="mx-auto flex w-full max-w-layout justify-between px-layout [&>*]:max-w-content">
-          <div>
-            <div className="text-h3 font-bold">
-              {counseleeInfo?.name}
-              <span className="text-subtitle2 font-bold"> 님</span>
+  contentWidth: number;
+}) => {
+  return (
+    <div
+      className="fixed top-0 z-10 h-fit w-full bg-white"
+      style={{
+        width: contentWidth,
+      }}>
+      <div className="h-fit bg-white">
+        <div className="border-grayscale-05 border-b pb-1 pt-12">
+          <div className="mx-auto flex w-full max-w-layout justify-between px-layout [&>*]:max-w-content">
+            <div>
+              <div className="text-h3 font-bold">
+                {counseleeInfo?.name}
+                <span className="text-subtitle2 font-bold"> 님</span>
+              </div>
+              <div className="mt-3 flex items-center pl-[7px] text-body1 font-medium text-grayscale-60">
+                <InfoItem icon="📍" content={consultStatus} />
+                <InfoItem icon="🎂" content={age} />
+                <InfoItem icon="💊" content={diseases} showDivider={false} />
+              </div>
             </div>
-            <div className="mt-3 flex items-center pl-[7px] text-body1 font-medium text-grayscale-60">
-              <InfoItem icon="📍" content={consultStatus} />
-              <InfoItem icon="🎂" content={age} />
-              <InfoItem icon="💊" content={diseases} showDivider={false} />
-            </div>
+            <HeaderButtons
+              onSave={saveConsult}
+              onComplete={completeConsult}
+              name={counseleeInfo?.name}
+              sessionStatus={sessionStatus}
+            />
           </div>
-          <HeaderButtons
-            onSave={saveConsult}
-            onComplete={completeConsult}
-            name={counseleeInfo?.name}
-            sessionStatus={sessionStatus}
-          />
         </div>
+        <ConsultTabs hasPreviousConsult={hasPreviousConsult} />
       </div>
-      <ConsultTabs hasPreviousConsult={hasPreviousConsult} />
     </div>
-  </div>
-);
+  );
+};
 
 const ConsultTabs = ({
   hasPreviousConsult,
@@ -147,6 +152,7 @@ export function Index() {
 
   const { isLoading: isInitializeAllTabsDataLoading } =
     useInitializeAllTabsData(counselSessionId ?? '');
+  const [contentWidth, setContentWidth] = useState(0);
 
   const { data: counseleeInfo, isLoading } = useSelectCounseleeInfo(
     counselSessionId ?? '',
@@ -361,29 +367,15 @@ export function Index() {
           recordingStatus={recordingStatus}
           completeConsult={completeConsult}
           hasPreviousConsult={hasPreviousConsult}
+          contentWidth={contentWidth}
         />
         {isInitializeAllTabsDataLoading ? (
           <Spinner />
         ) : (
-          <div className="mb-100 h-full w-full px-layout pb-10 pt-6 [&>*]:mx-auto [&>*]:max-w-content">
-            {hasPreviousConsult && (
-              <TabsContent value="pastConsult">
-                <PastConsult />
-              </TabsContent>
-            )}
-            <TabsContent value="survey">
-              <ConsultCard />
-            </TabsContent>
-            <TabsContent value="medicine">
-              <MedicineMemo />
-            </TabsContent>
-            <TabsContent value="note">
-              <MedicineConsult />
-            </TabsContent>
-            <TabsContent value="wasteMedication">
-              <DiscardMedicine />
-            </TabsContent>
-          </div>
+          <TabContents
+            hasPreviousConsult={hasPreviousConsult}
+            onWidthChange={setContentWidth}
+          />
         )}
       </Tabs>
 
