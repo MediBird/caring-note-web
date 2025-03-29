@@ -18,8 +18,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { getCommonPinningStyles } from '@/lib/getTableCellPinningStyle';
-import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -129,7 +129,13 @@ export function DataTable<TData, TValue>({
                           column: cell.column,
                         }),
                       }}
-                      className="transition-colors duration-200 ease-in-out group-hover:!bg-primary-5">
+                      className="transition-colors duration-200 ease-in-out group-hover:!bg-primary-5"
+                      onClick={(e) => {
+                        // actions 칼럼일 경우 row 클릭 이벤트 전파 방지
+                        if (cell.column.id === 'actions') {
+                          e.stopPropagation();
+                        }
+                      }}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
