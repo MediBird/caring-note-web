@@ -146,7 +146,6 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
       if (isRecording) {
         openDialog();
         setOnConfirm(() => {
-          resetRecording();
           navigate(route);
         });
       } else {

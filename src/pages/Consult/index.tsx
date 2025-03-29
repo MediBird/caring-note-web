@@ -159,7 +159,9 @@ export function Index() {
   const previousPath = useRouteStore((state) => state.previousPath);
   const setPreviousPath = useRouteStore((state) => state.setPreviousPath);
 
-  const { resetRecording } = useRecording();
+  const { resetRecording, submitRecordingForLeavingOut } = useRecording(
+    counselSessionId ?? '',
+  );
   const recordingStatus = useRecordingStore((state) => state.recordingStatus);
 
   const {
@@ -275,7 +277,7 @@ export function Index() {
 
   const handleConfirmLeave = () => {
     onConfirm();
-    resetRecording();
+    submitRecordingForLeavingOut();
     closeDialog();
   };
 
