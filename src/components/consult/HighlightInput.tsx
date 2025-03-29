@@ -197,12 +197,12 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
   return (
     <div
       className={cn(
-        'flex w-full flex-col rounded-[4px] border border-grayscale-30 bg-white p-0',
+        'flex max-h-[560px] w-full flex-col rounded-[4px] border border-grayscale-30 bg-white p-0',
         className,
       )}>
       <div
         className={cn(
-          'max-h-[560px] flex-1 overflow-y-auto border-b border-grayscale-30 p-2',
+          'flex-1 overflow-y-auto border-b border-grayscale-30 p-2',
           inputClassName,
         )}
         onClick={() => getHighlightedText()}
