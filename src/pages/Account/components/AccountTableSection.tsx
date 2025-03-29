@@ -40,7 +40,7 @@ export function AccountTableSection() {
   }
 
   return (
-    <div className="flex w-full flex-col gap-4">
+    <div className="flex w-full flex-col gap-6">
       <AccountTable data={counselorData} />
       <DataTablePagination
         pagination={pagination}

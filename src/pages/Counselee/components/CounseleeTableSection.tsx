@@ -58,7 +58,7 @@ export const CounseleeTableSection = ({
           onOpenChange={(open) => !open && setEditingCounselee(null)}
         />
       )}
-      <div className="mt-4 flex justify-center">
+      <div className="mt-6 flex justify-center">
         <DataTablePagination
           pagination={pagination}
           onPageChange={onPageChange}

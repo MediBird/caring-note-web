@@ -264,7 +264,7 @@ export const CounseleeDialog = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 items-end gap-4">
             <div className="space-y-2">
               <Label>생활지원사</Label>
               <FormInput
@@ -330,7 +330,7 @@ export const CounseleeDialog = ({
           <div className="space-y-2">
             <Label>비고</Label>
             <Textarea
-              placeholder="비고 사항을 입력하세요."
+              placeholder="케어링 노트 서비스 이전의 상담 기록을 남기면 유용합니다."
               value={formData.note}
               onChange={(e) =>
                 setFormData({ ...formData, note: e.target.value })
