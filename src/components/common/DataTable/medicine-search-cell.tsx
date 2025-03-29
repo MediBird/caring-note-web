@@ -4,6 +4,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useDebounce } from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
 import { useSearchMedicationByKeyword } from '@/pages/Consult/hooks/query/useSearchMedicationByKeyword';
@@ -80,17 +86,49 @@ function MedicineSearchCell<T extends { id: string }>({
           asChild
           ref={triggerRef}
           className="h-full content-center rounded-[8px] border-none bg-transparent data-[state=open]:bg-white data-[state=open]:shadow-cell-shadow">
-          <div className="h-full w-full">
-            <Input
-              type="text"
-              placeholder="이름을 입력해 주세요"
-              value={inputValue}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              className="h-full truncate border-none bg-transparent"
-            />
-          </div>
+          {open ? (
+            <div className="h-full w-full">
+              <Input
+                type="text"
+                placeholder="이름을 입력해 주세요"
+                value={inputValue}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                className="h-full truncate border-none bg-transparent"
+              />
+            </div>
+          ) : (
+            <div className="h-full w-full cursor-pointer" onClick={handleFocus}>
+              <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      className={cn(
+                        'flex h-full w-full items-center justify-start truncate border-t border-transparent bg-transparent px-3 py-2 text-base leading-4',
+                        inputValue === '' && 'text-grayscale-30',
+                      )}>
+                      <p className="truncate">
+                        {inputValue === ''
+                          ? '이름을 입력해 주세요'
+                          : inputValue}
+                      </p>
+                    </div>
+                  </TooltipTrigger>
+                  {inputValue !== '' && (
+                    <TooltipContent
+                      side="bottom"
+                      align="start"
+                      sideOffset={4}
+                      collisionPadding={20}
+                      className="max-w-[400px] break-words">
+                      {inputValue}
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          )}
         </PopoverTrigger>
         <PopoverContent
           align="start"
