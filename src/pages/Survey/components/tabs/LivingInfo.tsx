@@ -91,61 +91,21 @@ export default function LivingInfo() {
           ...(isSmoker
             ? [
                 {
-                  label: '흡연 기간',
+                  label: '총 흡연기간',
                   value: (
                     <div className="flex items-center gap-2">
                       <Input
-                        type="number"
-                        className="w-20"
-                        placeholder="년"
-                        min="0"
-                        max="100"
-                        value={
-                          livingInfo?.smoking?.smokingPeriodNote?.split(
-                            '년',
-                          )[0] || ''
-                        }
-                        onChange={(e) => {
-                          const years = e.target.value;
-                          const months =
-                            livingInfo?.smoking?.smokingPeriodNote
-                              ?.split('년')[1]
-                              ?.split('개월')[0]
-                              ?.trim() || '';
-                          const periodNote = `${years}년 ${months}개월`;
+                        type="text"
+                        className="w-[11rem]"
+                        placeholder="00년 00개월"
+                        value={livingInfo?.smoking?.smokingPeriodNote || ''}
+                        onChange={(e) =>
                           handleUpdateLivingInfo(
                             'smoking.smokingPeriodNote',
-                            periodNote,
-                          );
-                        }}
-                      />
-                      <span>년</span>
-                      <Input
-                        type="number"
-                        className="w-20"
-                        placeholder="개월"
-                        min="0"
-                        max="11"
-                        value={
-                          livingInfo?.smoking?.smokingPeriodNote
-                            ?.split('년')[1]
-                            ?.split('개월')[0]
-                            ?.trim() || ''
+                            e.target.value,
+                          )
                         }
-                        onChange={(e) => {
-                          const years =
-                            livingInfo?.smoking?.smokingPeriodNote?.split(
-                              '년',
-                            )[0] || '';
-                          const months = e.target.value;
-                          const periodNote = `${years}년 ${months}개월`;
-                          handleUpdateLivingInfo(
-                            'smoking.smokingPeriodNote',
-                            periodNote,
-                          );
-                        }}
                       />
-                      <span>개월</span>
                     </div>
                   ),
                 },
