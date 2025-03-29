@@ -51,6 +51,7 @@ const PaginationLink = ({
   <a
     aria-current={isActive ? 'page' : undefined}
     className={cn(
+      'cursor-pointer',
       buttonVariants({
         variant: isActive ? 'tertiary' : 'ghost',
         size,
@@ -70,7 +71,7 @@ const PaginationPrevious = ({
     aria-label="이전 페이지로 이동"
     size="sm"
     className={cn(
-      'gap-1 pl-2.5 h-[30px] font-light flex items-center',
+      'flex h-[30px] items-center gap-1 pl-2.5 font-light',
       className,
     )}
     {...props}>
@@ -88,7 +89,7 @@ const PaginationNext = ({
     aria-label="다음 페이지로 이동"
     size="sm"
     className={cn(
-      'gap-1 pr-2.5 h-[30px] font-light flex items-center',
+      'flex h-[30px] items-center gap-1 pr-2.5 font-light',
       className,
     )}
     {...props}>
