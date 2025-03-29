@@ -113,7 +113,7 @@ export const createColumns = ({
               null,
             );
           }}
-          placeholder="년-월-일"
+          placeholder="연도-월-일"
           handleClicked={(value) => {
             if (!value) return;
 
