@@ -19,15 +19,10 @@ import {
   SMOKING_OPTIONS,
 } from '@/utils/constants';
 import { useCounselCardStore } from '../../hooks/counselCardStore';
-import { useCounselCardLivingInfoQuery } from '../../hooks/useCounselCardQuery';
 
-interface LivingInfoProps {
-  counselSessionId: string;
-}
-
-export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
-  const { livingInfo, setLivingInfo } = useCounselCardStore();
-  const { isLoading } = useCounselCardLivingInfoQuery(counselSessionId);
+export default function LivingInfo() {
+  const { infoData, setInfoData } = useCounselCardStore();
+  const livingInfo = infoData.living;
 
   const handleUpdateLivingInfo = (
     field: string,
@@ -39,15 +34,11 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
       [key]: Array.isArray(value) ? new Set(value) : value,
     };
 
-    setLivingInfo({
+    setInfoData('living', {
       ...livingInfo,
       [section]: updatedSection,
     } as CounselCardLivingInformationRes);
   };
-
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
 
   const smokingAmountOptions = SMOKING_OPTIONS;
   const smokingPackOptions = SMOKING_AMOUNT_OPTIONS;
@@ -65,7 +56,7 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
 
   const isDrinker =
     livingInfo?.drinking?.drinkingAmount !== undefined &&
-    livingInfo?.drinking?.drinkingAmount !== 'NONE';
+    livingInfo?.drinking?.drinkingAmount !== DrinkingDTODrinkingAmountEnum.None;
 
   return (
     <Card className="flex w-full flex-col gap-5">
@@ -356,7 +347,7 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
                     currentAssistants.push(enumValue);
                   }
 
-                  setLivingInfo({
+                  setInfoData('living', {
                     ...livingInfo,
                     medicationManagement: {
                       ...livingInfo?.medicationManagement,

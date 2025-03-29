@@ -12,9 +12,13 @@ import BasicInfo from './components/tabs/BasicInfo';
 import HealthInfo from './components/tabs/HealthInfo';
 import IndependentLivingAssessment from './components/tabs/IndependentLivingAssessment';
 import LivingInfo from './components/tabs/LivingInfo';
+import { useCounselCardStore } from './hooks/counselCardStore';
 import {
   useCompleteCounselCard,
   useCounselCardBaseInfoQuery,
+  useCounselCardHealthInfoQuery,
+  useCounselCardIndependentLifeInfoQuery,
+  useCounselCardLivingInfoQuery,
   useSaveCounselCardDraft,
 } from './hooks/useCounselCardQuery';
 
@@ -37,16 +41,56 @@ export default function Survey() {
   const [activeTab, setActiveTab] = useState(tabItems[0].id);
   const [isDisability, setIsDisability] = useState<boolean | null>(null);
   const [filteredTabItems, setFilteredTabItems] = useState(tabItems);
+  const [isLoading, setIsLoading] = useState(true);
   const { saveDraft } = useSaveCounselCardDraft();
   const { complete } = useCompleteCounselCard();
-  const { data: baseInfoData } = useCounselCardBaseInfoQuery(
-    counselSessionId ?? '',
-  );
   const navigate = useNavigate();
   const location = useLocation();
+  const { setCounselSessionId } = useCounselCardStore();
+
+  // 페이지 진입 시에만 데이터를 fetch
+  const { data: baseInfoData, isLoading: isBaseInfoLoading } =
+    useCounselCardBaseInfoQuery(
+      counselSessionId ?? '',
+      true, // fetchOnMount를 true로 설정
+    );
+
+  // 중복 호출 제거하고 각 데이터의 로딩 상태 가져오기
+  const { isLoading: isHealthInfoLoading } = useCounselCardHealthInfoQuery(
+    counselSessionId ?? '',
+    true,
+  );
+  const { isLoading: isLivingInfoLoading } = useCounselCardLivingInfoQuery(
+    counselSessionId ?? '',
+    true,
+  );
+  const { isLoading: isIndependentLifeInfoLoading } =
+    useCounselCardIndependentLifeInfoQuery(counselSessionId ?? '', true);
+
+  // 모든 데이터의 로딩 상태 통합 관리
+  useEffect(() => {
+    setIsLoading(
+      isBaseInfoLoading ||
+        isHealthInfoLoading ||
+        isLivingInfoLoading ||
+        isIndependentLifeInfoLoading,
+    );
+  }, [
+    isBaseInfoLoading,
+    isHealthInfoLoading,
+    isLivingInfoLoading,
+    isIndependentLifeInfoLoading,
+  ]);
+
   const isCompleted =
     baseInfoData?.cardRecordStatus ===
     CounselCardBaseInformationResCardRecordStatusEnum.Completed;
+
+  useEffect(() => {
+    if (counselSessionId) {
+      setCounselSessionId(counselSessionId);
+    }
+  }, [counselSessionId, setCounselSessionId]);
 
   useEffect(() => {
     const fetchCounseleeInfo = async () => {
@@ -111,6 +155,15 @@ export default function Survey() {
     }
   };
 
+  // 로딩 중일 때 표시
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p className="text-xl">데이터를 불러오는 중입니다...</p>
+      </div>
+    );
+  }
+
   return (
     <Tabs
       value={activeTab}
@@ -155,7 +208,7 @@ export default function Survey() {
         <div className="mb-100 w-full px-layout pb-10 pt-10 [&>*]:mx-auto [&>*]:max-w-content">
           {filteredTabItems.map((tab) => (
             <TabsContent key={tab.id} value={tab.id}>
-              <tab.component counselSessionId={counselSessionId ?? ''} />
+              <tab.component />
             </TabsContent>
           ))}
         </div>

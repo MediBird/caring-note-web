@@ -8,21 +8,16 @@ import {
   HEALTH_INSURANCE_TYPE_MAP,
 } from '@/utils/constants';
 import { useCounselCardStore } from '../../hooks/counselCardStore';
-import { useCounselCardBaseInfoQuery } from '../../hooks/useCounselCardQuery';
 
-interface BasicInfoProps {
-  counselSessionId: string;
-}
-
-export default function BasicInfo({ counselSessionId }: BasicInfoProps) {
-  const { baseInfo, setBaseInfo } = useCounselCardStore();
-  const { isLoading } = useCounselCardBaseInfoQuery(counselSessionId);
+export default function BasicInfo() {
+  const { infoData, setInfoData } = useCounselCardStore();
+  const baseInfo = infoData.base;
 
   const handleUpdateBaseInfo = (
     field: 'significantNote' | 'medicationNote',
     value: string,
   ) => {
-    setBaseInfo({
+    setInfoData('base', {
       ...baseInfo,
       counselPurposeAndNote: {
         ...baseInfo?.counselPurposeAndNote,
@@ -30,10 +25,6 @@ export default function BasicInfo({ counselSessionId }: BasicInfoProps) {
       },
     });
   };
-
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
 
   return (
     <Card className="flex w-full flex-col gap-5">
@@ -90,11 +81,12 @@ export default function BasicInfo({ counselSessionId }: BasicInfoProps) {
                   // 이미 선택된 항목이면 제거, 아니면 추가
                   const updatedPurposes = currentPurposes.includes(valueAsEnum)
                     ? currentPurposes.filter(
-                        (purpose) => purpose !== valueAsEnum,
+                        (purpose: CounselPurposeAndNoteDTOCounselPurposeEnum) =>
+                          purpose !== valueAsEnum,
                       )
                     : [...currentPurposes, valueAsEnum];
 
-                  setBaseInfo({
+                  setInfoData('base', {
                     ...baseInfo,
                     counselPurposeAndNote: {
                       ...baseInfo?.counselPurposeAndNote,
@@ -133,7 +125,7 @@ export default function BasicInfo({ counselSessionId }: BasicInfoProps) {
                 onChange={(e) =>
                   handleUpdateBaseInfo('medicationNote', e.target.value)
                 }
-                placeholder="약사님께 전달해 드릴 의약물을 작성해주세요"
+                placeholder="약사님께 전달해 드릴 의약물을 작성해 주세요."
               />
             ),
           },

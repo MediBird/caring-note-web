@@ -21,18 +21,10 @@ import {
   WALKING_METHODS_OPTIONS,
 } from '@/utils/constants';
 import { useCounselCardStore } from '../../hooks/counselCardStore';
-import { useCounselCardIndependentLifeInfoQuery } from '../../hooks/useCounselCardQuery';
 
-interface IndependentLivingAssessmentProps {
-  counselSessionId: string;
-}
-
-export default function IndependentLivingAssessment({
-  counselSessionId,
-}: IndependentLivingAssessmentProps) {
-  const { independentLifeInfo, setIndependentLifeInfo } = useCounselCardStore();
-  const { isLoading } =
-    useCounselCardIndependentLifeInfoQuery(counselSessionId);
+export default function IndependentLivingAssessment() {
+  const { infoData, setInfoData } = useCounselCardStore();
+  const independentLifeInfo = infoData.independentLife;
 
   const handleWalkingMethodsChange = (value: string) => {
     const enumValue = value as WalkingDTOWalkingMethodsEnum;
@@ -46,7 +38,7 @@ export default function IndependentLivingAssessment({
       currentMethods.add(enumValue);
     }
 
-    setIndependentLifeInfo({
+    setInfoData('independentLife', {
       ...independentLifeInfo,
       walking: {
         ...independentLifeInfo?.walking,
@@ -67,7 +59,7 @@ export default function IndependentLivingAssessment({
       currentEquipments.add(enumValue);
     }
 
-    setIndependentLifeInfo({
+    setInfoData('independentLife', {
       ...independentLifeInfo,
       walking: {
         ...independentLifeInfo?.walking,
@@ -88,7 +80,7 @@ export default function IndependentLivingAssessment({
       currentEvacuations.add(enumValue);
     }
 
-    setIndependentLifeInfo({
+    setInfoData('independentLife', {
       ...independentLifeInfo,
       evacuation: {
         ...independentLifeInfo?.evacuation,
@@ -107,7 +99,7 @@ export default function IndependentLivingAssessment({
       currentSights.push(enumValue);
     }
 
-    setIndependentLifeInfo({
+    setInfoData('independentLife', {
       ...independentLifeInfo,
       communication: {
         ...independentLifeInfo?.communication,
@@ -126,7 +118,7 @@ export default function IndependentLivingAssessment({
       currentHearings.push(enumValue);
     }
 
-    setIndependentLifeInfo({
+    setInfoData('independentLife', {
       ...independentLifeInfo,
       communication: {
         ...independentLifeInfo?.communication,
@@ -137,7 +129,7 @@ export default function IndependentLivingAssessment({
 
   const handleCommunicationsChange = (value: string) => {
     const enumValue = value as CommunicationDTOCommunicationsEnum;
-    setIndependentLifeInfo({
+    setInfoData('independentLife', {
       ...independentLifeInfo,
       communication: {
         ...independentLifeInfo?.communication,
@@ -157,7 +149,7 @@ export default function IndependentLivingAssessment({
       currentUsingKoreans.push(enumValue);
     }
 
-    setIndependentLifeInfo({
+    setInfoData('independentLife', {
       ...independentLifeInfo,
       communication: {
         ...independentLifeInfo?.communication,
@@ -165,10 +157,6 @@ export default function IndependentLivingAssessment({
       },
     });
   };
-
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
 
   return (
     <Card className="flex w-full flex-col gap-5">
@@ -212,7 +200,7 @@ export default function IndependentLivingAssessment({
                 className="w-full rounded border p-2"
                 value={independentLifeInfo?.walking?.walkingNote || ''}
                 onChange={(e) =>
-                  setIndependentLifeInfo({
+                  setInfoData('independentLife', {
                     ...independentLifeInfo,
                     walking: {
                       ...independentLifeInfo?.walking,
@@ -250,7 +238,7 @@ export default function IndependentLivingAssessment({
                 className="w-full rounded border p-2"
                 value={independentLifeInfo?.evacuation?.evacuationNote || ''}
                 onChange={(e) =>
-                  setIndependentLifeInfo({
+                  setInfoData('independentLife', {
                     ...independentLifeInfo,
                     evacuation: {
                       ...independentLifeInfo?.evacuation,
