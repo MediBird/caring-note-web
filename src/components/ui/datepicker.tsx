@@ -10,7 +10,13 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 
 export interface DatePickerProps {
   placeholder?: string;
@@ -26,6 +32,9 @@ export interface DatePickerProps {
   align?: 'start' | 'end';
   activeAllDates?: boolean;
   disablePastDates?: boolean;
+  isPrescriptionDate?: boolean;
+  isDateUnknown?: boolean;
+  handleDateUnknown?: () => void;
 }
 
 export function DatePickerComponent({
@@ -42,21 +51,33 @@ export function DatePickerComponent({
   showBorderWithOpen = false,
   activeAllDates = true,
   disablePastDates = false,
+  isPrescriptionDate = false,
+  isDateUnknown = false,
+  handleDateUnknown,
 }: DatePickerProps) {
-  const [month, setMonth] = React.useState<Date | undefined>(selectedMonth);
+  const [month, setMonth] = useState<Date | undefined>(selectedMonth);
 
-  const [date, setDate] = React.useState<Date | undefined>(initialDate);
-  const [isOpen, setIsOpen] = React.useState(false); // Popover 열림 상태 관리
+  const [date, setDate] = useState<Date | undefined>(initialDate);
 
-  // date가 변경될 때만 handleClicked를 호출하도록 수정
-  const handleDateSelect = React.useCallback(
+  const [isUnknown, setIsUnknown] = useState(isDateUnknown);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleDateSelect = useCallback(
     (newDate: Date | undefined) => {
       setDate(newDate);
       handleClicked?.(newDate);
       setIsOpen(false);
+      setIsUnknown(false);
     },
     [handleClicked],
   );
+
+  const handleDateUnknownClick = useCallback(() => {
+    setIsUnknown(true);
+    handleDateUnknown?.();
+    setIsOpen(false);
+  }, [handleDateUnknown]);
 
   const enabledDatesSet = useMemo(
     () => new Set(enabledDates || []),
@@ -87,6 +108,19 @@ export function DatePickerComponent({
     [enabledDatesSet, activeAllDates, disablePastDates],
   );
 
+  const getDateText = () => {
+    if (isUnknown) {
+      return '처방날짜 모름';
+    }
+    return date ? (
+      format(date, 'yyyy-MM-dd')
+    ) : (
+      <span className="text-base text-grayscale-30">
+        {placeholder ? placeholder : '날짜 및 시간 선택'}
+      </span>
+    );
+  };
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen} modal={true}>
       <PopoverTrigger asChild>
@@ -102,7 +136,7 @@ export function DatePickerComponent({
           <Button
             variant="outline"
             className={cn(
-              'h-full w-[280px] items-center justify-start border-transparent bg-transparent text-left text-base font-normal hover:bg-transparent',
+              'h-full w-[280px] items-center justify-start border-transparent bg-transparent text-left !text-base font-normal hover:bg-transparent',
               !date && 'text-muted-foreground',
               isOpen && 'text-primary-50',
               showBorderWithOpen &&
@@ -110,11 +144,7 @@ export function DatePickerComponent({
                 '!border-primary-50 ring-1 ring-primary-50',
               className,
             )}>
-            {date ? (
-              format(date, 'yyyy-MM-dd')
-            ) : (
-              <span>{placeholder ? placeholder : '날짜 및 시간 선택'}</span>
-            )}
+            {getDateText()}
           </Button>
         )}
       </PopoverTrigger>
@@ -147,6 +177,14 @@ export function DatePickerComponent({
             onMonthChange={onMonthChange ? onMonthChange : setMonth}
             disabled={isDateDisabled}
           />
+        )}
+        {isPrescriptionDate && (
+          <Button
+            variant="secondary"
+            className="mt-3 w-full"
+            onClick={handleDateUnknownClick}>
+            처방날짜 모름
+          </Button>
         )}
       </PopoverContent>
     </Popover>

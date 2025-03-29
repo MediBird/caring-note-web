@@ -1,5 +1,6 @@
 import { SelectMedicationRecordHistRes } from '@/api';
 import { WasteMedicationListDTO } from '@/pages/Consult/types/WasteMedicationDTO';
+
 import { create } from 'zustand';
 
 export const useWasteMedicationListStore = create<{
@@ -34,7 +35,7 @@ export const initSelectMedicationRecordHistRes: SelectMedicationRecordHistRes =
     medicationName: '',
     divisionCode: 'PRESCRIPTION',
     usageObject: '',
-    prescriptionDate: new Date().toISOString().split('T')[0],
+    prescriptionDate: undefined,
     prescriptionDays: 0,
     unit: '일',
     usageStatusCode: undefined,

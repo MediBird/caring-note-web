@@ -14,7 +14,11 @@ import { Ellipsis } from 'lucide-react';
 
 interface PrescriptionMedicineTableColumnsProps {
   onDelete: (id: string) => void;
-  handleUpdateCell: (id: string, field: string, value: string | number) => void;
+  handleUpdateCell: (
+    id: string,
+    field: string,
+    value: string | number | null,
+  ) => void;
   handleSearchEnter: (
     id: string,
     medicationId: string,
@@ -87,10 +91,29 @@ export const createColumns = ({
     header: '처방 날짜',
     accessorKey: 'prescriptionDate',
     cell: ({ row }) => {
-      const initialDate = new Date(row.original.prescriptionDate ?? '');
+      const getInitialDate = () => {
+        if (
+          row.original.prescriptionDate &&
+          row.original.prescriptionDate !== null
+        ) {
+          return new Date(row.original.prescriptionDate);
+        }
+        return undefined;
+      };
+
       return (
         <DatePickerComponent
-          initialDate={initialDate}
+          initialDate={getInitialDate()}
+          isDateUnknown={row.original.prescriptionDate === null}
+          isPrescriptionDate={true}
+          handleDateUnknown={() => {
+            handleUpdateCell(
+              row.original.id as string,
+              'prescriptionDate',
+              null,
+            );
+          }}
+          placeholder="년-월-일"
           handleClicked={(value) => {
             if (!value) return;
 
@@ -98,7 +121,7 @@ export const createColumns = ({
             const formattedDate = dateString.split('T')[0];
 
             handleUpdateCell(
-              row.original.rowId as string,
+              row.original.id as string,
               'prescriptionDate',
               formattedDate,
             );
@@ -130,9 +153,9 @@ export const createColumns = ({
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="flex justify-center items-center w-full">
-              <button className="hover:bg-grayscale-5 text-center content-center rounded-[4px] text-grayscale-60 p-1">
-                <Ellipsis className="w-4 h-4" />
+            <div className="flex w-full items-center justify-center">
+              <button className="content-center rounded-[4px] p-1 text-center text-grayscale-60 hover:bg-grayscale-5">
+                <Ellipsis className="h-4 w-4" />
               </button>
             </div>
           </DropdownMenuTrigger>
