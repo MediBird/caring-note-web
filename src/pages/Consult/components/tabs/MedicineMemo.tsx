@@ -50,10 +50,12 @@ const MedicineMemo: React.FC = () => {
   const handleUpdateCell = (
     id: string,
     field: string,
-    value: string | number,
+    value: string | number | null,
   ) => {
     const updatedItem: MedicationRecordListDTO | undefined =
-      medicationRecordList.find((item) => item.id === id);
+      medicationRecordList.find((item) => {
+        return item.id === id;
+      });
 
     if (!updatedItem) return;
 

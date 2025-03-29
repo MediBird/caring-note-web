@@ -127,16 +127,6 @@ function MedicineSearchCell<T extends { id: string }>({
               </div>
             )}
           </div>
-          {/* {searchMedicationByKeywordList &&
-            searchMedicationByKeywordList?.length > 5 && (
-              <div
-                className="absolute bottom-0 left-0 right-0 h-[50px] pointer-events-none"
-                style={{
-                  background:
-                    'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%)',
-                }}
-              />
-            )} */}
         </PopoverContent>
       </div>
     </Popover>

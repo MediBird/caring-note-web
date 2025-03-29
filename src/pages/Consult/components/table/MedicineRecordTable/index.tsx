@@ -8,7 +8,11 @@ interface MedicineRecordTableProps {
   divisionCode: SelectMedicationRecordHistResDivisionCodeEnum;
   medicineRecordList: MedicationRecordListDTO[];
   handleAddTableRowButton: (divisionCode: string) => void;
-  handleUpdateCell: (id: string, field: string, value: string | number) => void;
+  handleUpdateCell: (
+    id: string,
+    field: string,
+    value: string | number | null,
+  ) => void;
   handleSearchEnter: (
     id: string,
     medicationId: string,
