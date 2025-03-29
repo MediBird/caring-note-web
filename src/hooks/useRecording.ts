@@ -218,7 +218,7 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
         lastModified: Date.now(),
       },
     );
-    downloadRecording(audioFile);
+    // downloadRecording(audioFile);
 
     try {
       await aiCounselSummaryControllerApi.convertSpeechToText(audioFile, {
