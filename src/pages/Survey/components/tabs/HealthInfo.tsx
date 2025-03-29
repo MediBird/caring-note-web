@@ -3,19 +3,15 @@ import { ButtonGroup } from '@/components/ui/button-group';
 import { Card } from '@/components/ui/card';
 import CardSection from '@/components/ui/card-section';
 import { Textarea } from '@/components/ui/textarea';
-import { DISEASE_OPTIONS } from '@/utils/constants';
+import { DISEASE_OPTIONS } from '../../../../utils/constants';
 import { useCounselCardStore } from '../../hooks/counselCardStore';
-import { useCounselCardHealthInfoQuery } from '../../hooks/useCounselCardQuery';
-
-interface HealthInfoProps {
-  counselSessionId: string;
-}
 
 const allergyOptions = [
   { label: '알레르기 있음', value: 'true' },
   { label: '알레르기 없음', value: 'false' },
 ];
-const medicationSideEffectOptions = [
+
+const sideEffectOptions = [
   { label: '약물 부작용 있음', value: 'true' },
   { label: '약물 부작용 없음', value: 'false' },
 ];
@@ -30,9 +26,9 @@ type HealthInfoField = {
     | 'symptomsNote';
 };
 
-export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
-  const { healthInfo, setHealthInfo } = useCounselCardStore();
-  const { isLoading } = useCounselCardHealthInfoQuery(counselSessionId);
+export default function HealthInfo() {
+  const { infoData, setInfoData } = useCounselCardStore();
+  const healthInfo = infoData.health;
 
   const handleDiseaseChange = (value: string) => {
     const enumValue = value as DiseaseInfoDTODiseasesEnum;
@@ -40,13 +36,13 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
 
     if (currentDiseases.includes(enumValue)) {
       currentDiseases = currentDiseases.filter(
-        (disease) => disease !== enumValue,
+        (disease: DiseaseInfoDTODiseasesEnum) => disease !== enumValue,
       );
     } else {
       currentDiseases.push(enumValue);
     }
 
-    setHealthInfo({
+    setInfoData('health', {
       ...healthInfo,
       diseaseInfo: {
         ...healthInfo?.diseaseInfo,
@@ -60,7 +56,7 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
       HealthInfoField['section'],
       HealthInfoField['key'],
     ];
-    setHealthInfo({
+    setInfoData('health', {
       ...healthInfo,
       [section]: {
         ...healthInfo?.[section],
@@ -68,10 +64,6 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
       },
     });
   };
-
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
 
   return (
     <Card className="flex w-full flex-col gap-5">
@@ -138,7 +130,7 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
                 value={healthInfo?.allergy?.isAllergic ? 'true' : 'false'}
                 onChange={(value) => {
                   const isAllergic = value === 'true';
-                  setHealthInfo({
+                  setInfoData('health', {
                     ...healthInfo,
                     allergy: {
                       isAllergic,
@@ -162,7 +154,7 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
                       className="min-h-[100px] w-full rounded border p-2"
                       value={healthInfo?.allergy?.allergyNote || ''}
                       onChange={(e) =>
-                        setHealthInfo({
+                        setInfoData('health', {
                           ...healthInfo,
                           allergy: {
                             isAllergic: true,
@@ -184,7 +176,7 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
             label: '약물 부작용 여부',
             value: (
               <ButtonGroup
-                options={medicationSideEffectOptions}
+                options={sideEffectOptions}
                 value={
                   healthInfo?.medicationSideEffect?.isMedicationSideEffect
                     ? 'true'
@@ -192,7 +184,7 @@ export default function HealthInfo({ counselSessionId }: HealthInfoProps) {
                 }
                 onChange={(value) => {
                   const hasSideEffect = value === 'true';
-                  setHealthInfo({
+                  setInfoData('health', {
                     ...healthInfo,
                     medicationSideEffect: {
                       ...healthInfo?.medicationSideEffect,

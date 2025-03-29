@@ -72,6 +72,7 @@ const consentItems: ConsentItem[] = [
       },
     ],
   },
+  /* 
   {
     id: 2,
     title: '개인정보의 제 3자 제공 동의',
@@ -113,6 +114,7 @@ const consentItems: ConsentItem[] = [
       },
     ],
   },
+  */
   {
     id: 3,
     title: '폐의약품 수거에 관한 동의',

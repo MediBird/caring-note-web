@@ -45,11 +45,15 @@ const CardSection = ({ title, items, variant }: CardSectionProps) => {
     <div className={`rounded-t-[4px] ${styles.border} bg-grayscale-3`}>
       <div className={`h-[6px] w-full ${styles.line} rounded-t-[4px]`} />
       <div className="px-5 pb-[1.875rem] pt-[1.375rem]">
-        <h3 className="mb-6 text-lg font-semibold">{title}</h3>
+        <h3 className="mb-6 text-subtitle2 font-bold text-grayscale-90">
+          {title}
+        </h3>
         <div className="space-y-6">
           {items.map((item, index) => (
             <div key={index} className="flex flex-col space-y-2">
-              <span className="text-body1 font-bold">{item.label}</span>
+              <span className="text-grascale-90 text-body1 font-bold">
+                {item.label}
+              </span>
               {item.subLabel && (
                 <span className="text-body2 font-medium text-grayscale-50">
                   {item.subLabel}

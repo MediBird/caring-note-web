@@ -1,4 +1,10 @@
-import { SmokingDTOSmokingAmountEnum } from '@/api';
+import {
+  CounselCardBaseInformationRes,
+  CounselCardHealthInformationRes,
+  CounselCardIndependentLifeInformationRes,
+  CounselCardLivingInformationRes,
+  SmokingDTOSmokingAmountEnum,
+} from '@/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import CardSection from '@/components/ui/card-section';
@@ -7,6 +13,7 @@ import {
   HistoryPopoverContent,
   HistoryPopoverTrigger,
 } from '@/components/ui/history-popover';
+import { useCounselCardStore } from '@/pages/Survey/hooks/counselCardStore';
 import {
   useCounselCardBaseInfoQuery,
   useCounselCardHealthInfoQuery,
@@ -31,11 +38,33 @@ import {
   WALKING_METHODS_MAP,
 } from '@/utils/constants';
 import { ClockIcon } from 'lucide-react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
+interface ConsultCardData {
+  baseInformation: CounselCardBaseInformationRes | null | undefined;
+  healthInformation: CounselCardHealthInformationRes | null | undefined;
+  independentLifeInformation:
+    | CounselCardIndependentLifeInformationRes
+    | null
+    | undefined;
+  livingInformation: CounselCardLivingInformationRes | null | undefined;
+}
 
 const ConsultCard: React.FC = () => {
   const { counselSessionId } = useParams();
   const navigate = useNavigate();
+  const { setShouldFetch } = useCounselCardStore();
+
+  // 컴포넌트 마운트시 데이터 새로고침 트리거
+  useEffect(() => {
+    if (counselSessionId) {
+      setShouldFetch('base', true);
+      setShouldFetch('health', true);
+      setShouldFetch('independentLife', true);
+      setShouldFetch('living', true);
+    }
+  }, [counselSessionId, setShouldFetch]);
 
   const { data: baseInfoData } = useCounselCardBaseInfoQuery(
     counselSessionId || '',
@@ -49,11 +78,23 @@ const ConsultCard: React.FC = () => {
     counselSessionId || '',
   );
 
-  const consultCardData = {
-    baseInformation: baseInfoData,
-    healthInformation: healthInfoData,
-    independentLifeInformation: independentLifeInfoData,
-    livingInformation: livingInfoData,
+  const consultCardData: ConsultCardData = {
+    baseInformation: baseInfoData as
+      | CounselCardBaseInformationRes
+      | null
+      | undefined,
+    healthInformation: healthInfoData as
+      | CounselCardHealthInformationRes
+      | null
+      | undefined,
+    independentLifeInformation: independentLifeInfoData as
+      | CounselCardIndependentLifeInformationRes
+      | null
+      | undefined,
+    livingInformation: livingInfoData as
+      | CounselCardLivingInformationRes
+      | null
+      | undefined,
   };
 
   return (
@@ -81,20 +122,17 @@ const ConsultCard: React.FC = () => {
             items={[
               {
                 label: '성명',
-                value:
-                  consultCardData?.baseInformation?.baseInfo?.counseleeName,
+                value: baseInfoData?.baseInfo?.counseleeName,
               },
               {
                 label: '생년월일',
-                value: consultCardData?.baseInformation?.baseInfo?.birthDate,
+                value: baseInfoData?.baseInfo?.birthDate,
               },
               {
                 label: '의료보장형태',
-                value: consultCardData?.baseInformation?.baseInfo
-                  ?.healthInsuranceType
+                value: baseInfoData?.baseInfo?.healthInsuranceType
                   ? HEALTH_INSURANCE_TYPE_MAP[
-                      consultCardData.baseInformation.baseInfo
-                        .healthInsuranceType
+                      baseInfoData.baseInfo.healthInsuranceType
                     ]
                   : '',
               },
@@ -107,10 +145,9 @@ const ConsultCard: React.FC = () => {
               {
                 label: '상담 목적',
                 value: Array.isArray(
-                  consultCardData?.baseInformation?.counselPurposeAndNote
-                    ?.counselPurpose,
+                  baseInfoData?.counselPurposeAndNote?.counselPurpose,
                 )
-                  ? consultCardData?.baseInformation?.counselPurposeAndNote.counselPurpose
+                  ? baseInfoData?.counselPurposeAndNote.counselPurpose
                       .map((purpose) => COUNSEL_PURPOSE_MAP[purpose])
                       .join(', ')
                   : '',
@@ -118,14 +155,12 @@ const ConsultCard: React.FC = () => {
               {
                 label: '특이사항',
                 value:
-                  consultCardData?.baseInformation?.counselPurposeAndNote
-                    ?.significantNote || '',
+                  baseInfoData?.counselPurposeAndNote?.significantNote || '',
               },
               {
                 label: '의약품',
                 value:
-                  consultCardData?.baseInformation?.counselPurposeAndNote
-                    ?.medicationNote || '',
+                  baseInfoData?.counselPurposeAndNote?.medicationNote || '',
               },
             ]}
           />

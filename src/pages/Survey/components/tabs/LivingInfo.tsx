@@ -19,15 +19,10 @@ import {
   SMOKING_OPTIONS,
 } from '@/utils/constants';
 import { useCounselCardStore } from '../../hooks/counselCardStore';
-import { useCounselCardLivingInfoQuery } from '../../hooks/useCounselCardQuery';
 
-interface LivingInfoProps {
-  counselSessionId: string;
-}
-
-export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
-  const { livingInfo, setLivingInfo } = useCounselCardStore();
-  const { isLoading } = useCounselCardLivingInfoQuery(counselSessionId);
+export default function LivingInfo() {
+  const { infoData, setInfoData } = useCounselCardStore();
+  const livingInfo = infoData.living;
 
   const handleUpdateLivingInfo = (
     field: string,
@@ -39,15 +34,11 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
       [key]: Array.isArray(value) ? new Set(value) : value,
     };
 
-    setLivingInfo({
+    setInfoData('living', {
       ...livingInfo,
       [section]: updatedSection,
     } as CounselCardLivingInformationRes);
   };
-
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
 
   const smokingAmountOptions = SMOKING_OPTIONS;
   const smokingPackOptions = SMOKING_AMOUNT_OPTIONS;
@@ -56,7 +47,7 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
 
   const houseMateOptions = [
     { label: '독거', value: 'true' },
-    { label: '동거인 있음', value: 'false' },
+    { label: '동거', value: 'false' },
   ];
 
   const isSmoker =
@@ -65,7 +56,7 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
 
   const isDrinker =
     livingInfo?.drinking?.drinkingAmount !== undefined &&
-    livingInfo?.drinking?.drinkingAmount !== 'NONE';
+    livingInfo?.drinking?.drinkingAmount !== DrinkingDTODrinkingAmountEnum.None;
 
   return (
     <Card className="flex w-full flex-col gap-5">
@@ -100,61 +91,21 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
           ...(isSmoker
             ? [
                 {
-                  label: '흡연 기간',
+                  label: '총 흡연기간',
                   value: (
                     <div className="flex items-center gap-2">
                       <Input
-                        type="number"
-                        className="w-20"
-                        placeholder="년"
-                        min="0"
-                        max="100"
-                        value={
-                          livingInfo?.smoking?.smokingPeriodNote?.split(
-                            '년',
-                          )[0] || ''
-                        }
-                        onChange={(e) => {
-                          const years = e.target.value;
-                          const months =
-                            livingInfo?.smoking?.smokingPeriodNote
-                              ?.split('년')[1]
-                              ?.split('개월')[0]
-                              ?.trim() || '';
-                          const periodNote = `${years}년 ${months}개월`;
+                        type="text"
+                        className="w-[11rem]"
+                        placeholder="00년 00개월"
+                        value={livingInfo?.smoking?.smokingPeriodNote || ''}
+                        onChange={(e) =>
                           handleUpdateLivingInfo(
                             'smoking.smokingPeriodNote',
-                            periodNote,
-                          );
-                        }}
-                      />
-                      <span>년</span>
-                      <Input
-                        type="number"
-                        className="w-20"
-                        placeholder="개월"
-                        min="0"
-                        max="11"
-                        value={
-                          livingInfo?.smoking?.smokingPeriodNote
-                            ?.split('년')[1]
-                            ?.split('개월')[0]
-                            ?.trim() || ''
+                            e.target.value,
+                          )
                         }
-                        onChange={(e) => {
-                          const years =
-                            livingInfo?.smoking?.smokingPeriodNote?.split(
-                              '년',
-                            )[0] || '';
-                          const months = e.target.value;
-                          const periodNote = `${years}년 ${months}개월`;
-                          handleUpdateLivingInfo(
-                            'smoking.smokingPeriodNote',
-                            periodNote,
-                          );
-                        }}
                       />
-                      <span>개월</span>
                     </div>
                   ),
                 },
@@ -272,10 +223,10 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
             ),
           },
           {
-            label: '운동 특이사항',
+            label: '규칙적으로 하는 운동 종류',
             value: (
-              <Textarea
-                placeholder="운동 특이사항을 작성해주세요."
+              <Input
+                placeholder="규칙적으로 실행하는 모든 운동 종류를 작성해주세요."
                 className="w-full rounded border p-2"
                 value={livingInfo?.exercise?.exerciseNote || ''}
                 onChange={(e) =>
@@ -309,22 +260,28 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
               />
             ),
           },
-          {
-            label: '동거인 구성원',
-            value: (
-              <Textarea
-                placeholder="구성원과의 관계를 작성해주세요."
-                className="w-full rounded border p-2"
-                value={livingInfo?.medicationManagement?.houseMateNote || ''}
-                onChange={(e) =>
-                  handleUpdateLivingInfo(
-                    'medicationManagement.houseMateNote',
-                    e.target.value,
-                  )
-                }
-              />
-            ),
-          },
+          ...(livingInfo?.medicationManagement?.isAlone === false
+            ? [
+                {
+                  label: '동거인 구성원',
+                  value: (
+                    <Textarea
+                      placeholder="구성원과의 관계를 작성해주세요."
+                      className="w-full rounded border p-2"
+                      value={
+                        livingInfo?.medicationManagement?.houseMateNote || ''
+                      }
+                      onChange={(e) =>
+                        handleUpdateLivingInfo(
+                          'medicationManagement.houseMateNote',
+                          e.target.value,
+                        )
+                      }
+                    />
+                  ),
+                },
+              ]
+            : []),
           {
             label: '복용자 및 투약 보조자',
             subLabel: '여러 개를 동시에 선택 할 수 있어요.',
@@ -350,7 +307,7 @@ export default function LivingInfo({ counselSessionId }: LivingInfoProps) {
                     currentAssistants.push(enumValue);
                   }
 
-                  setLivingInfo({
+                  setInfoData('living', {
                     ...livingInfo,
                     medicationManagement: {
                       ...livingInfo?.medicationManagement,

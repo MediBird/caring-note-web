@@ -19,6 +19,7 @@ import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationR
 import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
 import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
+import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAllTabsData';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { DISEASE_MAP } from '@/utils/constants';
@@ -33,7 +34,6 @@ import MedicineConsult from './components/tabs/MedicineConsult';
 import MedicineMemo from './components/tabs/MedicineMemo';
 import TemporarySaveDialog from './components/TemporarySaveDialog';
 import { useLeaveOutDialogStore } from './hooks/store/useLeaveOutDialogStore';
-import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAllTabsData';
 
 interface InfoItemProps {
   icon: string;
