@@ -74,6 +74,23 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
     setIsWasteListInitialized,
   } = useWasteMedicationListStore();
 
+  // 의약물 기록 init 및 업데이트를 하나의 useEffect로 통합
+  useEffect(() => {
+    if (medicationRecordListData) {
+      setMedicationRecordList(medicationRecordListData);
+
+      // 아직 초기화되지 않았다면 초기화 완료로 표시
+      if (!isMedicineMemoInitialized) {
+        setMedicineMemoInitialized(true);
+      }
+    }
+  }, [
+    medicationRecordListData,
+    setMedicationRecordList,
+    setMedicineMemoInitialized,
+    isMedicineMemoInitialized,
+  ]);
+
   // 폐의약품 설문 init
   useEffect(() => {
     if (isDisposalInitialized) return;
@@ -134,21 +151,6 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
     setIsWasteListInitialized,
     isWasteListInitialized,
     counselSessionId,
-  ]);
-
-  //의약물 기록 init
-  useEffect(() => {
-    if (isMedicineMemoInitialized) return;
-
-    if (medicationRecordListData) {
-      setMedicationRecordList(medicationRecordListData ?? []);
-      setMedicineMemoInitialized(true);
-    }
-  }, [
-    medicationRecordListData,
-    setMedicationRecordList,
-    setMedicineMemoInitialized,
-    isMedicineMemoInitialized,
   ]);
 
   // 중재기록 init

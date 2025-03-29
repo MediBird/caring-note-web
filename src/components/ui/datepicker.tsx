@@ -65,8 +65,25 @@ export function DatePickerComponent({
 
   const handleDateSelect = useCallback(
     (newDate: Date | undefined) => {
-      setDate(newDate);
-      handleClicked?.(newDate);
+      if (newDate) {
+        const adjustedDate = new Date(
+          Date.UTC(
+            newDate.getFullYear(),
+            newDate.getMonth(),
+            newDate.getDate(),
+            0,
+            0,
+            0,
+            0,
+          ),
+        );
+
+        setDate(adjustedDate);
+        handleClicked?.(adjustedDate);
+      } else {
+        setDate(newDate);
+        handleClicked?.(newDate);
+      }
       setIsOpen(false);
       setIsUnknown(false);
     },
