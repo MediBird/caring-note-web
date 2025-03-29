@@ -179,19 +179,19 @@ export const DISEASE_MAP: Record<
 
 export const MEAL_PATTERN_OPTIONS: ButtonGroupOption[] = [
   {
-    label: '하루 1회 규칙적',
+    label: '하루 한 끼 규칙적 식사',
     value: NutritionDTOMealPatternEnum.OneRegularMeal,
   },
   {
-    label: '하루 2회 규칙적',
+    label: '하루 두 끼 규칙적 식사',
     value: NutritionDTOMealPatternEnum.TwoRegularMeals,
   },
   {
-    label: '하루 3회 규칙적',
+    label: '하루 세 끼 규칙적 식사',
     value: NutritionDTOMealPatternEnum.ThreeRegularMeals,
   },
   {
-    label: '불규칙적',
+    label: '불규칙한 식사',
     value: NutritionDTOMealPatternEnum.IrregularMeals,
   },
 ] as const;
