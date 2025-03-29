@@ -22,7 +22,7 @@ import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAll
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { DISEASE_MAP } from '@/utils/constants';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import CheckLeaveOutDialog from './components/CheckLeaveOutDialog';
 import FinishConsultDialog from './components/FinishConsultDialog';
@@ -82,7 +82,6 @@ const ConsultHeader = ({
   saveConsult,
   completeConsult,
   hasPreviousConsult,
-  contentWidth,
 }: {
   counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
   consultStatus: string;
@@ -93,37 +92,34 @@ const ConsultHeader = ({
   recordingStatus: RecordingStatus;
   completeConsult: () => void;
   hasPreviousConsult: boolean;
-  contentWidth: number;
 }) => {
   return (
-    <div
-      className="fixed top-0 z-10 h-fit w-full bg-white"
-      style={{
-        width: contentWidth,
-      }}>
-      <div className="h-fit bg-white">
-        <div className="border-grayscale-05 border-b pb-1 pt-12">
-          <div className="mx-auto flex w-full max-w-layout justify-between px-layout [&>*]:max-w-content">
-            <div>
-              <div className="text-h3 font-bold">
-                {counseleeInfo?.name}
-                <span className="text-subtitle2 font-bold"> 님</span>
+    <div className="flex-none">
+      <div className="z-10 w-full bg-white">
+        <div className="h-fit bg-white">
+          <div className="border-grayscale-05 border-b pb-1 pt-12">
+            <div className="mx-auto flex w-full max-w-layout justify-between px-layout [&>*]:max-w-content">
+              <div>
+                <div className="text-h3 font-bold">
+                  {counseleeInfo?.name}
+                  <span className="text-subtitle2 font-bold"> 님</span>
+                </div>
+                <div className="mt-3 flex items-center pl-[7px] text-body1 font-medium text-grayscale-60">
+                  <InfoItem icon="📍" content={consultStatus} />
+                  <InfoItem icon="🎂" content={age} />
+                  <InfoItem icon="💊" content={diseases} showDivider={false} />
+                </div>
               </div>
-              <div className="mt-3 flex items-center pl-[7px] text-body1 font-medium text-grayscale-60">
-                <InfoItem icon="📍" content={consultStatus} />
-                <InfoItem icon="🎂" content={age} />
-                <InfoItem icon="💊" content={diseases} showDivider={false} />
-              </div>
+              <HeaderButtons
+                onSave={saveConsult}
+                onComplete={completeConsult}
+                name={counseleeInfo?.name}
+                sessionStatus={sessionStatus}
+              />
             </div>
-            <HeaderButtons
-              onSave={saveConsult}
-              onComplete={completeConsult}
-              name={counseleeInfo?.name}
-              sessionStatus={sessionStatus}
-            />
           </div>
+          <ConsultTabs hasPreviousConsult={hasPreviousConsult} />
         </div>
-        <ConsultTabs hasPreviousConsult={hasPreviousConsult} />
       </div>
     </div>
   );
@@ -152,7 +148,6 @@ export function Index() {
 
   const { isLoading: isInitializeAllTabsDataLoading } =
     useInitializeAllTabsData(counselSessionId ?? '');
-  const [contentWidth, setContentWidth] = useState(0);
 
   const { data: counseleeInfo, isLoading } = useSelectCounseleeInfo(
     counselSessionId ?? '',
@@ -346,7 +341,7 @@ export function Index() {
   return (
     <>
       <Tabs
-        className="h-full w-full"
+        className="flex h-screen w-full flex-col"
         value={activeTab}
         onValueChange={(value) => {
           setActiveTab(value as ConsultTab);
@@ -363,15 +358,11 @@ export function Index() {
           recordingStatus={recordingStatus}
           completeConsult={completeConsult}
           hasPreviousConsult={hasPreviousConsult}
-          contentWidth={contentWidth}
         />
         {isInitializeAllTabsDataLoading ? (
           <Spinner />
         ) : (
-          <TabContents
-            hasPreviousConsult={hasPreviousConsult}
-            onWidthChange={setContentWidth}
-          />
+          <TabContents hasPreviousConsult={hasPreviousConsult} />
         )}
       </Tabs>
 
