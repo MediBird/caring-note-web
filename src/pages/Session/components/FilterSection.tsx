@@ -113,7 +113,7 @@ export const FilterSection = () => {
             selectedValues={selectedCounselors}
           />
           <TableFilterDate
-            title="날짜 필터"
+            title="상담 일자"
             onSelectionChange={handleDateFilterChange}
             selectedDates={selectedDatesAsDateObjects}
             enabledDates={activeDates}

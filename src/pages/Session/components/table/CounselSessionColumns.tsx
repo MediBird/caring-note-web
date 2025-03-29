@@ -12,6 +12,13 @@ import {
 import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
+import { InfoIcon } from '../../../../components/icon/InfoIcon';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../../../../components/ui/tooltip';
 import { EditReservationDialog } from '../dialog/EditReservationDialog';
 
 export const createScheduleColumns = ({
@@ -42,7 +49,19 @@ export const createScheduleColumns = ({
   {
     id: 'counselorName',
     accessorKey: 'counselorName',
-    header: '담당 약사',
+    header: (
+      <div className="flex items-center gap-1">
+        <span>상담 약사</span>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <InfoIcon className="h-5 w-5 text-grayscale-50" />
+            </TooltipTrigger>
+            <TooltipContent>담당 약사입니다.</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+    ),
     size: 150,
     cell: ({ row }) => {
       const counselorName = row.original.counselorName;
@@ -72,7 +91,7 @@ export const createScheduleColumns = ({
   {
     id: 'status',
     accessorKey: 'status',
-    header: '상담 상태',
+    header: '상담 진행',
     size: 150,
     cell: ({ row }) => {
       const status = row.original.status;

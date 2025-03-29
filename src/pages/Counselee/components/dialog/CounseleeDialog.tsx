@@ -264,7 +264,7 @@ export const CounseleeDialog = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 items-end gap-4">
             <div className="space-y-2">
               <Label>생활지원사</Label>
               <FormInput

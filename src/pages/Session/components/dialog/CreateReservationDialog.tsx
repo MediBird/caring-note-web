@@ -1,4 +1,5 @@
 import counselList from '@/assets/icon/20/counsellist.filled.blue.svg';
+import ChevronDownIcon from '@/assets/icon/24/arrowdropdown.black.svg?react';
 import { Button } from '@/components/ui/button';
 import DatePickerComponent from '@/components/ui/datepicker';
 import {
@@ -12,14 +13,13 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import TimepickerComponent from '@/components/ui/time-picker';
+import { cn } from '@/lib/utils';
+import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 import { AlertCircle, XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCreateCounselReservation } from '../../hooks/query/useCounselSessionQuery';
 import { combineToFormattedDateTime } from '../../utils/dateTimeUtils';
 import CounseleeSearchInput from './CounseleeSearchInput';
-import { cn } from '@/lib/utils';
-import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
-import ChevronDownIcon from '@/assets/icon/24/arrowdropdown.black.svg?react';
 
 const DEFAULT_SESSION_TIME = '10:00';
 const DEFAULT_SESSION_DATE = formatDateToHyphen(new Date());
@@ -139,12 +139,8 @@ export const CreateReservationDialog = () => {
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="secondary" size="lg">
-          <img
-            src={counselList}
-            alt="상담 일정 등록"
-            className="mr-2 h-5 w-5"
-          />
-          상담 일정 등록
+          <img src={counselList} alt="일정 등록" className="h-5 w-5" />
+          일정 등록
         </Button>
       </DialogTrigger>
       <DialogContent

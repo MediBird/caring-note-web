@@ -8,11 +8,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import CardSection from '@/components/ui/card-section';
-import {
-  HistoryPopover,
-  HistoryPopoverContent,
-  HistoryPopoverTrigger,
-} from '@/components/ui/history-popover';
 import { useCounselCardStore } from '@/pages/Survey/hooks/counselCardStore';
 import {
   useCounselCardBaseInfoQuery,
@@ -37,7 +32,6 @@ import {
   WALKING_EQUIPMENTS_MAP,
   WALKING_METHODS_MAP,
 } from '@/utils/constants';
-import { ClockIcon } from 'lucide-react';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -168,7 +162,7 @@ const ConsultCard: React.FC = () => {
             title={
               <div className="flex items-center gap-2">
                 흡연
-                <HistoryPopover>
+                {/* <HistoryPopover>
                   <HistoryPopoverTrigger>
                     <ClockIcon className="h-4 w-4" />
                   </HistoryPopoverTrigger>
@@ -204,7 +198,7 @@ const ConsultCard: React.FC = () => {
                       },
                     ]}
                   />
-                </HistoryPopover>
+                </HistoryPopover> */}
               </div>
             }
             variant="secondary"

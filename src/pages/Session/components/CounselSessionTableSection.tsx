@@ -60,7 +60,7 @@ export function CounselSessionTableSection() {
   }
 
   return (
-    <div className="flex w-full flex-col gap-4">
+    <div className="flex w-full flex-col gap-6">
       <CounselSessionTable
         data={sessionData}
         onDelete={handleDelete}
