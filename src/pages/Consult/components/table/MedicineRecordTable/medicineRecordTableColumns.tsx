@@ -11,6 +11,7 @@ import {
 import { MedicationRecordListDTO } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordList';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
+import { SelectMedicationRecordHistResUsageStatusCodeEnum } from '../../../../../api/models/select-medication-record-hist-res';
 
 interface PrescriptionMedicineTableColumnsProps {
   onDelete: (id: string) => void;
@@ -42,7 +43,10 @@ export const createColumns = ({
 
       return (
         <SelectCell
-          initialValue={selectedOption?.value ?? ''}
+          initialValue={
+            selectedOption?.value ??
+            SelectMedicationRecordHistResUsageStatusCodeEnum.Regular
+          }
           options={USAGE_STATUS_CODE_OPTIONS}
           placeholder="사용 상태를 선택하세요"
           onValueChange={(value) => {
