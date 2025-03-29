@@ -31,6 +31,7 @@ import TemporarySaveDialog from './components/TemporarySaveDialog';
 import { useLeaveOutDialogStore } from './hooks/store/useLeaveOutDialogStore';
 import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAllTabsData';
 import TabContents from '@/pages/Consult/components/TabContents';
+import { usePrevMedicationCounsel } from '@/pages/Consult/hooks/query/usePrevMedicationCounsel';
 
 interface InfoItemProps {
   icon: string;
@@ -162,6 +163,8 @@ export function Index() {
     counselSessionId ?? '',
   );
 
+  const { prevMedicationCounsel } = usePrevMedicationCounsel(counselSessionId);
+
   const previousPath = useRouteStore((state) => state.previousPath);
   const setPreviousPath = useRouteStore((state) => state.setPreviousPath);
 
@@ -219,16 +222,8 @@ export function Index() {
   });
 
   const hasPreviousConsult = useMemo(() => {
-    if (!counseleeInfo) return false;
-
-    if (
-      counseleeInfo?.counselCount === undefined ||
-      counseleeInfo?.counselCount === 0
-    )
-      return false;
-
-    return counseleeInfo.counselCount > 0;
-  }, [counseleeInfo]);
+    return !!prevMedicationCounsel;
+  }, [prevMedicationCounsel]);
 
   useEffect(() => {
     if (!hasPreviousConsult) {
