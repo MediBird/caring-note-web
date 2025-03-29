@@ -118,22 +118,30 @@ export const createScheduleColumns = ({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="flex w-full items-center justify-center">
-              <button className="content-center rounded-[4px] p-1 text-center text-grayscale-60 hover:bg-grayscale-5">
+              <button
+                className="content-center rounded-[4px] p-1 text-center text-grayscale-60 hover:bg-grayscale-5"
+                onClick={(e) => e.stopPropagation()}>
                 <Ellipsis className="h-4 w-4" />
               </button>
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
             <EditReservationDialog
               session={row.original}
               triggerComponent={
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onClick={(e) => e.stopPropagation()}>
                   수정하기
                 </DropdownMenuItem>
               }
             />
             <DropdownMenuItem
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 onDelete(row.original.counselSessionId as string);
               }}>
               삭제하기
