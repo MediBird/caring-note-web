@@ -124,6 +124,72 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
     return highlights;
   }, [editorState]);
 
+  const handleKeyCommand = useCallback(
+    (command: string, editorState: EditorState) => {
+      if (command === 'cut') {
+        try {
+          const selection = editorState.getSelection();
+          if (!selection.isCollapsed()) {
+            const content = editorState.getCurrentContent();
+            const selectedText = content
+              .getBlockForKey(selection.getStartKey())
+              .getText()
+              .slice(selection.getStartOffset(), selection.getEndOffset());
+
+            navigator.clipboard.writeText(selectedText);
+
+            const newContent = Modifier.replaceText(content, selection, '');
+
+            const newEditorState = EditorState.push(
+              editorState,
+              newContent,
+              'remove-range',
+            );
+
+            setEditorState(newEditorState);
+            setCounselRecord(newContent.getPlainText());
+            return 'handled';
+          }
+        } catch (error) {
+          console.error('Cut operation failed:', error);
+        }
+      }
+      return 'not-handled';
+    },
+    [setEditorState, setCounselRecord],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'x' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+
+        const selection = editorState.getSelection();
+        if (!selection.isCollapsed()) {
+          const content = editorState.getCurrentContent();
+          const selectedText = content
+            .getBlockForKey(selection.getStartKey())
+            .getText()
+            .slice(selection.getStartOffset(), selection.getEndOffset());
+
+          navigator.clipboard.writeText(selectedText);
+
+          const newContent = Modifier.replaceText(content, selection, '');
+
+          const newEditorState = EditorState.push(
+            editorState,
+            newContent,
+            'remove-range',
+          );
+
+          setEditorState(newEditorState);
+          setCounselRecord(newContent.getPlainText());
+        }
+      }
+    },
+    [editorState, setEditorState, setCounselRecord],
+  );
+
   useEffect(() => {
     setCounselRecordHighlights(getHighlightedText() || []);
   }, [setCounselRecordHighlights, getHighlightedText]);
@@ -131,7 +197,7 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
   return (
     <div
       className={cn(
-        'flex w-full flex-col rounded-[4px] border border-grayscale-30 bg-white p-0',
+        'flex max-h-[560px] w-full flex-col rounded-[4px] border border-grayscale-30 bg-white p-0',
         className,
       )}>
       <div
@@ -139,7 +205,8 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
           'flex-1 overflow-y-auto border-b border-grayscale-30 p-2',
           inputClassName,
         )}
-        onClick={() => getHighlightedText()}>
+        onClick={() => getHighlightedText()}
+        onKeyDown={handleKeyDown}>
         <Editor
           editorState={editorState}
           placeholder={`실시간으로 상담 내용을 기록하세요.
@@ -149,6 +216,7 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
             setCounselRecord(editorState.getCurrentContent().getPlainText());
           }}
           customStyleMap={styleMap}
+          handleKeyCommand={handleKeyCommand}
         />
       </div>
       <div className="flex h-[48px] items-center">

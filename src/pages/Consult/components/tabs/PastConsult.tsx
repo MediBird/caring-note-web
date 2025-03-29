@@ -2,14 +2,24 @@ import PastConsultContainer from '@/components/consult/PastConsultContainer';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import PrevCounselTable from '@/pages/Consult/components/table/PrevCounselTable';
 import { usePrevMedicationCounsel } from '@/pages/Consult/hooks/query/usePrevMedicationCounsel';
-
+import { PrevCounselSessionListDTO } from '@/pages/Consult/hooks/query/usePrevCounselSessionList';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-
+import { useParams, useNavigate } from 'react-router-dom';
 const PastConsult: React.FC = () => {
+  const navigate = useNavigate();
   const { counselSessionId } = useParams();
 
-  const { prevMedicationCounsel } = usePrevMedicationCounsel(counselSessionId);
+  const { prevMedicationCounsel } = usePrevMedicationCounsel(
+    counselSessionId ?? '',
+  );
+
+  const handleClickPrevCounselSession = (
+    rowData: PrevCounselSessionListDTO,
+  ) => {
+    const prevCounselSessionId = rowData.counselSessionId ?? '';
+
+    navigate(`/consult/${prevCounselSessionId}`);
+  };
 
   return (
     <Card>
@@ -48,7 +58,9 @@ const PastConsult: React.FC = () => {
         </p>
       </CardHeader>
       <div className="h-auto">
-        <PrevCounselTable />
+        <PrevCounselTable
+          handleClickPrevCounselSession={handleClickPrevCounselSession}
+        />
       </div>
     </Card>
   );
