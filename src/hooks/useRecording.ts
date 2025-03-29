@@ -9,8 +9,6 @@ import {
 import { format } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 
-const now = format(new Date(), 'yyyyMMdd_HHmmss');
-
 // helper functions
 const updateRecordingStatus = (newStatus: RecordingStatus) => {
   useRecordingStore.setState({ recordingStatus: newStatus });
@@ -40,6 +38,7 @@ const addOneSecond = () => {
 };
 
 const downloadRecording = (audioFile: File) => {
+  const now = format(new Date(), 'yyyyMMdd_HHmmss');
   const audioUrl = URL.createObjectURL(audioFile);
   const downloadLink = document.createElement('a');
   downloadLink.href = audioUrl;
@@ -139,7 +138,7 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     }
   };
 
-  const stopRecording = async () => {
+  const stopRecording = () => {
     if (!mediaRecorderRef.current) return;
 
     mediaRecorderRef.current.stop();
@@ -152,6 +151,8 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
   }, []);
 
   const submitRecording = async () => {
+    const now = format(new Date(), 'yyyyMMdd_HHmmss');
+
     updateRecordingStatus(RecordingStatus.STTLoading);
 
     const audioBlob = new Blob(audioChunksRef.current, {
@@ -199,6 +200,8 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
 
   const submitRecordingForLeavingOut = async () => {
     if (!mediaRecorderRef.current) return;
+
+    const now = format(new Date(), 'yyyyMMdd_HHmmss');
 
     mediaRecorderRef.current.stop();
     await new Promise((resolve) => setTimeout(resolve, 1000));
