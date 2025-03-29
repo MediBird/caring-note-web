@@ -29,7 +29,6 @@ import FinishConsultDialog from './components/FinishConsultDialog';
 import RecordingDialog from './components/recording/RecordingDialog';
 import TemporarySaveDialog from './components/TemporarySaveDialog';
 import { useLeaveOutDialogStore } from './hooks/store/useLeaveOutDialogStore';
-import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAllTabsData';
 import TabContents from '@/pages/Consult/components/TabContents';
 import { usePrevMedicationCounsel } from '@/pages/Consult/hooks/query/usePrevMedicationCounsel';
 
