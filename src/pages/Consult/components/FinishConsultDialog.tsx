@@ -30,6 +30,10 @@ const FinishConsultDialog = ({
   const [isCompleteConsultDialogOpen, setIsCompleteConsultDialogOpen] =
     useState(false);
   const navigate = useNavigate();
+  const isRecording =
+    recordingStatus !== RecordingStatus.Ready &&
+    recordingStatus !== RecordingStatus.STTCompleted &&
+    recordingStatus !== RecordingStatus.AICompleted;
 
   return (
     <>
@@ -43,15 +47,13 @@ const FinishConsultDialog = ({
           <DialogHeader className="mt-4 h-[80px] items-center justify-center">
             <DialogTitle>
               <p className="center text-center text-h3 font-bold">
-                {recordingStatus === RecordingStatus.Ready ||
-                recordingStatus === RecordingStatus.STTCompleted ||
-                recordingStatus === RecordingStatus.AICompleted ? (
-                  <>{name}님, 상담을 완료하시겠어요?</>
-                ) : (
+                {isRecording ? (
                   <>
-                    녹음을 저장하지 않은 채로 <br />
+                    녹음을 저장하고 <br />
                     상담을 완료하시겠어요?
                   </>
+                ) : (
+                  <>{name}님, 상담을 완료하시겠어요?</>
                 )}
               </p>
             </DialogTitle>
@@ -64,18 +66,14 @@ const FinishConsultDialog = ({
                 alt="finishConsult"
               />
               <p className="text-center text-body1 font-medium text-grayscale-100">
-                {recordingStatus === RecordingStatus.Ready ||
-                recordingStatus === RecordingStatus.STTCompleted ||
-                recordingStatus === RecordingStatus.AICompleted ? (
+                {isRecording ? (
                   <>
+                    이대로 상담을 중지하고 녹음중인 내용을 저장합니다. <br />
                     상담 완료 후, 상담 내역에서 기록하신 내용을 확인할 수
                     있습니다.
                   </>
                 ) : (
                   <>
-                    이대로 상담을 완료하면 녹음 중인 내용이 다 사라져요. <br />
-                    녹음 저장을 원하시면 녹음 저장을 마저 완료해주세요. <br />
-                    <br />
                     상담 완료 후, 상담 내역에서 기록하신 내용을 확인할 수
                     있습니다.
                   </>

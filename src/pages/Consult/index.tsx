@@ -282,10 +282,19 @@ export function Index() {
   };
 
   const completeConsult = async () => {
+    const isRecording =
+      recordingStatus !== RecordingStatus.Ready &&
+      recordingStatus !== RecordingStatus.STTCompleted &&
+      recordingStatus !== RecordingStatus.AICompleted;
+
     await saveConsult();
 
     if (counselSessionInfo?.status !== 'COMPLETED') {
       updateCounselSessionStatus('COMPLETED');
+    }
+
+    if (isRecording) {
+      submitRecordingForLeavingOut();
     }
   };
 
