@@ -1,7 +1,7 @@
 ---
 description: 
-globs: 
-alwaysApply: true
+globs: *.tsx,*.ts
+alwaysApply: false
 ---
 # Caring Note Web 프로젝트 Cursor 규칙
 
