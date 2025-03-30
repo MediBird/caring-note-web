@@ -29,7 +29,7 @@ import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { ROLE_TYPE_MAP } from '@/utils/constants';
 import { useKeycloak } from '@react-keycloak/web';
 import { useLayoutEffect, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const cleanName = (name?: string): string => {
   if (!name) return '';
@@ -47,6 +47,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
   );
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { toggleSidebar, open, setOpen } = useSidebar();
 
@@ -144,6 +145,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
     action?: null | (() => void),
   ) => {
     if (action) action();
+
     if (route) {
       const isRecording =
         recordingStatus !== RecordingStatus.Ready &&
@@ -154,7 +156,10 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         counselSessionInfo?.status ===
         SelectCounselSessionResStatusEnum.InProgress;
 
-      if (isRecording || isCounselSessionInProgress) {
+      if (
+        isRecording ||
+        (isCounselSessionInProgress && location.pathname.includes('consult'))
+      ) {
         openDialog();
         setOnConfirm(() => {
           navigate(route);

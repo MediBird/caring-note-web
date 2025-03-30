@@ -2,15 +2,38 @@ import PastConsultContainer from '@/components/consult/PastConsultContainer';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import PrevCounselTable from '@/pages/Consult/components/table/PrevCounselTable';
 import { usePrevMedicationCounsel } from '@/pages/Consult/hooks/query/usePrevMedicationCounsel';
-import { PrevCounselSessionListDTO } from '@/pages/Consult/hooks/query/usePrevCounselSessionList';
-import React from 'react';
+import {
+  PrevCounselSessionListDTO,
+  usePrevCounselSessionList,
+} from '@/pages/Consult/hooks/query/usePrevCounselSessionList';
+import React, { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useGetAiSummaryQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetAiSummaryQuery';
+import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
+import ReactMarkdown from 'react-markdown';
 const PastConsult: React.FC = () => {
   const navigate = useNavigate();
+
   const { counselSessionId } = useParams();
 
   const { prevMedicationCounsel } = usePrevMedicationCounsel(
     counselSessionId ?? '',
+  );
+  const { prevCounselSessionList } = usePrevCounselSessionList(
+    counselSessionId ?? '',
+  );
+
+  const prevCounselSessionId = useMemo(() => {
+    if (prevCounselSessionList.length > 0) {
+      return prevCounselSessionList[0]?.counselSessionId;
+    }
+
+    return '';
+  }, [prevCounselSessionList]);
+
+  const { data: aiSummary, isSuccess } = useGetAiSummaryQuery(
+    prevCounselSessionId,
+    RecordingStatus.AICompleted,
   );
 
   const handleClickPrevCounselSession = (
@@ -43,11 +66,14 @@ const PastConsult: React.FC = () => {
           </ul>
         </PastConsultContainer>
 
-        <PastConsultContainer title="상담노트 요약" variant="secondary">
-          <h2 className="flex items-center text-subtitle2 font-bold text-secondary-70"></h2>
-          <p className="mt-4 whitespace-pre-wrap">
-            {prevMedicationCounsel?.counselNoteSummary}
-          </p>
+        <PastConsultContainer title="AI 요약" variant="secondary">
+          <h2 className="flex items-center py-3 text-subtitle2 font-bold text-secondary-70"></h2>
+
+          {isSuccess && (
+            <ReactMarkdown className={'prose'}>
+              {aiSummary?.analysedText}
+            </ReactMarkdown>
+          )}
         </PastConsultContainer>
       </div>
 
