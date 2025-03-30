@@ -1,7 +1,4 @@
-import {
-  CounselCardBaseInformationResCardRecordStatusEnum,
-  CounseleeControllerApi,
-} from '@/api';
+import { CounselCardBaseInformationResCardRecordStatusEnum } from '@/api';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -22,8 +19,6 @@ import {
   useSaveCounselCardDraft,
 } from './hooks/useCounselCardQuery';
 
-const counseleeControllerApi = new CounseleeControllerApi();
-
 const tabItems = [
   { id: 'basicInfo', name: '기본 정보', component: BasicInfo },
   { id: 'healthInfo', name: '건강 정보', component: HealthInfo },
@@ -32,15 +27,12 @@ const tabItems = [
     id: 'independentLiving',
     name: '자립생활 역량',
     component: IndependentLivingAssessment,
-    showOnlyForDisabled: true,
   },
 ];
 
 export default function Survey() {
   const { counselSessionId } = useParams<{ counselSessionId: string }>();
   const [activeTab, setActiveTab] = useState(tabItems[0].id);
-  const [isDisability, setIsDisability] = useState<boolean | null>(null);
-  const [filteredTabItems, setFilteredTabItems] = useState(tabItems);
   const [isLoading, setIsLoading] = useState(true);
   const { saveDraft } = useSaveCounselCardDraft();
   const { complete } = useCompleteCounselCard();
@@ -91,44 +83,6 @@ export default function Survey() {
       setCounselSessionId(counselSessionId);
     }
   }, [counselSessionId, setCounselSessionId]);
-
-  useEffect(() => {
-    const fetchCounseleeInfo = async () => {
-      if (baseInfoData?.baseInfo?.counseleeId) {
-        try {
-          const response =
-            await counseleeControllerApi.selectCounseleeBaseInformation(
-              counselSessionId ?? '',
-            );
-
-          if (response.data.data) {
-            setIsDisability(response.data.data.isDisability ?? false);
-          }
-        } catch (error) {
-          console.error('내담자 정보를 불러오는 데 실패했습니다.', error);
-          setIsDisability(false);
-        }
-      }
-    };
-
-    fetchCounseleeInfo();
-  }, [baseInfoData, counselSessionId]);
-
-  useEffect(() => {
-    // 장애 여부에 따라 탭 필터링
-    if (isDisability !== null) {
-      const newFilteredTabs = tabItems.filter(
-        (tab) => !tab.showOnlyForDisabled || isDisability,
-      );
-
-      setFilteredTabItems(newFilteredTabs);
-
-      // 현재 활성화된 탭이 필터링된 후에도 존재하는지 확인
-      if (activeTab === 'independentLiving' && !isDisability) {
-        setActiveTab(newFilteredTabs[0].id);
-      }
-    }
-  }, [isDisability, activeTab]);
 
   const handleSaveDraft = async () => {
     const success = await saveDraft(counselSessionId ?? '');
@@ -196,7 +150,7 @@ export default function Survey() {
         />
         <TabsList className="sticky top-0 z-10 w-full border-b border-grayscale-10 bg-white">
           <div className="mx-auto flex h-full w-full max-w-layout justify-start gap-5 px-layout [&>*]:max-w-content">
-            {filteredTabItems.map((tab) => (
+            {tabItems.map((tab) => (
               <TabsTrigger key={tab.id} value={tab.id}>
                 {tab.name}
               </TabsTrigger>
@@ -206,7 +160,7 @@ export default function Survey() {
       </div>
       <div className="flex-grow overflow-auto">
         <div className="mb-100 w-full px-layout pb-10 pt-10 [&>*]:mx-auto [&>*]:max-w-content">
-          {filteredTabItems.map((tab) => (
+          {tabItems.map((tab) => (
             <TabsContent key={tab.id} value={tab.id}>
               <tab.component />
             </TabsContent>
