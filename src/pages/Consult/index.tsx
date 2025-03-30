@@ -4,7 +4,6 @@ import {
   UpdateStatusInCounselSessionReqStatusEnum,
 } from '@/api';
 import Spinner from '@/components/common/Spinner';
-import { InfoToast } from '@/components/ui/costom-toast';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
@@ -12,10 +11,12 @@ import { useRecording } from '@/hooks/useRecording';
 import { useRouteStore } from '@/hooks/useRouteStore';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
 import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
+import TabContents from '@/pages/Consult/components/TabContents';
 import { useGetIsRecordingPopupQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetIsRecordingPopupQuery';
 import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetRecordingStatusQuery';
 import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
 import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
+import { usePrevCounselSessionList } from '@/pages/Consult/hooks/query/usePrevCounselSessionList';
 import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
 import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAllTabsData';
@@ -24,13 +25,12 @@ import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { DISEASE_MAP } from '@/utils/constants';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import CheckLeaveOutDialog from './components/CheckLeaveOutDialog';
 import FinishConsultDialog from './components/FinishConsultDialog';
 import RecordingDialog from './components/recording/RecordingDialog';
 import TemporarySaveDialog from './components/TemporarySaveDialog';
 import { useLeaveOutDialogStore } from './hooks/store/useLeaveOutDialogStore';
-import TabContents from '@/pages/Consult/components/TabContents';
-import { usePrevCounselSessionList } from '@/pages/Consult/hooks/query/usePrevCounselSessionList';
 
 interface InfoItemProps {
   icon: string;
@@ -197,7 +197,7 @@ export function Index() {
       isSuccessSaveMedicationRecordList &&
       isSuccessWasteMedication
     ) {
-      InfoToast({ message: '작성하신 내용을 성공적으로 저장하였습니다.' });
+      toast.info('작성하신 내용을 성공적으로 저장하였습니다.');
     }
   }, [
     isSuccessSaveMedicationCounsel,
