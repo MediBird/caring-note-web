@@ -221,6 +221,11 @@ export function Index() {
     return prevCounselSessionList?.length > 0;
   }, [prevCounselSessionList]);
 
+  const isRecording =
+    recordingStatus !== RecordingStatus.Ready &&
+    recordingStatus !== RecordingStatus.STTCompleted &&
+    recordingStatus !== RecordingStatus.AICompleted;
+
   useEffect(() => {
     if (!hasPreviousConsult) {
       setActiveTab(ConsultTab.consultCard);
@@ -276,11 +281,6 @@ export function Index() {
   }, [saveWasteMedication, saveMedicationCounsel, saveMedicationRecordList]);
 
   const handleConfirmLeave = () => {
-    const isRecording =
-      recordingStatus !== RecordingStatus.Ready &&
-      recordingStatus !== RecordingStatus.STTCompleted &&
-      recordingStatus !== RecordingStatus.AICompleted;
-
     if (isRecording) {
       submitRecordingForLeavingOut();
     }
@@ -388,6 +388,7 @@ export function Index() {
       {/* 녹음 진행 여부 Dialog */}
       {!isLeaveOutDialogOpen &&
         !isRecordingDialogClosed &&
+        !isRecording &&
         isSuccessGetIsRecordingPopup &&
         isPopup && <RecordingDialog />}
 
