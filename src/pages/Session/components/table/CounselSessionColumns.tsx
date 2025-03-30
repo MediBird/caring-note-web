@@ -20,6 +20,7 @@ import {
   TooltipTrigger,
 } from '../../../../components/ui/tooltip';
 import { EditReservationDialog } from '../dialog/EditReservationDialog';
+import SessionDeleteDialog from '@/pages/Session/components/SessionDeleteDialog';
 
 export const createScheduleColumns = ({
   onDelete,
@@ -160,13 +161,19 @@ export const createScheduleColumns = ({
                 </DropdownMenuItem>
               }
             />
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(row.original.counselSessionId as string);
-              }}>
-              삭제하기
-            </DropdownMenuItem>
+            <SessionDeleteDialog
+              triggerComponent={
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}>
+                  삭제하기
+                </DropdownMenuItem>
+              }
+              onDelete={onDelete}
+              id={row.original.counselSessionId as string}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       );
