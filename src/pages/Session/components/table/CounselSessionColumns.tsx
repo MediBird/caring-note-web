@@ -3,24 +3,24 @@ import {
   SelectCounselSessionRes,
 } from '@/api';
 import { TableCell } from '@/components/common/DataTable/table-cell';
+import { InfoIcon } from '@/components/icon/InfoIcon';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { formatDisplayText } from '@/utils/formatDisplayText';
-import { ColumnDef } from '@tanstack/react-table';
-import { Ellipsis } from 'lucide-react';
-import { InfoIcon } from '../../../../components/icon/InfoIcon';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '../../../../components/ui/tooltip';
-import { EditReservationDialog } from '../dialog/EditReservationDialog';
+} from '@/components/ui/tooltip';
 import SessionDeleteDialog from '@/pages/Session/components/SessionDeleteDialog';
+import { formatDisplayText } from '@/utils/formatDisplayText';
+import { ColumnDef } from '@tanstack/react-table';
+import { Ellipsis } from 'lucide-react';
+import { EditReservationDialog } from '../dialog/EditReservationDialog';
 
 export const createScheduleColumns = ({
   onDelete,
