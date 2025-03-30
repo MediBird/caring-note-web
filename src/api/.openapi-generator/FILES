@@ -139,6 +139,7 @@ models/smoking-dto.ts
 models/success-res.ts
 models/time-recorded-res-object.ts
 models/update-base-information-req.ts
+models/update-counsel-card-req.ts
 models/update-counsel-card-status-req.ts
 models/update-counselee-consent-req.ts
 models/update-counselee-consent-res.ts

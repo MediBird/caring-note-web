@@ -118,6 +118,7 @@ export * from './smoking-dto';
 export * from './success-res';
 export * from './time-recorded-res-object';
 export * from './update-base-information-req';
+export * from './update-counsel-card-req';
 export * from './update-counsel-card-status-req';
 export * from './update-counselee-consent-req';
 export * from './update-counselee-consent-res';

@@ -31,7 +31,7 @@ export interface AddAndUpdateMedicationRecordHistReq {
      * @type {string}
      * @memberof AddAndUpdateMedicationRecordHistReq
      */
-    'medicationId': string;
+    'medicationId'?: string;
     /**
      * 
      * @type {string}
@@ -43,13 +43,13 @@ export interface AddAndUpdateMedicationRecordHistReq {
      * @type {string}
      * @memberof AddAndUpdateMedicationRecordHistReq
      */
-    'prescriptionDate': string;
+    'prescriptionDate'?: string;
     /**
      * 
      * @type {number}
      * @memberof AddAndUpdateMedicationRecordHistReq
      */
-    'prescriptionDays': number;
+    'prescriptionDays'?: number;
     /**
      * 
      * @type {string}
@@ -61,13 +61,13 @@ export interface AddAndUpdateMedicationRecordHistReq {
      * @type {string}
      * @memberof AddAndUpdateMedicationRecordHistReq
      */
-    'usageObject': string;
+    'usageObject'?: string;
     /**
      * 
      * @type {string}
      * @memberof AddAndUpdateMedicationRecordHistReq
      */
-    'unit': string;
+    'unit'?: string;
     /**
      * 
      * @type {string}
