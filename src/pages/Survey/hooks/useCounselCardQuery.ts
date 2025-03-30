@@ -281,10 +281,9 @@ export const useCounselCardStatusMutation = () => {
       status: UpdateCounselCardStatusReqStatusEnum;
     }) => {
       try {
-        const response = await counselCardApi.updateCounselCardStatus(
-          counselSessionId,
-          { status },
-        );
+        await counselCardApi.updateCounselCardStatus(counselSessionId, {
+          status,
+        });
         return { counselSessionId };
       } catch (error) {
         handleError(error, 'base', '상태 업데이트');
