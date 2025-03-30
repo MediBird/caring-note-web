@@ -1,3 +1,4 @@
+import { SelectCounselSessionResStatusEnum } from '@/api';
 import AdminIcon from '@/assets/icon/24/accountcircle.fiiled.svg?react';
 import QuestionIcon from '@/assets/icon/24/help.fiiled.svg?react';
 import HomeIcon from '@/assets/icon/24/home.filled.svg?react';
@@ -19,6 +20,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useAuthContext } from '@/context/AuthContext';
+import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import { useLeaveOutDialogStore } from '@/pages/Consult/hooks/store/useLeaveOutDialogStore';
@@ -27,7 +29,7 @@ import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { ROLE_TYPE_MAP } from '@/utils/constants';
 import { useKeycloak } from '@react-keycloak/web';
 import { useLayoutEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const cleanName = (name?: string): string => {
   if (!name) return '';
@@ -39,6 +41,11 @@ interface NavigationLeftProps {
 }
 
 const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
+  const { counselSessionId } = useParams();
+  const { data: counselSessionInfo } = useCounselSessionQueryById(
+    counselSessionId ?? '',
+  );
+
   const navigate = useNavigate();
 
   const { toggleSidebar, open, setOpen } = useSidebar();
@@ -143,7 +150,11 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         recordingStatus !== RecordingStatus.STTCompleted &&
         recordingStatus !== RecordingStatus.AICompleted;
 
-      if (isRecording) {
+      const isCounselSessionInProgress =
+        counselSessionInfo?.status ===
+        SelectCounselSessionResStatusEnum.InProgress;
+
+      if (isRecording || isCounselSessionInProgress) {
         openDialog();
         setOnConfirm(() => {
           navigate(route);
