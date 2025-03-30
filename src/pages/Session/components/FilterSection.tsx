@@ -1,8 +1,8 @@
 import TableFilter from '@/components/common/DataTable/table-filter';
+import TableFilterDate from '@/components/common/DataTable/table-filter-date';
 import { SearchInput } from '@/components/common/search-input';
 import { useCounselActiveDate } from '@/pages/Home/hooks/query/useCounselActiveDate';
 import { useCallback, useEffect, useState } from 'react';
-import TableFilterDate from '../../../components/common/DataTable/table-filter-date';
 import { useCounselorList } from '../hooks/query/useCounselSessionQuery';
 import {
   useCounselSessionParamsStore,
@@ -91,21 +91,21 @@ export const FilterSection = () => {
   });
 
   return (
-    <div className="flex flex-col gap-2 w-full">
-      <div className="flex justify-between items-center flex-wrap">
-        <div className="flex gap-4 items-center flex-wrap">
+    <div className="flex w-full flex-col gap-2">
+      <div className="flex flex-wrap items-center justify-between">
+        <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-col">
             <SearchInput
               value={params.counseleeNameKeyword || ''}
               onChange={handleNameFilterChange}
             />
             {keywordError && (
-              <span className="text-red-500 text-xs mt-1">{keywordError}</span>
+              <span className="mt-1 text-xs text-red-500">{keywordError}</span>
             )}
           </div>
           <TableFilter
             title="담당 약사"
-            options={counselorNames.map((counselorName) => ({
+            options={counselorNames.map((counselorName: string) => ({
               label: counselorName,
               value: counselorName,
             }))}

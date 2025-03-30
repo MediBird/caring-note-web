@@ -1,8 +1,10 @@
 import {
+  BaseInfoDTOHealthInsuranceTypeEnum,
   CounselCardBaseInformationRes,
   CounselCardHealthInformationRes,
   CounselCardIndependentLifeInformationRes,
   CounselCardLivingInformationRes,
+  CounselPurposeAndNoteDTOCounselPurposeEnum,
   SmokingDTOSmokingAmountEnum,
 } from '@/api';
 import { Button } from '@/components/ui/button';
@@ -126,7 +128,8 @@ const ConsultCard: React.FC = () => {
                 label: '의료보장형태',
                 value: baseInfoData?.baseInfo?.healthInsuranceType
                   ? HEALTH_INSURANCE_TYPE_MAP[
-                      baseInfoData.baseInfo.healthInsuranceType
+                      baseInfoData.baseInfo
+                        .healthInsuranceType as BaseInfoDTOHealthInsuranceTypeEnum
                     ]
                   : '',
               },
@@ -142,7 +145,12 @@ const ConsultCard: React.FC = () => {
                   baseInfoData?.counselPurposeAndNote?.counselPurpose,
                 )
                   ? baseInfoData?.counselPurposeAndNote.counselPurpose
-                      .map((purpose) => COUNSEL_PURPOSE_MAP[purpose])
+                      .map(
+                        (purpose: CounselPurposeAndNoteDTOCounselPurposeEnum) =>
+                          COUNSEL_PURPOSE_MAP[
+                            purpose as CounselPurposeAndNoteDTOCounselPurposeEnum
+                          ],
+                      )
                       .join(', ')
                   : '',
               },

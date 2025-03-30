@@ -183,9 +183,11 @@ export default function LivingInfo() {
               <ButtonGroup
                 options={MEAL_PATTERN_OPTIONS}
                 value={livingInfo?.nutrition?.mealPattern || ''}
-                onChange={(value) =>
-                  handleUpdateLivingInfo('nutrition.mealPattern', value)
-                }
+                onChange={(value) => {
+                  const newValue =
+                    livingInfo?.nutrition?.mealPattern === value ? '' : value;
+                  handleUpdateLivingInfo('nutrition.mealPattern', newValue);
+                }}
               />
             ),
           },
@@ -216,9 +218,13 @@ export default function LivingInfo() {
               <ButtonGroup
                 options={EXERCISE_PATTERN_OPTIONS}
                 value={livingInfo?.exercise?.exercisePattern || ''}
-                onChange={(value) =>
-                  handleUpdateLivingInfo('exercise.exercisePattern', value)
-                }
+                onChange={(value) => {
+                  const newValue =
+                    livingInfo?.exercise?.exercisePattern === value
+                      ? ''
+                      : value;
+                  handleUpdateLivingInfo('exercise.exercisePattern', newValue);
+                }}
               />
             ),
           },
