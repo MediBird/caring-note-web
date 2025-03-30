@@ -239,6 +239,7 @@ export function Index() {
     }
 
     const statusMapping: { [key: string]: RecordingStatus } = {
+      STT_PROGESS: RecordingStatus.STTLoading,
       STT_COMPLETE: RecordingStatus.STTCompleted,
       STT_FAILED: RecordingStatus.Error,
       GPT_COMPLETE: RecordingStatus.AICompleted,
@@ -275,9 +276,24 @@ export function Index() {
   }, [saveWasteMedication, saveMedicationCounsel, saveMedicationRecordList]);
 
   const handleConfirmLeave = () => {
+    const isRecording =
+      recordingStatus !== RecordingStatus.Ready &&
+      recordingStatus !== RecordingStatus.STTCompleted &&
+      recordingStatus !== RecordingStatus.AICompleted;
+
+    if (isRecording) {
+      submitRecordingForLeavingOut();
+    }
+
+    const isCounselSessionInProgress =
+      counselSessionInfo?.status ===
+      UpdateStatusInCounselSessionReqStatusEnum.InProgress;
+
+    if (isCounselSessionInProgress) {
+      saveConsult();
+    }
+
     onConfirm();
-    saveConsult();
-    submitRecordingForLeavingOut();
     closeDialog();
   };
 
