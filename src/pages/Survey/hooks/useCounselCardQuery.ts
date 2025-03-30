@@ -5,7 +5,6 @@ import {
   CounselCardHealthInformationRes,
   CounselCardIndependentLifeInformationRes,
   CounselCardLivingInformationRes,
-  CounseleeControllerApi,
   UpdateCounselCardReq,
   UpdateCounselCardStatusReqStatusEnum,
 } from '@/api';
@@ -16,7 +15,6 @@ import { toast } from 'sonner';
 import { InfoType, useCounselCardStore } from './counselCardStore';
 
 const counselCardApi = new CounselCardControllerApi();
-const counseleeApi = new CounseleeControllerApi();
 
 // 에러 핸들링 공통 함수
 const handleError = (
