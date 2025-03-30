@@ -239,7 +239,7 @@ export function Index() {
     }
 
     const statusMapping: { [key: string]: RecordingStatus } = {
-      STT_PROGESS: RecordingStatus.STTLoading,
+      STT_PROGRESS: RecordingStatus.STTLoading,
       STT_COMPLETE: RecordingStatus.STTCompleted,
       STT_FAILED: RecordingStatus.Error,
       GPT_COMPLETE: RecordingStatus.AICompleted,
