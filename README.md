@@ -114,7 +114,7 @@ GitHub Actions를 사용하여 CI/CD 파이프라인이 구성되어 있습니�
 
 ## 🧩 코드 규칙
 
-자세한 코드 규칙은 [cursorrule.mdc](/.cursor/cursorrule.mdc) 파일을 참조하세요. 주요 규칙:
+자세한 코드 규칙은 [cursorrule.mdc](/.cursor/rules/cursorrule.mdc) 파일을 참조하세요. 주요 규칙:
 
 - Keycloak 인증 관련 규칙
 - Zustand 스토어 구조 규칙
