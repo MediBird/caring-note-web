@@ -276,6 +276,7 @@ export function Index() {
 
   const handleConfirmLeave = () => {
     onConfirm();
+    saveConsult();
     submitRecordingForLeavingOut();
     closeDialog();
   };
