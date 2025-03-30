@@ -5,18 +5,16 @@ import {
   CounselCardHealthInformationRes,
   CounselCardIndependentLifeInformationRes,
   CounselCardLivingInformationRes,
-  CounseleeControllerApi,
   UpdateCounselCardReq,
   UpdateCounselCardStatusReqStatusEnum,
 } from '@/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { InfoType, useCounselCardStore } from './counselCardStore';
 
 const counselCardApi = new CounselCardControllerApi();
-const counseleeApi = new CounseleeControllerApi();
 
 // 에러 핸들링 공통 함수
 const handleError = (
@@ -36,20 +34,6 @@ const handleError = (
     const defaultMessage = `${infoType} 정보 ${action} 중 알 수 없는 오류가 발생했습니다.`;
     setError(infoType, defaultMessage);
     toast.error(defaultMessage);
-  }
-};
-
-// 내담자의 장애 여부 확인 함수
-const checkIsDisability = async (
-  counselSessionId: string,
-): Promise<boolean> => {
-  try {
-    const response =
-      await counseleeApi.selectCounseleeBaseInformation(counselSessionId);
-    return response.data.data?.isDisability ?? false;
-  } catch (error) {
-    console.error('내담자 정보를 불러오는 데 실패했습니다.', error);
-    return false;
   }
 };
 
@@ -125,7 +109,6 @@ export const useCounselCardInfoQuery = <T>(
     fetchedSessionIds,
     setFetchedSessionId,
   } = useCounselCardStore();
-  const [isDisabled, setIsDisabled] = useState(false);
   const queryClient = useQueryClient();
   const prevCounselSessionIdRef = useRef<string | null>(null);
   const hasFetchedRef = useRef<boolean>(false);
@@ -164,19 +147,6 @@ export const useCounselCardInfoQuery = <T>(
     prevCounselSessionIdRef.current = counselSessionId;
   }, [counselSessionId, setCounselSessionId, queryClient, setShouldFetch]);
 
-  // 독립생활 평가에 필요한 장애 여부 체크
-  useEffect(() => {
-    if (infoType !== 'independentLife' || !counselSessionId) return;
-
-    const checkDisabilityStatus = async () => {
-      const result = await checkIsDisability(counselSessionId);
-      setIsDisabled(result);
-      setShouldFetch('independentLife', result);
-    };
-
-    checkDisabilityStatus();
-  }, [counselSessionId, infoType, setShouldFetch]);
-
   // 컴포넌트 마운트 시 한 번만 fetch 수행을 위한 useEffect
   useEffect(() => {
     if (fetchOnMount && !hasFetchedRef.current && counselSessionId) {
@@ -188,7 +158,6 @@ export const useCounselCardInfoQuery = <T>(
   // fetch 여부 결정
   const shouldFetchData = Boolean(
     counselSessionId &&
-      (infoType !== 'independentLife' || isDisabled) &&
       (fetchedSessionIds[infoType] !== counselSessionId ||
         shouldFetch[infoType]),
   );
@@ -338,9 +307,7 @@ export const useSaveCounselCardDraft = () => {
         }
       }
 
-      // 독립생활 정보 (장애인인 경우에만)
-      const isDisability = await checkIsDisability(counselSessionId);
-      if (store.infoData.independentLife && isDisability) {
+      if (store.infoData.independentLife) {
         if (store.infoData.independentLife.communication) {
           updateCounselCardReq.communication =
             store.infoData.independentLife.communication;
