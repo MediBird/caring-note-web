@@ -160,8 +160,20 @@ function MedicineSearchCell<T extends { id: string }>({
                 </div>
               ))
             ) : (
-              <div className="font-medium text-grayscale-40">
-                검색 결과가 없습니다.
+              <div className="flex flex-col gap-2">
+                <div className="font-medium text-grayscale-40">
+                  검색 결과가 없습니다.
+                </div>
+                {inputValue && (
+                  <div
+                    onClick={() => {
+                      handleSearchEnter(row.original.id, '', inputValue);
+                    }}
+                    className="flex cursor-pointer items-center justify-between rounded-sm p-1 text-primary-50 hover:bg-grayscale-5">
+                    <span>"{inputValue}" 직접 입력하기</span>
+                    <Check className="h-4 w-4" />
+                  </div>
+                )}
               </div>
             )}
           </div>

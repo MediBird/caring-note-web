@@ -1,8 +1,4 @@
-import {
-  AddAndUpdateMedicationRecordHistReqDivisionCodeEnum,
-  AddAndUpdateMedicationRecordHistReqUsageStatusCodeEnum,
-  MedicationRecordHistControllerApi,
-} from '@/api';
+import { MedicationRecordHistControllerApi } from '@/api';
 import { MedicationRecordListSaveDTO } from '@/pages/Consult/types/MedicationRecordListDTO';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -16,17 +12,17 @@ const saveMedicationRecord = async ({
 }: MedicationRecordListSaveDTO) => {
   const medicationRecordHistListPayload = medicationRecordHistList.map(
     (item) => ({
-      rowId: item.rowId === '' ? (null as unknown as string) : item.rowId,
-      medicationId: item.medicationId as string,
-      divisionCode:
-        item.divisionCode as AddAndUpdateMedicationRecordHistReqDivisionCodeEnum,
-      prescriptionDate: item.prescriptionDate as string,
-      prescriptionDays: Number(item.prescriptionDays),
+      rowId: item.rowId === '' ? undefined : item.rowId,
+      medicationId: item.medicationId || '',
+      divisionCode: item.divisionCode || 'PRESCRIPTION',
+      prescriptionDate: item.prescriptionDate || undefined,
+      prescriptionDays: item.prescriptionDays
+        ? Number(item.prescriptionDays)
+        : undefined,
       medicationName: item.medicationName as string,
-      usageObject: item.usageObject as string,
+      usageObject: item.usageObject || undefined,
       unit: '일',
-      usageStatusCode:
-        item.usageStatusCode as AddAndUpdateMedicationRecordHistReqUsageStatusCodeEnum,
+      usageStatusCode: item.usageStatusCode || 'REGULAR',
     }),
   );
 
