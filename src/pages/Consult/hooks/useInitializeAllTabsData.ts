@@ -1,4 +1,7 @@
-import { WasteMedicationDisposalReqUnusedReasonTypesEnum } from '@/api';
+import {
+  SelectMedicationRecordListBySessionIdRes,
+  WasteMedicationDisposalReqUnusedReasonTypesEnum,
+} from '@/api';
 import { useMedicationRecordList } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordList';
 import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { useWasteMedicationDisposalQuery } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useWasteMedicationDisposalQuery';
@@ -100,8 +103,8 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
         wasteMedicationDisposalData
           ? ({
               unusedReasonTypes: wasteMedicationDisposalData.unusedReasons?.map(
-                (reason) =>
-                  reason as WasteMedicationDisposalReqUnusedReasonTypesEnum,
+                (reason: WasteMedicationDisposalReqUnusedReasonTypesEnum) =>
+                  reason,
               ),
               unusedReasonDetail:
                 wasteMedicationDisposalData.unusedReasonDetail ?? '',
@@ -133,14 +136,16 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
 
     if (isSuccessWasteMedicationList && wasteMedicationListData) {
       setWasteMedicationList(
-        wasteMedicationListData.map((item) => ({
-          id: item.rowId ?? '',
-          rowId: item.rowId,
-          medicationId: item.medicationId ?? '',
-          medicationName: item.medicationName ?? '',
-          unit: item.unit ?? 0,
-          disposalReason: item.disposalReason ?? '',
-        })),
+        wasteMedicationListData.map(
+          (item: SelectMedicationRecordListBySessionIdRes) => ({
+            id: item.rowId ?? '',
+            rowId: item.rowId,
+            medicationId: item.medicationId ?? '',
+            medicationName: item.medicationName ?? '',
+            unit: item.unit ?? 0,
+            disposalReason: item.disposalReason ?? '',
+          }),
+        ),
       );
       setIsWasteListInitialized(true);
     }
