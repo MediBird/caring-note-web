@@ -22,7 +22,7 @@ const PencilIcon: React.FC = () => {
             <span className="absolute right-0 top-0 h-1.5 w-1.5 rounded-full bg-grayscale-50" />
             <PencilBlackIcon width={24} height={24} className="my-1" />
           </>
-        ) : recordingStatus === RecordingStatus.STTCompleted ? (
+        ) : recordingStatus === RecordingStatus.AICompleted ? (
           <>
             <PencilBlueIcon width={24} height={24} className="my-1" />
           </>
@@ -32,7 +32,7 @@ const PencilIcon: React.FC = () => {
       </div>
 
       {/* 하단 텍스트 */}
-      {recordingStatus === RecordingStatus.STTCompleted && (
+      {recordingStatus === RecordingStatus.AICompleted && (
         <span className="text-caption1 font-bold text-primary-50">
           저장 완료
         </span>

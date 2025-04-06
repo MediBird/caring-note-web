@@ -29,7 +29,6 @@ const TemporarySaveDialog = ({ onSave }: TemporarySaveDialogProps) => {
 
   const isRecording =
     recordingStatus !== RecordingStatus.Ready &&
-    recordingStatus !== RecordingStatus.STTCompleted &&
     recordingStatus !== RecordingStatus.AICompleted;
 
   return (
