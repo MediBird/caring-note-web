@@ -32,7 +32,6 @@ const FinishConsultDialog = ({
   const navigate = useNavigate();
   const isRecording =
     recordingStatus !== RecordingStatus.Ready &&
-    recordingStatus !== RecordingStatus.STTCompleted &&
     recordingStatus !== RecordingStatus.AICompleted;
 
   return (

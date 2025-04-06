@@ -149,7 +149,6 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
     if (route) {
       const isRecording =
         recordingStatus !== RecordingStatus.Ready &&
-        recordingStatus !== RecordingStatus.STTCompleted &&
         recordingStatus !== RecordingStatus.AICompleted;
 
       const isCounselSessionInProgress =

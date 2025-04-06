@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import DeleteRecordingDialog from '@/pages/Consult/components/recording/DeleteRecordingDialog';
-import SelectSpeakerDialog from '@/pages/Consult/components/recording/SelectSpeakerDialog';
 import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
@@ -105,7 +104,9 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
             'flex h-[166px] w-[348px] flex-col items-center justify-center gap-1 rounded-xl border border-grayscale-10 bg-grayscale-3',
             className,
           )}>
-          {recordingStatus === RecordingStatus.STTLoading ? (
+          {recordingStatus === RecordingStatus.STTLoading ||
+          recordingStatus === RecordingStatus.STTCompleted ||
+          recordingStatus === RecordingStatus.AILoading ? (
             <div className="flex flex-col items-center">
               <p className="text-body1 font-medium text-grayscale-50">
                 녹음 저장 중...
@@ -115,24 +116,10 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
                 평균 1분 내 저장됩니다. 조금만 기다려 주세요.
               </p>
             </div>
-          ) : recordingStatus === RecordingStatus.STTCompleted ? (
-            <div className="flex flex-col items-center gap-4">
-              <p className="text-body1 font-bold text-grayscale-80">
-                녹음 저장 완료!
-              </p>
-              <SelectSpeakerDialog />
-            </div>
-          ) : recordingStatus === RecordingStatus.AILoading ? (
-            <div className="flex flex-col items-center">
-              <p className="text-body1 font-medium text-grayscale-50">
-                녹음 스크립트 생성 중...
-              </p>
-              <Spinner />
-            </div>
           ) : recordingStatus === RecordingStatus.AICompleted ? (
             <div className="flex flex-col items-center gap-4">
               <p className="text-body1 font-bold text-grayscale-80">
-                스크립트 생성 완료!
+                녹음 저장 완료!
               </p>
               <Button onClick={showAiSummaryView} variant={'primary'} size="md">
                 내용 확인

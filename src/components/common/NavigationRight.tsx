@@ -26,8 +26,7 @@ const NavigationRight = () => {
 
     if (
       autoNavigationOpen === 'true' &&
-      (recordingStatus === RecordingStatus.STTCompleted ||
-        recordingStatus === RecordingStatus.AICompleted)
+      recordingStatus === RecordingStatus.AICompleted
     ) {
       openRightNav();
     }
