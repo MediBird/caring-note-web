@@ -26,7 +26,7 @@ export default function LivingInfo() {
 
   const handleUpdateLivingInfo = (
     field: string,
-    value: string | string[] | boolean,
+    value: string | string[] | boolean | undefined | null,
   ) => {
     const [section, key] = field.split('.');
     const updatedSection = {
@@ -52,10 +52,12 @@ export default function LivingInfo() {
 
   const isSmoker =
     livingInfo?.smoking?.smokingAmount !== undefined &&
+    livingInfo?.smoking?.smokingAmount !== null &&
     livingInfo.smoking.smokingAmount !== SmokingDTOSmokingAmountEnum.None;
 
   const isDrinker =
     livingInfo?.drinking?.drinkingAmount !== undefined &&
+    livingInfo?.drinking?.drinkingAmount !== null &&
     livingInfo?.drinking?.drinkingAmount !== DrinkingDTODrinkingAmountEnum.None;
 
   return (
@@ -69,16 +71,28 @@ export default function LivingInfo() {
             value: (
               <ButtonGroup
                 options={smokingAmountOptions}
-                value={isSmoker ? 'true' : 'false'}
+                value={
+                  isSmoker
+                    ? 'true'
+                    : livingInfo?.smoking?.smokingAmount ===
+                        SmokingDTOSmokingAmountEnum.None
+                      ? 'false'
+                      : ''
+                }
                 onChange={(value) => {
-                  if (value === 'false') {
-                    // 비흡연인 경우 smokingAmount를 NONE으로 설정
+                  if (
+                    (value === 'true' && isSmoker) ||
+                    (value === 'false' &&
+                      livingInfo?.smoking?.smokingAmount ===
+                        SmokingDTOSmokingAmountEnum.None)
+                  ) {
+                    handleUpdateLivingInfo('smoking.smokingAmount', null);
+                  } else if (value === 'false') {
                     handleUpdateLivingInfo(
                       'smoking.smokingAmount',
                       SmokingDTOSmokingAmountEnum.None,
                     );
                   } else {
-                    // 흡연인 경우 기본값 설정
                     handleUpdateLivingInfo(
                       'smoking.smokingAmount',
                       SmokingDTOSmokingAmountEnum.OnePack,
@@ -138,19 +152,33 @@ export default function LivingInfo() {
               <ButtonGroup
                 options={drinkingAmountOptions}
                 value={
-                  livingInfo?.drinking?.drinkingAmount !==
-                  DrinkingDTODrinkingAmountEnum.None
+                  isDrinker
                     ? 'true'
-                    : 'false'
+                    : livingInfo?.drinking?.drinkingAmount ===
+                        DrinkingDTODrinkingAmountEnum.None
+                      ? 'false'
+                      : ''
                 }
-                onChange={(value) =>
-                  handleUpdateLivingInfo(
-                    'drinking.drinkingAmount',
-                    value === 'true'
-                      ? DrinkingDTODrinkingAmountEnum.OnceAWeek
-                      : DrinkingDTODrinkingAmountEnum.None,
-                  )
-                }
+                onChange={(value) => {
+                  if (
+                    (value === 'true' && isDrinker) ||
+                    (value === 'false' &&
+                      livingInfo?.drinking?.drinkingAmount ===
+                        DrinkingDTODrinkingAmountEnum.None)
+                  ) {
+                    handleUpdateLivingInfo('drinking.drinkingAmount', null);
+                  } else if (value === 'true') {
+                    handleUpdateLivingInfo(
+                      'drinking.drinkingAmount',
+                      DrinkingDTODrinkingAmountEnum.OnceAWeek,
+                    );
+                  } else {
+                    handleUpdateLivingInfo(
+                      'drinking.drinkingAmount',
+                      DrinkingDTODrinkingAmountEnum.None,
+                    );
+                  }
+                }}
               />
             ),
           },
@@ -255,14 +283,32 @@ export default function LivingInfo() {
               <ButtonGroup
                 options={houseMateOptions}
                 value={
-                  livingInfo?.medicationManagement?.isAlone ? 'true' : 'false'
+                  livingInfo?.medicationManagement?.isAlone === null
+                    ? ''
+                    : livingInfo?.medicationManagement?.isAlone === true
+                      ? 'true'
+                      : livingInfo?.medicationManagement?.isAlone === false
+                        ? 'false'
+                        : ''
                 }
-                onChange={(value) =>
-                  handleUpdateLivingInfo(
-                    'medicationManagement.isAlone',
-                    value === 'true',
-                  )
-                }
+                onChange={(value) => {
+                  if (
+                    (value === 'true' &&
+                      livingInfo?.medicationManagement?.isAlone === true) ||
+                    (value === 'false' &&
+                      livingInfo?.medicationManagement?.isAlone === false)
+                  ) {
+                    handleUpdateLivingInfo(
+                      'medicationManagement.isAlone',
+                      null,
+                    );
+                  } else {
+                    handleUpdateLivingInfo(
+                      'medicationManagement.isAlone',
+                      value === 'true',
+                    );
+                  }
+                }}
               />
             ),
           },
