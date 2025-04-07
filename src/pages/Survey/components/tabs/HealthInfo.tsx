@@ -127,18 +127,40 @@ export default function HealthInfo() {
             value: (
               <ButtonGroup
                 options={allergyOptions}
-                value={healthInfo?.allergy?.isAllergic ? 'true' : 'false'}
+                value={
+                  healthInfo?.allergy?.isAllergic === undefined
+                    ? ''
+                    : healthInfo?.allergy?.isAllergic
+                      ? 'true'
+                      : 'false'
+                }
                 onChange={(value) => {
-                  const isAllergic = value === 'true';
-                  setInfoData('health', {
-                    ...healthInfo,
-                    allergy: {
-                      isAllergic,
-                      allergyNote: isAllergic
-                        ? healthInfo?.allergy?.allergyNote || ''
-                        : '',
-                    },
-                  });
+                  if (
+                    (value === 'true' &&
+                      healthInfo?.allergy?.isAllergic === true) ||
+                    (value === 'false' &&
+                      healthInfo?.allergy?.isAllergic === false)
+                  ) {
+                    setInfoData('health', {
+                      ...healthInfo,
+                      allergy: {
+                        ...healthInfo?.allergy,
+                        isAllergic: undefined,
+                        allergyNote: '',
+                      },
+                    });
+                  } else {
+                    const isAllergic = value === 'true';
+                    setInfoData('health', {
+                      ...healthInfo,
+                      allergy: {
+                        isAllergic,
+                        allergyNote: isAllergic
+                          ? healthInfo?.allergy?.allergyNote || ''
+                          : '',
+                      },
+                    });
+                  }
                 }}
                 className="flex-wrap"
               />
@@ -178,26 +200,48 @@ export default function HealthInfo() {
               <ButtonGroup
                 options={sideEffectOptions}
                 value={
-                  healthInfo?.medicationSideEffect?.isMedicationSideEffect
-                    ? 'true'
-                    : 'false'
+                  healthInfo?.medicationSideEffect?.isMedicationSideEffect ===
+                  undefined
+                    ? ''
+                    : healthInfo?.medicationSideEffect?.isMedicationSideEffect
+                      ? 'true'
+                      : 'false'
                 }
                 onChange={(value) => {
-                  const hasSideEffect = value === 'true';
-                  setInfoData('health', {
-                    ...healthInfo,
-                    medicationSideEffect: {
-                      ...healthInfo?.medicationSideEffect,
-                      isMedicationSideEffect: hasSideEffect,
-                      symptomsNote: hasSideEffect
-                        ? healthInfo?.medicationSideEffect?.symptomsNote || ''
-                        : '',
-                      suspectedMedicationNote: hasSideEffect
-                        ? healthInfo?.medicationSideEffect
-                            ?.suspectedMedicationNote || ''
-                        : '',
-                    },
-                  });
+                  if (
+                    (value === 'true' &&
+                      healthInfo?.medicationSideEffect
+                        ?.isMedicationSideEffect === true) ||
+                    (value === 'false' &&
+                      healthInfo?.medicationSideEffect
+                        ?.isMedicationSideEffect === false)
+                  ) {
+                    setInfoData('health', {
+                      ...healthInfo,
+                      medicationSideEffect: {
+                        ...healthInfo?.medicationSideEffect,
+                        isMedicationSideEffect: undefined,
+                        symptomsNote: '',
+                        suspectedMedicationNote: '',
+                      },
+                    });
+                  } else {
+                    const hasSideEffect = value === 'true';
+                    setInfoData('health', {
+                      ...healthInfo,
+                      medicationSideEffect: {
+                        ...healthInfo?.medicationSideEffect,
+                        isMedicationSideEffect: hasSideEffect,
+                        symptomsNote: hasSideEffect
+                          ? healthInfo?.medicationSideEffect?.symptomsNote || ''
+                          : '',
+                        suspectedMedicationNote: hasSideEffect
+                          ? healthInfo?.medicationSideEffect
+                              ?.suspectedMedicationNote || ''
+                          : '',
+                      },
+                    });
+                  }
                 }}
                 className="flex-wrap"
               />
