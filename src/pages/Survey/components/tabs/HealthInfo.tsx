@@ -145,7 +145,7 @@ export default function HealthInfo() {
                       ...healthInfo,
                       allergy: {
                         ...healthInfo?.allergy,
-                        isAllergic: undefined,
+                        isAllergic: null,
                         allergyNote: '',
                       },
                     });
@@ -201,7 +201,7 @@ export default function HealthInfo() {
                 options={sideEffectOptions}
                 value={
                   healthInfo?.medicationSideEffect?.isMedicationSideEffect ===
-                  undefined
+                  null
                     ? ''
                     : healthInfo?.medicationSideEffect?.isMedicationSideEffect
                       ? 'true'
