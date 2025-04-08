@@ -1,6 +1,6 @@
 import { MedicationCounselControllerApi } from '@/api';
-import { MedicationConsultDTO } from '@/pages/Consult/types/MedicineConsultDTO';
 import { useMedicationConsultStore } from '@/pages/Consult/hooks/store/useMedicationConsultStore';
+import { MedicationConsultDTO } from '@/pages/Consult/types/MedicineConsultDTO';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const medicationCounselControllerApi = new MedicationCounselControllerApi();
@@ -31,13 +31,11 @@ const saveMedicationCounsel = async (
     await medicationCounselControllerApi.addMedicationCounsel({
       counselSessionId: medicationConsultDTO.counselSessionId,
       counselRecord: medicationConsultDTO.counselRecord,
-      counselRecordHighlights: medicationConsultDTO.counselRecordHighlights,
     });
   } else {
     await medicationCounselControllerApi.updateMedicationCounsel({
       medicationCounselId: medicationConsultDTO.medicationCounselId,
       counselRecord: medicationConsultDTO.counselRecord,
-      counselRecordHighlights: medicationConsultDTO.counselRecordHighlights,
     });
   }
 

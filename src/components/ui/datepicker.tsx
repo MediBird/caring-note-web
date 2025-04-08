@@ -32,6 +32,7 @@ export interface DatePickerProps {
   align?: 'start' | 'end';
   activeAllDates?: boolean;
   disablePastDates?: boolean;
+  disableFutureDates?: boolean;
   isPrescriptionDate?: boolean;
   isDateUnknown?: boolean;
   handleDateUnknown?: () => void;
@@ -51,6 +52,7 @@ export function DatePickerComponent({
   showBorderWithOpen = false,
   activeAllDates = true,
   disablePastDates = false,
+  disableFutureDates = false,
   isPrescriptionDate = false,
   isDateUnknown = false,
   handleDateUnknown,
@@ -111,6 +113,14 @@ export function DatePickerComponent({
         }
       }
 
+      if (disableFutureDates) {
+        const today = new Date();
+        today.setHours(23, 59, 59, 999);
+        if (date > today) {
+          return true;
+        }
+      }
+
       if (enabledDatesSet.size === 0 && activeAllDates) {
         return false;
       }
@@ -122,7 +132,7 @@ export function DatePickerComponent({
       const formattedDate = format(date, 'yyyy-MM-dd');
       return !enabledDatesSet.has(formattedDate);
     },
-    [enabledDatesSet, activeAllDates, disablePastDates],
+    [enabledDatesSet, activeAllDates, disablePastDates, disableFutureDates],
   );
 
   const getDateText = () => {

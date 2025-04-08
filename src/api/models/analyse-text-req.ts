@@ -26,11 +26,5 @@ export interface AnalyseTextReq {
      * @memberof AnalyseTextReq
      */
     'counselSessionId': string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AnalyseTextReq
-     */
-    'speakers'?: Array<string>;
 }
 

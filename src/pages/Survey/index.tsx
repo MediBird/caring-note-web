@@ -87,14 +87,14 @@ export default function Survey() {
   const handleSaveDraft = async () => {
     const success = await saveDraft(counselSessionId ?? '');
     if (success) {
-      toast.success('임시 저장되었습니다.');
+      toast.info('임시 저장되었습니다.');
     }
   };
 
   const handleComplete = async () => {
     const success = await complete(counselSessionId ?? '');
     if (success) {
-      toast.success(
+      toast.info(
         isCompleted ? '수정이 완료되었습니다.' : '설문이 완료되었습니다.',
       );
 

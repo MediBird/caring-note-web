@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { Node } from 'slate';
 import { MedicationConsultDTO } from '@/pages/Consult/types/MedicineConsultDTO';
+import { Node } from 'slate';
+import { create } from 'zustand';
 
 interface MedicationConsultState {
   editorContent: Node[];
@@ -20,7 +20,6 @@ export const useMedicationConsultStore = create<MedicationConsultState>(
       counselSessionId: '',
       medicationCounselId: '',
       counselRecord: '',
-      counselRecordHighlights: [],
     },
 
     setEditorContent: (content: Node[]) => set({ editorContent: content }),

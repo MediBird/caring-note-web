@@ -37,13 +37,31 @@ export interface UpdateCounseleeReq {
      * @type {string}
      * @memberof UpdateCounseleeReq
      */
+    'dateOfBirth'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
     'phoneNumber'?: string;
     /**
      * 
      * @type {string}
      * @memberof UpdateCounseleeReq
      */
-    'dateOfBirth'?: string;
+    'lastCounselDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'affiliatedWelfareInstitution'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'note'?: string;
     /**
      * 
      * @type {string}
@@ -67,19 +85,7 @@ export interface UpdateCounseleeReq {
      * @type {string}
      * @memberof UpdateCounseleeReq
      */
-    'note'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateCounseleeReq
-     */
     'careManagerName'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateCounseleeReq
-     */
-    'affiliatedWelfareInstitution'?: string;
 }
 
 export const UpdateCounseleeReqGenderTypeEnum = {

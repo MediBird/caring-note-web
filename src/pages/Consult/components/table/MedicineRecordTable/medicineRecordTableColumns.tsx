@@ -137,6 +137,7 @@ export const createColumns = ({
               formattedDate,
             );
           }}
+          disableFutureDates={true}
         />
       );
     },

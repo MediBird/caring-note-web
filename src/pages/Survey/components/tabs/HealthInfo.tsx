@@ -128,7 +128,7 @@ export default function HealthInfo() {
               <ButtonGroup
                 options={allergyOptions}
                 value={
-                  healthInfo?.allergy?.isAllergic === undefined
+                  healthInfo?.allergy?.isAllergic === null
                     ? ''
                     : healthInfo?.allergy?.isAllergic
                       ? 'true'

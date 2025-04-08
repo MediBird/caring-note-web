@@ -6,13 +6,13 @@ import { useMedicationRecordList } from '@/pages/Consult/hooks/query/medicationR
 import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 import { useWasteMedicationDisposalQuery } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useWasteMedicationDisposalQuery';
 import { useWasteMedicationList } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useWasteMedicationListQuery';
-import { AddAndUpdateWasteMedicationDisposalDTO } from '@/pages/Consult/types/WasteMedicationDTO';
+import { useMedicationConsultStore } from '@/pages/Consult/hooks/store/useMedicationConsultStore';
 import {
   initialWasteMedicationDisposalState,
   useWasteMedicationDisposalStore,
 } from '@/pages/Consult/hooks/store/useWasteMedicationDisposalStore';
 import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
-import { useMedicationConsultStore } from '@/pages/Consult/hooks/store/useMedicationConsultStore';
+import { AddAndUpdateWasteMedicationDisposalDTO } from '@/pages/Consult/types/WasteMedicationDTO';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
 import { useEffect, useState } from 'react';
 
@@ -164,8 +164,6 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
         counselSessionId: counselSessionId || '',
         medicationCounselId: medicineConsultData.medicationCounselId || '',
         counselRecord: medicineConsultData.counselRecord || '',
-        counselRecordHighlights:
-          medicineConsultData.counselRecordHighlights || [],
       });
       setIsMedicationConsultInitialized(true);
     }

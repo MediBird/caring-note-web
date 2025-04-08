@@ -13,9 +13,6 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { MedicationCounselHighlightDTO } from './medication-counsel-highlight-dto';
 
 /**
  * 
@@ -35,11 +32,5 @@ export interface AddMedicationCounselReq {
      * @memberof AddMedicationCounselReq
      */
     'counselRecord': string;
-    /**
-     * 
-     * @type {Array<MedicationCounselHighlightDTO>}
-     * @memberof AddMedicationCounselReq
-     */
-    'counselRecordHighlights'?: Array<MedicationCounselHighlightDTO>;
 }
 

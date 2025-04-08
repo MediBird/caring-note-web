@@ -36,6 +36,7 @@ function MedicineSearchCell<T extends { id: string }>({
   const [inputValue, setInputValue] = useState(value);
   const debouncedInputValue = useDebounce(inputValue, 300);
   const popoverRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -89,6 +90,7 @@ function MedicineSearchCell<T extends { id: string }>({
           {open ? (
             <div className="h-full w-full">
               <Input
+                ref={inputRef}
                 type="text"
                 placeholder="이름을 입력해 주세요"
                 value={inputValue}
@@ -96,10 +98,16 @@ function MedicineSearchCell<T extends { id: string }>({
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 className="h-full truncate border-none bg-transparent"
+                autoFocus
               />
             </div>
           ) : (
-            <div className="h-full w-full cursor-pointer" onClick={handleFocus}>
+            <div
+              className="h-full w-full cursor-pointer"
+              onClick={() => {
+                setOpen(true);
+                setTimeout(() => inputRef.current?.focus(), 0);
+              }}>
               <TooltipProvider delayDuration={200}>
                 <Tooltip>
                   <TooltipTrigger asChild>
