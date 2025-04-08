@@ -1,24 +1,22 @@
 import PastConsultContainer from '@/components/consult/PastConsultContainer';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import PrevCounselTable from '@/pages/Consult/components/table/PrevCounselTable';
-import { usePrevMedicationCounsel } from '@/pages/Consult/hooks/query/usePrevMedicationCounsel';
 import {
   PrevCounselSessionListDTO,
   usePrevCounselSessionList,
 } from '@/pages/Consult/hooks/query/usePrevCounselSessionList';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGetAiSummaryQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetAiSummaryQuery';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import ReactMarkdown from 'react-markdown';
-const PastConsult: React.FC = () => {
+import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
+
+const PastConsult = () => {
   const navigate = useNavigate();
 
   const { counselSessionId } = useParams();
 
-  const { prevMedicationCounsel } = usePrevMedicationCounsel(
-    counselSessionId ?? '',
-  );
   const { prevCounselSessionList } = usePrevCounselSessionList(
     counselSessionId ?? '',
   );
@@ -36,6 +34,9 @@ const PastConsult: React.FC = () => {
     RecordingStatus.AICompleted,
   );
 
+  const { data: prevCounselRecord, isLoading: isPrevCounselRecordLoading } =
+    useSelectMedicineConsult(prevCounselSessionId);
+
   const handleClickPrevCounselSession = (
     rowData: PrevCounselSessionListDTO,
   ) => {
@@ -43,6 +44,27 @@ const PastConsult: React.FC = () => {
 
     navigate(`/consult/${prevCounselSessionId}`);
   };
+
+  const highlightList = useMemo((): string[] => {
+    if (isPrevCounselRecordLoading) return [];
+
+    const parsedPrevCounselRecord: {
+      type: string;
+      children: { text: string; bold?: boolean }[];
+    }[] = JSON.parse(prevCounselRecord?.counselRecord ?? '');
+
+    const childrenList = parsedPrevCounselRecord.map((item) => {
+      return item.children;
+    });
+
+    const highlightList = childrenList.map((item) => {
+      const boldList = item.filter((item) => item.bold);
+
+      return boldList.map((item) => item.text);
+    });
+
+    return highlightList.flat();
+  }, [isPrevCounselRecordLoading, prevCounselRecord]);
 
   return (
     <Card>
@@ -52,17 +74,13 @@ const PastConsult: React.FC = () => {
       <div className="flex flex-row items-start justify-between space-x-4">
         <PastConsultContainer title="상담 기록 하이라이트" variant="primary">
           <ul className="mt-4 space-y-2 text-body1 font-medium">
-            {prevMedicationCounsel?.counselRecordHighlights?.map(
-              (item, index) => {
-                return (
-                  <li
-                    key={index}
-                    className="border-l-2 border-grayscale-10 pl-2">
-                    {item.highlight}
-                  </li>
-                );
-              },
-            )}
+            {highlightList?.map((item, index) => {
+              return (
+                <li key={index} className="border-l-2 border-grayscale-10 pl-2">
+                  {item}
+                </li>
+              );
+            })}
           </ul>
         </PastConsultContainer>
 
