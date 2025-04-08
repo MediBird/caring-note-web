@@ -51,7 +51,11 @@ const PastConsult = () => {
     const parsedPrevCounselRecord: {
       type: string;
       children: { text: string; bold?: boolean }[];
-    }[] = JSON.parse(prevCounselRecord?.counselRecord ?? '');
+    }[] =
+      prevCounselRecord?.counselRecord &&
+      prevCounselRecord?.counselRecord !== ''
+        ? JSON.parse(prevCounselRecord?.counselRecord)
+        : [];
 
     const childrenList = parsedPrevCounselRecord.map((item) => {
       return item.children;
