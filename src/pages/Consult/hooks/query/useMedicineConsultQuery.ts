@@ -1,6 +1,6 @@
 import { MedicationCounselControllerApi } from '@/api';
-import { MedicineConsultDTO } from '@/pages/Consult/types/MedicineConsultDTO';
-import { useMedicineConsultStore } from '@/store/medicineConsultStore';
+import { MedicationConsultDTO } from '@/pages/Consult/types/MedicineConsultDTO';
+import { useMedicationConsultStore } from '@/pages/Consult/hooks/store/useMedicationConsultStore';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const medicationCounselControllerApi = new MedicationCounselControllerApi();
@@ -21,27 +21,27 @@ const selectMedicationCounsel = async (counselSessionId: string) => {
 };
 
 const saveMedicationCounsel = async (
-  medicineConsultDTO: MedicineConsultDTO,
+  medicationConsultDTO: MedicationConsultDTO,
 ) => {
-  if (medicineConsultDTO.counselRecord === '') {
+  if (medicationConsultDTO.counselRecord === '') {
     return;
   }
 
-  if (medicineConsultDTO.medicationCounselId === '') {
+  if (medicationConsultDTO.medicationCounselId === '') {
     await medicationCounselControllerApi.addMedicationCounsel({
-      counselSessionId: medicineConsultDTO.counselSessionId,
-      counselRecord: medicineConsultDTO.counselRecord,
-      counselRecordHighlights: medicineConsultDTO.counselRecordHighlights,
+      counselSessionId: medicationConsultDTO.counselSessionId,
+      counselRecord: medicationConsultDTO.counselRecord,
+      counselRecordHighlights: medicationConsultDTO.counselRecordHighlights,
     });
   } else {
     await medicationCounselControllerApi.updateMedicationCounsel({
-      medicationCounselId: medicineConsultDTO.medicationCounselId,
-      counselRecord: medicineConsultDTO.counselRecord,
-      counselRecordHighlights: medicineConsultDTO.counselRecordHighlights,
+      medicationCounselId: medicationConsultDTO.medicationCounselId,
+      counselRecord: medicationConsultDTO.counselRecord,
+      counselRecordHighlights: medicationConsultDTO.counselRecordHighlights,
     });
   }
 
-  return medicineConsultDTO.counselSessionId;
+  return medicationConsultDTO.counselSessionId;
 };
 
 export const useSelectMedicineConsult = (counselSessionId?: string) => {
@@ -55,10 +55,10 @@ export const useSelectMedicineConsult = (counselSessionId?: string) => {
 export const useSaveMedicineConsult = () => {
   const queryClient = useQueryClient();
 
-  const { medicineConsult } = useMedicineConsultStore();
+  const { medicationConsult } = useMedicationConsultStore();
 
   return useMutation({
-    mutationFn: () => saveMedicationCounsel(medicineConsult),
+    mutationFn: () => saveMedicationCounsel(medicationConsult),
     onSuccess: (counselSessionId) => {
       queryClient.invalidateQueries({
         queryKey: ['SelectMedicationConsult', counselSessionId],

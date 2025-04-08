@@ -41,7 +41,7 @@ export const useWasteMedicationList = (counselSessionId: string) => {
     select: (data: SelectMedicationRecordListBySessionIdRes[]) => {
       return data?.map((item) => ({
         ...item,
-        id: item.medicationId,
+        id: item.medicationId ?? '',
       }));
     },
   });

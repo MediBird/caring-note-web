@@ -12,14 +12,9 @@ import {
   useWasteMedicationDisposalStore,
 } from '@/pages/Consult/hooks/store/useWasteMedicationDisposalStore';
 import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
-import useCounselRecordEditorStateStore from '@/store/counselRecordEditorStateStore';
-import { useMedicineConsultStore } from '@/store/medicineConsultStore';
+import { useMedicationConsultStore } from '@/pages/Consult/hooks/store/useMedicationConsultStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
-
 import { useEffect, useState } from 'react';
-import { EditorState } from 'draft-js';
-import { ContentBlock, Modifier, SelectionState } from 'draft-js';
-import { ContentState } from 'draft-js';
 
 export const useInitializeAllTabsData = (counselSessionId: string) => {
   // 모든 초기화 진행 상태를 추적하는 플래그
@@ -59,9 +54,11 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
   } = useMedicineMemoStore();
 
   // 중재기록 store
-  const { editorState, setEditorState } = useCounselRecordEditorStateStore();
-  const { isEditorInitialized, setEditorInitialized, setMedicationConsult } =
-    useMedicineConsultStore();
+  const {
+    isMedicationConsultInitialized,
+    setIsMedicationConsultInitialized,
+    setMedicationConsult,
+  } = useMedicationConsultStore();
 
   // 폐의약품 설문 store
   const {
@@ -103,8 +100,8 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
         wasteMedicationDisposalData
           ? ({
               unusedReasonTypes: wasteMedicationDisposalData.unusedReasons?.map(
-                (reason: WasteMedicationDisposalReqUnusedReasonTypesEnum) =>
-                  reason,
+                (reason: string) =>
+                  reason as WasteMedicationDisposalReqUnusedReasonTypesEnum,
               ),
               unusedReasonDetail:
                 wasteMedicationDisposalData.unusedReasonDetail ?? '',
@@ -160,7 +157,7 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
 
   // 중재기록 init
   useEffect(() => {
-    if (isEditorInitialized) return;
+    if (isMedicationConsultInitialized) return;
 
     if (medicineConsultData) {
       setMedicationConsult({
@@ -170,90 +167,21 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
         counselRecordHighlights:
           medicineConsultData.counselRecordHighlights || [],
       });
-
-      const contentState = ContentState.createFromText(
-        medicineConsultData.counselRecord || '',
-      );
-
-      let contentStateWithHighlight = contentState;
-
-      if (
-        medicineConsultData.counselRecordHighlights?.length &&
-        medicineConsultData.counselRecord
-      ) {
-        contentStateWithHighlight =
-          medicineConsultData.counselRecordHighlights.reduce(
-            (currentContent, highlight) => {
-              const start = highlight.startIndex;
-              const end = highlight.endIndex;
-
-              if (start === -1) return currentContent;
-
-              try {
-                let offset = 0;
-                let targetBlock: ContentBlock | null = null;
-                let targetStart = start;
-                let targetEnd = end;
-
-                const blocks = currentContent.getBlockMap().toArray();
-                for (const block of blocks) {
-                  const length = block.getLength();
-                  if (start >= offset && start < offset + length) {
-                    targetBlock = block;
-                    targetStart = start - offset;
-                    targetEnd = end - offset;
-                    break;
-                  }
-                  offset += length + 1;
-                }
-
-                if (!targetBlock) return currentContent;
-
-                const blockKey = targetBlock.getKey();
-                const selectionState = SelectionState.createEmpty(
-                  blockKey,
-                ).merge({
-                  anchorOffset: targetStart,
-                  focusOffset: targetEnd,
-                  hasFocus: true,
-                });
-
-                return Modifier.applyInlineStyle(
-                  currentContent,
-                  selectionState,
-                  'HIGHLIGHT',
-                );
-              } catch (error) {
-                console.error('하이라이트 스타일 적용 중 오류 발생:', error);
-                return currentContent;
-              }
-            },
-            contentState,
-          );
-      }
-
-      const newEditorState = EditorState.createWithContent(
-        contentStateWithHighlight,
-      );
-
-      setEditorState(newEditorState);
-      setEditorInitialized(true);
+      setIsMedicationConsultInitialized(true);
     }
   }, [
     medicineConsultData,
-    counselSessionId,
-    editorState,
-    setEditorState,
     setMedicationConsult,
-    setEditorInitialized,
-    isEditorInitialized,
+    setIsMedicationConsultInitialized,
+    isMedicationConsultInitialized,
+    counselSessionId,
   ]);
 
   // 모든 초기화 상태 확인 및 업데이트
   useEffect(() => {
     if (
       isMedicineMemoInitialized &&
-      isEditorInitialized &&
+      isMedicationConsultInitialized &&
       isDisposalInitialized &&
       isWasteListInitialized
     ) {
@@ -267,7 +195,7 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
     };
   }, [
     isMedicineMemoInitialized,
-    isEditorInitialized,
+    isMedicationConsultInitialized,
     isDisposalInitialized,
     isWasteListInitialized,
   ]);
@@ -300,12 +228,12 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
     // 이미 초기화된 상태인 경우에만 초기화 상태를 리셋
     if (
       isMedicineMemoInitialized ||
-      isEditorInitialized ||
+      isMedicationConsultInitialized ||
       isDisposalInitialized ||
       isWasteListInitialized
     ) {
       setMedicineMemoInitialized(false);
-      setEditorInitialized(false);
+      setIsMedicationConsultInitialized(false);
       setIsDisposalInitialized(false);
       setIsWasteListInitialized(false);
       setIsAllInitialized(false);
@@ -318,7 +246,7 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
     error,
     isAllInitialized,
     isMedicineMemoInitialized,
-    isEditorInitialized,
+    isMedicationConsultInitialized,
     isDisposalInitialized,
     isWasteListInitialized,
   };

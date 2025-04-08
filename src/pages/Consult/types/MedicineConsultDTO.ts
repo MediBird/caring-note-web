@@ -1,4 +1,4 @@
-export interface MedicineConsultDTO {
+export interface MedicationConsultDTO {
   counselSessionId: string;
   medicationCounselId: string;
   counselRecord: string;
