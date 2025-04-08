@@ -191,11 +191,11 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     }
   };
 
-  const submitSpeakers = (speakers: string[]) => {
+  const submitSpeakers = () => {
     sessionStorage.setItem('autoNavigationOpen', 'true');
 
     updateRecordingStatus(RecordingStatus.AILoading);
-    sendSpeakers({ counselSessionId, speakers });
+    sendSpeakers({ counselSessionId });
   };
 
   const submitRecordingForLeavingOut = async () => {

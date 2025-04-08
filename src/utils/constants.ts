@@ -26,8 +26,27 @@ export const HEALTH_INSURANCE_TYPE_MAP: Record<
   [BaseInfoDTOHealthInsuranceTypeEnum.HealthInsurance]: '건강보험',
   [BaseInfoDTOHealthInsuranceTypeEnum.MedicalAid]: '의료급여',
   [BaseInfoDTOHealthInsuranceTypeEnum.VeteransBenefits]: '보훈',
-  [BaseInfoDTOHealthInsuranceTypeEnum.NonCovered]: '없음',
+  [BaseInfoDTOHealthInsuranceTypeEnum.NonCovered]: '비급여',
 } as const;
+
+export const HEALTH_INSURANCE_TYPE_OPTIONS: ButtonGroupOption[] = [
+  {
+    label: '건강보험',
+    value: BaseInfoDTOHealthInsuranceTypeEnum.HealthInsurance,
+  },
+  {
+    label: '의료급여',
+    value: BaseInfoDTOHealthInsuranceTypeEnum.MedicalAid,
+  },
+  {
+    label: '보훈',
+    value: BaseInfoDTOHealthInsuranceTypeEnum.VeteransBenefits,
+  },
+  {
+    label: '비급여',
+    value: BaseInfoDTOHealthInsuranceTypeEnum.NonCovered,
+  },
+] as const;
 
 export const COUNSEL_PURPOSE_OPTIONS: ButtonGroupOption[] = [
   {

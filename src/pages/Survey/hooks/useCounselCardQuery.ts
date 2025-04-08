@@ -5,8 +5,10 @@ import {
   CounselCardHealthInformationRes,
   CounselCardIndependentLifeInformationRes,
   CounselCardLivingInformationRes,
+  CounseleeControllerApi,
   UpdateCounselCardReq,
   UpdateCounselCardStatusReqStatusEnum,
+  UpdateCounseleeReq,
 } from '@/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
@@ -15,6 +17,7 @@ import { toast } from 'sonner';
 import { InfoType, useCounselCardStore } from './counselCardStore';
 
 const counselCardApi = new CounselCardControllerApi();
+const counseleeApi = new CounseleeControllerApi();
 
 // 에러 핸들링 공통 함수
 const handleError = (
@@ -288,9 +291,31 @@ export const useSaveCounselCardDraft = () => {
       const updateCounselCardReq: UpdateCounselCardReq = {};
 
       // 기본 정보
-      if (store.infoData.base && store.infoData.base.counselPurposeAndNote) {
-        updateCounselCardReq.counselPurposeAndNote =
-          store.infoData.base.counselPurposeAndNote;
+      if (store.infoData.base) {
+        // 내담자 정보 업데이트
+        if (
+          store.infoData.base.baseInfo?.counseleeId &&
+          (store.infoData.base.baseInfo?.counseleeName ||
+            store.infoData.base.baseInfo?.birthDate)
+        ) {
+          const updateCounseleeReq: UpdateCounseleeReq = {
+            counseleeId: store.infoData.base.baseInfo.counseleeId,
+            name: store.infoData.base.baseInfo.counseleeName || '',
+            dateOfBirth: store.infoData.base.baseInfo.birthDate || '',
+          };
+
+          try {
+            await counseleeApi.updateCounselee(updateCounseleeReq);
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (error) {
+            toast.error('내담자 정보 업데이트에 실패했습니다.');
+          }
+        }
+
+        if (store.infoData.base.counselPurposeAndNote) {
+          updateCounselCardReq.counselPurposeAndNote =
+            store.infoData.base.counselPurposeAndNote;
+        }
       }
 
       // 건강 정보
@@ -367,6 +392,11 @@ export const useSaveCounselCardDraft = () => {
 
       // 모든 관련 쿼리 무효화
       invalidateAllInfoQueries(queryClient, counselSessionId);
+
+      // 내담자 목록 쿼리도 무효화
+      queryClient.invalidateQueries({
+        queryKey: ['selectCounseleeList'],
+      });
 
       return true;
     } catch (error) {

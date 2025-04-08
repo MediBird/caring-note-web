@@ -54,6 +54,7 @@ export const AICounselSummaryControllerApiAxiosParamCreator = function (configur
          * @summary 선택 발화자 기준 TA
          * @param {AnalyseTextReq} analyseTextReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         analyseText: async (analyseTextReq: AnalyseTextReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -307,6 +308,7 @@ export const AICounselSummaryControllerApiAxiosParamCreator = function (configur
          * @summary 발화자 별 발화 내용 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         selectSpeakerList: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -393,6 +395,7 @@ export const AICounselSummaryControllerApiFp = function(configuration?: Configur
          * @summary 선택 발화자 기준 TA
          * @param {AnalyseTextReq} analyseTextReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         async analyseText(analyseTextReq: AnalyseTextReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessRes>> {
@@ -473,6 +476,7 @@ export const AICounselSummaryControllerApiFp = function(configuration?: Configur
          * @summary 발화자 별 발화 내용 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         async selectSpeakerList(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListSelectSpeakerListRes>> {
@@ -509,6 +513,7 @@ export const AICounselSummaryControllerApiFactory = function (configuration?: Co
          * @summary 선택 발화자 기준 TA
          * @param {AnalyseTextReq} analyseTextReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         analyseText(analyseTextReq: AnalyseTextReq, options?: RawAxiosRequestConfig): AxiosPromise<SuccessRes> {
@@ -571,6 +576,7 @@ export const AICounselSummaryControllerApiFactory = function (configuration?: Co
          * @summary 발화자 별 발화 내용 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         selectSpeakerList(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListSelectSpeakerListRes> {
@@ -601,6 +607,7 @@ export class AICounselSummaryControllerApi extends BaseAPI {
      * @summary 선택 발화자 기준 TA
      * @param {AnalyseTextReq} analyseTextReq 
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      * @memberof AICounselSummaryControllerApi
      */
@@ -675,6 +682,7 @@ export class AICounselSummaryControllerApi extends BaseAPI {
      * @summary 발화자 별 발화 내용 조회
      * @param {string} counselSessionId 
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      * @memberof AICounselSummaryControllerApi
      */

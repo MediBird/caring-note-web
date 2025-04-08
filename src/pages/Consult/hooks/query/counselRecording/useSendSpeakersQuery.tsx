@@ -3,10 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 
 const aiCounselSummaryControllerApi = new AICounselSummaryControllerApi();
 
-const analyseText = async (counselSessionId: string, speakers?: string[]) => {
+const analyseText = async (counselSessionId: string) => {
   const response = await aiCounselSummaryControllerApi.analyseText({
     counselSessionId,
-    speakers,
   });
   return response.data;
 };
@@ -14,7 +13,7 @@ const analyseText = async (counselSessionId: string, speakers?: string[]) => {
 export const useSendSpeakersQuery = () => {
   const { mutate: sendSpeakers } = useMutation({
     mutationFn: (data: AnalyseTextReq) => {
-      return analyseText(data.counselSessionId, data.speakers);
+      return analyseText(data.counselSessionId);
     },
   });
 
