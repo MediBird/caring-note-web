@@ -27,6 +27,7 @@ import {
   validateName,
   validatePhoneNumber,
 } from '@/utils/inputValidations';
+import { AsYouType } from 'libphonenumber-js';
 import { XIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -232,18 +233,10 @@ export const CounseleeDialog = ({
                 placeholder="000-0000-0000"
                 value={formData.phoneNumber}
                 onChange={(e) => {
-                  const value = e.target.value.replace(/[^0-9]/g, '');
-                  let formattedNumber = '';
-
-                  if (value.length <= 2) {
-                    formattedNumber = value;
-                  } else if (value.length <= 6) {
-                    formattedNumber = `${value.slice(0, 2)}-${value.slice(2)}`;
-                  } else if (value.length <= 10) {
-                    formattedNumber = `${value.slice(0, 2)}-${value.slice(2, 6)}-${value.slice(6)}`;
-                  } else {
-                    formattedNumber = `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
-                  }
+                  const formatter = new AsYouType('KR');
+                  const formattedNumber = formatter.input(
+                    e.target.value.replace(/[^0-9]/g, ''),
+                  );
 
                   setFormData({ ...formData, phoneNumber: formattedNumber });
                 }}

@@ -1,4 +1,5 @@
 import { AddCounseleeReqGenderTypeEnum } from '@/api';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 export interface AddCounseleeFormData {
   id?: string;
@@ -56,14 +57,18 @@ export const validateDateOfBirth = (value: string) => {
   if (date < minDate) {
     return '너무 오래된 날짜입니다.';
   }
-  
+
   return null;
 };
 
 export const validatePhoneNumber = (value: string) => {
   if (!value) return '전화번호를 입력해주세요.';
-  if (!/^\d{2,3}-\d{3,4}-\d{4}$/.test(value))
+
+  const phoneNumber = parsePhoneNumberFromString(value, 'KR');
+  if (!phoneNumber || !phoneNumber.isValid()) {
     return '올바른 전화번호 형식이 아닙니다.';
+  }
+
   return null;
 };
 
