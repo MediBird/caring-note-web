@@ -62,7 +62,8 @@ export const validateDateOfBirth = (value: string) => {
 
 export const validatePhoneNumber = (value: string) => {
   if (!value) return '전화번호를 입력해주세요.';
-  if (!/^\d{3}-\d{4}-\d{4}$/.test(value)) return '숫자 11자리를 입력해주세요';
+  if (!/^\d{2,3}-\d{3,4}-\d{4}$/.test(value))
+    return '올바른 전화번호 형식이 아닙니다.';
   return null;
 };
 
