@@ -235,15 +235,14 @@ export const CounseleeDialog = ({
                   const value = e.target.value.replace(/[^0-9]/g, '');
                   let formattedNumber = '';
 
-                  if (value.length <= 3) {
+                  if (value.length <= 2) {
                     formattedNumber = value;
-                  } else if (value.length <= 7) {
-                    formattedNumber = `${value.slice(0, 3)}-${value.slice(3)}`;
+                  } else if (value.length <= 6) {
+                    formattedNumber = `${value.slice(0, 2)}-${value.slice(2)}`;
+                  } else if (value.length <= 10) {
+                    formattedNumber = `${value.slice(0, 2)}-${value.slice(2, 6)}-${value.slice(6)}`;
                   } else {
-                    formattedNumber = `${value.slice(0, 3)}-${value.slice(
-                      3,
-                      7,
-                    )}-${value.slice(7, 11)}`;
+                    formattedNumber = `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`;
                   }
 
                   setFormData({ ...formData, phoneNumber: formattedNumber });

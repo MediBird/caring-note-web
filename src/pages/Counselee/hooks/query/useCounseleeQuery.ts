@@ -7,6 +7,7 @@ import {
   UpdateCounseleeReq,
 } from '@/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 const counseleeInfoControllerApi = new CounseleeControllerApi();
 
@@ -53,9 +54,8 @@ export const useSelectCounseleeList = (params: FetchParams) => {
 };
 
 const selectCounseleeInfo = async (counseleeId: string) => {
-  const response = await counseleeInfoControllerApi.selectCounselee(
-    counseleeId,
-  );
+  const response =
+    await counseleeInfoControllerApi.selectCounselee(counseleeId);
   return response.data.data as SelectCounseleeRes;
 };
 
@@ -75,31 +75,38 @@ const createCounseleeInfo = async (counseleeInfo: AddCounseleeReq) => {
 export const useCreateCounseleeInfo = () => {
   return useMutation({
     mutationFn: createCounseleeInfo,
+    onSuccess: () => {
+      toast.info('내담자 정보가 생성되었습니다.');
+    },
   });
 };
 
 const updateCounseleeInfo = async (counseleeInfo: UpdateCounseleeReq) => {
-  const response = await counseleeInfoControllerApi.updateCounselee(
-    counseleeInfo,
-  );
+  const response =
+    await counseleeInfoControllerApi.updateCounselee(counseleeInfo);
   return response.data.data as string;
 };
 
 export const useUpdateCounseleeInfo = () => {
   return useMutation({
     mutationFn: updateCounseleeInfo,
+    onSuccess: () => {
+      toast.info('내담자 정보가 수정되었습니다.');
+    },
   });
 };
 
 const deleteCounseleeInfo = async (counseleeIds: DeleteCounseleeBatchReq[]) => {
-  const response = await counseleeInfoControllerApi.deleteCounseleeBatch(
-    counseleeIds,
-  );
+  const response =
+    await counseleeInfoControllerApi.deleteCounseleeBatch(counseleeIds);
   return response.data as DeleteCounseleeBatchRes;
 };
 
 export const useDeleteCounseleeInfo = () => {
   return useMutation({
     mutationFn: deleteCounseleeInfo,
+    onSuccess: () => {
+      toast.info('내담자 정보가 삭제되었습니다.');
+    },
   });
 };
