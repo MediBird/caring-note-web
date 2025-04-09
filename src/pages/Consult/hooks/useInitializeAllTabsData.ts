@@ -14,6 +14,7 @@ import {
 import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
 import { AddAndUpdateWasteMedicationDisposalDTO } from '@/pages/Consult/types/WasteMedicationDTO';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
+import { parseEditorContent } from '@/utils/parseEditorContent';
 import { useEffect, useState } from 'react';
 
 export const useInitializeAllTabsData = (counselSessionId: string) => {
@@ -58,6 +59,7 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
     isMedicationConsultInitialized,
     setIsMedicationConsultInitialized,
     setMedicationConsult,
+    setEditorContent,
   } = useMedicationConsultStore();
 
   // 폐의약품 설문 store
@@ -74,15 +76,13 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
     setIsWasteListInitialized,
   } = useWasteMedicationListStore();
 
-  // 의약물 기록 init 및 업데이트를 하나의 useEffect로 통합
+  // 의약물 기록 init
   useEffect(() => {
+    if (isMedicineMemoInitialized) return;
+
     if (medicationRecordListData) {
       setMedicationRecordList(medicationRecordListData);
-
-      // 아직 초기화되지 않았다면 초기화 완료로 표시
-      if (!isMedicineMemoInitialized) {
-        setMedicineMemoInitialized(true);
-      }
+      setMedicineMemoInitialized(true);
     }
   }, [
     medicationRecordListData,
@@ -165,11 +165,15 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
         medicationCounselId: medicineConsultData.medicationCounselId || '',
         counselRecord: medicineConsultData.counselRecord || '',
       });
+      setEditorContent(
+        parseEditorContent(medicineConsultData.counselRecord || ''),
+      );
       setIsMedicationConsultInitialized(true);
     }
   }, [
     medicineConsultData,
     setMedicationConsult,
+    setEditorContent,
     setIsMedicationConsultInitialized,
     isMedicationConsultInitialized,
     counselSessionId,
@@ -237,7 +241,19 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
       setIsAllInitialized(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [counselSessionId]); // 의존성 배열에는 counselSessionId만 포함
+  }, [counselSessionId]);
+
+  // 언마운트시 모든 초기화 상태 리셋
+  useEffect(() => {
+    return () => {
+      setMedicineMemoInitialized(false);
+      setIsMedicationConsultInitialized(false);
+      setIsDisposalInitialized(false);
+      setIsWasteListInitialized(false);
+      setIsAllInitialized(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     isLoading,
