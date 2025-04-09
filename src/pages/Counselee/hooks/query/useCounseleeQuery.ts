@@ -76,7 +76,7 @@ export const useCreateCounseleeInfo = () => {
   return useMutation({
     mutationFn: createCounseleeInfo,
     onSuccess: () => {
-      toast.info('내담자 정보가 생성되었습니다.');
+      toast.info('내담자가 등록되었습니다.');
     },
   });
 };
