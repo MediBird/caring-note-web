@@ -5,12 +5,12 @@ import {
   useDeleteCounseleeInfo,
   useSelectCounseleeList,
   useUpdateCounseleeInfo,
-} from './queries/useCounseleeQuery';
+} from './query/useCounseleeQuery';
 import {
   useBirthDatesQuery,
   useInstitutionsQuery,
-} from './queries/useFilterOptionsQuery';
-import { useFilterStore } from './stores/useFilterStore';
+} from './query/useFilterOptionsQuery';
+import { useFilterStore } from './store/useFilterStore';
 
 export const useCounseleeManagement = () => {
   const [page, setPage] = useState(0);
