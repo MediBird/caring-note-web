@@ -1,6 +1,6 @@
 import Tooltip from '@/components/common/Tooltip';
 import { cn } from '@/lib/utils';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { createEditor, Node, Transforms, Text, Descendant } from 'slate';
 import {
   Slate,
@@ -33,37 +33,6 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
     setMedicationConsult,
   } = useMedicationConsultStore();
 
-  const initialEditorContent = useMemo(() => {
-    if (
-      medicationConsult.counselRecord &&
-      medicationConsult.counselRecord !== ''
-    ) {
-      try {
-        const parsedEditorContent = JSON.parse(medicationConsult.counselRecord);
-
-        if (Array.isArray(parsedEditorContent)) {
-          return parsedEditorContent;
-        }
-
-        return [
-          {
-            type: 'paragraph',
-            children: [{ text: medicationConsult.counselRecord }],
-          },
-        ];
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        return [
-          {
-            type: 'paragraph',
-            children: [{ text: medicationConsult.counselRecord }],
-          },
-        ];
-      }
-    }
-    return editorContent;
-  }, [medicationConsult.counselRecord, editorContent]);
-
   const handleEditorChange = (value: Node[]) => {
     setEditorContent(value);
     setMedicationConsult({
@@ -94,11 +63,6 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
         split: true,
       },
     );
-
-    setMedicationConsult({
-      ...medicationConsult,
-      counselRecord: JSON.stringify(editorContent),
-    });
   };
 
   const handleRemoveHighlightText = (editor: CustomEditor) => {
@@ -107,11 +71,6 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
       { bold: undefined },
       { match: (node) => Text.isText(node), split: true },
     );
-
-    setMedicationConsult({
-      ...medicationConsult,
-      counselRecord: JSON.stringify(editorContent),
-    });
   };
 
   const renderLeaf = useCallback((props: RenderLeafProps) => {
@@ -126,7 +85,7 @@ const HighlightInput: React.FC<HighlightInputProps> = ({
       )}>
       <Slate
         editor={editor}
-        initialValue={initialEditorContent as Descendant[]}
+        initialValue={editorContent as Descendant[]}
         onChange={handleEditorChange}>
         <div
           className={cn(
