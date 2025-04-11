@@ -247,7 +247,7 @@ export const CounseleeDialog = ({
             <div className="space-y-2">
               <Label>행정동</Label>
               <FormInput
-                placeholder="행정동"
+                placeholder="OO동"
                 value={formData.address}
                 onChange={(e) =>
                   setFormData({ ...formData, address: e.target.value })
