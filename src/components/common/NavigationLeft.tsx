@@ -229,7 +229,8 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                     <span
                       className={cn(
                         'w-full overflow-hidden whitespace-nowrap',
-                        !open && 'w-full whitespace-pre-wrap text-center',
+                        !open &&
+                          'w-full whitespace-pre-wrap text-center text-body1 font-medium',
                       )}>
                       {open ? item.name : item.collapsedName}
                     </span>

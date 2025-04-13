@@ -5,9 +5,11 @@ import {
 import background from '@/assets/home/home-bg.webp';
 import logoWide from '@/assets/home/logo-wide.webp';
 import tableEmpty from '@/assets/home/table-empty.webp';
-import onlypc from '@/assets/illusts/onlypc.webp';
 import CalendarIcon from '@/assets/icon/calendar.svg?react';
+import onlypc from '@/assets/illusts/onlypc.webp';
+import Spinner from '@/components/common/Spinner';
 import DatePickerComponent from '@/components/ui/datepicker';
+import { useAuthContext } from '@/context/AuthContext';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
 import { cn } from '@/lib/utils';
 import CollegeMessages from '@/pages/Home/components/CollegeMessages';
@@ -17,8 +19,6 @@ import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 import { addMonths } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
 import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
-import { useAuthContext } from '@/context/AuthContext';
-import Spinner from '@/components/common/Spinner';
 
 function Home() {
   const today = new Date();
@@ -81,7 +81,7 @@ function Home() {
           <div className="flex w-full flex-grow flex-col items-center justify-center">
             <div className="flex h-auto min-h-[824px] w-full flex-col gap-6 rounded-xl bg-white p-6 shadow-container">
               <div className="flex w-full items-center justify-between">
-                <span className="text-2xl font-bold">상담 일정</span>
+                <span className="text-subtitle1 font-bold">상담 일정</span>
                 {user &&
                   (user.roleType === GetCounselorResRoleTypeEnum.Admin ||
                     user.roleType === GetCounselorResRoleTypeEnum.User) && (
@@ -91,7 +91,7 @@ function Home() {
                       trigger={
                         <button
                           className={cn(
-                            'flex items-center gap-0.5 px-2 text-right font-bold',
+                            'flex items-center gap-0.5 px-2 text-right text-body1 font-bold',
                           )}>
                           <CalendarIcon />
                           날짜 선택
