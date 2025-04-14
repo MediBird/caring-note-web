@@ -136,7 +136,7 @@ const ConsultTabs = ({
         <TabsTrigger value="pastConsult">상담 히스토리</TabsTrigger>
       )}
       <TabsTrigger value="survey">기초 설문 내역</TabsTrigger>
-      <TabsTrigger value="medicine">의약물 기록</TabsTrigger>
+      <TabsTrigger value="medicine">약물 기록</TabsTrigger>
       <TabsTrigger value="note">중재 기록 작성</TabsTrigger>
       <TabsTrigger value="wasteMedication">폐의약품 처리</TabsTrigger>
     </div>
@@ -185,7 +185,7 @@ export function Index() {
     isSuccess: isSuccessSaveMedicationCounsel,
   } = useSaveMedicineConsult();
 
-  // 의약물 기록 저장
+  // 약물 기록 저장
   const {
     mutate: saveMedicationRecordList,
     isSuccess: isSuccessSaveMedicationRecordList,

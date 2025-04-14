@@ -174,7 +174,7 @@ export default function BasicInfo() {
             ),
           },
           {
-            label: '의약물',
+            label: '약물',
             subLabel: '',
             value: (
               <Textarea
@@ -184,7 +184,7 @@ export default function BasicInfo() {
                 onChange={(e) =>
                   handleUpdateBaseInfo('medicationNote', e.target.value)
                 }
-                placeholder="약사님께 전달해 드릴 의약물을 작성해 주세요."
+                placeholder="약사님께 전달해 드릴 약물을 작성해 주세요."
               />
             ),
           },

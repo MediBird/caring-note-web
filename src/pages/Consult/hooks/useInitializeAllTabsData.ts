@@ -23,7 +23,7 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // 의약물 기록 조회
+  // 약물 기록 조회
   const { data: medicationRecordListData, isError: isMedicationRecordError } =
     useMedicationRecordList({
       counselSessionId: counselSessionId as string,
@@ -47,7 +47,7 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
     isError: isWasteMedicationListError,
   } = useWasteMedicationList(counselSessionId as string);
 
-  // 의약물 기록 store
+  // 약물 기록 store
   const {
     isListInitialized: isMedicineMemoInitialized,
     setIsListInitialized: setMedicineMemoInitialized,
@@ -76,7 +76,7 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
     setIsWasteListInitialized,
   } = useWasteMedicationListStore();
 
-  // 의약물 기록 init
+  // 약물 기록 init
   useEffect(() => {
     if (isMedicineMemoInitialized) return;
 
