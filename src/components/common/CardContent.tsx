@@ -1,4 +1,3 @@
-
 interface CardContentProps {
   className?: string;
   item: string;
@@ -7,8 +6,8 @@ interface CardContentProps {
 
 const CardContent = ({ item, value }: CardContentProps) => {
   return (
-    <div className="px-6 mt-8 mb-2 w-full">
-      <p className="text-body1 font-bold text-grayscale-90 mb-1">{item}</p>
+    <div className="mb-2 mt-8 w-full px-6">
+      <p className="mb-1 text-body1 font-bold text-grayscale-90">{item}</p>
       <span className="text-body2 font-medium text-grayscale-70">{value}</span>
     </div>
   );

@@ -60,7 +60,7 @@ const SearchComponent = ({
   };
 
   return (
-    <div className="relative w-full h-full bg-transparent">
+    <div className="relative h-full w-full bg-transparent">
       <Command
         className="rounded-lg"
         {...commandProps}
@@ -76,13 +76,13 @@ const SearchComponent = ({
         {/* 돋보기 아이콘 추가 */}
         <div className="relative">
           {searchIcon && (
-            <div className="absolute transform -translate-y-1/12 left-3 top-2">
+            <div className="-translate-y-1/12 absolute left-3 top-2 transform">
               {typeof searchIcon === 'string' && <img src={searchIcon} />}
             </div>
           )}
         </div>
         <CommandInput
-          className={`w-full h-full ${searchIcon ? 'pl-8' : ''}`}
+          className={`h-full w-full ${searchIcon ? 'pl-8' : ''}`}
           placeholder={placeholder}
           value={inputValue}
           onFocus={() => {
@@ -97,10 +97,10 @@ const SearchComponent = ({
           autoFocus
         />
 
-        <CommandList className="absolute left-0 z-10 w-full overflow-auto bg-white border rounded shadow-lg top-12 max-h-48">
+        <CommandList className="absolute left-0 top-12 z-10 max-h-48 w-full overflow-auto rounded border bg-white shadow-lg">
           <CommandGroup>
             {isFocused && (
-              <CommandItem className="p-2 text-sm text-left">
+              <CommandItem className="p-2 text-left text-sm">
                 검색 결과가 없습니다.
               </CommandItem>
             )}

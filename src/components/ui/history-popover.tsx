@@ -30,12 +30,12 @@ const HistoryPopoverContent = React.forwardRef<
         align={align}
         sideOffset={sideOffset}
         className={cn(
-          'z-50 relative w-[29.5rem] max-h-[300px] border border-neutral-200 bg-white text-neutral-950 shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50',
+          'relative z-50 max-h-[300px] w-[29.5rem] border border-neutral-200 bg-white text-neutral-950 shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50',
           className,
         )}
         {...props}>
-        <div className="flex flex-col h-[300px]">
-          <div className="px-6 py-5 flex-shrink-0">
+        <div className="flex h-[300px] flex-col">
+          <div className="flex-shrink-0 px-6 py-5">
             <h2 className="text-subtitle2 font-bold">히스토리</h2>
           </div>
           <ScrollArea className="flex-1" variant="mini">
@@ -43,15 +43,15 @@ const HistoryPopoverContent = React.forwardRef<
               {historyGroups.map((group, groupIndex) => (
                 <div
                   key={groupIndex}
-                  className="py-4 border-b border-graysclae-10 flex gap-3 w-full">
-                  <h3 className="text-body2 font-normal text-primary-60 shrink-0 w-24">
+                  className="border-graysclae-10 flex w-full gap-3 border-b py-4">
+                  <h3 className="w-24 shrink-0 text-body2 font-normal text-primary-60">
                     {group.date}
                   </h3>
-                  <ul className="space-y-4 flex flex-col flex-1 min-w-0">
+                  <ul className="flex min-w-0 flex-1 flex-col space-y-4">
                     {group.items.map((item, itemIndex) => (
                       <li
                         key={itemIndex}
-                        className="text-grayscale-90 font-medium text-body1 break-words">
+                        className="break-words text-body1 font-medium text-grayscale-90">
                         {item}
                       </li>
                     ))}
@@ -60,7 +60,7 @@ const HistoryPopoverContent = React.forwardRef<
               ))}
             </div>
           </ScrollArea>
-          <div className="px-6 py-5 flex-shrink-0">
+          <div className="flex-shrink-0 px-6 py-5">
             <div className="flex justify-end">
               <PopoverPrimitive.Close>
                 <Button variant="primary" size="md">

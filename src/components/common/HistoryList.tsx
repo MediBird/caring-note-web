@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface HistoryListProps {
   date: string;
@@ -7,15 +7,15 @@ interface HistoryListProps {
 
 const HistoryList: React.FC<HistoryListProps> = ({ date, items }) => {
   return (
-    <div className="w-full mb-4 border-b border-grayscale-5">
-      <div className="w-auto inline-block align-top mr-4">
+    <div className="mb-4 w-full border-b border-grayscale-5">
+      <div className="mr-4 inline-block w-auto align-top">
         <span className="text-body text-primary-60">{date}</span>
       </div>
       <div className="inline-block max-w-xs">
         {items.map((item, index) => (
           <p
             key={index}
-            className="text-body1 font-medium text-grayscale-90 pb-4">
+            className="pb-4 text-body1 font-medium text-grayscale-90">
             {item}
           </p>
         ))}

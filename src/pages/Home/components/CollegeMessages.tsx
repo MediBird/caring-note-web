@@ -13,16 +13,16 @@ function CollegeMessages() {
   ];
 
   return (
-    <div className="flex flex-col bg-white border-white rounded-xl gap-3 p-4 items-center justify-start shadow-container">
-      <h1 className="text-left text-xl font-bold break-keep text-primary-50 w-full leading-[26px]">
+    <div className="flex flex-col items-center justify-start gap-3 rounded-xl border-white bg-white p-4 shadow-container">
+      <h1 className="w-full break-keep text-left text-xl font-bold leading-[26px] text-primary-50">
         동료약사의 따뜻한 마음 ✨
       </h1>
-      <div className="flex flex-row hd:flex-col gap-3 w-full">
-        <div className="flex flex-col p-3 bg-primary-5 rounded-[8px] items-center justify-center w-full gap-[10px]">
+      <div className="flex w-full flex-row gap-3 hd:flex-col">
+        <div className="flex w-full flex-col items-center justify-center gap-[10px] rounded-[8px] bg-primary-5 p-3">
           <div className="text-center leading-6">{messages[0].message}</div>
           <p className="text-grayscale-50">{`- ${messages[0].name} -`}</p>
         </div>
-        <div className="flex flex-col p-3 bg-primary-5 rounded-[8px] items-center justify-center w-full gap-[10px]">
+        <div className="flex w-full flex-col items-center justify-center gap-[10px] rounded-[8px] bg-primary-5 p-3">
           <div className="text-center leading-6">{messages[1].message}</div>
           <p className="text-grayscale-50">{`- ${messages[1].name} -`}</p>
         </div>

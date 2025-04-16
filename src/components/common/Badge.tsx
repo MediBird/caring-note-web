@@ -1,12 +1,12 @@
-import BookmarkBlueIcon from "@/assets/icon/20/bookmark.blue.svg?react";
-import BookmarkRedIcon from "@/assets/icon/20/bookmark.red.svg?react";
-import BookmarkWhiteIcon from "@/assets/icon/20/bookmark.white.svg?react";
-import classNames from "classnames";
-import React from "react";
+import BookmarkBlueIcon from '@/assets/icon/20/bookmark.blue.svg?react';
+import BookmarkRedIcon from '@/assets/icon/20/bookmark.red.svg?react';
+import BookmarkWhiteIcon from '@/assets/icon/20/bookmark.white.svg?react';
+import classNames from 'classnames';
+import React from 'react';
 
-type BadgeVariant = "filled" | "tint" | "outline" | "ghost";
-type BadgeSize = "extra-large" | "large" | "medium" | "small";
-type BadgeColor = "primary" | "error";
+type BadgeVariant = 'filled' | 'tint' | 'outline' | 'ghost';
+type BadgeSize = 'extra-large' | 'large' | 'medium' | 'small';
+type BadgeColor = 'primary' | 'error';
 
 interface BadgeProps {
   className?: string;
@@ -18,19 +18,19 @@ interface BadgeProps {
 }
 
 const Badge: React.FC<BadgeProps> = ({
-  className = "",
-  variant = "filled",
-  size = "medium",
-  color = "primary",
+  className = '',
+  variant = 'filled',
+  size = 'medium',
+  color = 'primary',
   customIcon = null,
   children,
 }) => {
-  const baseClasses = "inline-flex items-center gap-2 rounded-full font-medium";
+  const baseClasses = 'inline-flex items-center gap-2 rounded-full font-medium';
   const sizeClasses = {
-    "extra-large": "px-4 py-2 text-subtitle1",
-    large: "px-4 py-2 text-body1",
-    medium: "px-3 py-1.5 text-body2",
-    small: "px-3 py-1.5 text-caption1",
+    'extra-large': 'px-4 py-2 text-subtitle1',
+    large: 'px-4 py-2 text-body1',
+    medium: 'px-3 py-1.5 text-body2',
+    small: 'px-3 py-1.5 text-caption1',
   };
 
   const variantClasses = {
@@ -41,7 +41,7 @@ const Badge: React.FC<BadgeProps> = ({
   };
 
   const iconSize = {
-    "extra-large": 20,
+    'extra-large': 20,
     large: 16,
     medium: 12,
     small: 12,
@@ -49,9 +49,9 @@ const Badge: React.FC<BadgeProps> = ({
 
   const icon = () => {
     const defaultIcon =
-      variant === "filled" ? (
+      variant === 'filled' ? (
         <BookmarkWhiteIcon width={iconSize[size]} height={iconSize[size]} />
-      ) : color === "primary" ? (
+      ) : color === 'primary' ? (
         <BookmarkBlueIcon width={iconSize[size]} height={iconSize[size]} />
       ) : (
         <BookmarkRedIcon width={iconSize[size]} height={iconSize[size]} />

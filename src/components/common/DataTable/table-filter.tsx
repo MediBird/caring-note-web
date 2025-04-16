@@ -127,7 +127,7 @@ const TableFilter = ({
                   <CommandItem
                     key={option.value}
                     onSelect={() => handleSelect(option.value)}>
-                    <div className="flex items-center justify-between w-full">
+                    <div className="flex w-full items-center justify-between">
                       <div className="flex items-center gap-2">
                         <input
                           type="checkbox"
@@ -148,18 +148,18 @@ const TableFilter = ({
               </CommandGroup>
               {filteredOptions.length === 0 && (
                 <CommandGroup>
-                  <CommandItem className="text-sm text-gray-500 py-2">
+                  <CommandItem className="py-2 text-sm text-gray-500">
                     검색 결과가 없습니다
                   </CommandItem>
                 </CommandGroup>
               )}
             </CommandList>
-            
+
             {selectedValues.length > 0 && (
               <div className="border-t border-gray-100">
                 <CommandItem
                   onSelect={handleClear}
-                  className="justify-center text-sm py-2">
+                  className="justify-center py-2 text-sm">
                   필터 초기화
                 </CommandItem>
               </div>

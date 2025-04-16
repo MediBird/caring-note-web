@@ -177,5 +177,3 @@ export const setLivingInfo = (
 ) => {
   useCounselCardStore.getState().setInfoData('living', data);
 };
-
-

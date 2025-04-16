@@ -11,7 +11,7 @@ const TabContentContainer: React.FC<TabContentContainerProps> = ({
   children,
 }) => {
   return (
-    <div className={cn('w-full h-auto pt-8 px-10 mb-20', className)}>
+    <div className={cn('mb-20 h-auto w-full px-10 pt-8', className)}>
       {children}
     </div>
   );
