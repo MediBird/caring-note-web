@@ -1,0 +1,17 @@
+src/api/
+build/
+dist/
+node_modules/
+src/vite-env.d.ts
+tailwind.config.js
+tsconfig.app.json
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+components.json
+eslint.config.js
+openapitools.json
+postcss.config.js
+package.json
+pnpm-lock.yaml
+src/global.d.ts
