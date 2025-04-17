@@ -7,4 +7,13 @@ pre-commit:
       run: pnpm run type-check
     format:
       glob: '*.{js,ts,jsx,tsx}'
+      run: pnpm run format:staged && git add {staged_files}
+
+pre-push:
+  parallel: true
+  commands:
+    type-check:
+      run: pnpm run type-check
+    format:
+      glob: '*.{js,ts,jsx,tsx}'
       run: pnpm run format && git add {staged_files}

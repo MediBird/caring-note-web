@@ -10,6 +10,7 @@
     "type-check": "tsc -p tsconfig.app.json --noEmit",
     "preview": "vite preview",
     "format": "prettier --write \"**/*.{js,ts,jsx,tsx,json}\" --ignore-path .prettierignore",
+    "format:staged": "git diff --staged --name-only --diff-filter=ACMR | grep -E '\\.(js|ts|jsx|tsx|json)$' | xargs -I % prettier --write --ignore-path .prettierignore % && git add -u",
     "generate:api": "openapi-generator-cli generate -i https://caringnote.co.kr/api/v1/api-docs -g typescript-axios -o src/api --additional-properties=apiPackage=api,modelPackage=models,withSeparateModelsAndApi=true,apis,supportingFiles",
     "generate:api:local": "openapi-generator-cli generate -i http://localhost:8080/api/v3/api-docs -g typescript-axios -o src/api"
   },
