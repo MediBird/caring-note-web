@@ -49,6 +49,29 @@ pnpm build
 pnpm preview
 ```
 
+### Git 훅 설정 (lefthook)
+
+이 프로젝트는 코드 품질 유지를 위해 Lefthook을 통한 Git 훅을 사용합니다.
+
+```bash
+# 모든 개발자는 최초 프로젝트 설정 후 반드시 실행해야 합니다
+pnpm dlx lefthook install
+```
+
+**주요 훅 설정:**
+
+- **pre-commit**: 커밋 전 다음 작업 수행
+
+  - 린트 검사 (`pnpm run lint`)
+  - 타입 검사 (`pnpm run type-check`)
+  - 스테이징된 파일 포맷팅 (`pnpm run format:staged`)
+
+- **pre-push**: 푸시 전 다음 작업 수행
+  - 전체 파일 타입 검사 (`pnpm run type-check`)
+  - 전체 코드 포맷팅 (`pnpm run format`)
+
+> ⚠️ **중요**: git 훅 작동을 위해 프로젝트 클론 후 `pnpm dlx lefthook install` 명령을 실행해주세요
+
 ### API 클라이언트 생성
 
 ```bash
