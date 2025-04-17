@@ -20,11 +20,11 @@ const Tooltip: React.FC<TooltipProps> = ({
 }) => {
   return (
     <>
-      <div className={cn(`inline-block m-1 text-gray-900`, className)}>
+      <div className={cn(`m-1 inline-block text-gray-900`, className)}>
         <TooltipBlackIcon width={20} height={20} data-tooltip-id={id} />
       </div>
       <ReactTooltip
-        className="bg-grayscale-10 !p-1 !px-2 !fixed !rounded-[4px] !font-normal"
+        className="!fixed !rounded-[4px] bg-grayscale-10 !p-1 !px-2 !font-normal"
         id={id}
         place={place}
         content={text}

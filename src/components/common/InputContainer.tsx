@@ -1,5 +1,5 @@
-import classNames from "classnames";
-import React, { ReactNode } from "react";
+import classNames from 'classnames';
+import React, { ReactNode } from 'react';
 
 interface InputContainerProps {
   className?: string;
@@ -11,7 +11,7 @@ const InputContainer: React.FC<InputContainerProps> = ({
   children,
 }) => {
   return (
-    <div className={classNames("flex items-center space-x-2 mr-4", className)}>
+    <div className={classNames('mr-4 flex items-center space-x-2', className)}>
       {children}
     </div>
   );

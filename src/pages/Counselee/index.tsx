@@ -22,9 +22,9 @@ const CounseleeManagement = () => {
         title="내담자 관리"
         description="복약 상담소를 방문하는 모든 내담자의 정보"
       />
-      <div className="flex justify-center pt-5 max-w-layout px-layout [&>*]:max-w-content mx-auto w-full">
-        <div className="w-full h-full rounded-[0.5rem] items-center flex flex-col">
-          <div className="w-full h-full rounded-[0.5rem] flex justify-between pb-5">
+      <div className="mx-auto flex w-full max-w-layout justify-center px-layout pt-5 [&>*]:max-w-content">
+        <div className="flex h-full w-full flex-col items-center rounded-[0.5rem]">
+          <div className="flex h-full w-full justify-between rounded-[0.5rem] pb-5">
             <FilterSection
               nameFilter={filter.name}
               setNameFilter={(value) => setFilter({ name: value })}

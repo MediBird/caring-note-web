@@ -13,9 +13,9 @@ const ConsultCardContainer: React.FC<ConsultCardContainerProps> = ({
   children,
 }) => {
   return (
-    <div className={classNames('w-full ', _class)}>
+    <div className={classNames('w-full', _class)}>
       <div className="rounded-t-lg"></div>
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <div className="px-2 py-2">{title}</div>
         {children}
       </div>

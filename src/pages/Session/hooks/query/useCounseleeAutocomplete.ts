@@ -9,9 +9,8 @@ export const useCounseleeAutocomplete = (keyword: string) => {
     queryFn: async () => {
       if (!keyword || keyword.length < 1) return [];
 
-      const response = await counseleeControllerApi.autocompleteCounselees(
-        keyword,
-      );
+      const response =
+        await counseleeControllerApi.autocompleteCounselees(keyword);
       return response.data.data || [];
     },
     enabled: keyword.length > 0,

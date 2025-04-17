@@ -1,5 +1,5 @@
-import SelectComponent from "@/components/common/SelectComponent";
-import TextFieldComponent from "@/components/common/TextFieldComponent";
+import SelectComponent from '@/components/common/SelectComponent';
+import TextFieldComponent from '@/components/common/TextFieldComponent';
 type option = {
   val: string;
   name: string;
@@ -23,11 +23,11 @@ const InputComponent = ({
   onSelect,
 }: InputComponentProps) => {
   switch (element.type) {
-    case "text":
+    case 'text':
       return <TextFieldComponent option={element} onChange={onChange} />;
-    case "select":
+    case 'select':
       return <SelectComponent option={element} onSelect={onSelect} />;
-    case "date":
+    case 'date':
       return;
     default:
       return <></>;

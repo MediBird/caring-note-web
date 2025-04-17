@@ -35,7 +35,7 @@ function SelectCellWithCustomInput({
       <Select value={initialValue} onValueChange={onValueChange}>
         <SelectTrigger
           className={cn(
-            'cursor-pointer border-none text-md bg-transparent data-[state=open]:shadow-cell-shadow focus:outline-none',
+            'text-md cursor-pointer border-none bg-transparent focus:outline-none data-[state=open]:shadow-cell-shadow',
             initialValue === '' && 'text-grayscale-40',
           )}>
           <SelectValue placeholder={placeholder} />
@@ -76,7 +76,7 @@ function SelectCellWithCustomInput({
                 onValueChange(customValue);
               }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full focus:outline-none border-b border-grayscale-30"
+              className="w-full border-b border-grayscale-30 focus:outline-none"
               placeholder="기타 입력"
             />
           </div>

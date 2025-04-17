@@ -1,7 +1,7 @@
-import check from "@/assets/icon/16/check.outline.blue.svg";
-import arrowDropDown from "@/assets/icon/arrowdropdown.svg";
-import arrowDropUp from "@/assets/icon/arrowdropup.svg";
-import React, { useState } from "react";
+import check from '@/assets/icon/16/check.outline.blue.svg';
+import arrowDropDown from '@/assets/icon/arrowdropdown.svg';
+import arrowDropUp from '@/assets/icon/arrowdropup.svg';
+import React, { useState } from 'react';
 interface DropdownProps {
   options: string[]; // 드롭다운 항목 배열
   placeholder?: string; // 선택 전 기본 텍스트
@@ -12,10 +12,10 @@ interface DropdownProps {
 
 const Dropdown: React.FC<DropdownProps> = ({
   options,
-  placeholder = "Select",
+  placeholder = 'Select',
   onSelect,
   disabled = false,
-  helpText = "",
+  helpText = '',
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false); // 드롭다운 열림 상태
   const [selectedValue, setSelectedValue] = useState<string | null>(null); // 선택된 값
@@ -44,16 +44,16 @@ const Dropdown: React.FC<DropdownProps> = ({
   return (
     <div
       className={`relative w-52 ${
-        disabled ? "opacity-50 cursor-not-allowed" : ""
+        disabled ? 'cursor-not-allowed opacity-50' : ''
       }`}>
       {/* 드롭다운 헤더 */}
       <div
-        className={`border rounded-[0.25rem] px-2 py-[0.375rem] flex justify-between items-center cursor-pointer ${
+        className={`flex cursor-pointer items-center justify-between rounded-[0.25rem] border px-2 py-[0.375rem] ${
           disabled
-            ? "border-grayscale-20 bg-grayscale-5"
+            ? 'border-grayscale-20 bg-grayscale-5'
             : isFocused
-            ? "border-primary-50 ring-1 ring-primary-50 border-2 bg-white"
-            : "border-grayscale-30 hover:border-grayscale-50"
+              ? 'border-2 border-primary-50 bg-white ring-1 ring-primary-50'
+              : 'border-grayscale-30 hover:border-grayscale-50'
         }`}
         onClick={handleToggle}
         role="button"
@@ -65,38 +65,38 @@ const Dropdown: React.FC<DropdownProps> = ({
         <span
           className={`text-body1 font-medium ${
             disabled
-              ? "text-grayscale-30"
+              ? 'text-grayscale-30'
               : selectedValue
-              ? "text-grayscale-90"
-              : "text-grayscale-40"
+                ? 'text-grayscale-90'
+                : 'text-grayscale-40'
           } leading-6`}>
           {selectedValue || placeholder}
         </span>
         <img
           src={isOpen ? arrowDropUp : arrowDropDown}
-          alt={isOpen ? "Collapse" : "Expand"}
-          className="w-[1.25rem] h-[1.25rem]"
+          alt={isOpen ? 'Collapse' : 'Expand'}
+          className="h-[1.25rem] w-[1.25rem]"
         />
       </div>
 
       {/* 드롭다운 리스트 */}
       {isOpen && (
         <ul
-          className="absolute mt-1 p-2 bg-white border border-gray-300 rounded-[0.25rem] shadow-lg z-10 w-full max-h-60 overflow-auto"
+          className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-[0.25rem] border border-gray-300 bg-white p-2 shadow-lg"
           role="listbox"
           tabIndex={-1}>
           {options.map((option, index) => (
             <li
               key={index}
-              className={`py-1 px-2 flex justify-between items-center hover:bg-grayscale-3 cursor-pointer text-body1 font-medium text-grayscale-90 leading-6 rounded-[0.25rem] ${
-                selectedValue === option ? "text-primary-50" : ""
+              className={`flex cursor-pointer items-center justify-between rounded-[0.25rem] px-2 py-1 text-body1 font-medium leading-6 text-grayscale-90 hover:bg-grayscale-3 ${
+                selectedValue === option ? 'text-primary-50' : ''
               }`}
               onClick={() => handleSelect(option)}
               role="option"
               aria-selected={selectedValue === option}>
               <span>{option}</span>
               {selectedValue === option && (
-                <img src={check} alt="Selected" className="w-4 h-4" />
+                <img src={check} alt="Selected" className="h-4 w-4" />
               )}
             </li>
           ))}
@@ -106,8 +106,8 @@ const Dropdown: React.FC<DropdownProps> = ({
       {/* 도움말 텍스트 */}
       {helpText && (
         <p
-          className={`pt-[1px] pb-[2px] text-caption1 font-regular ${
-            disabled ? "text-grayscale-40" : "text-grayscale-70"
+          className={`pb-[2px] pt-[1px] text-caption1 font-regular ${
+            disabled ? 'text-grayscale-40' : 'text-grayscale-70'
           }`}>
           {helpText}
         </p>

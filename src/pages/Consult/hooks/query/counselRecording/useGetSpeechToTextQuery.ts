@@ -5,9 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 const aiCounselSummaryControllerApi = new AICounselSummaryControllerApi();
 
 const selectSpeechToText = async (counselSessionId: string) => {
-  const response = await aiCounselSummaryControllerApi.selectSpeechToText(
-    counselSessionId,
-  );
+  const response =
+    await aiCounselSummaryControllerApi.selectSpeechToText(counselSessionId);
 
   return response.data.data || [];
 };

@@ -46,7 +46,7 @@ export function DataTablePagination({
               <PaginationLink
                 onClick={() => onPageChange(pageNumber)}
                 isActive={pagination.currentPage === pageNumber}
-                className="w-[30px] h-[30px] font-light flex items-center justify-center"
+                className="flex h-[30px] w-[30px] items-center justify-center font-light"
                 size="md">
                 {pageNumber + 1}
               </PaginationLink>

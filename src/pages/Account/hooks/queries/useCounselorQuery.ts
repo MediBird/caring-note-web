@@ -14,7 +14,8 @@ const counselorControllerApi = new CounselorControllerApi();
 export const COUNSELOR_KEYS = {
   all: ['counselors'] as const,
   lists: () => [...COUNSELOR_KEYS.all, 'list'] as const,
-  list: (filters: CounselorFetchParams) => [...COUNSELOR_KEYS.lists(), filters] as const,
+  list: (filters: CounselorFetchParams) =>
+    [...COUNSELOR_KEYS.lists(), filters] as const,
   details: () => [...COUNSELOR_KEYS.all, 'detail'] as const,
   detail: (id: string) => [...COUNSELOR_KEYS.details(), id] as const,
 };
@@ -26,7 +27,7 @@ export const useGetCounselorsByPage = (params: CounselorFetchParams) => {
     queryFn: async () => {
       const response = await counselorControllerApi.getCounselorsByPage(
         params.page,
-        params.size
+        params.size,
       );
       return response.data as CounselorPageRes;
     },
@@ -39,16 +40,16 @@ export const useUpdateCounselor = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ 
+    mutationFn: async ({
       counselorId,
-      updateCounselorReq
-    }: { 
-      counselorId: string, 
-      updateCounselorReq: UpdateCounselorReq 
+      updateCounselorReq,
+    }: {
+      counselorId: string;
+      updateCounselorReq: UpdateCounselorReq;
     }) => {
       const response = await counselorControllerApi.updateCounselor(
         counselorId,
-        updateCounselorReq
+        updateCounselorReq,
       );
       return response.data;
     },
@@ -56,7 +57,9 @@ export const useUpdateCounselor = () => {
       // 상담사 목록 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: COUNSELOR_KEYS.lists() });
       // 상담사 상세 정보 쿼리 무효화
-      queryClient.invalidateQueries({ queryKey: COUNSELOR_KEYS.detail(variables.counselorId) });
+      queryClient.invalidateQueries({
+        queryKey: COUNSELOR_KEYS.detail(variables.counselorId),
+      });
     },
   });
 };
@@ -67,7 +70,8 @@ export const useDeleteCounselor = () => {
 
   return useMutation({
     mutationFn: async (counselorId: string) => {
-      const response = await counselorControllerApi.deleteCounselor(counselorId);
+      const response =
+        await counselorControllerApi.deleteCounselor(counselorId);
       return response.data;
     },
     onSuccess: () => {
@@ -82,16 +86,16 @@ export const useResetPassword = () => {
   return useMutation({
     mutationFn: async ({
       counselorId,
-      resetPasswordReq
+      resetPasswordReq,
     }: {
-      counselorId: string,
-      resetPasswordReq: ResetPasswordReq
+      counselorId: string;
+      resetPasswordReq: ResetPasswordReq;
     }) => {
       const response = await counselorControllerApi.resetPassword(
         counselorId,
-        resetPasswordReq
+        resetPasswordReq,
       );
       return response.data;
     },
   });
-}; 
+};

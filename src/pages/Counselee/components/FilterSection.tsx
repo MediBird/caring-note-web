@@ -23,7 +23,7 @@ export const FilterSection = ({
   institutionsOptions,
 }: FilterSectionProps) => {
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex items-center gap-4">
       <SearchInput value={nameFilter} onChange={setNameFilter} />
       <TableFilter
         title="생년월일"

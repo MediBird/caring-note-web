@@ -24,15 +24,15 @@ const ErrorCommon: React.FC<ErrorCommonProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-white">
-      <div className="text-center w-[24.5rem] gap-[2rem]">
+    <div className="flex h-screen items-center justify-center bg-white">
+      <div className="w-[24.5rem] gap-[2rem] text-center">
         <div className="flex flex-col items-center justify-center gap-[1.5rem]">
-          <img src={image} alt={title} className="w-[15rem] h-[15rem]" />
+          <img src={image} alt={title} className="h-[15rem] w-[15rem]" />
           <div>
-            <p className="text-h3 font-bold text-grayscale-100 mb-[0.625rem]">
+            <p className="mb-[0.625rem] text-h3 font-bold text-grayscale-100">
               {title}
             </p>
-            <span className="text-grayscale-80 test-body1 font-medium">
+            <span className="test-body1 font-medium text-grayscale-80">
               {description}
             </span>
           </div>

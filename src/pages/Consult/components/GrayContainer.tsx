@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface GrayContainerProps {
   title?: string;
@@ -14,7 +14,7 @@ const GrayContainer: React.FC<GrayContainerProps> = ({
   children,
 }) => {
   return (
-    <div className="bg-gray-100 mb-4 p-4 rounded-lg">
+    <div className="mb-4 rounded-lg bg-gray-100 p-4">
       <div className="flex flex-row items-center justify-between">
         <div className="">
           <p className="text-lg font-bold">{title}</p>
@@ -22,7 +22,7 @@ const GrayContainer: React.FC<GrayContainerProps> = ({
         </div>
         {titleButton}
       </div>
-      <div className="h-auto mt-4 bg-gray-100">{children}</div>
+      <div className="mt-4 h-auto bg-gray-100">{children}</div>
     </div>
   );
 };

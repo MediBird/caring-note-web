@@ -27,8 +27,8 @@ export function getCommonPinningStyles<TData>({
       ? isLastLeftPinnedColumn
         ? '0px 0 20px 0px rgba(0, 0, 0, 0.08) inset'
         : isFirstRightPinnedColumn
-        ? '0px 0 20px 0px rgba(0, 0, 0, 0.08) inset'
-        : undefined
+          ? '0px 0 20px 0px rgba(0, 0, 0, 0.08) inset'
+          : undefined
       : undefined,
     left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
     right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
