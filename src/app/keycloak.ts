@@ -3,11 +3,10 @@
 import { AuthClientEvent } from '@react-keycloak/core';
 import Keycloak from 'keycloak-js';
 
-// Keycloak 설정. 여기서 url, realm, clientId는 위에서 만든 값으로 교체
 export const keycloak = new Keycloak({
   url: 'https://caringnote.co.kr/keycloak',
   realm: 'caringnote',
-  clientId: 'caringnote',
+  clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
 });
 
 export const initOptions = {
