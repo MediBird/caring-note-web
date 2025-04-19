@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: 소스 코드 체크아웃
@@ -49,9 +50,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }} # 태그 변경 (커밋 SHA 사용)
-          cache-from: type=gha # 빌드 캐시 추가
-          cache-to: type=gha,mode=max # 빌드 캐시 추가
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }}
 
       - name: Kubernetes Deployment 업데이트 (Staging) # 단계 이름 및 스크립트 수정
         uses: appleboy/ssh-action@v0.1.7
