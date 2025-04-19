@@ -12,33 +12,6 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: 소스 코드 체크아웃
-        uses: actions/checkout@v3
-
-      - name: Node.js 및 pnpm 캐시 설정
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.16.1"
-          
-      - name: corepack 활성화
-        run: corepack enable
-        
-      - name: Cache pnpm store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: 의존성 설치
-        run: pnpm install --frozen-lockfile
-
-      - name: 프로젝트 빌드 (Staging)
-        env: # 환경 변수 설정
-          VITE_KEYCLOAK_CLIENT_ID: caringnote-staging
-        run: pnpm build
-
       - name: Docker Hub 로그인
         uses: docker/login-action@v2
         with:
@@ -51,6 +24,8 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }}
+          build-args: |
+            VITE_KEYCLOAK_CLIENT_ID=caringnote-staging
 
       - name: Kubernetes Deployment 업데이트 (Staging) # 단계 이름 및 스크립트 수정
         uses: appleboy/ssh-action@v0.1.7
