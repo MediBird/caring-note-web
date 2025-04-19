@@ -15,6 +15,13 @@ RUN pnpm install
 
 # 소스 복사 및 빌드
 COPY . .
+
+# 빌드 시 사용할 환경 변수 정의
+ARG VITE_KEYCLOAK_CLIENT_ID
+ARG VITE_BASE_API_URL
+ENV VITE_KEYCLOAK_CLIENT_ID=$VITE_KEYCLOAK_CLIENT_ID
+ENV VITE_BASE_API_URL=$VITE_BASE_API_URL
+
 RUN pnpm run build
 
 # 2. Nginx 스테이지

@@ -9,32 +9,11 @@ on:
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: 소스 코드 체크아웃
         uses: actions/checkout@v3
-
-      - name: Node.js 및 pnpm 캐시 설정
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.16.1"
-          
-      - name: corepack 활성화
-        run: corepack enable
-        
-      - name: Cache pnpm store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: 의존성 설치
-        run: pnpm install --frozen-lockfile
-
-      - name: 프로젝트 빌드
-        run: pnpm build
 
       - name: Docker Hub 로그인
         uses: docker/login-action@v2
@@ -47,9 +26,12 @@ jobs:
         with:
           context: .
           push: true
-          tags: bsh998/caring-note-web:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }}
+          build-args: |
+            VITE_KEYCLOAK_CLIENT_ID=caringnote
+            VITE_BASE_API_URL=https://caringnote.co.kr/api
 
-      - name: VM에 배포
+      - name: Kubernetes Deployment 업데이트
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.VM_HOST }}
@@ -57,6 +39,5 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           port: ${{ secrets.VM_PORT }}
           script: |
-            cd /data/caring-note-deployment
-            kubectl delete -f web.yaml
-            kubectl apply -f web.yaml
+            kubectl set image deployment/caring-note-web caring-note-web=${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }} -n caring-note
+            kubectl annotate deployment/caring-note-web kubernetes.io/change-cause="웹 이미지 업데이트: ${{ github.sha }}" -n caring-note
