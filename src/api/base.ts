@@ -20,7 +20,7 @@ import type { AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 import { handleApiError } from './errorHandler';
 
-export const BASE_PATH = 'https://caringnote.co.kr/api'.replace(/\/+$/, '');
+export const BASE_PATH = import.meta.env.VITE_BASE_API_URL.replace(/\/+$/, '');
 
 /**
  *
