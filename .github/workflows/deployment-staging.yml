@@ -29,6 +29,7 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }}
           build-args: |
             VITE_KEYCLOAK_CLIENT_ID=caringnote-staging
+            VITE_BASE_API_URL=https://stg.caringnote.co.kr/api
 
       - name: Kubernetes Deployment 업데이트 (Staging) # 단계 이름 및 스크립트 수정
         uses: appleboy/ssh-action@v0.1.7
@@ -40,4 +41,4 @@ jobs:
           script: |
             # staging 네임스페이스의 caring-note-web deployment 대상으로 이미지 업데이트
             kubectl set image deployment/caring-note-web caring-note-web=${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }} -n caring-note-staging
-            kubectl annotate deployment/caring-note-web kubernetes.io/change-cause="웹 이미지 업데이트: ${{ github.sha }}" -n caring-note-staging 
+            kubectl annotate deployment/caring-note-web kubernetes.io/change-cause="웹 이미지 업데이트: ${{ github.sha }}" -n caring-note-staging
