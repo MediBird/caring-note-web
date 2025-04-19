@@ -1,9 +1,9 @@
-name: Build and Push Docker Image and deploy kubernetes pod
+name: Build and Push Docker Image and deploy kubernetes pod staging
 
 on:
   pull_request:
     branches:
-      - main
+      - staging # staging 브랜치로 변경
     types:
       - closed
 
@@ -33,9 +33,9 @@ jobs:
       - name: 의존성 설치
         run: pnpm install --frozen-lockfile
 
-      - name: 프로젝트 빌드
-        env:
-          VITE_KEYCLOAK_CLIENT_ID: ${{ secrets.VITE_KEYCLOAK_CLIENT_ID || 'caringnote' }}
+      - name: 프로젝트 빌드 (Staging)
+        env: # 환경 변수 설정
+          VITE_KEYCLOAK_CLIENT_ID: caringnote-staging
         run: pnpm build
 
       - name: Docker Hub 로그인
@@ -44,22 +44,23 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Docker 이미지 빌드 및 푸시
+      - name: Docker 이미지 빌드 및 푸시 (Staging)
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }} # 태그 변경 (커밋 SHA 사용)
+          cache-from: type=gha # 빌드 캐시 추가
+          cache-to: type=gha,mode=max # 빌드 캐시 추가
 
-      - name: Kubernetes Deployment 업데이트
+      - name: Kubernetes Deployment 업데이트 (Staging) # 단계 이름 및 스크립트 수정
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: ${{ secrets.VM_HOST }}
+          host: ${{ secrets.VM_HOST }} # 스테이징 VM 정보 사용 (필요시 secrets 수정)
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.VM_SSH_KEY }}
           port: ${{ secrets.VM_PORT }}
           script: |
-            kubectl set image deployment/caring-note-web caring-note-web=${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }} -n caring-note
-            kubectl annotate deployment/caring-note-web kubernetes.io/change-cause="웹 이미지 업데이트: ${{ github.sha }}" -n caring-note
+            # staging 네임스페이스의 caring-note-web deployment 대상으로 이미지 업데이트
+            kubectl set image deployment/caring-note-web caring-note-web=${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }} -n caring-note-staging
+            kubectl annotate deployment/caring-note-web kubernetes.io/change-cause="웹 이미지 업데이트: ${{ github.sha }}" -n caring-note-staging 
