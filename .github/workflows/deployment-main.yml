@@ -39,5 +39,5 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           port: ${{ secrets.VM_PORT }}
           script: |
-            kubectl set image deployment/caring-note-web caring-note-web=${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }} -n caring-note
-            kubectl annotate deployment/caring-note-web kubernetes.io/change-cause="웹 이미지 업데이트: ${{ github.sha }}" -n caring-note
+            kubectl set image deployment/caring-note-web caring-note-web=${{ secrets.DOCKERHUB_USERNAME }}/caring-note-web:${{ github.sha }} -n default
+            kubectl annotate deployment/caring-note-web kubernetes.io/change-cause="웹 이미지 업데이트: ${{ github.sha }}" -n default
