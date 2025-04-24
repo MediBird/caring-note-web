@@ -31,6 +31,7 @@ function Home() {
   const { data: counselList, isLoading: isCounselListLoading } =
     useSelectCounselSessionList({
       baseDate: formatDateToHyphen(selectedDate),
+      page: 0,
     });
 
   const { data: counselActiveDate, isLoading: isCounselActiveDateLoading } =

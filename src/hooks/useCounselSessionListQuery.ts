@@ -23,7 +23,7 @@ const selectCounselSessionList = async (params: FetchParams) => {
   // 상담 일정 목록 조회 API 호출
   const response =
     await counselSessionControllerApi.selectCounselSessionListByBaseDateAndCursorAndSize(
-      params.page ?? 1,
+      params.page ?? 0,
       params.size ?? 15,
       params.baseDate,
     );
