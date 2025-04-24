@@ -32,8 +32,6 @@ import type { CommonResSelectCounseleeConsentByCounseleeIdRes } from '../models'
 // @ts-ignore
 import type { CommonResUpdateCounseleeConsentRes } from '../models';
 // @ts-ignore
-import type { DeleteCounselor400Response } from '../models';
-// @ts-ignore
 import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { UpdateCounseleeConsentReq } from '../models';
@@ -48,6 +46,7 @@ export const CounseleeConsentControllerApiAxiosParamCreator = function (configur
          * @summary 내담자 개인정보 수집 동의 여부 등록
          * @param {AddCounseleeConsentReq} addCounseleeConsentReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         addCounseleeConsent: async (addCounseleeConsentReq: AddCounseleeConsentReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -221,6 +220,7 @@ export const CounseleeConsentControllerApiFp = function(configuration?: Configur
          * @summary 내담자 개인정보 수집 동의 여부 등록
          * @param {AddCounseleeConsentReq} addCounseleeConsentReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         async addCounseleeConsent(addCounseleeConsentReq: AddCounseleeConsentReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResAddCounseleeConsentRes>> {
@@ -284,6 +284,7 @@ export const CounseleeConsentControllerApiFactory = function (configuration?: Co
          * @summary 내담자 개인정보 수집 동의 여부 등록
          * @param {AddCounseleeConsentReq} addCounseleeConsentReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         addCounseleeConsent(addCounseleeConsentReq: AddCounseleeConsentReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResAddCounseleeConsentRes> {
@@ -335,6 +336,7 @@ export class CounseleeConsentControllerApi extends BaseAPI {
      * @summary 내담자 개인정보 수집 동의 여부 등록
      * @param {AddCounseleeConsentReq} addCounseleeConsentReq 
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      * @memberof CounseleeConsentControllerApi
      */

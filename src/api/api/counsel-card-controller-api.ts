@@ -36,8 +36,6 @@ import type { CommonResCounselCardRes } from '../models';
 // @ts-ignore
 import type { CommonResListTimeRecordedResObject } from '../models';
 // @ts-ignore
-import type { DeleteCounselor400Response } from '../models';
-// @ts-ignore
 import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { UpdateBaseInformationReq } from '../models';

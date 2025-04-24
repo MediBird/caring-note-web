@@ -38,8 +38,6 @@ import type { ConvertSpeechToTextReq } from '../models';
 // @ts-ignore
 import type { DeleteAICounselSummaryReq } from '../models';
 // @ts-ignore
-import type { DeleteCounselor400Response } from '../models';
-// @ts-ignore
 import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { SuccessRes } from '../models';

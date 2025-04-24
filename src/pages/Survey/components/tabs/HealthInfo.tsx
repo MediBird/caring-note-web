@@ -145,7 +145,7 @@ export default function HealthInfo() {
                       ...healthInfo,
                       allergy: {
                         ...healthInfo?.allergy,
-                        isAllergic: null,
+                        isAllergic: undefined,
                         allergyNote: '',
                       },
                     });

@@ -11,6 +11,7 @@ interface FetchParams {
   baseDate?: string;
   cursor?: string;
   size?: number;
+  page?: number;
 }
 
 const HIGHLIGHT_DURATION = 2000;
@@ -22,11 +23,11 @@ const selectCounselSessionList = async (params: FetchParams) => {
   // 상담 일정 목록 조회 API 호출
   const response =
     await counselSessionControllerApi.selectCounselSessionListByBaseDateAndCursorAndSize(
+      params.page ?? 1,
+      params.size ?? 15,
       params.baseDate,
-      params.cursor,
-      params.size,
     );
-  return response.data.data ?? [];
+  return response.data ?? [];
 };
 
 // 쿼리키를 상수로 정의

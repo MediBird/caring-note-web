@@ -34,17 +34,15 @@ import type { CommonResListString } from '../models';
 // @ts-ignore
 import type { CommonResSelectCounseleeBaseInformationByCounseleeIdRes } from '../models';
 // @ts-ignore
-import type { CommonResSelectCounseleePageRes } from '../models';
-// @ts-ignore
 import type { CommonResSelectCounseleeRes } from '../models';
 // @ts-ignore
 import type { CommonResString } from '../models';
 // @ts-ignore
 import type { DeleteCounseleeBatchReq } from '../models';
 // @ts-ignore
-import type { DeleteCounselor400Response } from '../models';
-// @ts-ignore
 import type { ErrorRes } from '../models';
+// @ts-ignore
+import type { PageResSelectCounseleeRes } from '../models';
 // @ts-ignore
 import type { UpdateCounseleeReq } from '../models';
 /**
@@ -582,7 +580,7 @@ export const CounseleeControllerApiFp = function(configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounseleePageRes>> {
+        async selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageResSelectCounseleeRes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselees(page, size, name, birthDates, affiliatedWelfareInstitutions, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounseleeControllerApi.selectCounselees']?.[localVarOperationServerIndex]?.url;
@@ -700,7 +698,7 @@ export const CounseleeControllerApiFactory = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounseleePageRes> {
+        selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<PageResSelectCounseleeRes> {
             return localVarFp.selectCounselees(page, size, name, birthDates, affiliatedWelfareInstitutions, options).then((request) => request(axios, basePath));
         },
         /**
