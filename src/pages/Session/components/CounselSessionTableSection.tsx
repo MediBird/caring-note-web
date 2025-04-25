@@ -3,7 +3,7 @@ import {
   DataTablePagination,
   PaginationInfo,
 } from '@/components/common/DataTable/pagination';
-import { useHighlightedSession } from '@/hooks/useCounselSessionQuery';
+import { useHighlightedSession } from '@/hooks/useCounselSessionListQuery';
 import { useCallback } from 'react';
 import {
   useDeleteCounselSession,
@@ -37,9 +37,9 @@ export function CounselSessionTableSection() {
 
   const pagination: PaginationInfo = {
     currentPage: params.page || 0,
-    totalPages: data?.pageInfo?.totalPages || 1,
-    hasPrevious: data?.pageInfo?.hasPrevious || false,
-    hasNext: data?.pageInfo?.hasNext || false,
+    totalPages: data?.totalPages || 1,
+    hasPrevious: data?.hasPrevious || false,
+    hasNext: data?.hasNext || false,
   };
 
   // 페이지 변경 핸들러

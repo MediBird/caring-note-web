@@ -24,13 +24,11 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { CounselorNameListRes } from '../models';
 // @ts-ignore
-import type { CounselorPageRes } from '../models';
-// @ts-ignore
-import type { DeleteCounselor400Response } from '../models';
-// @ts-ignore
 import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { GetCounselorRes } from '../models';
+// @ts-ignore
+import type { PageResCounselorInfoListRes } from '../models';
 // @ts-ignore
 import type { ResetPasswordReq } from '../models';
 // @ts-ignore
@@ -370,7 +368,7 @@ export const CounselorControllerApiFp = function(configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getCounselorsByPage(page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CounselorPageRes>> {
+        async getCounselorsByPage(page?: number, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageResCounselorInfoListRes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getCounselorsByPage(page, size, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.getCounselorsByPage']?.[localVarOperationServerIndex]?.url;
@@ -467,7 +465,7 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCounselorsByPage(page?: number, size?: number, options?: RawAxiosRequestConfig): AxiosPromise<CounselorPageRes> {
+        getCounselorsByPage(page?: number, size?: number, options?: RawAxiosRequestConfig): AxiosPromise<PageResCounselorInfoListRes> {
             return localVarFp.getCounselorsByPage(page, size, options).then((request) => request(axios, basePath));
         },
         /**

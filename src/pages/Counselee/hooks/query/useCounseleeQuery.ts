@@ -27,16 +27,7 @@ const selectCounseleeList = async (params: FetchParams) => {
     params.birthDates,
     params.affiliatedWelfareInstitutions,
   );
-  return {
-    content: response.data.data?.content as SelectCounseleeRes[],
-    pagination: {
-      totalPages: response.data.data?.pageInfo?.totalPages,
-      totalElements: response.data.data?.pageInfo?.totalElements,
-      currentPage: response.data.data?.pageInfo?.currentPage,
-      hasNext: response.data.data?.pageInfo?.hasNext,
-      hasPrevious: response.data.data?.pageInfo?.hasPrevious,
-    },
-  };
+  return response.data;
 };
 
 export const COUNSEL_SESSION_KEYS = {

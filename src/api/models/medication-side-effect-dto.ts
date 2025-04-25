@@ -20,23 +20,23 @@
  * @interface MedicationSideEffectDTO
  */
 export interface MedicationSideEffectDTO {
-  /**
-   *
-   * @type {boolean}
-   * @memberof MedicationSideEffectDTO
-   */
-  isMedicationSideEffect?: boolean | null;
-  /**
-   *
-   * @type {string}
-   * @memberof MedicationSideEffectDTO
-   */
-  suspectedMedicationNote?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof MedicationSideEffectDTO
-   */
-  symptomsNote?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MedicationSideEffectDTO
+     */
+    'isMedicationSideEffect'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof MedicationSideEffectDTO
+     */
+    'suspectedMedicationNote'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MedicationSideEffectDTO
+     */
+    'symptomsNote'?: string;
 }
 

@@ -30,8 +30,6 @@ import type { CommonResListSelectMedicationRecordHistRes } from '../models';
 // @ts-ignore
 import type { CommonResVoid } from '../models';
 // @ts-ignore
-import type { DeleteCounselor400Response } from '../models';
-// @ts-ignore
 import type { ErrorRes } from '../models';
 /**
  * MedicationRecordHistControllerApi - axios parameter creator

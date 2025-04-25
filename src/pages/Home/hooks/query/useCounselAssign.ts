@@ -2,7 +2,7 @@ import {
   CounselSessionControllerApi,
   UpdateCounselorInCounselSessionReq,
 } from '@/api';
-import { COUNSEL_SESSION_KEYS } from '@/hooks/useCounselSessionQuery';
+import { COUNSEL_SESSION_KEYS } from '@/hooks/useCounselSessionListQuery';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 // 상담 담당 약사 할당

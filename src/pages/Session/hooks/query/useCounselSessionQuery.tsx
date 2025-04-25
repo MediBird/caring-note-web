@@ -4,7 +4,7 @@ import {
   useCreateCounselSession,
   useDeleteCounselSession,
   useUpdateCounselSession,
-} from '@/hooks/useCounselSessionQuery';
+} from '@/hooks/useCounselSessionListQuery';
 import { useQuery } from '@tanstack/react-query';
 
 // 상담 세션 생성 - 중앙 라이브러리에서 가져옴
@@ -24,18 +24,19 @@ export const useCounselSessionList = (
   baseDate?: string,
   cursor?: string,
   size?: number,
+  page?: number,
   enabled = true,
 ) => {
   return useQuery({
-    queryKey: COUNSEL_SESSION_KEYS.list({ baseDate, cursor, size }),
+    queryKey: COUNSEL_SESSION_KEYS.list({ baseDate, cursor, size, page }),
     queryFn: () =>
       counselSessionControllerApi.selectCounselSessionListByBaseDateAndCursorAndSize(
+        page ?? 1,
+        size ?? 15,
         baseDate,
-        cursor,
-        size,
       ),
     enabled: enabled,
-    select: (response) => response.data?.data,
+    select: (response) => response.data,
   });
 };
 
@@ -96,7 +97,7 @@ export const useSearchCounselSessions = (
         scheduledDates,
       ),
     enabled: shouldEnableQuery,
-    select: (response) => response.data?.data,
+    select: (response) => response.data,
   });
 };
 

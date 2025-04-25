@@ -10,7 +10,7 @@ import onlypc from '@/assets/illusts/onlypc.webp';
 import Spinner from '@/components/common/Spinner';
 import DatePickerComponent from '@/components/ui/datepicker';
 import { useAuthContext } from '@/context/AuthContext';
-import { useSelectCounselSessionList } from '@/hooks/useCounselSessionQuery';
+import { useSelectCounselSessionList } from '@/hooks/useCounselSessionListQuery';
 import { cn } from '@/lib/utils';
 import CollegeMessages from '@/pages/Home/components/CollegeMessages';
 import ConsultCountContainer from '@/pages/Home/components/ConsultCountContainer';
@@ -31,6 +31,7 @@ function Home() {
   const { data: counselList, isLoading: isCounselListLoading } =
     useSelectCounselSessionList({
       baseDate: formatDateToHyphen(selectedDate),
+      page: 0,
     });
 
   const { data: counselActiveDate, isLoading: isCounselActiveDateLoading } =
@@ -45,7 +46,7 @@ function Home() {
   }, []);
 
   const formattedCounselList = useMemo(() => {
-    return counselList?.map((item: SelectCounselSessionListItem) => {
+    return counselList?.content?.map((item: SelectCounselSessionListItem) => {
       return {
         ...item,
         id: item.counselSessionId,

@@ -4,7 +4,6 @@ import {
   CommunicationDTOHearingsEnum,
   CommunicationDTOSightsEnum,
   CommunicationDTOUsingKoreansEnum,
-  CounselorListItemRoleTypeEnum,
   CounselPurposeAndNoteDTOCounselPurposeEnum,
   DrinkingDTODrinkingAmountEnum,
   EvacuationDTOEvacuationsEnum,
@@ -16,7 +15,9 @@ import {
   SmokingDTOSmokingAmountEnum,
   WalkingDTOWalkingEquipmentsEnum,
   WalkingDTOWalkingMethodsEnum,
+  CounselorListItemRoleTypeEnum,
 } from '@/api';
+
 import { ButtonGroupOption } from '@/components/ui/button-group';
 
 export const HEALTH_INSURANCE_TYPE_MAP: Record<
