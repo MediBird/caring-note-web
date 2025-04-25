@@ -18,13 +18,13 @@ export function AccountTableSection() {
   const { data, isLoading } = useGetCounselorsByPage(params);
 
   // API 응답 데이터를 적절한 형태로 변환
-  const counselorData = data?.counselors || [];
+  const counselorData = data?.content || [];
 
   const pagination: PaginationInfo = {
     currentPage: params.page || 0,
-    totalPages: data?.pageInfo?.totalPages || 1,
-    hasPrevious: data?.pageInfo?.hasPrevious || false,
-    hasNext: data?.pageInfo?.hasNext || false,
+    totalPages: data?.totalPages || 1,
+    hasPrevious: data?.hasPrevious || false,
+    hasNext: data?.hasNext || false,
   };
 
   // 페이지 변경 핸들러
