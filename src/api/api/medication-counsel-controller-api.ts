@@ -34,8 +34,6 @@ import type { CommonResSelectPreviousMedicationCounselRes } from '../models';
 // @ts-ignore
 import type { CommonResUpdateMedicationCounselRes } from '../models';
 // @ts-ignore
-import type { DeleteCounselor400Response } from '../models';
-// @ts-ignore
 import type { DeleteMedicationCounselReq } from '../models';
 // @ts-ignore
 import type { ErrorRes } from '../models';

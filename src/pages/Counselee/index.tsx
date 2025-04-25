@@ -44,10 +44,10 @@ const CounseleeManagement = () => {
           <CounseleeTableSection
             data={data?.content}
             pagination={{
-              currentPage: data?.pagination?.currentPage ?? 0,
-              totalPages: data?.pagination?.totalPages ?? 1,
-              hasPrevious: data?.pagination?.hasPrevious ?? false,
-              hasNext: data?.pagination?.hasNext ?? false,
+              currentPage: data?.page ?? 0,
+              totalPages: data?.totalPages ?? 1,
+              hasPrevious: data?.hasPrevious ?? false,
+              hasNext: data?.hasNext ?? false,
             }}
             onDelete={handleDelete}
             onUpdate={handleUpdate}

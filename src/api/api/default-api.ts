@@ -32,8 +32,6 @@ import type { AddCounseleeReq } from '../models';
 // @ts-ignore
 import type { AddMedicationCounselReq } from '../models';
 // @ts-ignore
-import type { CommonCursorResListSelectCounselSessionListItem } from '../models';
-// @ts-ignore
 import type { CommonResAddCounseleeConsentRes } from '../models';
 // @ts-ignore
 import type { CommonResAddMedicationCounselRes } from '../models';
@@ -82,15 +80,11 @@ import type { CommonResListTimeRecordedResObject } from '../models';
 // @ts-ignore
 import type { CommonResModifyCounselReservationRes } from '../models';
 // @ts-ignore
-import type { CommonResSelectCounselSessionPageRes } from '../models';
-// @ts-ignore
 import type { CommonResSelectCounselSessionRes } from '../models';
 // @ts-ignore
 import type { CommonResSelectCounseleeBaseInformationByCounseleeIdRes } from '../models';
 // @ts-ignore
 import type { CommonResSelectCounseleeConsentByCounseleeIdRes } from '../models';
-// @ts-ignore
-import type { CommonResSelectCounseleePageRes } from '../models';
 // @ts-ignore
 import type { CommonResSelectCounseleeRes } from '../models';
 // @ts-ignore
@@ -118,13 +112,17 @@ import type { DeleteCounselSessionReq } from '../models';
 // @ts-ignore
 import type { DeleteCounseleeBatchReq } from '../models';
 // @ts-ignore
-import type { DeleteCounselor400Response } from '../models';
-// @ts-ignore
 import type { DeleteMedicationCounselReq } from '../models';
 // @ts-ignore
 import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { ModifyCounselReservationReq } from '../models';
+// @ts-ignore
+import type { PageResSelectCounselSessionListItem } from '../models';
+// @ts-ignore
+import type { PageResSelectCounselSessionRes } from '../models';
+// @ts-ignore
+import type { PageResSelectCounseleeRes } from '../models';
 // @ts-ignore
 import type { UpdateBaseInformationReq } from '../models';
 // @ts-ignore
@@ -288,6 +286,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @summary 내담자 개인정보 수집 동의 여부 등록
          * @param {AddCounseleeConsentReq} addCounseleeConsentReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         addCounseleeConsent: async (addCounseleeConsentReq: AddCounseleeConsentReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -1517,13 +1516,17 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary 상담일정 목록 조회
+         * @param {number} page 
+         * @param {number} size 
          * @param {string} [baseDate] 
-         * @param {string} [cursor] 
-         * @param {number} [size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounselSessionListByBaseDateAndCursorAndSize: async (baseDate?: string, cursor?: string, size?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        selectCounselSessionListByBaseDateAndCursorAndSize: async (page: number, size: number, baseDate?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('selectCounselSessionListByBaseDateAndCursorAndSize', 'page', page)
+            // verify required parameter 'size' is not null or undefined
+            assertParamExists('selectCounselSessionListByBaseDateAndCursorAndSize', 'size', size)
             const localVarPath = `/v1/counsel/session/list`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1546,8 +1549,8 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
                     baseDate;
             }
 
-            if (cursor !== undefined) {
-                localVarQueryParameter['cursor'] = cursor;
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
             }
 
             if (size !== undefined) {
@@ -2549,6 +2552,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @summary 내담자 개인정보 수집 동의 여부 등록
          * @param {AddCounseleeConsentReq} addCounseleeConsentReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         async addCounseleeConsent(addCounseleeConsentReq: AddCounseleeConsentReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResAddCounseleeConsentRes>> {
@@ -2790,7 +2794,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounselSessionPageRes>> {
+        async searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageResSelectCounselSessionRes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.searchCounselSessions']?.[localVarOperationServerIndex]?.url;
@@ -2957,14 +2961,14 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary 상담일정 목록 조회
+         * @param {number} page 
+         * @param {number} size 
          * @param {string} [baseDate] 
-         * @param {string} [cursor] 
-         * @param {number} [size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectCounselSessionListByBaseDateAndCursorAndSize(baseDate?: string, cursor?: string, size?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonCursorResListSelectCounselSessionListItem>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselSessionListByBaseDateAndCursorAndSize(baseDate, cursor, size, options);
+        async selectCounselSessionListByBaseDateAndCursorAndSize(page: number, size: number, baseDate?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageResSelectCounselSessionListItem>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselSessionListByBaseDateAndCursorAndSize(page, size, baseDate, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.selectCounselSessionListByBaseDateAndCursorAndSize']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -3033,7 +3037,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResSelectCounseleePageRes>> {
+        async selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageResSelectCounseleeRes>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.selectCounselees(page, size, name, birthDates, affiliatedWelfareInstitutions, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.selectCounselees']?.[localVarOperationServerIndex]?.url;
@@ -3318,6 +3322,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @summary 내담자 개인정보 수집 동의 여부 등록
          * @param {AddCounseleeConsentReq} addCounseleeConsentReq 
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         addCounseleeConsent(addCounseleeConsentReq: AddCounseleeConsentReq, options?: RawAxiosRequestConfig): AxiosPromise<CommonResAddCounseleeConsentRes> {
@@ -3505,7 +3510,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounselSessionPageRes> {
+        searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<PageResSelectCounselSessionRes> {
             return localVarFp.searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3633,14 +3638,14 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary 상담일정 목록 조회
+         * @param {number} page 
+         * @param {number} size 
          * @param {string} [baseDate] 
-         * @param {string} [cursor] 
-         * @param {number} [size] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounselSessionListByBaseDateAndCursorAndSize(baseDate?: string, cursor?: string, size?: number, options?: RawAxiosRequestConfig): AxiosPromise<CommonCursorResListSelectCounselSessionListItem> {
-            return localVarFp.selectCounselSessionListByBaseDateAndCursorAndSize(baseDate, cursor, size, options).then((request) => request(axios, basePath));
+        selectCounselSessionListByBaseDateAndCursorAndSize(page: number, size: number, baseDate?: string, options?: RawAxiosRequestConfig): AxiosPromise<PageResSelectCounselSessionListItem> {
+            return localVarFp.selectCounselSessionListByBaseDateAndCursorAndSize(page, size, baseDate, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -3694,7 +3699,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<CommonResSelectCounseleePageRes> {
+        selectCounselees(page: number, size: number, name?: string, birthDates?: Array<string>, affiliatedWelfareInstitutions?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<PageResSelectCounseleeRes> {
             return localVarFp.selectCounselees(page, size, name, birthDates, affiliatedWelfareInstitutions, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3931,6 +3936,7 @@ export class DefaultApi extends BaseAPI {
      * @summary 내담자 개인정보 수집 동의 여부 등록
      * @param {AddCounseleeConsentReq} addCounseleeConsentReq 
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
@@ -4308,15 +4314,15 @@ export class DefaultApi extends BaseAPI {
     /**
      * 
      * @summary 상담일정 목록 조회
+     * @param {number} page 
+     * @param {number} size 
      * @param {string} [baseDate] 
-     * @param {string} [cursor] 
-     * @param {number} [size] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public selectCounselSessionListByBaseDateAndCursorAndSize(baseDate?: string, cursor?: string, size?: number, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).selectCounselSessionListByBaseDateAndCursorAndSize(baseDate, cursor, size, options).then((request) => request(this.axios, this.basePath));
+    public selectCounselSessionListByBaseDateAndCursorAndSize(page: number, size: number, baseDate?: string, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).selectCounselSessionListByBaseDateAndCursorAndSize(page, size, baseDate, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
