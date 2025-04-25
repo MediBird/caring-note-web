@@ -1,4 +1,4 @@
-import { CounselorListItem, CounselorPageRes, PageRes } from '@/api';
+import { CounselorListItem, PageResCounselorInfoListRes, PageRes } from '@/api';
 import { create } from 'zustand';
 
 // 상담사 목록 조회 파라미터
@@ -21,7 +21,7 @@ interface CounselorStoreState {
   error: string | null;
 
   // 액션 메소드들
-  setCounselors: (data: CounselorPageRes | undefined) => void;
+  setCounselors: (data: PageResCounselorInfoListRes | undefined) => void;
   setSelectedCounselorId: (id: string | null) => void;
   setLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
@@ -38,8 +38,14 @@ export const useCounselorStore = create<CounselorStoreState>((set) => ({
 
   setCounselors: (data) =>
     set({
-      counselors: data?.counselors || [],
-      pageInfo: data?.pageInfo || null,
+      counselors: data?.content || [],
+      pageInfo: {
+        totalPages: data?.totalPages || 1,
+        totalElements: data?.totalElements || 0,
+        currentPage: data?.page || 0,
+        hasNext: data?.hasNext || false,
+        hasPrevious: data?.hasPrevious || false,
+      },
       error: null,
     }),
 

@@ -1,6 +1,5 @@
 import {
   CounselorControllerApi,
-  type CounselorPageRes,
   type ResetPasswordReq,
   type UpdateCounselorReq,
 } from '@/api';
@@ -29,7 +28,7 @@ export const useGetCounselorsByPage = (params: CounselorFetchParams) => {
         params.page,
         params.size,
       );
-      return response.data as CounselorPageRes;
+      return response.data;
     },
     enabled: params.page !== undefined && params.size !== undefined,
   });
