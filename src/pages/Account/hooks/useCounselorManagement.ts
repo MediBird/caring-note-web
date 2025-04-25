@@ -41,7 +41,15 @@ export const useCounselorManagement = () => {
   // 데이터가 변경될 때 스토어 업데이트
   useEffect(() => {
     if (data) {
-      setCounselors(data);
+      setCounselors({
+        content: data.content,
+        page: data.page,
+        size: data.size,
+        totalElements: data.totalElements,
+        totalPages: data.totalPages,
+        hasNext: data.hasNext,
+        hasPrevious: data.hasPrevious,
+      });
     }
   }, [data, setCounselors]);
 
