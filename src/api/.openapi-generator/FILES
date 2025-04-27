@@ -28,7 +28,6 @@ models/add-counselee-req.ts
 models/add-medication-counsel-req.ts
 models/add-medication-counsel-res.ts
 models/allergy-dto.ts
-models/analyse-text-req.ts
 models/base-info-dto.ts
 models/common-res-add-counselee-consent-res.ts
 models/common-res-add-medication-counsel-res.ts
@@ -37,7 +36,6 @@ models/common-res-counsel-card-health-information-res.ts
 models/common-res-counsel-card-id-res.ts
 models/common-res-counsel-card-independent-life-information-res.ts
 models/common-res-counsel-card-living-information-res.ts
-models/common-res-counsel-card-res.ts
 models/common-res-counsel-session-stat-res.ts
 models/common-res-create-counsel-reservation-res.ts
 models/common-res-delete-counsel-session-res.ts
@@ -52,7 +50,6 @@ models/common-res-list-select-counselee-autocomplete-res.ts
 models/common-res-list-select-medication-record-hist-res.ts
 models/common-res-list-select-medication-record-list-by-session-id-res.ts
 models/common-res-list-select-previous-counsel-session-list-res.ts
-models/common-res-list-select-speaker-list-res.ts
 models/common-res-list-select-speech-to-text-res.ts
 models/common-res-list-string.ts
 models/common-res-list-time-recorded-res-object.ts
@@ -71,6 +68,7 @@ models/common-res-update-counselee-consent-res.ts
 models/common-res-update-counselor-in-counsel-session-res.ts
 models/common-res-update-medication-counsel-res.ts
 models/common-res-update-status-in-counsel-session-res.ts
+models/common-res-validation-error-res.ts
 models/common-res-void.ts
 models/common-res-waste-medication-disposal-res.ts
 models/communication-dto.ts
@@ -80,7 +78,6 @@ models/counsel-card-health-information-res.ts
 models/counsel-card-id-res.ts
 models/counsel-card-independent-life-information-res.ts
 models/counsel-card-living-information-res.ts
-models/counsel-card-res.ts
 models/counsel-purpose-and-note-dto.ts
 models/counsel-session-stat-res.ts
 models/counselor-info-list-res.ts
@@ -93,6 +90,7 @@ models/delete-counsel-session-res.ts
 models/delete-counselee-batch-req.ts
 models/delete-counselee-batch-res.ts
 models/delete-counselee-consent-res.ts
+models/delete-counselor400-response.ts
 models/delete-medication-counsel-req.ts
 models/delete-medication-counsel-res.ts
 models/disease-info-dto.ts
@@ -128,12 +126,10 @@ models/select-medication-record-hist-res.ts
 models/select-medication-record-list-by-session-id-res.ts
 models/select-previous-counsel-session-list-res.ts
 models/select-previous-medication-counsel-res.ts
-models/select-speaker-list-res.ts
 models/select-speech-to-text-res.ts
 models/smoking-dto.ts
 models/success-res.ts
 models/time-recorded-res-object.ts
-models/update-base-information-req.ts
 models/update-counsel-card-req.ts
 models/update-counsel-card-status-req.ts
 models/update-counselee-consent-req.ts
@@ -143,14 +139,13 @@ models/update-counselor-in-counsel-session-req.ts
 models/update-counselor-in-counsel-session-res.ts
 models/update-counselor-req.ts
 models/update-counselor-res.ts
-models/update-health-information-req.ts
-models/update-independent-life-information-req.ts
-models/update-living-information-req.ts
 models/update-medication-counsel-req.ts
 models/update-medication-counsel-res.ts
 models/update-role-req.ts
 models/update-status-in-counsel-session-req.ts
 models/update-status-in-counsel-session-res.ts
+models/validation-error-res.ts
+models/validation-error.ts
 models/walking-dto.ts
 models/waste-medication-disposal-req.ts
 models/waste-medication-disposal-res.ts

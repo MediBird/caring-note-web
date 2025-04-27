@@ -38,6 +38,12 @@ export interface MedicationManagementDTO {
      * @memberof MedicationManagementDTO
      */
     'medicationAssistants'?: Array<MedicationManagementDTOMedicationAssistantsEnum>;
+    /**
+     * 
+     * @type {string}
+     * @memberof MedicationManagementDTO
+     */
+    'customMedicationAssistant'?: string;
 }
 
 export const MedicationManagementDTOMedicationAssistantsEnum = {
@@ -47,6 +53,7 @@ export const MedicationManagementDTOMedicationAssistantsEnum = {
     Relatives: 'RELATIVES',
     Friend: 'FRIEND',
     Caregiver: 'CAREGIVER',
+    Parent: 'PARENT',
     Other: 'OTHER'
 } as const;
 

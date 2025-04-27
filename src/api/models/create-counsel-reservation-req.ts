@@ -25,12 +25,12 @@ export interface CreateCounselReservationReq {
      * @type {string}
      * @memberof CreateCounselReservationReq
      */
-    'counseleeId': string;
+    'counseleeId'?: string;
     /**
      * 상담 일정 날짜 및 시간
      * @type {string}
      * @memberof CreateCounselReservationReq
      */
-    'scheduledStartDateTime': string;
+    'scheduledStartDateTime'?: string;
 }
 

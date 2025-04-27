@@ -25,7 +25,7 @@ export interface UpdateCounseleeConsentReq {
      * @type {string}
      * @memberof UpdateCounseleeConsentReq
      */
-    'counseleeConsentId': string;
+    'counseleeConsentId'?: string;
     /**
      * 
      * @type {boolean}

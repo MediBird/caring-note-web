@@ -22,10 +22,6 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { AnalyseTextReq } from '../models';
-// @ts-ignore
-import type { CommonResListSelectSpeakerListRes } from '../models';
-// @ts-ignore
 import type { CommonResListSelectSpeechToTextRes } from '../models';
 // @ts-ignore
 import type { CommonResSelectAICounselSummaryPopUpRes } from '../models';
@@ -38,6 +34,8 @@ import type { ConvertSpeechToTextReq } from '../models';
 // @ts-ignore
 import type { DeleteAICounselSummaryReq } from '../models';
 // @ts-ignore
+import type { DeleteCounselor400Response } from '../models';
+// @ts-ignore
 import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { SuccessRes } from '../models';
@@ -47,47 +45,6 @@ import type { SuccessRes } from '../models';
  */
 export const AIApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * 
-         * @summary 선택 발화자 기준 TA
-         * @param {AnalyseTextReq} analyseTextReq 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        analyseText: async (analyseTextReq: AnalyseTextReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'analyseTextReq' is not null or undefined
-            assertParamExists('analyseText', 'analyseTextReq', analyseTextReq)
-            const localVarPath = `/v1/counsel/ai/ta`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(analyseTextReq, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
         /**
          * 
          * @summary convert Speech to Text
@@ -303,45 +260,6 @@ export const AIApiAxiosParamCreator = function (configuration?: Configuration) {
         },
         /**
          * 
-         * @summary 발화자 별 발화 내용 조회
-         * @param {string} counselSessionId 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        selectSpeakerList: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'counselSessionId' is not null or undefined
-            assertParamExists('selectSpeakerList', 'counselSessionId', counselSessionId)
-            const localVarPath = `/v1/counsel/ai/{counselSessionId}/stt/speaker/list`
-                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary stt 결과 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -388,20 +306,6 @@ export const AIApiAxiosParamCreator = function (configuration?: Configuration) {
 export const AIApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AIApiAxiosParamCreator(configuration)
     return {
-        /**
-         * 
-         * @summary 선택 발화자 기준 TA
-         * @param {AnalyseTextReq} analyseTextReq 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        async analyseText(analyseTextReq: AnalyseTextReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.analyseText(analyseTextReq, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AIApi.analyseText']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
         /**
          * 
          * @summary convert Speech to Text
@@ -471,20 +375,6 @@ export const AIApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary 발화자 별 발화 내용 조회
-         * @param {string} counselSessionId 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        async selectSpeakerList(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CommonResListSelectSpeakerListRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.selectSpeakerList(counselSessionId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AIApi.selectSpeakerList']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
          * @summary stt 결과 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -506,17 +396,6 @@ export const AIApiFp = function(configuration?: Configuration) {
 export const AIApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AIApiFp(configuration)
     return {
-        /**
-         * 
-         * @summary 선택 발화자 기준 TA
-         * @param {AnalyseTextReq} analyseTextReq 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        analyseText(analyseTextReq: AnalyseTextReq, options?: RawAxiosRequestConfig): AxiosPromise<SuccessRes> {
-            return localVarFp.analyseText(analyseTextReq, options).then((request) => request(axios, basePath));
-        },
         /**
          * 
          * @summary convert Speech to Text
@@ -571,17 +450,6 @@ export const AIApiFactory = function (configuration?: Configuration, basePath?: 
         },
         /**
          * 
-         * @summary 발화자 별 발화 내용 조회
-         * @param {string} counselSessionId 
-         * @param {*} [options] Override http request option.
-         * @deprecated
-         * @throws {RequiredError}
-         */
-        selectSpeakerList(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<CommonResListSelectSpeakerListRes> {
-            return localVarFp.selectSpeakerList(counselSessionId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary stt 결과 조회
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
@@ -600,19 +468,6 @@ export const AIApiFactory = function (configuration?: Configuration, basePath?: 
  * @extends {BaseAPI}
  */
 export class AIApi extends BaseAPI {
-    /**
-     * 
-     * @summary 선택 발화자 기준 TA
-     * @param {AnalyseTextReq} analyseTextReq 
-     * @param {*} [options] Override http request option.
-     * @deprecated
-     * @throws {RequiredError}
-     * @memberof AIApi
-     */
-    public analyseText(analyseTextReq: AnalyseTextReq, options?: RawAxiosRequestConfig) {
-        return AIApiFp(this.configuration).analyseText(analyseTextReq, options).then((request) => request(this.axios, this.basePath));
-    }
-
     /**
      * 
      * @summary convert Speech to Text
@@ -673,19 +528,6 @@ export class AIApi extends BaseAPI {
      */
     public selectAnalysedText(counselSessionId: string, options?: RawAxiosRequestConfig) {
         return AIApiFp(this.configuration).selectAnalysedText(counselSessionId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary 발화자 별 발화 내용 조회
-     * @param {string} counselSessionId 
-     * @param {*} [options] Override http request option.
-     * @deprecated
-     * @throws {RequiredError}
-     * @memberof AIApi
-     */
-    public selectSpeakerList(counselSessionId: string, options?: RawAxiosRequestConfig) {
-        return AIApiFp(this.configuration).selectSpeakerList(counselSessionId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

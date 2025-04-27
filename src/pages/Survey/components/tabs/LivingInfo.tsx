@@ -17,6 +17,7 @@ import {
   MEDICATION_ASSISTANTS_OPTIONS,
   SMOKING_AMOUNT_OPTIONS,
   SMOKING_OPTIONS,
+  WATER_INTAKE_OPTIONS,
 } from '@/utils/constants';
 import { useCounselCardStore } from '../../hooks/counselCardStore';
 
@@ -59,6 +60,11 @@ export default function LivingInfo() {
     livingInfo?.drinking?.drinkingAmount !== undefined &&
     livingInfo?.drinking?.drinkingAmount !== null &&
     livingInfo?.drinking?.drinkingAmount !== DrinkingDTODrinkingAmountEnum.None;
+
+  const isOtherAssistantSelected =
+    livingInfo?.medicationManagement?.medicationAssistants?.includes(
+      MedicationManagementDTOMedicationAssistantsEnum.Other,
+    );
 
   return (
     <Card className="flex w-full flex-col gap-5">
@@ -220,6 +226,20 @@ export default function LivingInfo() {
             ),
           },
           {
+            label: '하루 수분 섭취량',
+            value: (
+              <ButtonGroup
+                options={WATER_INTAKE_OPTIONS}
+                value={livingInfo?.nutrition?.waterIntake || ''}
+                onChange={(value) => {
+                  const newValue =
+                    livingInfo?.nutrition?.waterIntake === value ? '' : value;
+                  handleUpdateLivingInfo('nutrition.waterIntake', newValue);
+                }}
+              />
+            ),
+          },
+          {
             label: '식생활 특이사항',
             value: (
               <Textarea
@@ -371,6 +391,29 @@ export default function LivingInfo() {
               />
             ),
           },
+          ...(isOtherAssistantSelected
+            ? [
+                {
+                  label: '기타 투약 보조자',
+                  value: (
+                    <Input
+                      placeholder="기타 투약 보조자를 입력해주세요."
+                      className="w-full rounded border p-2"
+                      value={
+                        livingInfo?.medicationManagement
+                          ?.customMedicationAssistant || ''
+                      }
+                      onChange={(e) =>
+                        handleUpdateLivingInfo(
+                          'medicationManagement.customMedicationAssistant',
+                          e.target.value,
+                        )
+                      }
+                    />
+                  ),
+                },
+              ]
+            : []),
         ]}
       />
     </Card>

@@ -6,6 +6,7 @@ import {
   CounselCardLivingInformationRes,
   CounselPurposeAndNoteDTOCounselPurposeEnum,
   SmokingDTOSmokingAmountEnum,
+  MedicationManagementDTOMedicationAssistantsEnum,
 } from '@/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,6 +34,7 @@ import {
   USING_KOREANS_MAP,
   WALKING_EQUIPMENTS_MAP,
   WALKING_METHODS_MAP,
+  WATER_INTAKE_MAP,
 } from '@/utils/constants';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -285,6 +287,15 @@ const ConsultCard: React.FC = () => {
                   : '',
               },
               {
+                label: '수분 섭취량',
+                value: consultCardData?.livingInformation?.nutrition
+                  ?.waterIntake
+                  ? WATER_INTAKE_MAP[
+                      consultCardData.livingInformation.nutrition.waterIntake
+                    ]
+                  : '',
+              },
+              {
                 label: '식생활 특이사항',
                 value:
                   consultCardData?.livingInformation?.nutrition
@@ -337,6 +348,20 @@ const ConsultCard: React.FC = () => {
                     ?.map((assistant) => MEDICATION_ASSISTANTS_MAP[assistant])
                     .join(', ') || '',
               },
+              ...(consultCardData?.livingInformation?.medicationManagement?.medicationAssistants?.includes(
+                MedicationManagementDTOMedicationAssistantsEnum.Other,
+              ) &&
+              consultCardData?.livingInformation?.medicationManagement
+                ?.customMedicationAssistant
+                ? [
+                    {
+                      label: '기타 투약 보조자',
+                      value:
+                        consultCardData.livingInformation.medicationManagement
+                          .customMedicationAssistant,
+                    },
+                  ]
+                : []),
             ]}
           />
         </div>

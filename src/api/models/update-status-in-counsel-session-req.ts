@@ -25,7 +25,7 @@ export interface UpdateStatusInCounselSessionReq {
      * @type {string}
      * @memberof UpdateStatusInCounselSessionReq
      */
-    'counselSessionId': string;
+    'counselSessionId'?: string;
     /**
      * 
      * @type {string}

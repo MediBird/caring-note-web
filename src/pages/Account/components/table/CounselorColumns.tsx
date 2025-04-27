@@ -1,4 +1,7 @@
-import { CounselorListItem, CounselorListItemRoleTypeEnum } from '@/api';
+import type {
+  CounselorListItem,
+  CounselorListItemRoleTypeEnum,
+} from '@/api/models/counselor-list-item';
 import { TableCell } from '@/components/common/DataTable/table-cell';
 import { COUNSELOR_ROLE_TYPE_MAP } from '@/utils/constants';
 import { formatDisplayText } from '@/utils/formatDisplayText';

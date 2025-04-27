@@ -25,6 +25,6 @@ export interface DeleteCounseleeBatchReq {
      * @type {string}
      * @memberof DeleteCounseleeBatchReq
      */
-    'counseleeId': string;
+    'counseleeId'?: string;
 }
 

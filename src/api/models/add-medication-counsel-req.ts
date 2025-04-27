@@ -25,12 +25,12 @@ export interface AddMedicationCounselReq {
      * @type {string}
      * @memberof AddMedicationCounselReq
      */
-    'counselSessionId': string;
+    'counselSessionId'?: string;
     /**
      * 
      * @type {string}
      * @memberof AddMedicationCounselReq
      */
-    'counselRecord': string;
+    'counselRecord'?: string;
 }
 

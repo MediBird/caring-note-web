@@ -15,19 +15,25 @@
 
 
 /**
- * 
+ * 영양 DTO
  * @export
  * @interface NutritionDTO
  */
 export interface NutritionDTO {
     /**
-     * 
+     * 식사 양상
      * @type {string}
      * @memberof NutritionDTO
      */
     'mealPattern'?: NutritionDTOMealPatternEnum;
     /**
-     * 
+     * 수분섭취량
+     * @type {string}
+     * @memberof NutritionDTO
+     */
+    'waterIntake'?: NutritionDTOWaterIntakeEnum;
+    /**
+     * 영양 특이사항
      * @type {string}
      * @memberof NutritionDTO
      */
@@ -42,5 +48,14 @@ export const NutritionDTOMealPatternEnum = {
 } as const;
 
 export type NutritionDTOMealPatternEnum = typeof NutritionDTOMealPatternEnum[keyof typeof NutritionDTOMealPatternEnum];
+export const NutritionDTOWaterIntakeEnum = {
+    LessThan500Ml: 'LESS_THAN_500ML',
+    Between500MlAnd1L: 'BETWEEN_500ML_AND_1L',
+    Between1LAnd15L: 'BETWEEN_1L_AND_1_5L',
+    Between15LAnd2L: 'BETWEEN_1_5L_AND_2L',
+    MoreThan2L: 'MORE_THAN_2L'
+} as const;
+
+export type NutritionDTOWaterIntakeEnum = typeof NutritionDTOWaterIntakeEnum[keyof typeof NutritionDTOWaterIntakeEnum];
 
 

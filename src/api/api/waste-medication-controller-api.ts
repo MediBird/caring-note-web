@@ -34,6 +34,8 @@ import type { CommonResVoid } from '../models';
 // @ts-ignore
 import type { CommonResWasteMedicationDisposalRes } from '../models';
 // @ts-ignore
+import type { DeleteCounselor400Response } from '../models';
+// @ts-ignore
 import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { WasteMedicationDisposalReq } from '../models';

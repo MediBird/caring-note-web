@@ -1,4 +1,6 @@
-import { CounselorListItem, PageResCounselorInfoListRes, PageRes } from '@/api';
+import { CounselorListItem } from '@/api/models/counselor-list-item';
+import { PageResCounselorInfoListRes } from '@/api/models/page-res-counselor-info-list-res';
+import { PageRes } from '@/api/models/page-res';
 import { create } from 'zustand';
 
 // 상담사 목록 조회 파라미터

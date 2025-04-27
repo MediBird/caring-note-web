@@ -25,6 +25,6 @@ export interface DeleteCounseleeBatchRes {
      * @type {string}
      * @memberof DeleteCounseleeBatchRes
      */
-    'deletedCounseleeId': string;
+    'deletedCounseleeId'?: string;
 }
 

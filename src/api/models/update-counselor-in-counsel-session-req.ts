@@ -25,12 +25,12 @@ export interface UpdateCounselorInCounselSessionReq {
      * @type {string}
      * @memberof UpdateCounselorInCounselSessionReq
      */
-    'counselSessionId': string;
+    'counselSessionId'?: string;
     /**
      * 
      * @type {string}
      * @memberof UpdateCounselorInCounselSessionReq
      */
-    'counselorId': string;
+    'counselorId'?: string;
 }
 

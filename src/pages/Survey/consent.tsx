@@ -5,7 +5,6 @@ import {
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { cn } from '@/lib/utils';
@@ -185,7 +184,6 @@ export default function Consent() {
   const [selectedConsent, setSelectedConsent] = useState<ConsentItem | null>(
     null,
   );
-  const [consents, setConsents] = useState<number[]>([]);
 
   // counselSessionId가 없으면 리다이렉트
   useEffect(() => {
@@ -203,18 +201,6 @@ export default function Consent() {
   const handleBack = () => {
     setSelectedConsent(null);
   };
-
-  // 동의 체크 토글
-  const toggleConsent = (id: number) => {
-    if (consents.includes(id)) {
-      setConsents(consents.filter((consentId) => consentId !== id));
-    } else {
-      setConsents([...consents, id]);
-    }
-  };
-
-  // 모든 동의 항목에 체크했는지 확인
-  const allConsented = consentItems.length === consents.length;
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-grayscale-3 p-4">
@@ -237,16 +223,8 @@ export default function Consent() {
               <ConsentContent sections={selectedConsent.sections} />
             </div>
 
-            <Button
-              className={cn('w-full')}
-              onClick={() => {
-                // 동의하지 않은 상태일 때만 동의 상태로 변경 (이미 동의한 상태면 유지)
-                if (!consents.includes(selectedConsent.id)) {
-                  toggleConsent(selectedConsent.id);
-                }
-                handleBack();
-              }}>
-              {consents.includes(selectedConsent.id) ? '동의함' : '동의하기'}
+            <Button className={cn('w-full')} onClick={handleBack}>
+              확인
             </Button>
           </div>
         ) : (
@@ -263,21 +241,10 @@ export default function Consent() {
                 {consentItems.map((consent) => (
                   <div
                     key={consent.id}
-                    className="flex w-full overflow-hidden rounded-md p-4">
-                    <div
-                      className="flex w-full cursor-pointer items-center justify-between"
-                      onClick={() => handleConsentClick(consent)}>
-                      <div className="mr-3 flex items-center">
-                        <Checkbox
-                          id={`consent-${consent.id}`}
-                          checked={consents.includes(consent.id)}
-                          onCheckedChange={() => toggleConsent(consent.id)}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </div>
-                      <Label
-                        htmlFor={`consent-${consent.id}`}
-                        className="flex-1 cursor-pointer">
+                    className="flex w-full cursor-pointer overflow-hidden rounded-md p-4"
+                    onClick={() => handleConsentClick(consent)}>
+                    <div className="flex w-full items-center justify-between">
+                      <Label className="flex-1 cursor-pointer">
                         {consent.title}
                       </Label>
                       <ChevronRight className="h-5 w-5 text-grayscale-90" />
@@ -290,9 +257,9 @@ export default function Consent() {
             <CardFooter className="w-full">
               <Button
                 className="w-full"
-                disabled={!allConsented || !counselSessionId || !counseleeInfo}
+                disabled={!counselSessionId || !counseleeInfo}
                 size="xl"
-                variant={allConsented ? 'primary' : 'secondary'}
+                variant={'primary'}
                 onClick={async () => {
                   if (!counselSessionId || !counseleeInfo) {
                     console.error('상담 세션 ID 또는 내담자 정보가 없습니다.');

@@ -1,5 +1,4 @@
 import { AICounselSummaryControllerApi } from '@/api';
-import { useSendSpeakersQuery } from '@/pages/Consult/hooks/query/counselRecording/useSendSpeakersQuery';
 import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import {
   MediaRecorderStatus,
@@ -63,7 +62,6 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     () => new AICounselSummaryControllerApi(),
     [],
   );
-  const { sendSpeakers } = useSendSpeakersQuery();
 
   const startRecording = async () => {
     try {
@@ -195,7 +193,6 @@ export const useRecording = (counselSessionId: string | undefined = '') => {
     sessionStorage.setItem('autoNavigationOpen', 'true');
 
     updateRecordingStatus(RecordingStatus.AILoading);
-    sendSpeakers({ counselSessionId });
   };
 
   const submitRecordingForLeavingOut = async () => {

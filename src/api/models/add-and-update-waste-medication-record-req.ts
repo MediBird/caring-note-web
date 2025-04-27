@@ -31,7 +31,7 @@ export interface AddAndUpdateWasteMedicationRecordReq {
      * @type {string}
      * @memberof AddAndUpdateWasteMedicationRecordReq
      */
-    'medicationId': string;
+    'medicationId'?: string;
     /**
      * 
      * @type {number}
@@ -43,12 +43,12 @@ export interface AddAndUpdateWasteMedicationRecordReq {
      * @type {string}
      * @memberof AddAndUpdateWasteMedicationRecordReq
      */
-    'disposalReason': string;
+    'disposalReason'?: string;
     /**
      * 
      * @type {string}
      * @memberof AddAndUpdateWasteMedicationRecordReq
      */
-    'medicationName': string;
+    'medicationName'?: string;
 }
 
