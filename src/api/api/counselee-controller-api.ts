@@ -40,6 +40,8 @@ import type { CommonResString } from '../models';
 // @ts-ignore
 import type { DeleteCounseleeBatchReq } from '../models';
 // @ts-ignore
+import type { DeleteCounselor400Response } from '../models';
+// @ts-ignore
 import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { PageResSelectCounseleeRes } from '../models';

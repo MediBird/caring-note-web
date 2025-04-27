@@ -55,7 +55,7 @@ export interface AddAndUpdateMedicationRecordHistReq {
      * @type {string}
      * @memberof AddAndUpdateMedicationRecordHistReq
      */
-    'medicationName': string;
+    'medicationName'?: string;
     /**
      * 
      * @type {string}

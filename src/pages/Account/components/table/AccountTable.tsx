@@ -1,4 +1,4 @@
-import { CounselorListItem } from '@/api';
+import type { CounselorListItem } from '@/api/models/counselor-list-item';
 import { DataTable } from '@/components/common/DataTable/data-table';
 import { useState } from 'react';
 import { AccountDetailDialog } from '../dialog/AccountDetailDialog';

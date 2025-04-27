@@ -25,7 +25,7 @@ export interface ResetPasswordReq {
      * @type {string}
      * @memberof ResetPasswordReq
      */
-    'newPassword': string;
+    'newPassword'?: string;
     /**
      * 
      * @type {boolean}

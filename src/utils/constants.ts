@@ -1,22 +1,24 @@
+import { BaseInfoDTOHealthInsuranceTypeEnum } from '@/api/models/base-info-dto';
 import {
-  BaseInfoDTOHealthInsuranceTypeEnum,
   CommunicationDTOCommunicationsEnum,
   CommunicationDTOHearingsEnum,
   CommunicationDTOSightsEnum,
   CommunicationDTOUsingKoreansEnum,
-  CounselPurposeAndNoteDTOCounselPurposeEnum,
-  DrinkingDTODrinkingAmountEnum,
-  EvacuationDTOEvacuationsEnum,
-  ExerciseDTOExercisePatternEnum,
-  GetCounselorResRoleTypeEnum,
-  MedicationManagementDTOMedicationAssistantsEnum,
-  NutritionDTOMealPatternEnum,
-  SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum,
-  SmokingDTOSmokingAmountEnum,
+} from '@/api/models/communication-dto';
+import { CounselPurposeAndNoteDTOCounselPurposeEnum } from '@/api/models/counsel-purpose-and-note-dto';
+import { CounselorListItemRoleTypeEnum } from '@/api/models/counselor-list-item';
+import { DrinkingDTODrinkingAmountEnum } from '@/api/models/drinking-dto';
+import { EvacuationDTOEvacuationsEnum } from '@/api/models/evacuation-dto';
+import { ExerciseDTOExercisePatternEnum } from '@/api/models/exercise-dto';
+import { GetCounselorResRoleTypeEnum } from '@/api/models/get-counselor-res';
+import { MedicationManagementDTOMedicationAssistantsEnum } from '@/api/models/medication-management-dto';
+import { NutritionDTOMealPatternEnum } from '@/api/models/nutrition-dto';
+import { SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum } from '@/api/models/select-counselee-base-information-by-counselee-id-res';
+import { SmokingDTOSmokingAmountEnum } from '@/api/models/smoking-dto';
+import {
   WalkingDTOWalkingEquipmentsEnum,
   WalkingDTOWalkingMethodsEnum,
-  CounselorListItemRoleTypeEnum,
-} from '@/api';
+} from '@/api/models/walking-dto';
 
 import { ButtonGroupOption } from '@/components/ui/button-group';
 

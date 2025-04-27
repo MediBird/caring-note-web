@@ -1,4 +1,5 @@
-import { CounselorListItem, UpdateCounselorReq } from '@/api';
+import { UpdateCounselorReq } from '@/api';
+import type { CounselorListItem } from '@/api/models/counselor-list-item';
 import {
   Dialog,
   DialogClose,

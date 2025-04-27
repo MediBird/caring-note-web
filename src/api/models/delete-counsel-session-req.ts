@@ -25,6 +25,6 @@ export interface DeleteCounselSessionReq {
      * @type {string}
      * @memberof DeleteCounselSessionReq
      */
-    'counselSessionId': string;
+    'counselSessionId'?: string;
 }
 

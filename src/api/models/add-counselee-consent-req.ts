@@ -25,13 +25,13 @@ export interface AddCounseleeConsentReq {
      * @type {string}
      * @memberof AddCounseleeConsentReq
      */
-    'counselSessionId': string;
+    'counselSessionId'?: string;
     /**
      * 
      * @type {string}
      * @memberof AddCounseleeConsentReq
      */
-    'counseleeId': string;
+    'counseleeId'?: string;
     /**
      * 
      * @type {boolean}

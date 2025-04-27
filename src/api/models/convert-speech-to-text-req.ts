@@ -25,6 +25,6 @@ export interface ConvertSpeechToTextReq {
      * @type {string}
      * @memberof ConvertSpeechToTextReq
      */
-    'counselSessionId': string;
+    'counselSessionId'?: string;
 }
 

@@ -24,6 +24,8 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { CounselorNameListRes } from '../models';
 // @ts-ignore
+import type { DeleteCounselor400Response } from '../models';
+// @ts-ignore
 import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { GetCounselorRes } from '../models';

@@ -25,7 +25,7 @@ export interface UpdateCounseleeReq {
      * @type {string}
      * @memberof UpdateCounseleeReq
      */
-    'counseleeId': string;
+    'counseleeId'?: string;
     /**
      * 
      * @type {string}

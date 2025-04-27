@@ -32,6 +32,8 @@ import type { CommonResSelectCounseleeConsentByCounseleeIdRes } from '../models'
 // @ts-ignore
 import type { CommonResUpdateCounseleeConsentRes } from '../models';
 // @ts-ignore
+import type { DeleteCounselor400Response } from '../models';
+// @ts-ignore
 import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { UpdateCounseleeConsentReq } from '../models';

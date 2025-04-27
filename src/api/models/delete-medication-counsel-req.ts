@@ -25,6 +25,6 @@ export interface DeleteMedicationCounselReq {
      * @type {string}
      * @memberof DeleteMedicationCounselReq
      */
-    'medicationCounselId': string;
+    'medicationCounselId'?: string;
 }
 

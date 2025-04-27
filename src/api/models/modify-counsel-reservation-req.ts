@@ -25,18 +25,18 @@ export interface ModifyCounselReservationReq {
      * @type {string}
      * @memberof ModifyCounselReservationReq
      */
-    'counselSessionId': string;
+    'counselSessionId'?: string;
     /**
      * 
      * @type {string}
      * @memberof ModifyCounselReservationReq
      */
-    'counseleeId': string;
+    'counseleeId'?: string;
     /**
      * 상담 일정 날짜 및 시간
      * @type {string}
      * @memberof ModifyCounselReservationReq
      */
-    'scheduledStartDateTime': string;
+    'scheduledStartDateTime'?: string;
 }
 
