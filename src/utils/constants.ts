@@ -12,7 +12,10 @@ import { EvacuationDTOEvacuationsEnum } from '@/api/models/evacuation-dto';
 import { ExerciseDTOExercisePatternEnum } from '@/api/models/exercise-dto';
 import { GetCounselorResRoleTypeEnum } from '@/api/models/get-counselor-res';
 import { MedicationManagementDTOMedicationAssistantsEnum } from '@/api/models/medication-management-dto';
-import { NutritionDTOMealPatternEnum } from '@/api/models/nutrition-dto';
+import {
+  NutritionDTOMealPatternEnum,
+  NutritionDTOWaterIntakeEnum,
+} from '@/api/models/nutrition-dto';
 import { SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum } from '@/api/models/select-counselee-base-information-by-counselee-id-res';
 import { SmokingDTOSmokingAmountEnum } from '@/api/models/smoking-dto';
 import {
@@ -227,6 +230,38 @@ export const MEAL_PATTERN_MAP: Record<NutritionDTOMealPatternEnum, string> =
     {} as Record<NutritionDTOMealPatternEnum, string>,
   );
 
+export const WATER_INTAKE_OPTIONS: ButtonGroupOption[] = [
+  {
+    label: '500ml 미만',
+    value: NutritionDTOWaterIntakeEnum.LessThan500Ml,
+  },
+  {
+    label: '500ml ~ 1L',
+    value: NutritionDTOWaterIntakeEnum.Between500MlAnd1L,
+  },
+  {
+    label: '1L ~ 1.5L',
+    value: NutritionDTOWaterIntakeEnum.Between1LAnd15L,
+  },
+  {
+    label: '1.5L ~ 2L',
+    value: NutritionDTOWaterIntakeEnum.Between15LAnd2L,
+  },
+  {
+    label: '2L 이상',
+    value: NutritionDTOWaterIntakeEnum.MoreThan2L,
+  },
+] as const;
+
+export const WATER_INTAKE_MAP: Record<NutritionDTOWaterIntakeEnum, string> =
+  WATER_INTAKE_OPTIONS.reduce(
+    (acc, { value, label }) => ({
+      ...acc,
+      [value]: label,
+    }),
+    {} as Record<NutritionDTOWaterIntakeEnum, string>,
+  );
+
 export const EXERCISE_PATTERN_OPTIONS: ButtonGroupOption[] = [
   {
     label: '주 1회',
@@ -289,6 +324,10 @@ export const MEDICATION_ASSISTANTS_OPTIONS: ButtonGroupOption[] = [
   {
     label: '요양보호사 또는 돌봄종사자',
     value: MedicationManagementDTOMedicationAssistantsEnum.Caregiver,
+  },
+  {
+    label: '부모',
+    value: MedicationManagementDTOMedicationAssistantsEnum.Parent,
   },
   {
     label: '기타',
