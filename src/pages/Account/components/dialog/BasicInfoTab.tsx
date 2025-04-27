@@ -1,4 +1,7 @@
-import { CounselorListItem, CounselorListItemRoleTypeEnum } from '@/api';
+import type {
+  CounselorListItem,
+  CounselorListItemRoleTypeEnum,
+} from '@/api/models/counselor-list-item';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

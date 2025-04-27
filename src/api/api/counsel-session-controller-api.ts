@@ -44,6 +44,8 @@ import type { CreateCounselReservationReq } from '../models';
 // @ts-ignore
 import type { DeleteCounselSessionReq } from '../models';
 // @ts-ignore
+import type { DeleteCounselor400Response } from '../models';
+// @ts-ignore
 import type { ErrorRes } from '../models';
 // @ts-ignore
 import type { ModifyCounselReservationReq } from '../models';

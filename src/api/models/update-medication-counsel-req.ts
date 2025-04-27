@@ -28,13 +28,13 @@ export interface UpdateMedicationCounselReq {
      * @type {string}
      * @memberof UpdateMedicationCounselReq
      */
-    'medicationCounselId': string;
+    'medicationCounselId'?: string;
     /**
      * 
      * @type {string}
      * @memberof UpdateMedicationCounselReq
      */
-    'counselRecord': string;
+    'counselRecord'?: string;
     /**
      * 
      * @type {Array<MedicationCounselHighlightDTO>}

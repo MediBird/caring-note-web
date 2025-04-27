@@ -28,7 +28,7 @@ export const useCounselAssign = () => {
       counselSessionId,
       counselorId,
     }: UpdateCounselorInCounselSessionReq) =>
-      updateCounselorInCounselSession(counselSessionId, counselorId),
+      updateCounselorInCounselSession(counselSessionId!, counselorId!),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: COUNSEL_SESSION_KEYS.all,
