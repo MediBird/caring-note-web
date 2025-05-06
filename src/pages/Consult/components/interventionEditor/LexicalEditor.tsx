@@ -37,13 +37,13 @@ const initialConfig = {
 
 interface LexicalEditorProps {
   onChange?: (editorState: string) => void;
-  initialContent?: string;
+  initialContent?: string | null;
 }
 
 const LexicalEditor = ({ onChange, initialContent }: LexicalEditorProps) => {
-  const [editorState, setEditorState] = useState<string>(initialContent || '');
-
-  console.log('editorState', editorState);
+  const [editorState, setEditorState] = useState<string | null>(
+    initialContent || null,
+  );
 
   const handleChange = useCallback(
     (editorState: EditorState) => {
@@ -59,14 +59,18 @@ const LexicalEditor = ({ onChange, initialContent }: LexicalEditorProps) => {
   );
 
   return (
-    <LexicalComposer initialConfig={initialConfig}>
-      <div className="editor-container h-full overflow-hidden rounded-md border border-grayscale-20">
+    <LexicalComposer
+      initialConfig={{
+        ...initialConfig,
+        editorState: editorState,
+      }}>
+      <div className="editor-container flex h-full flex-col overflow-hidden rounded-md border border-grayscale-10">
         <ToolbarPlugin />
-        <div className="relative p-2">
+        <div className="relative flex-1 overflow-hidden p-2">
           <RichTextPlugin
             contentEditable={
               <ContentEditable
-                className="min-h-[470px] max-w-none leading-normal outline-none"
+                className="absolute inset-0 max-w-none overflow-y-auto p-2 leading-normal outline-none"
                 style={{
                   caretColor: 'black',
                   lineHeight: '1.5',
@@ -92,3 +96,60 @@ const LexicalEditor = ({ onChange, initialContent }: LexicalEditorProps) => {
 };
 
 export default LexicalEditor;
+
+// {
+//   "root": {
+//     "children": [
+//       {
+//         "children": [
+//           {
+//             "detail": 0,
+//             "format": 0,
+//             "mode": "normal",
+//             "style": "",
+//             "text": "정형외과 약 중복 처방 중재.",
+//             "type": "text",
+//             "version": 1
+//           }
+//         ],
+//         "direction": "ltr",
+//         "format": "",
+//         "indent": 0,
+//         "type": "paragraph",
+//         "version": 1,
+//         "textFormat": 0,
+//         "textStyle": ""
+//       }
+//     ],
+//     "direction": "ltr",
+//     "format": "",
+//     "indent": 0,
+//     "type": "root",
+//     "version": 1
+//   }
+// }
+
+// {
+//   "root": {
+//     "children": [
+//       {
+//         "children": [
+//           {
+//             "detail": 0,
+//             "format": 0,
+//             "mode": "normal",
+//             "style": "",
+//             "text": "정형외과 약 중복 처방 중재.",
+//             "type": "text",
+//             "version": 1
+//           }
+//         ],
+//         "direction": null,
+//         "format": "",
+//         "indent": 0,
+//         "version": 1,
+//         "type": "paragraph"
+//       },
+//     ]
+//   }
+// }

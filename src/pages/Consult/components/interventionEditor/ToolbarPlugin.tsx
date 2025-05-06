@@ -58,25 +58,34 @@ const ToolbarPlugin = () => {
       }
 
       try {
-        const topLevelElement = anchorNode.getTopLevelElementOrThrow();
-
-        if (
-          $isHeadingNode(topLevelElement) &&
-          topLevelElement.getTag() === 'h1'
-        ) {
-          activeEvents.push(eventTypes.formatHeading);
-          setBlockType('h1');
-        } else if ($isListNode(topLevelElement)) {
-          const listType = (topLevelElement as ListNode).getTag();
-          setBlockType(listType);
-
-          if (listType === 'ul') {
-            activeEvents.push(eventTypes.formatBulletList);
-          } else if (listType === 'ol') {
-            activeEvents.push(eventTypes.formatNumberList);
-          }
-        } else {
+        // root 노드인지 확인
+        if (anchorNode.getKey() === 'root') {
           setBlockType('paragraph');
+        } else {
+          const topLevelElement = anchorNode.getTopLevelElement();
+
+          if (topLevelElement) {
+            if (
+              $isHeadingNode(topLevelElement) &&
+              topLevelElement.getTag() === 'h1'
+            ) {
+              activeEvents.push(eventTypes.formatHeading);
+              setBlockType('h1');
+            } else if ($isListNode(topLevelElement)) {
+              const listType = (topLevelElement as ListNode).getTag();
+              setBlockType(listType);
+
+              if (listType === 'ul') {
+                activeEvents.push(eventTypes.formatBulletList);
+              } else if (listType === 'ol') {
+                activeEvents.push(eventTypes.formatNumberList);
+              }
+            } else {
+              setBlockType('paragraph');
+            }
+          } else {
+            setBlockType('paragraph');
+          }
         }
       } catch (error) {
         console.error('Error checking node type:', error);
@@ -249,7 +258,7 @@ const ToolbarPlugin = () => {
   };
 
   return (
-    <div className="flex gap-2 border-b border-grayscale-20 px-2 py-1">
+    <div className="flex gap-2 border-b border-grayscale-10 px-2 py-1">
       <ToolbarButton
         onClick={formatHeading}
         isActive={isEventActive(eventTypes.formatHeading)}

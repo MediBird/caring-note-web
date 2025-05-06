@@ -8,7 +8,6 @@ import {
   LexicalEditor,
   SELECTION_CHANGE_COMMAND,
   $getRoot,
-  ElementNode,
 } from 'lexical';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -98,21 +97,19 @@ function TextFormatFloatingToolbar({
         }
 
         let isFirstNode = false;
-        editor.getEditorState().read(() => {
-          try {
+
+        try {
+          if (selectedNode.getKey() !== 'root') {
             const topLevelElement = selectedNode.getTopLevelElement();
             if (topLevelElement) {
               const rootNode = $getRoot();
-              const firstChild = rootNode.getFirstChild() as ElementNode | null;
-
-              if (firstChild && topLevelElement.is(firstChild)) {
-                isFirstNode = true;
-              }
+              const firstChild = rootNode.getFirstChild();
+              isFirstNode = firstChild ? topLevelElement.is(firstChild) : false;
             }
-          } catch (error) {
-            console.error('Error checking if node is first:', error);
           }
-        });
+        } catch (error) {
+          console.error('노드 관계 확인 중 오류 발생:', error);
+        }
 
         setFloatingElemPosition({
           targetRect: rangeRect,

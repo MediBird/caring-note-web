@@ -1,16 +1,44 @@
 import './editorStyles.css';
 import { useParams } from 'react-router-dom';
 import LexicalEditor from './LexicalEditor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCounselSessionQueryById } from '@/hooks';
 import { Button } from '@/components/ui/button';
+import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
+import {
+  convertSlateToLexical,
+  getIsSlateNode,
+} from '@/utils/convertSlateToLexcialState';
+import Spinner from '@/components/common/Spinner';
 
 function InterventionEditor() {
+  const [isEditorReady, setIsEditorReady] = useState(false);
   const { counselSessionId } = useParams();
 
-  const [editorContent, setEditorContent] = useState<string>('');
+  const { data: medicineConsultData } =
+    useSelectMedicineConsult(counselSessionId);
+
+  const [editorContent, setEditorContent] = useState<string | null>(null);
 
   const { data } = useCounselSessionQueryById(counselSessionId as string);
+
+  useEffect(() => {
+    if (medicineConsultData) {
+      const isSlateNode = getIsSlateNode(
+        medicineConsultData?.counselRecord || '{}',
+      );
+
+      if (isSlateNode) {
+        setEditorContent(
+          convertSlateToLexical(medicineConsultData?.counselRecord || ''),
+        );
+      } else {
+        setEditorContent(medicineConsultData?.counselRecord || '');
+      }
+
+      setIsEditorReady(true);
+    }
+  }, [medicineConsultData]);
 
   const handleEditorChange = (content: string) => {
     setEditorContent(content);
@@ -42,7 +70,16 @@ function InterventionEditor() {
       </div>
 
       <div className="flex-grow overflow-auto px-6 pb-6">
-        <LexicalEditor onChange={handleEditorChange} />
+        {!isEditorReady ? (
+          <div className="flex h-full w-full items-center justify-center">
+            <Spinner />
+          </div>
+        ) : (
+          <LexicalEditor
+            onChange={handleEditorChange}
+            initialContent={editorContent}
+          />
+        )}
       </div>
     </div>
   );
