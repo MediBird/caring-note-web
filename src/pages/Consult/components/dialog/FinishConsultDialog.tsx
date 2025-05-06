@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import CompleteConsultDialog from '@/pages/Consult/components/CompleteConsultDialog';
+import CompleteConsultDialog from '@/pages/Consult/components/dialog/CompleteConsultDialog';
 import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { useState } from 'react';

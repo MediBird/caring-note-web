@@ -1,48 +1,50 @@
 import {
   SelectCounseleeBaseInformationByCounseleeIdRes,
-  SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum,
   UpdateStatusInCounselSessionReqStatusEnum,
 } from '@/api';
+import { useCallback, useEffect, useMemo } from 'react';
 import Spinner from '@/components/common/Spinner';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
-import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
-import { useRecording } from '@/hooks/useRecording';
-import { useRouteStore } from '@/hooks/useRouteStore';
+import {
+  useRecording,
+  useRouteStore,
+  useSelectCounseleeInfo,
+  useCounselSessionQueryById,
+} from '@/hooks';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
-import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
+import EditConsultDialog from '@/pages/Consult/components/dialog/EditConsultDialog';
 import TabContents from '@/pages/Consult/components/TabContents';
-import { useGetIsRecordingPopupQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetIsRecordingPopupQuery';
-import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetRecordingStatusQuery';
-import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
-import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
-import { usePrevCounselSessionList } from '@/pages/Consult/hooks/query/usePrevCounselSessionList';
-import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
+import {
+  useGetIsRecordingPopupQuery,
+  useGetRecordingStatusQuery,
+  useMedicationRecordSave,
+  useSaveWasteMedication,
+  useSaveMedicineConsult,
+  usePrevCounselSessionList,
+} from '@/pages/Consult/hooks/query';
 import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAllTabsData';
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
-import { DISEASE_MAP } from '@/utils/constants';
-import { useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import CheckLeaveOutDialog from './components/CheckLeaveOutDialog';
-import FinishConsultDialog from './components/FinishConsultDialog';
+import CheckLeaveOutDialog from './components/dialog/CheckLeaveOutDialog';
+import FinishConsultDialog from './components/dialog/FinishConsultDialog';
 import RecordingDialog from './components/recording/RecordingDialog';
-import TemporarySaveDialog from './components/TemporarySaveDialog';
+import TemporarySaveDialog from './components/dialog/TemporarySaveDialog';
 import { useLeaveOutDialogStore } from './hooks/store/useLeaveOutDialogStore';
+import { Button } from '@/components/ui/button';
+import PencilBlueIcon from '@/assets/icon/24/create.filled.blue.svg?react';
 
 interface InfoItemProps {
-  icon: string;
   content: React.ReactNode;
   showDivider?: boolean;
 }
 
-const InfoItem = ({ icon, content, showDivider = true }: InfoItemProps) => (
+const InfoItem = ({ content, showDivider = true }: InfoItemProps) => (
   <div className="flex items-center gap-[6px]">
     <div className="flex items-center">
-      <span className="text-subtitle-2 pr-[0.25rem]">{icon}</span>
-      <span className="text-grayscale-70">{content}</span>
+      <span className="body1 text-grayscale-70">{content}</span>
     </div>
     {showDivider && (
       <div className="mr-[6px] h-[16px] w-[1px] bg-grayscale-10" />
@@ -77,8 +79,6 @@ const ConsultHeader = ({
   counseleeInfo,
   sessionStatus,
   consultStatus,
-  age,
-  diseases,
   saveConsult,
   completeConsult,
   hasPreviousConsult,
@@ -86,28 +86,59 @@ const ConsultHeader = ({
   counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
   consultStatus: string;
   sessionStatus: UpdateStatusInCounselSessionReqStatusEnum | undefined;
-  age: string;
-  diseases: React.ReactNode;
   saveConsult: () => void;
   recordingStatus: RecordingStatus;
   completeConsult: () => void;
   hasPreviousConsult: boolean;
 }) => {
+  const { counselSessionId } = useParams();
+
+  const interventionEditorWindows: Record<string, Window | null> = {};
+
+  const handleInterventionEditor = () => {
+    if (!counselSessionId) return;
+
+    const url = `/intervention-editor/${counselSessionId}`;
+    const windowName = `interventionEditor_${counselSessionId}`;
+    const windowFeatures =
+      'width=1200,height=1020,resizable=yes,scrollbars=yes';
+
+    if (
+      interventionEditorWindows[counselSessionId] &&
+      !interventionEditorWindows[counselSessionId]!.closed
+    ) {
+      // 포커스 주기
+      interventionEditorWindows[counselSessionId]!.focus();
+    } else {
+      // 새 창 열기
+      interventionEditorWindows[counselSessionId] = window.open(
+        url,
+        windowName,
+        windowFeatures,
+      );
+    }
+  };
+
   return (
     <div className="flex-none">
       <div className="z-10 w-full bg-white">
         <div className="h-fit bg-white">
-          <div className="border-grayscale-05 border-b pb-1 pt-12">
+          <div className="pt-12">
             <div className="mx-auto flex w-full max-w-layout justify-between px-layout [&>*]:max-w-content">
-              <div>
+              <div className="flex flex-row items-end gap-5 pb-5">
                 <div className="text-h3 font-bold">
                   {counseleeInfo?.name}
                   <span className="text-subtitle2 font-bold"> 님</span>
                 </div>
-                <div className="mt-3 flex items-center pl-[7px] text-body1 font-medium text-grayscale-60">
-                  <InfoItem icon="📍" content={consultStatus} />
-                  <InfoItem icon="🎂" content={age} />
-                  <InfoItem icon="💊" content={diseases} showDivider={false} />
+                <div className="flex items-center text-body1 font-medium text-grayscale-60">
+                  <InfoItem content={consultStatus} />
+                  <InfoItem content={`만 ${counseleeInfo?.age}세`} />
+                  <InfoItem
+                    content={
+                      counseleeInfo?.isDisability ? '장애인' : '비장애인'
+                    }
+                    showDivider={false}
+                  />
                 </div>
               </div>
               <HeaderButtons
@@ -118,7 +149,10 @@ const ConsultHeader = ({
               />
             </div>
           </div>
-          <ConsultTabs hasPreviousConsult={hasPreviousConsult} />
+          <ConsultTabs
+            hasPreviousConsult={hasPreviousConsult}
+            handleInterventionEditor={handleInterventionEditor}
+          />
         </div>
       </div>
     </div>
@@ -127,18 +161,29 @@ const ConsultHeader = ({
 
 const ConsultTabs = ({
   hasPreviousConsult,
+  handleInterventionEditor,
 }: {
   hasPreviousConsult: boolean;
+  handleInterventionEditor: () => void;
 }) => (
   <TabsList className="w-full border-b border-grayscale-10">
-    <div className="mx-auto flex h-full w-full max-w-layout justify-start gap-5 px-layout [&>*]:max-w-content">
+    <div className="mx-auto flex h-full w-full max-w-layout items-center justify-start gap-5 px-layout pb-1 [&>*]:max-w-content">
+      <Button
+        variant="tertiary"
+        size="md"
+        className="text-sm font-bold"
+        onClick={handleInterventionEditor}>
+        <PencilBlueIcon width={16} height={16} />
+        중재 기록
+      </Button>
+      <div className="h-4 w-[1px] bg-grayscale-10" />
       {hasPreviousConsult && (
         <TabsTrigger value="pastConsult">상담 히스토리</TabsTrigger>
       )}
       <TabsTrigger value="survey">기초 설문 내역</TabsTrigger>
       <TabsTrigger value="medicine">약물 기록</TabsTrigger>
-      <TabsTrigger value="note">중재 기록 작성</TabsTrigger>
       <TabsTrigger value="wasteMedication">폐의약품 처리</TabsTrigger>
+      <TabsTrigger value="note">녹음 및 AI 요약</TabsTrigger>
     </div>
   </TabsList>
 );
@@ -320,38 +365,7 @@ export function Index() {
     );
   }
 
-  const formatDiseases = (
-    diseases:
-      | SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum[]
-      | Set<SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum>
-      | undefined,
-  ) => {
-    if (!diseases) return '';
-
-    const diseaseArray = Array.isArray(diseases)
-      ? diseases
-      : Array.from(diseases);
-    if (!diseaseArray.length) return '';
-
-    const mappedDiseases = diseaseArray.map((disease) => DISEASE_MAP[disease]);
-
-    if (mappedDiseases.length <= 3) {
-      return mappedDiseases.join(' · ');
-    }
-
-    return (
-      <>
-        {mappedDiseases.slice(0, 3).join(' · ')}
-        <span className="text-grayscale-30">
-          {` 외 ${mappedDiseases.length - 3}개의 질병`}
-        </span>
-      </>
-    );
-  };
-
   const consultStatus = hasPreviousConsult ? '재상담' : '초기 상담';
-  const age = `만 ${counseleeInfo?.age}세`;
-  const diseases = formatDiseases(counseleeInfo?.diseases);
   const isRecordingDialogClosed =
     sessionStorage.getItem('isRecordingDialogClosed') === 'true';
 
@@ -369,8 +383,6 @@ export function Index() {
           }
           sessionStatus={counselSessionInfo?.status}
           consultStatus={consultStatus}
-          age={age}
-          diseases={diseases}
           saveConsult={saveConsult}
           recordingStatus={recordingStatus}
           completeConsult={completeConsult}
