@@ -7,6 +7,8 @@ import {
   FORMAT_TEXT_COMMAND,
   LexicalEditor,
   SELECTION_CHANGE_COMMAND,
+  $getRoot,
+  ElementNode,
 } from 'lexical';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -95,10 +97,28 @@ function TextFormatFloatingToolbar({
           return;
         }
 
+        let isFirstNode = false;
+        editor.getEditorState().read(() => {
+          try {
+            const topLevelElement = selectedNode.getTopLevelElement();
+            if (topLevelElement) {
+              const rootNode = $getRoot();
+              const firstChild = rootNode.getFirstChild() as ElementNode | null;
+
+              if (firstChild && topLevelElement.is(firstChild)) {
+                isFirstNode = true;
+              }
+            }
+          } catch (error) {
+            console.error('Error checking if node is first:', error);
+          }
+        });
+
         setFloatingElemPosition({
           targetRect: rangeRect,
           floatingElem: popupCharStylesEditorElem,
           anchorElem,
+          isFirstNode,
         });
       } else {
         popupCharStylesEditorElem.style.display = 'none';

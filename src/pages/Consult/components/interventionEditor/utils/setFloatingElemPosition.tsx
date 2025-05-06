@@ -7,12 +7,14 @@ interface setFloatingElemPositionProps {
   anchorElem: HTMLElement;
   verticalGap?: number;
   horizontalOffset?: number;
+  isFirstNode?: boolean;
 }
 
 export function setFloatingElemPosition({
   targetRect,
   floatingElem,
   anchorElem,
+  isFirstNode,
   verticalGap = VERTICAL_GAP,
   horizontalOffset = HORIZONTAL_OFFSET,
 }: setFloatingElemPositionProps) {
@@ -28,11 +30,21 @@ export function setFloatingElemPosition({
   const anchorElementRect = anchorElem.getBoundingClientRect();
   const editorScrollerRect = scrollerElem.getBoundingClientRect();
 
-  let top = targetRect.top - floatingElemRect.height - verticalGap;
+  const isNearTop = targetRect.top - editorScrollerRect.top < 50;
+
+  let top =
+    isNearTop || isFirstNode
+      ? targetRect.bottom + verticalGap
+      : targetRect.top - floatingElemRect.height - verticalGap;
+
   let left = targetRect.left - horizontalOffset;
 
-  if (top < editorScrollerRect.top) {
-    top += floatingElemRect.height + targetRect.height + verticalGap * 2;
+  if (isNearTop && top + floatingElemRect.height > editorScrollerRect.bottom) {
+    top = targetRect.top - floatingElemRect.height - verticalGap;
+  }
+
+  if (!isNearTop && top < editorScrollerRect.top) {
+    top = targetRect.bottom + verticalGap;
   }
 
   if (left + floatingElemRect.width > editorScrollerRect.right) {
