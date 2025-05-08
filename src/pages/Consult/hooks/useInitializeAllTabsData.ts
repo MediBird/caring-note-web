@@ -14,7 +14,6 @@ import {
 import { useWasteMedicationListStore } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
 import { AddAndUpdateWasteMedicationDisposalDTO } from '@/pages/Consult/types/WasteMedicationDTO';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
-import { parseEditorContent } from '@/utils/parseEditorContent';
 import { useEffect, useState } from 'react';
 
 export const useInitializeAllTabsData = (counselSessionId: string) => {
@@ -59,7 +58,6 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
     isMedicationConsultInitialized,
     setIsMedicationConsultInitialized,
     setMedicationConsult,
-    setEditorContent,
   } = useMedicationConsultStore();
 
   // 폐의약품 설문 store
@@ -165,15 +163,12 @@ export const useInitializeAllTabsData = (counselSessionId: string) => {
         medicationCounselId: medicineConsultData.medicationCounselId || '',
         counselRecord: medicineConsultData.counselRecord || '',
       });
-      setEditorContent(
-        parseEditorContent(medicineConsultData.counselRecord || ''),
-      );
+
       setIsMedicationConsultInitialized(true);
     }
   }, [
     medicineConsultData,
     setMedicationConsult,
-    setEditorContent,
     setIsMedicationConsultInitialized,
     isMedicationConsultInitialized,
     counselSessionId,

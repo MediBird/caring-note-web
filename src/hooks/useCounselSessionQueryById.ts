@@ -9,7 +9,7 @@ const getCounselSessionById = async (counselSessionId: string) => {
   return response.data.data;
 };
 
-const useCounselSessionQueryById = (counselSessionId: string) => {
+export const useCounselSessionQueryById = (counselSessionId: string) => {
   const { data, isLoading } = useQuery({
     queryKey: ['counselSession', counselSessionId],
     queryFn: () => getCounselSessionById(counselSessionId),
@@ -18,5 +18,3 @@ const useCounselSessionQueryById = (counselSessionId: string) => {
 
   return { data, isLoading };
 };
-
-export default useCounselSessionQueryById;

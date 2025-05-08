@@ -2,6 +2,7 @@ import { GetCounselorResRoleTypeEnum } from '@/api/models/get-counselor-res';
 import { useAuthContext } from '@/context/AuthContext';
 import AccountManagement from '@/pages/Account';
 import Consult from '@/pages/Consult';
+import InterventionEditor from '@/pages/Consult/components/interventionEditor';
 import CounseleeManagement from '@/pages/Counselee';
 import ForbiddenErrorPage from '@/pages/Errors/Forbidden';
 import NotFoundErrorPage from '@/pages/Errors/NotFound';
@@ -54,6 +55,16 @@ const Routes = () => {
       {
         path: '/',
         element: <Home />,
+      },
+    ],
+  };
+
+  const interventionEditorRoutes: AppRouteObject = {
+    path: '/intervention-editor/:counselSessionId',
+    children: [
+      {
+        path: '',
+        element: <InterventionEditor />,
       },
     ],
   };
@@ -123,6 +134,7 @@ const Routes = () => {
     surveyRoutes,
     consentRoutes,
     AdminRoutes,
+    interventionEditorRoutes,
   ];
 
   return useRoutes(routes);
