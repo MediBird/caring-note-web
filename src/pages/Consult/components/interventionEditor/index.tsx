@@ -1,61 +1,24 @@
 import './editorStyles.css';
-import { useParams } from 'react-router-dom';
 import LexicalEditor from './LexicalEditor';
-import { useEffect, useState } from 'react';
-import { useCounselSessionQueryById } from '@/hooks';
 import { Button } from '@/components/ui/button';
-import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
-import {
-  convertSlateToLexical,
-  getIsSlateNode,
-} from '@/utils/convertSlateToLexcialState';
 import Spinner from '@/components/common/Spinner';
+import { useInterventionEditor } from './useInterventionEditor';
 
 function InterventionEditor() {
-  const [isEditorReady, setIsEditorReady] = useState(false);
-  const { counselSessionId } = useParams();
-
-  const { data: medicineConsultData } =
-    useSelectMedicineConsult(counselSessionId);
-
-  const [editorContent, setEditorContent] = useState<string | null>(null);
-
-  const { data } = useCounselSessionQueryById(counselSessionId as string);
-
-  useEffect(() => {
-    if (medicineConsultData) {
-      const isSlateNode = getIsSlateNode(
-        medicineConsultData?.counselRecord || '{}',
-      );
-
-      if (isSlateNode) {
-        setEditorContent(
-          convertSlateToLexical(medicineConsultData?.counselRecord || ''),
-        );
-      } else {
-        setEditorContent(medicineConsultData?.counselRecord || '');
-      }
-
-      setIsEditorReady(true);
-    }
-  }, [medicineConsultData]);
-
-  const handleEditorChange = (content: string) => {
-    setEditorContent(content);
-  };
-
-  const handleSave = () => {
-    // API 호출로 저장 기능 구현
-    console.log('저장된 내용:', editorContent);
-    // TODO: 서버에 저장하는 로직 추가
-  };
+  const {
+    isEditorReady,
+    editorContent,
+    handleEditorChange,
+    handleSave,
+    counselSessionData,
+  } = useInterventionEditor();
 
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden">
-      <div className="flex flex-col gap-2 p-6 pb-2">
+      <div className="flex flex-col gap-2 px-10 py-6 pb-2">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">
-            {data?.counseleeName}님 중재 기록
+            {counselSessionData?.counseleeName}님 중재 기록
           </h1>
           <Button size="xl" onClick={handleSave}>
             내용 저장하기
@@ -69,7 +32,7 @@ function InterventionEditor() {
         </div>
       </div>
 
-      <div className="flex-grow overflow-auto px-6 pb-6">
+      <div className="flex-grow overflow-auto px-10 pb-10">
         {!isEditorReady ? (
           <div className="flex h-full w-full items-center justify-center">
             <Spinner />

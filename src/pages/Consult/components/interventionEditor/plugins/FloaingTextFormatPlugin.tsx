@@ -13,9 +13,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import BoldIcon from '@/assets/icon/24/format.bold.svg?react';
 import HighlightIcon from '@/assets/icon/24/format.highlight.svg?react';
-import { getDOMRangeRect } from './utils/getDOMRangeRect';
-import { getSelectedNode } from './utils/getSelectNode';
-import { setFloatingElemPosition } from './utils/setFloatingElemPosition';
+import { getDOMRangeRect } from '../utils/getDOMRangeRect';
+import { getSelectedNode } from '../utils/getSelectNode';
+import { setFloatingElemPosition } from '../utils/setFloatingElemPosition';
 
 interface TextFormatFloatingToolbarProps {
   editor: LexicalEditor;

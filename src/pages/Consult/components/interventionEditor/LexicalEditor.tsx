@@ -7,10 +7,10 @@ import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { ListItemNode, ListNode } from '@lexical/list';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
-import ToolbarPlugin from './ToolbarPlugin';
+import ToolbarPlugin from './plugins/ToolbarPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { EditorState } from 'lexical';
-import FloatingTextFormatToolbarPlugin from '@/pages/Consult/components/interventionEditor/FloaingTextFormatPlugin';
+import FloatingTextFormatToolbarPlugin from '@/pages/Consult/components/interventionEditor/plugins/FloaingTextFormatPlugin';
 
 const theme = {
   heading: {
