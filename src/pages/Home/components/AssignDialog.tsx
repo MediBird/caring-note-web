@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCounselAssign } from '../hooks/query/useCounselAssign';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
-import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
+import { useCounselSessionQueryById } from '@/hooks/useCounselSessionQueryById';
 
 interface AssignDialogProps {
   counselSessionId: string;

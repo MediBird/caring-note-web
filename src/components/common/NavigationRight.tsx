@@ -6,7 +6,6 @@ import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore
 import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useRightNavigationStore from '@/store/navigationStore';
 import { useEffect } from 'react';
-import HighlightInput from '../consult/HighlightInput';
 
 const NavigationRight = () => {
   const isOpen = useRightNavigationStore((state) => state.isOpen);
@@ -65,10 +64,6 @@ const NavigationRight = () => {
               />
             </div>
             <div className="flex w-full flex-col items-center justify-between gap-4 px-4 py-4">
-              <HighlightInput
-                className="w-full"
-                inputClassName="max-h-[400px] min-h-[240px]"
-              />
               <Recording className="w-full" />
             </div>
           </div>

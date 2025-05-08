@@ -30,7 +30,7 @@ const buttonVariants = cva(
         nonpressed:
           'border border-grayscale-30 bg-grayscale-03 text-grayscale-60 hover:border-grayscale-50 hover:bg-grayscale-10 hover:text-grayscale-70',
         tertiary:
-          'bg-primary-10 border border-transparent text-primary-50 hover:bg-primary-30 ',
+          'bg-primary-10 border border-transparent text-primary-50 hover:bg-primary-20 ',
         selectButtonSelected:
           'bg-primary-20 border border-primary-40 text-primary-60 hover:bg-primary-30 hover:border-primary-50 disabled:bg-primary-20 disabled:border-primary-30 disabled:text-primary-30 ',
         selectButtonNonSelected:

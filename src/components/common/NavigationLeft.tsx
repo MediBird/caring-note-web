@@ -20,7 +20,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useAuthContext } from '@/context/AuthContext';
-import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
+import { useCounselSessionQueryById } from '@/hooks/useCounselSessionQueryById';
 import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
 import { useLeaveOutDialogStore } from '@/pages/Consult/hooks/store/useLeaveOutDialogStore';
