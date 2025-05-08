@@ -311,8 +311,10 @@ const ToolbarButton = ({
   return (
     <button
       onClick={onClick}
-      className={`h-6 w-6 rounded-[2px] hover:bg-primary-10 ${
-        isActive ? 'bg-primary-10 text-primary-50' : ''
+      className={`h-6 w-6 rounded-[2px] hover:bg-grayscale-3 ${
+        isActive
+          ? 'bg-primary-10 text-primary-50 hover:bg-primary-20 hover:text-primary-60'
+          : ''
       }`}
       title={title}>
       {children}

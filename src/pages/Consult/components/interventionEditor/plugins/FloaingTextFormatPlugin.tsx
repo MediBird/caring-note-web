@@ -180,8 +180,10 @@ function TextFormatFloatingToolbar({
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
               setIsBold(!isBold);
             }}
-            className={`h-6 w-6 rounded-[2px] hover:bg-gray-100 ${
-              isBold ? 'bg-primary-10 text-primary-50' : ''
+            className={`h-6 w-6 rounded-[2px] hover:bg-grayscale-3 ${
+              isBold
+                ? 'bg-primary-10 text-primary-50 hover:bg-primary-20 hover:text-primary-60'
+                : ''
             }`}>
             <BoldIcon />
           </button>
@@ -190,8 +192,10 @@ function TextFormatFloatingToolbar({
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'highlight');
               setIsHighlight(!isHighlight);
             }}
-            className={`h-6 w-6 rounded-[2px] hover:bg-gray-100 ${
-              isHighlight ? 'bg-primary-10 text-primary-50' : ''
+            className={`h-6 w-6 rounded-[2px] hover:bg-grayscale-3 ${
+              isHighlight
+                ? 'bg-primary-10 text-primary-50 hover:bg-primary-20 hover:text-primary-60'
+                : ''
             }`}>
             <HighlightIcon />
           </button>
