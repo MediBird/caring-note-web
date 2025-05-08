@@ -19,7 +19,6 @@ import {
   useGetRecordingStatusQuery,
   useMedicationRecordSave,
   useSaveWasteMedication,
-  useSaveMedicineConsult,
   usePrevCounselSessionList,
 } from '@/pages/Consult/hooks/query';
 import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
@@ -225,10 +224,10 @@ export function Index() {
     useSaveWasteMedication(counselSessionId ?? '');
 
   // 중재기록 저장
-  const {
-    mutate: saveMedicationCounsel,
-    isSuccess: isSuccessSaveMedicationCounsel,
-  } = useSaveMedicineConsult();
+  // const {
+  //   mutate: saveMedicationCounsel,
+  //   isSuccess: isSuccessSaveMedicationCounsel,
+  // } = useSaveMedicineConsult();
 
   // 약물 기록 저장
   const {
@@ -237,18 +236,10 @@ export function Index() {
   } = useMedicationRecordSave({ counselSessionId: counselSessionId ?? '' });
 
   useEffect(() => {
-    if (
-      isSuccessSaveMedicationCounsel &&
-      isSuccessSaveMedicationRecordList &&
-      isSuccessWasteMedication
-    ) {
+    if (isSuccessSaveMedicationRecordList && isSuccessWasteMedication) {
       toast.info('작성하신 내용을 성공적으로 저장하였습니다.');
     }
-  }, [
-    isSuccessSaveMedicationCounsel,
-    isSuccessSaveMedicationRecordList,
-    isSuccessWasteMedication,
-  ]);
+  }, [isSuccessSaveMedicationRecordList, isSuccessWasteMedication]);
 
   const { isSuccess: isSuccessGetIsRecordingPopup, data: isPopup } =
     useGetIsRecordingPopupQuery(counselSessionId);
@@ -314,15 +305,11 @@ export function Index() {
 
   const saveConsult = useCallback(async () => {
     try {
-      await Promise.all([
-        saveWasteMedication(),
-        saveMedicationCounsel(),
-        saveMedicationRecordList(),
-      ]);
+      await Promise.all([saveWasteMedication(), saveMedicationRecordList()]);
     } catch (error) {
       console.error('저장 중 오류가 발생했습니다:', error);
     }
-  }, [saveWasteMedication, saveMedicationCounsel, saveMedicationRecordList]);
+  }, [saveWasteMedication, saveMedicationRecordList]);
 
   const handleConfirmLeave = () => {
     if (isRecording) {
