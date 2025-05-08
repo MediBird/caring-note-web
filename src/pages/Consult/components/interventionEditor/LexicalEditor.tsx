@@ -14,7 +14,7 @@ import FloatingTextFormatToolbarPlugin from '@/pages/Consult/components/interven
 
 const theme = {
   heading: {
-    h1: 'text-2xl mb-2 font-normal',
+    h1: 'mb-2 subtitle-1',
   },
   list: {
     ul: 'list-disc pl-5 mb-2',
