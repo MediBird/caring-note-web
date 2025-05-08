@@ -96,6 +96,8 @@ const Recording: React.FC<RecordingProps> = ({ className }) => {
     setActiveTab(ConsultTab.consultNote);
   };
 
+  console.log(recordingStatus);
+
   return (
     <>
       {

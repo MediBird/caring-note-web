@@ -30,12 +30,12 @@ const saveMedicationCounsel = async (
   if (medicationConsultDTO.medicationCounselId === '') {
     await medicationCounselControllerApi.addMedicationCounsel({
       counselSessionId: medicationConsultDTO.counselSessionId,
-      counselRecord: medicationConsultDTO.counselRecord,
+      counselRecord: medicationConsultDTO.counselRecord || '',
     });
   } else {
     await medicationCounselControllerApi.updateMedicationCounsel({
       medicationCounselId: medicationConsultDTO.medicationCounselId,
-      counselRecord: medicationConsultDTO.counselRecord,
+      counselRecord: medicationConsultDTO.counselRecord || '',
     });
   }
 
