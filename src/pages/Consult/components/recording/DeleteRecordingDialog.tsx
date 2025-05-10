@@ -9,12 +9,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useRecording } from '@/hooks/useRecording';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
 
 function DeleteRecordingDialog() {
-  const { resetRecording } = useRecording();
   const [open, setOpen] = useState(false);
 
   return (
@@ -43,7 +41,7 @@ function DeleteRecordingDialog() {
               </Button>
             </>
           </DialogClose>
-          <Button variant="primaryError" onClick={resetRecording}>
+          <Button variant="primaryError" onClick={() => setOpen(false)}>
             삭제
           </Button>
         </DialogFooter>

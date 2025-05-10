@@ -1,5 +1,4 @@
 import NavigationLeft from '@/components/common/NavigationLeft';
-import NavigationRight from '@/components/common/NavigationRight';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
@@ -39,7 +38,6 @@ function Layout() {
           )}>
           <Outlet />
         </main>
-        {isRightSideBarActive && <NavigationRight />}
       </div>
     </SidebarProvider>
   );
