@@ -1,21 +1,9 @@
 import { Header } from '../../components/ui/Header';
 import { CounseleeTableSection } from './components/CounseleeTableSection';
-import { CounseleeDialog } from './components/dialog/CounseleeDialog';
-import { FilterSection } from './components/FilterSection';
-import { useCounseleeManagement } from './hooks/useCounseleeManagement';
+import { CreateCounseleeDialog } from './components/dialog/CreateCounseleeDialog';
+import { CounseleeFilterSection } from './components/CounseleeFilterSection';
 
 const CounseleeManagement = () => {
-  const {
-    data,
-    filter,
-    filterOptions,
-    handlePageChange,
-    handleDelete,
-    handleUpdate,
-    handleCreate,
-    setFilter,
-  } = useCounseleeManagement();
-
   return (
     <div>
       <Header
@@ -25,34 +13,10 @@ const CounseleeManagement = () => {
       <div className="mx-auto flex w-full max-w-layout justify-center px-layout pt-5 [&>*]:max-w-content">
         <div className="flex h-full w-full flex-col items-center rounded-[0.5rem]">
           <div className="flex h-full w-full justify-between rounded-[0.5rem] pb-5">
-            <FilterSection
-              nameFilter={filter.name}
-              setNameFilter={(value) => setFilter({ name: value })}
-              birthDatesFilter={filter.birthDates}
-              setBirthDatesFilter={(values) =>
-                setFilter({ birthDates: values })
-              }
-              institutionsFilter={filter.affiliatedWelfareInstitutions}
-              setInstitutionsFilter={(values) =>
-                setFilter({ affiliatedWelfareInstitutions: values })
-              }
-              birthDatesOptions={filterOptions.birthDatesOptions}
-              institutionsOptions={filterOptions.institutionsOptions}
-            />
-            <CounseleeDialog onSubmit={handleCreate} />
+            <CounseleeFilterSection />
+            <CreateCounseleeDialog />
           </div>
-          <CounseleeTableSection
-            data={data?.content}
-            pagination={{
-              currentPage: data?.page ?? 0,
-              totalPages: data?.totalPages ?? 1,
-              hasPrevious: data?.hasPrevious ?? false,
-              hasNext: data?.hasNext ?? false,
-            }}
-            onDelete={handleDelete}
-            onUpdate={handleUpdate}
-            onPageChange={handlePageChange}
-          />
+          <CounseleeTableSection />
         </div>
       </div>
     </div>

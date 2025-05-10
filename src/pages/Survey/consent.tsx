@@ -137,7 +137,7 @@ function ConsentContent({ sections }: { sections: ContentSection[] }) {
             return (
               <h3
                 key={index}
-                className="mb-3 text-body1 font-bold text-grayscale-90">
+                className="mb-3 text-body1 font-semibold text-grayscale-90">
                 {section.content}
               </h3>
             );
@@ -204,7 +204,7 @@ export default function Consent() {
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-grayscale-3 p-4">
-      <Card className="flex w-[30rem] flex-col items-center justify-center bg-white px-5 pb-5 pt-10 shadow-md">
+      <Card className="flex w-[30rem] flex-col items-center justify-center rounded-[20px] bg-white px-5 pb-5 pt-10 shadow-md">
         {selectedConsent ? (
           // 선택된 동의 상세 내용 페이지
           <div className="w-full p-4">
@@ -230,10 +230,11 @@ export default function Consent() {
         ) : (
           // 메인 동의서 페이지
           <>
-            <CardHeader>
-              <h3 className="text-h3 font-bold">
-                개인정보 수집 동의서를 작성해주세요.
-              </h3>
+            <CardHeader className="w-full">
+              <div className="mx-[10px] w-full text-left text-h3 font-bold">
+                개인정보 수집 동의서를 <br />
+                작성해주세요.
+              </div>
             </CardHeader>
 
             <CardContent className="w-full pb-5">
@@ -256,7 +257,7 @@ export default function Consent() {
 
             <CardFooter className="w-full">
               <Button
-                className="w-full"
+                className="w-full text-body1 font-semibold text-white"
                 disabled={!counselSessionId || !counseleeInfo}
                 size="xl"
                 variant={'primary'}

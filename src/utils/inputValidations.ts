@@ -17,7 +17,7 @@ export interface AddCounseleeFormData {
 export const validateName = (value: string) => {
   if (!value.trim()) return '이름을 입력해주세요.';
   if (value.length > 30) return '이름은 30자 이내로 입력해주세요.';
-  if (!/^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z]+$/.test(value))
+  if (!/^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z\s]+$/.test(value))
     return '성명을 올바른 형식으로 입력해주세요.';
   return null;
 };

@@ -12,6 +12,8 @@ api/default-api.ts
 api/medication-controller-api.ts
 api/medication-counsel-controller-api.ts
 api/medication-record-hist-controller-api.ts
+api/tus-controller-api.ts
+api/tusapi.ts
 api/waste-medication-controller-api.ts
 base.ts
 common.ts

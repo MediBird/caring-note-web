@@ -1,6 +1,8 @@
-import { AddCounseleeReqGenderTypeEnum, SelectCounseleeRes } from '@/api';
-import personAddIcon from '@/assets/icon/20/personadd.svg';
-import { InfoIcon } from '@/components/icon/InfoIcon';
+import {
+  AddCounseleeReqGenderTypeEnum,
+  SelectCounseleeRes,
+  UpdateCounseleeReq,
+} from '@/api';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import {
@@ -11,17 +13,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { FormInput } from '@/components/ui/form-input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip-triangle';
 import {
   validateDateOfBirth,
   validateName,
@@ -29,79 +24,78 @@ import {
 } from '@/utils/inputValidations';
 import { AsYouType } from 'libphonenumber-js';
 import { XIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { AddCounseleeFormData } from './CreateCounseleeDialog';
+import { useUpdateCounseleeInfo } from '../../hooks/query/useCounseleeQuery';
 
-interface AddCounseleeDialogProps {
-  onSubmit: (data: AddCounseleeFormData) => void;
-  initialData?: SelectCounseleeRes;
-  mode?: 'add' | 'edit';
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
+interface UpdateCounseleeDialogProps {
+  counselee: SelectCounseleeRes;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export interface AddCounseleeFormData {
-  id?: string;
-  name: string;
-  dateOfBirth: string;
-  genderType: AddCounseleeReqGenderTypeEnum;
-  phoneNumber: string;
-  address: string;
-  careManagerName: string;
-  affiliatedWelfareInstitution: string;
-  isDisability: boolean;
-  note: string;
-}
-
-export const CounseleeDialog = ({
-  onSubmit,
-  initialData,
-  mode = 'add',
-  open: controlledOpen,
+export const UpdateCounseleeDialog = ({
+  counselee,
+  open,
   onOpenChange,
-}: AddCounseleeDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState<AddCounseleeFormData>(() => {
-    if (initialData) {
-      return {
-        id: initialData.id ?? '',
-        name: initialData.name || '',
-        dateOfBirth: initialData.dateOfBirth || '',
-        genderType: initialData.gender || AddCounseleeReqGenderTypeEnum.Female,
-        phoneNumber: initialData.phoneNumber || '',
-        address: initialData.address || '',
-        careManagerName: initialData.careManagerName || '',
-        affiliatedWelfareInstitution:
-          initialData.affiliatedWelfareInstitution || '',
-        isDisability: initialData.disability || false,
-        note: initialData.note || '',
-      };
-    }
-    return {
-      name: '',
-      dateOfBirth: '',
-      genderType: AddCounseleeReqGenderTypeEnum.Female,
-      phoneNumber: '',
-      address: '',
-      careManagerName: '',
-      affiliatedWelfareInstitution: '',
-      isDisability: false,
-      note: '',
-    };
-  });
+}: UpdateCounseleeDialogProps) => {
+  const [formData, setFormData] = useState<AddCounseleeFormData>(() => ({
+    id: counselee.id,
+    name: counselee.name || '',
+    dateOfBirth: counselee.dateOfBirth || '',
+    genderType: counselee.gender || AddCounseleeReqGenderTypeEnum.Female,
+    phoneNumber: counselee.phoneNumber || '',
+    address: counselee.address || '',
+    careManagerName: counselee.careManagerName || '',
+    affiliatedWelfareInstitution: counselee.affiliatedWelfareInstitution || '',
+    isDisability: counselee.disability || false,
+    note: counselee.note || '',
+  }));
 
-  const handleOpenChange = (newOpen: boolean) => {
-    if (onOpenChange) {
-      onOpenChange(newOpen);
-    } else {
-      setOpen(newOpen);
-    }
-  };
+  const { mutate: updateCounselee, isPending: isUpdating } =
+    useUpdateCounseleeInfo(); // 추가
 
-  const isOpen = mode === 'edit' ? controlledOpen : open;
+  useEffect(() => {
+    setFormData({
+      id: counselee.id,
+      name: counselee.name || '',
+      dateOfBirth: counselee.dateOfBirth || '',
+      genderType: counselee.gender || AddCounseleeReqGenderTypeEnum.Female,
+      phoneNumber: counselee.phoneNumber || '',
+      address: counselee.address || '',
+      careManagerName: counselee.careManagerName || '',
+      affiliatedWelfareInstitution:
+        counselee.affiliatedWelfareInstitution || '',
+      isDisability: counselee.disability || false,
+      note: counselee.note || '',
+    });
+  }, [counselee]);
 
   const handleSubmit = () => {
-    onSubmit(formData);
-    handleOpenChange(false);
+    const { id } = formData;
+    if (!id) {
+      console.error('UpdateCounseleeDialog: ID is missing in formData');
+      return;
+    }
+
+    const submissionData: UpdateCounseleeReq = {
+      counseleeId: id,
+      name: formData.name,
+      dateOfBirth: formData.dateOfBirth,
+      phoneNumber: formData.phoneNumber,
+      affiliatedWelfareInstitution: formData.affiliatedWelfareInstitution,
+      note: formData.note,
+      genderType: formData.genderType,
+      address: formData.address,
+      isDisability: formData.isDisability,
+      careManagerName: formData.careManagerName,
+    };
+
+    updateCounselee(submissionData, {
+      onSuccess: () => {
+        onOpenChange(false); // 성공 시 다이얼로그 닫기
+      },
+    });
   };
 
   const isSubmitDisabled = useMemo(() => {
@@ -117,7 +111,8 @@ export const CounseleeDialog = ({
       isNameValid !== null ||
       isDateOfBirthValid !== null ||
       isPhoneNumberValid !== null ||
-      (formData.careManagerName && isCareManagerNameValid !== null)
+      (formData.careManagerName && isCareManagerNameValid !== null) ||
+      isUpdating
     ) {
       return true;
     }
@@ -128,23 +123,14 @@ export const CounseleeDialog = ({
     formData.dateOfBirth,
     formData.phoneNumber,
     formData.careManagerName,
+    isUpdating,
   ]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      {mode === 'add' && (
-        <DialogTrigger asChild>
-          <Button variant="secondary" size="lg">
-            <img src={personAddIcon} alt="내담자 추가" className="h-5 w-5" />
-            내담자 등록
-          </Button>
-        </DialogTrigger>
-      )}
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[500px]">
         <DialogHeader>
-          <DialogTitle>
-            {mode === 'add' ? '신규 내담자 등록' : '내담자 정보 수정'}
-          </DialogTitle>
+          <DialogTitle>내담자 정보 수정</DialogTitle>
           <DialogDescription className="text-sm text-grayscale-60"></DialogDescription>
           <DialogClose
             asChild
@@ -183,12 +169,12 @@ export const CounseleeDialog = ({
                   if (value.length <= 4) {
                     formattedDate = value;
                   } else if (value.length <= 6) {
-                    formattedDate = `${value.slice(0, 4)}-${value.slice(4)}`;
+                    formattedDate = `\${value.slice(0, 4)}-\${value.slice(4)}`;
                   } else {
-                    formattedDate = `${value.slice(0, 4)}-${value.slice(
+                    formattedDate = `\${value.slice(0, 4)}-\${value.slice(
                       4,
                       6,
-                    )}-${value.slice(6, 8)}`;
+                    )}-\${value.slice(6, 8)}`;
                   }
 
                   setFormData({ ...formData, dateOfBirth: formattedDate });
@@ -265,29 +251,12 @@ export const CounseleeDialog = ({
                 onChange={(e) =>
                   setFormData({ ...formData, careManagerName: e.target.value })
                 }
+                validation={(value) => (value ? validateName(value) : null)}
               />
             </div>
             <div className="space-y-2">
               <div className="flex items-center gap-1">
                 <Label>연계 기관</Label>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <InfoIcon className="h-5 w-5 text-grayscale-50" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <ul className="list-disc space-y-0.5 pl-5 text-caption1 font-light marker:text-white">
-                        <li className="ml-[-0.6rem]">
-                          사회복지관: 신림, 강감찬, 봉천, 관악장애인
-                        </li>
-                        <li className="ml-[-0.6rem]">의료기관: 한울</li>
-                        <li className="ml-[-0.6rem]">
-                          연계기관이 없을 경우: 공란으로 처리
-                        </li>
-                      </ul>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
               </div>
               <FormInput
                 placeholder="기관명 (띄어쓰기 생략)"
@@ -338,11 +307,11 @@ export const CounseleeDialog = ({
               if (isSubmitDisabled) {
                 return;
               }
-
               handleSubmit();
             }}
-            variant={isSubmitDisabled ? 'primaryError' : 'primary'}>
-            {mode === 'add' ? '완료' : '수정'}
+            variant={isSubmitDisabled ? 'primaryError' : 'primary'}
+            disabled={isUpdating}>
+            {isUpdating ? '수정 중...' : '수정'}
           </Button>
         </DialogFooter>
       </DialogContent>

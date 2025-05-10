@@ -27,7 +27,7 @@ export const SearchInput = ({ value, onChange }: SearchInputProps) => {
         value={value}
         onChange={handleChange}
         placeholder="내담자 검색"
-        className="pl-10 pr-10"
+        className="w-[12.5rem] pl-10 pr-10"
       />
       {value && (
         <button

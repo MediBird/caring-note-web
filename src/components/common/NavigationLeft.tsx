@@ -66,13 +66,6 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         roles: ['ROLE_ADMIN', 'ROLE_USER'],
         action: null,
       },
-      // 기능 구현 전 임시 주석 처리
-      // {
-      //   name: '메세지 보관함',
-      //   collapsedName: '메세지 보관함',
-      //   icon: <PaperPlainIcon width={24} height={24} />,
-      //   roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
-      // },
       {
         name: '내담자 관리',
         collapsedName: '내담자 관리',
@@ -185,7 +178,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                     className={cn(
                       'flex flex-row items-center gap-2',
                       !open
-                        ? 'flex-col justify-center gap-1 overflow-hidden p-[3px] text-center text-xs font-bold text-grayscale-50 hover:!text-grayscale-70 [&>svg]:text-grayscale-90'
+                        ? 'flex-col justify-center gap-1 overflow-hidden p-[3px] text-center text-caption1 font-bold text-grayscale-50 hover:!text-grayscale-70 [&>svg]:text-grayscale-90'
                         : 'text-grayscale-90',
                       getIsActive(item.route ?? '') &&
                         'text-primary-50 [&>svg]:text-primary-50',
@@ -195,7 +188,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                       className={cn(
                         'w-full overflow-hidden whitespace-nowrap',
                         !open &&
-                          'w-full whitespace-pre-wrap text-center text-body1 font-medium',
+                          'w-full whitespace-pre-wrap text-center text-caption1 font-bold',
                       )}>
                       {open ? item.name : item.collapsedName}
                     </span>
@@ -221,7 +214,8 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                     <span
                       className={cn(
                         'w-full overflow-hidden whitespace-nowrap',
-                        !open && 'w-full whitespace-pre-wrap text-center',
+                        !open &&
+                          'w-full whitespace-pre-wrap text-center text-caption1 font-bold',
                       )}>
                       {open ? item.name : item.collapsedName}
                     </span>

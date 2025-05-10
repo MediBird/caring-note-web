@@ -97,5 +97,8 @@
     "vite": "^6.2.5",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-svgr": "^4.3.0"
+  },
+  "volta": {
+    "node": "23.11.0"
   }
 }

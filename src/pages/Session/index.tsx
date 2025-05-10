@@ -16,7 +16,7 @@ const SessionManagement = () => {
       <Header title="상담 내역" description="내담자의 복약 상담 내역" />
 
       {/* 메인 콘텐츠 */}
-      <div className="mx-auto flex w-full max-w-layout justify-center px-layout pt-5">
+      <div className="mx-auto flex w-full min-w-fit max-w-layout justify-center px-layout pt-5">
         <div className="flex w-full flex-col gap-5">
           {/* 필터 섹션 */}
           <FilterSection />
