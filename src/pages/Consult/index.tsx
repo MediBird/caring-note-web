@@ -5,11 +5,7 @@ import {
 import { useCallback, useEffect, useMemo } from 'react';
 import Spinner from '@/components/common/Spinner';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  useRecording,
-  useSelectCounseleeInfo,
-  useCounselSessionQueryById,
-} from '@/hooks';
+import { useSelectCounseleeInfo, useCounselSessionQueryById } from '@/hooks';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
 import EditConsultDialog from '@/pages/Consult/components/dialog/EditConsultDialog';
 import TabContents from '@/pages/Consult/components/TabContents';
@@ -18,16 +14,12 @@ import {
   useSaveWasteMedication,
   usePrevCounselSessionList,
 } from '@/pages/Consult/hooks/query';
-import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAllTabsData';
-import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import CheckLeaveOutDialog from './components/dialog/CheckLeaveOutDialog';
 import FinishConsultDialog from './components/dialog/FinishConsultDialog';
 import TemporarySaveDialog from './components/dialog/TemporarySaveDialog';
-import { useLeaveOutDialogStore } from './hooks/store/useLeaveOutDialogStore';
 import { Button } from '@/components/ui/button';
 import PencilBlueIcon from '@/assets/icon/24/create.filled.blue.svg?react';
 
@@ -82,7 +74,6 @@ const ConsultHeader = ({
   consultStatus: string;
   sessionStatus: UpdateStatusInCounselSessionReqStatusEnum | undefined;
   saveConsult: () => void;
-  recordingStatus: RecordingStatus;
   completeConsult: () => void;
   hasPreviousConsult: boolean;
 }) => {
@@ -201,15 +192,6 @@ export function Index() {
     counselSessionId ?? '',
   );
 
-  const { submitRecordingForLeavingOut } = useRecording(counselSessionId ?? '');
-  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
-
-  const {
-    isOpen: isLeaveOutDialogOpen,
-    closeDialog,
-    onConfirm,
-  } = useLeaveOutDialogStore();
-
   // 폐의약품 처리 저장
   const { saveWasteMedication, isSuccessWasteMedication } =
     useSaveWasteMedication(counselSessionId ?? '');
@@ -236,10 +218,6 @@ export function Index() {
     return prevCounselSessionList?.length > 0;
   }, [prevCounselSessionList]);
 
-  const isRecording =
-    recordingStatus !== RecordingStatus.Ready &&
-    recordingStatus !== RecordingStatus.AICompleted;
-
   useEffect(() => {
     if (!hasPreviousConsult) {
       setActiveTab(ConsultTab.consultCard);
@@ -256,36 +234,11 @@ export function Index() {
     }
   }, [saveWasteMedication, saveMedicationRecordList]);
 
-  const handleConfirmLeave = () => {
-    if (isRecording) {
-      submitRecordingForLeavingOut();
-    }
-
-    const isCounselSessionInProgress =
-      counselSessionInfo?.status ===
-      UpdateStatusInCounselSessionReqStatusEnum.InProgress;
-
-    if (isCounselSessionInProgress) {
-      saveConsult();
-    }
-
-    onConfirm();
-    closeDialog();
-  };
-
   const completeConsult = async () => {
-    const isRecording =
-      recordingStatus !== RecordingStatus.Ready &&
-      recordingStatus !== RecordingStatus.AICompleted;
-
     await saveConsult();
 
     if (counselSessionInfo?.status !== 'COMPLETED') {
       updateCounselSessionStatus('COMPLETED');
-    }
-
-    if (isRecording) {
-      submitRecordingForLeavingOut();
     }
   };
 
@@ -314,7 +267,6 @@ export function Index() {
           sessionStatus={counselSessionInfo?.status}
           consultStatus={consultStatus}
           saveConsult={saveConsult}
-          recordingStatus={recordingStatus}
           completeConsult={completeConsult}
           hasPreviousConsult={hasPreviousConsult}
         />
@@ -324,11 +276,6 @@ export function Index() {
           <TabContents hasPreviousConsult={hasPreviousConsult} />
         )}
       </Tabs>
-
-      {/* 페이지 이탈 Dialog */}
-      {isLeaveOutDialogOpen && (
-        <CheckLeaveOutDialog onConfirm={handleConfirmLeave} />
-      )}
     </>
   );
 }

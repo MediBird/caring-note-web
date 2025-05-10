@@ -1,4 +1,3 @@
-import { SelectCounselSessionResStatusEnum } from '@/api';
 import AdminIcon from '@/assets/icon/24/accountcircle.fiiled.svg?react';
 import QuestionIcon from '@/assets/icon/24/help.fiiled.svg?react';
 import HomeIcon from '@/assets/icon/24/home.filled.svg?react';
@@ -20,16 +19,11 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useAuthContext } from '@/context/AuthContext';
-import { useCounselSessionQueryById } from '@/hooks/useCounselSessionQueryById';
-import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
-import { useLeaveOutDialogStore } from '@/pages/Consult/hooks/store/useLeaveOutDialogStore';
-import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
-import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { ROLE_TYPE_MAP } from '@/utils/constants';
 import { useKeycloak } from '@react-keycloak/web';
 import { useLayoutEffect, useMemo } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const cleanName = (name?: string): string => {
   if (!name) return '';
@@ -41,11 +35,6 @@ interface NavigationLeftProps {
 }
 
 const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
-  const { counselSessionId } = useParams();
-  const { data: counselSessionInfo } = useCounselSessionQueryById(
-    counselSessionId ?? '',
-  );
-
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -53,11 +42,6 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
 
   const { user } = useAuthContext();
   const { keycloak } = useKeycloak();
-
-  const { resetRecording } = useRecording();
-  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
-  const openDialog = useLeaveOutDialogStore((state) => state.openDialog);
-  const setOnConfirm = useLeaveOutDialogStore((state) => state.setOnConfirm);
 
   const getIsActive = (route: string) => {
     return location.pathname === route;
@@ -147,26 +131,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
     if (action) action();
 
     if (route) {
-      const isRecording =
-        recordingStatus !== RecordingStatus.Ready &&
-        recordingStatus !== RecordingStatus.AICompleted;
-
-      const isCounselSessionInProgress =
-        counselSessionInfo?.status ===
-        SelectCounselSessionResStatusEnum.InProgress;
-
-      if (
-        isRecording ||
-        (isCounselSessionInProgress && location.pathname.includes('consult'))
-      ) {
-        openDialog();
-        setOnConfirm(() => {
-          navigate(route);
-        });
-      } else {
-        resetRecording();
-        navigate(route);
-      }
+      navigate(route);
     }
   };
 

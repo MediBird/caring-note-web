@@ -8,13 +8,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useRecording } from '@/hooks/useRecording';
 import { useState } from 'react';
 
 import recordingDialog from '@/assets/recording/recordingDialog.webp';
 
 function RecordingDialog() {
-  const { startRecording } = useRecording();
   const [open, setOpen] = useState(true);
 
   const setDialogClosed = () => {
@@ -23,7 +21,6 @@ function RecordingDialog() {
 
   const handleClickSaveRecording = () => {
     setDialogClosed();
-    startRecording();
     setOpen(false);
   };
 

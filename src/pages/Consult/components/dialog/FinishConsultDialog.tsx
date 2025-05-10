@@ -11,8 +11,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import CompleteConsultDialog from '@/pages/Consult/components/dialog/CompleteConsultDialog';
-import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
-import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,14 +23,10 @@ const FinishConsultDialog = ({
   name = '',
   onComplete,
 }: FinishConsultDialogProps) => {
-  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
   const [open, setOpen] = useState(false);
   const [isCompleteConsultDialogOpen, setIsCompleteConsultDialogOpen] =
     useState(false);
   const navigate = useNavigate();
-  const isRecording =
-    recordingStatus !== RecordingStatus.Ready &&
-    recordingStatus !== RecordingStatus.AICompleted;
 
   return (
     <>
@@ -46,14 +40,7 @@ const FinishConsultDialog = ({
           <DialogHeader className="mt-4 h-[80px] items-center justify-center">
             <DialogTitle>
               <p className="center text-center text-h3 font-bold">
-                {isRecording ? (
-                  <>
-                    녹음을 저장하고 <br />
-                    상담을 완료하시겠어요?
-                  </>
-                ) : (
-                  <>{name}님, 상담을 완료하시겠어요?</>
-                )}
+                <>{name}님, 상담을 완료하시겠어요?</>
               </p>
             </DialogTitle>
           </DialogHeader>
@@ -65,18 +52,10 @@ const FinishConsultDialog = ({
                 alt="finishConsult"
               />
               <p className="text-center text-body1 font-medium text-grayscale-100">
-                {isRecording ? (
-                  <>
-                    이대로 상담을 중지하고 녹음중인 내용을 저장합니다. <br />
-                    상담 완료 후, 상담 내역에서 기록하신 내용을 확인할 수
-                    있습니다.
-                  </>
-                ) : (
-                  <>
-                    상담 완료 후, 상담 내역에서 기록하신 내용을 확인할 수
-                    있습니다.
-                  </>
-                )}
+                <>
+                  상담 완료 후, 상담 내역에서 기록하신 내용을 확인할 수
+                  있습니다.
+                </>
               </p>
             </div>
           </DialogDescription>
