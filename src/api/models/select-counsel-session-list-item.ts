@@ -80,6 +80,12 @@ export interface SelectCounselSessionListItem {
      * @memberof SelectCounselSessionListItem
      */
     'isCounselorAssign'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SelectCounselSessionListItem
+     */
+    'isConsent'?: boolean;
 }
 
 export const SelectCounselSessionListItemStatusEnum = {

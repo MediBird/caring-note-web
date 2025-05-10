@@ -1,10 +1,9 @@
 import timeStats from '@/assets/home/times-stats.webp';
 import doneStats from '@/assets/home/done-stats.webp';
 import counseleeStats from '@/assets/home/counselee-stats.webp';
-import messageStats from '@/assets/home/message-stats.webp';
 
 import ConsultCount from './ConsultCount';
-function ConsultCountContainer() {
+function MeaningfulStatistics() {
   return (
     <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-container">
       <span className="text-xl font-bold leading-[26px] text-primary-50">
@@ -35,16 +34,9 @@ function ConsultCountContainer() {
           image={doneStats}
           backgroundColor="linear-gradient(180deg, rgba(119, 182, 255, 0.2) 0%, rgba(37, 138, 255, 0.2) 100%)"
         />
-        <ConsultCount
-          count={1234}
-          unit="건"
-          title="연계 기관에 전달한 <br /> 메세지 건수"
-          image={messageStats}
-          backgroundColor="linear-gradient(90deg, rgba(230, 132, 5, 0.15) 0%, rgba(255, 202, 68, 0.15) 100%)"
-        />
       </div>
     </div>
   );
 }
 
-export default ConsultCountContainer;
+export default MeaningfulStatistics;

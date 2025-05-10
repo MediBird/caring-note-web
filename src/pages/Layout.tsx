@@ -1,41 +1,14 @@
 import NavigationLeft from '@/components/common/NavigationLeft';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import { useMemo } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 function Layout() {
-  const location = useLocation();
-
-  const isSidebarOpen = useMemo(() => {
-    const isSurvey = location.pathname.includes('/survey');
-
-    if (isSurvey) {
-      return false;
-    }
-
-    return true;
-  }, [location.pathname]);
-
-  const isRightSideBarActive = useMemo(() => {
-    const isConsult = location.pathname.includes('/consult');
-
-    if (isConsult) {
-      return true;
-    }
-
-    return false;
-  }, [location.pathname]);
-
   return (
-    <SidebarProvider defaultOpen={isSidebarOpen}>
+    <SidebarProvider>
       <div className="flex h-auto w-full justify-start bg-white">
         <NavigationLeft />
-        <main
-          className={cn(
-            'flex-1 overflow-x-auto overflow-y-hidden',
-            isRightSideBarActive ? 'pr-[64px]' : '',
-          )}>
+        <main className={cn('flex-1 overflow-x-auto overflow-y-hidden')}>
           <Outlet />
         </main>
       </div>
