@@ -13,12 +13,13 @@ import { useAuthContext } from '@/context/AuthContext';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionListQuery';
 import { cn } from '@/lib/utils';
 import CollegeMessages from '@/pages/Home/components/CollegeMessages';
-import ConsultCountContainer from '@/pages/Home/components/ConsultCountContainer';
+import ConsultCountContainer from '@/pages/Home/components/MeaningfulStatistics';
 import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
 import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
 import { addMonths } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
 import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
+import MeaningfulStatistics from '@/pages/Home/components/MeaningfulStatistics';
 
 function Home() {
   const today = new Date();
@@ -92,7 +93,7 @@ function Home() {
                       trigger={
                         <button
                           className={cn(
-                            'flex items-center gap-0.5 px-2 text-right text-body1 font-bold',
+                            'flex items-center gap-0.5 px-2 text-right text-body1 font-semibold',
                           )}>
                           <CalendarIcon />
                           날짜 선택
@@ -163,7 +164,7 @@ function Home() {
           </div>
           {/* min-width 1440px 이하 */}
           <div className="flex w-full flex-col justify-center gap-4 hd:hidden">
-            <ConsultCountContainer />
+            <MeaningfulStatistics />
             <CollegeMessages />
           </div>
         </div>

@@ -51,7 +51,7 @@ const CardSection = ({ title, items, variant }: CardSectionProps) => {
         <div className="space-y-6">
           {items.map((item, index) => (
             <div key={index} className="flex flex-col space-y-2">
-              <span className="text-grascale-90 text-body1 font-bold">
+              <span className="text-grascale-90 text-body1 font-semibold">
                 {item.label}
               </span>
               {item.subLabel && (

@@ -97,7 +97,7 @@ export default function PasswordChangeTab({
     <div className="mb-5 flex h-[427px] flex-col px-5">
       <div className="flex-grow space-y-5">
         <div className="flex w-full flex-col items-start justify-start gap-3">
-          <Label htmlFor="newPassword" className="text-body1 font-bold">
+          <Label htmlFor="newPassword" className="text-body1 font-semibold">
             신규 비밀번호
           </Label>
           <div className="relative w-full">
@@ -160,7 +160,7 @@ export default function PasswordChangeTab({
         </div>
 
         <div className="flex w-full flex-col items-start justify-start gap-3">
-          <Label htmlFor="confirmPassword" className="text-body1 font-bold">
+          <Label htmlFor="confirmPassword" className="text-body1 font-semibold">
             비밀번호 확인
           </Label>
           <FormInput

@@ -6,7 +6,7 @@ import {
   SelectCounseleeRes,
   UpdateCounseleeReq,
 } from '@/api';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 const counseleeInfoControllerApi = new CounseleeControllerApi();
@@ -64,10 +64,12 @@ const createCounseleeInfo = async (counseleeInfo: AddCounseleeReq) => {
 };
 
 export const useCreateCounseleeInfo = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createCounseleeInfo,
     onSuccess: () => {
       toast.info('내담자가 등록되었습니다.');
+      queryClient.invalidateQueries({ queryKey: COUNSEL_SESSION_KEYS.all });
     },
   });
 };
@@ -79,10 +81,12 @@ const updateCounseleeInfo = async (counseleeInfo: UpdateCounseleeReq) => {
 };
 
 export const useUpdateCounseleeInfo = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateCounseleeInfo,
     onSuccess: () => {
       toast.info('내담자 정보가 수정되었습니다.');
+      queryClient.invalidateQueries({ queryKey: COUNSEL_SESSION_KEYS.all });
     },
   });
 };
@@ -94,10 +98,12 @@ const deleteCounseleeInfo = async (counseleeIds: DeleteCounseleeBatchReq[]) => {
 };
 
 export const useDeleteCounseleeInfo = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteCounseleeInfo,
     onSuccess: () => {
       toast.info('내담자 정보가 삭제되었습니다.');
+      queryClient.invalidateQueries({ queryKey: COUNSEL_SESSION_KEYS.all });
     },
   });
 };
