@@ -273,10 +273,11 @@ export const CounselSessionControllerApiAxiosParamCreator = function (configurat
          * @param {string} [counseleeNameKeyword] 
          * @param {Array<string>} [counselorNames] 
          * @param {Array<string>} [scheduledDates] 
+         * @param {Array<SearchCounselSessionsStatusesEnum>} [statuses] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        searchCounselSessions: async (page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        searchCounselSessions: async (page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, statuses?: Array<SearchCounselSessionsStatusesEnum>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'page' is not null or undefined
             assertParamExists('searchCounselSessions', 'page', page)
             // verify required parameter 'size' is not null or undefined
@@ -315,6 +316,10 @@ export const CounselSessionControllerApiAxiosParamCreator = function (configurat
 
             if (scheduledDates) {
                 localVarQueryParameter['scheduledDates'] = scheduledDates;
+            }
+
+            if (statuses) {
+                localVarQueryParameter['statuses'] = statuses;
             }
 
 
@@ -622,11 +627,12 @@ export const CounselSessionControllerApiFp = function(configuration?: Configurat
          * @param {string} [counseleeNameKeyword] 
          * @param {Array<string>} [counselorNames] 
          * @param {Array<string>} [scheduledDates] 
+         * @param {Array<SearchCounselSessionsStatusesEnum>} [statuses] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageResSelectCounselSessionRes>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, options);
+        async searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, statuses?: Array<SearchCounselSessionsStatusesEnum>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageResSelectCounselSessionRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, statuses, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.searchCounselSessions']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -766,11 +772,12 @@ export const CounselSessionControllerApiFactory = function (configuration?: Conf
          * @param {string} [counseleeNameKeyword] 
          * @param {Array<string>} [counselorNames] 
          * @param {Array<string>} [scheduledDates] 
+         * @param {Array<SearchCounselSessionsStatusesEnum>} [statuses] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<PageResSelectCounselSessionRes> {
-            return localVarFp.searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, options).then((request) => request(axios, basePath));
+        searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, statuses?: Array<SearchCounselSessionsStatusesEnum>, options?: RawAxiosRequestConfig): AxiosPromise<PageResSelectCounselSessionRes> {
+            return localVarFp.searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, statuses, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -902,12 +909,13 @@ export class CounselSessionControllerApi extends BaseAPI {
      * @param {string} [counseleeNameKeyword] 
      * @param {Array<string>} [counselorNames] 
      * @param {Array<string>} [scheduledDates] 
+     * @param {Array<SearchCounselSessionsStatusesEnum>} [statuses] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CounselSessionControllerApi
      */
-    public searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, options?: RawAxiosRequestConfig) {
-        return CounselSessionControllerApiFp(this.configuration).searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, options).then((request) => request(this.axios, this.basePath));
+    public searchCounselSessions(page: number, size: number, counseleeNameKeyword?: string, counselorNames?: Array<string>, scheduledDates?: Array<string>, statuses?: Array<SearchCounselSessionsStatusesEnum>, options?: RawAxiosRequestConfig) {
+        return CounselSessionControllerApiFp(this.configuration).searchCounselSessions(page, size, counseleeNameKeyword, counselorNames, scheduledDates, statuses, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -973,3 +981,13 @@ export class CounselSessionControllerApi extends BaseAPI {
     }
 }
 
+/**
+ * @export
+ */
+export const SearchCounselSessionsStatusesEnum = {
+    Scheduled: 'SCHEDULED',
+    InProgress: 'IN_PROGRESS',
+    Completed: 'COMPLETED',
+    Canceled: 'CANCELED'
+} as const;
+export type SearchCounselSessionsStatusesEnum = typeof SearchCounselSessionsStatusesEnum[keyof typeof SearchCounselSessionsStatusesEnum];

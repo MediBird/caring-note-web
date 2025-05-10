@@ -9,6 +9,11 @@ import {
   useSessionDateStore,
 } from '../hooks/store/useCounselSessionStore';
 import { CreateReservationDialog } from './dialog/CreateReservationDialog';
+import {
+  COUNSEL_SESSION_STATUS_LABELS,
+  SearchCounselSessionsStatusesEnum,
+} from '@/constants/counselSessionConstants';
+import { GetCounselorResRoleTypeEnum } from '@/api';
 
 export const FilterSection = () => {
   // 스토어와 데이터
@@ -16,6 +21,7 @@ export const FilterSection = () => {
   const { dates, setDates, year, month, setYearMonth } = useSessionDateStore();
   const { data: counselorNames = [] } = useCounselorList();
   const selectedCounselors = params.counselorNames || [];
+  const selectedStatuses = params.statuses || [];
 
   // 입력 오류 표시 상태
   const [keywordError, setKeywordError] = useState<string | null>(null);
@@ -32,6 +38,7 @@ export const FilterSection = () => {
   const { data: activeDates } = useCounselActiveDate({
     year,
     month,
+    userType: GetCounselorResRoleTypeEnum.User,
   });
 
   /**
@@ -84,6 +91,17 @@ export const FilterSection = () => {
     });
   };
 
+  // 상담 상태 필터 변경 핸들러
+  const handleStatusFilterChange = (selectedValues: string[]) => {
+    setParams({
+      statuses:
+        selectedValues.length > 0
+          ? (selectedValues as SearchCounselSessionsStatusesEnum[])
+          : undefined,
+      page: 0, // 페이지 리셋
+    });
+  };
+
   // 현재 선택된 날짜를 Date 객체로 변환
   const selectedDatesAsDateObjects = dates.map((dateStr) => {
     const [year, month, day] = dateStr.split('-').map(Number);
@@ -117,6 +135,17 @@ export const FilterSection = () => {
             onSelectionChange={handleDateFilterChange}
             selectedDates={selectedDatesAsDateObjects}
             enabledDates={activeDates}
+          />
+          <TableFilter
+            title="상담 상태"
+            options={Object.values(SearchCounselSessionsStatusesEnum).map(
+              (status) => ({
+                label: COUNSEL_SESSION_STATUS_LABELS[status] || status,
+                value: status,
+              }),
+            )}
+            onSelectionChange={handleStatusFilterChange}
+            selectedValues={selectedStatuses}
           />
         </div>
 

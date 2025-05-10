@@ -2,6 +2,7 @@ import {
   CreateCounselReservationReq,
   ModifyCounselReservationReq,
   SelectCounselSessionListItem,
+  SearchCounselSessionsStatusesEnum,
 } from '@/api';
 import { create } from 'zustand';
 
@@ -14,6 +15,7 @@ interface FetchParams {
   counseleeNameKeyword?: string;
   counselorNames?: string[];
   scheduledDates?: string[];
+  statuses?: SearchCounselSessionsStatusesEnum[];
 }
 
 interface ParamsState {
@@ -30,6 +32,7 @@ export const useCounselSessionParamsStore = create<ParamsState>((set) => ({
     counseleeNameKeyword: undefined,
     counselorNames: undefined,
     scheduledDates: undefined,
+    statuses: undefined,
   },
   setParams: (newParams) =>
     set((state) => ({ params: { ...state.params, ...newParams } })),
@@ -42,6 +45,7 @@ export const useCounselSessionParamsStore = create<ParamsState>((set) => ({
         counseleeNameKeyword: undefined,
         counselorNames: undefined,
         scheduledDates: undefined,
+        statuses: undefined,
       },
     }),
 }));
