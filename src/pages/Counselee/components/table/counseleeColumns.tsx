@@ -10,7 +10,9 @@ import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef, Row } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
 import { useState } from 'react';
+import { DeleteCounseleeDialog } from '../dialog/DeleteCounseleeDialog';
 import { UpdateCounseleeDialog } from '../dialog/UpdateCounseleeDialog';
+import { useDeleteCounseleeInfo } from '../../hooks/query/useCounseleeQuery';
 
 // CounseleeActionsCell 컴포넌트 정의
 interface CounseleeActionsCellProps {
@@ -19,7 +21,16 @@ interface CounseleeActionsCellProps {
 
 const CounseleeActionsCell = ({ row }: CounseleeActionsCellProps) => {
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const counselee = row.original;
+
+  const { mutate: deleteCounselee } = useDeleteCounseleeInfo();
+
+  const handleDelete = () => {
+    if (counselee.id) {
+      deleteCounselee([{ counseleeId: counselee.id }]);
+    }
+  };
 
   return (
     <>
@@ -31,11 +42,15 @@ const CounseleeActionsCell = ({ row }: CounseleeActionsCellProps) => {
             </button>
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent
+          align="end"
+          className="text-body1 font-medium text-grayscale-100">
           <DropdownMenuItem onClick={() => setIsUpdateDialogOpen(true)}>
             수정하기
           </DropdownMenuItem>
-          <DropdownMenuItem>삭제하기</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+            삭제하기
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       {isUpdateDialogOpen && (
@@ -43,6 +58,14 @@ const CounseleeActionsCell = ({ row }: CounseleeActionsCellProps) => {
           counselee={counselee}
           open={isUpdateDialogOpen}
           onOpenChange={setIsUpdateDialogOpen}
+        />
+      )}
+      {isDeleteDialogOpen && (
+        <DeleteCounseleeDialog
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
+          onConfirm={handleDelete}
+          itemName={counselee.name + '님'}
         />
       )}
     </>
