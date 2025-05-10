@@ -7,9 +7,6 @@ import {
 } from '@/pages/Consult/hooks/query/usePrevCounselSessionList';
 import { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useGetAiSummaryQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetAiSummaryQuery';
-import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
-import ReactMarkdown from 'react-markdown';
 import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
 
 const PastConsult = () => {
@@ -28,11 +25,6 @@ const PastConsult = () => {
 
     return '';
   }, [prevCounselSessionList]);
-
-  const { data: aiSummary, isSuccess } = useGetAiSummaryQuery(
-    prevCounselSessionId,
-    RecordingStatus.AICompleted,
-  );
 
   const { data: prevCounselRecord, isLoading: isPrevCounselRecordLoading } =
     useSelectMedicineConsult(prevCounselSessionId);
@@ -90,12 +82,6 @@ const PastConsult = () => {
 
         <PastConsultContainer title="AI 요약" variant="secondary">
           <h2 className="flex items-center py-3 text-subtitle2 font-bold text-secondary-70"></h2>
-
-          {isSuccess && (
-            <ReactMarkdown className={'prose'}>
-              {aiSummary?.analysedText}
-            </ReactMarkdown>
-          )}
         </PastConsultContainer>
       </div>
 
