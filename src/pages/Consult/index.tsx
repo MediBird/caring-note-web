@@ -7,7 +7,6 @@ import Spinner from '@/components/common/Spinner';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   useRecording,
-  useRouteStore,
   useSelectCounseleeInfo,
   useCounselSessionQueryById,
 } from '@/hooks';
@@ -15,8 +14,6 @@ import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus
 import EditConsultDialog from '@/pages/Consult/components/dialog/EditConsultDialog';
 import TabContents from '@/pages/Consult/components/TabContents';
 import {
-  useGetIsRecordingPopupQuery,
-  useGetRecordingStatusQuery,
   useMedicationRecordSave,
   useSaveWasteMedication,
   usePrevCounselSessionList,
@@ -29,7 +26,6 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import CheckLeaveOutDialog from './components/dialog/CheckLeaveOutDialog';
 import FinishConsultDialog from './components/dialog/FinishConsultDialog';
-import RecordingDialog from './components/recording/RecordingDialog';
 import TemporarySaveDialog from './components/dialog/TemporarySaveDialog';
 import { useLeaveOutDialogStore } from './hooks/store/useLeaveOutDialogStore';
 import { Button } from '@/components/ui/button';
@@ -205,12 +201,7 @@ export function Index() {
     counselSessionId ?? '',
   );
 
-  const previousPath = useRouteStore((state) => state.previousPath);
-  const setPreviousPath = useRouteStore((state) => state.setPreviousPath);
-
-  const { resetRecording, submitRecordingForLeavingOut } = useRecording(
-    counselSessionId ?? '',
-  );
+  const { submitRecordingForLeavingOut } = useRecording(counselSessionId ?? '');
   const recordingStatus = useRecordingStore((state) => state.recordingStatus);
 
   const {
@@ -222,12 +213,6 @@ export function Index() {
   // 폐의약품 처리 저장
   const { saveWasteMedication, isSuccessWasteMedication } =
     useSaveWasteMedication(counselSessionId ?? '');
-
-  // 중재기록 저장
-  // const {
-  //   mutate: saveMedicationCounsel,
-  //   isSuccess: isSuccessSaveMedicationCounsel,
-  // } = useSaveMedicineConsult();
 
   // 약물 기록 저장
   const {
@@ -241,12 +226,6 @@ export function Index() {
     }
   }, [isSuccessSaveMedicationRecordList, isSuccessWasteMedication]);
 
-  const { isSuccess: isSuccessGetIsRecordingPopup, data: isPopup } =
-    useGetIsRecordingPopupQuery(counselSessionId);
-  const {
-    data: getRecordingStatusData,
-    isSuccess: isSuccessGetRecordingStatus,
-  } = useGetRecordingStatusQuery(counselSessionId ?? '', recordingStatus);
   const { activeTab, setActiveTab } = useConsultTabStore();
 
   const { mutate: updateCounselSessionStatus } = useUpdateCounselSessionStatus({
@@ -268,40 +247,6 @@ export function Index() {
       setActiveTab(ConsultTab.pastConsult);
     }
   }, [hasPreviousConsult, setActiveTab]);
-
-  useEffect(() => {
-    if (!isSuccessGetRecordingStatus) {
-      return;
-    }
-
-    if (!getRecordingStatusData?.aiCounselSummaryStatus) {
-      return;
-    }
-
-    const statusMapping: { [key: string]: RecordingStatus } = {
-      STT_PROGRESS: RecordingStatus.STTLoading,
-      STT_COMPLETE: RecordingStatus.STTCompleted,
-      STT_FAILED: RecordingStatus.Error,
-      GPT_COMPLETE: RecordingStatus.AICompleted,
-      GPT_FAILED: RecordingStatus.Error,
-    };
-
-    const status = statusMapping[getRecordingStatusData.aiCounselSummaryStatus];
-
-    if (status) {
-      if (previousPath?.startsWith('/survey')) {
-        setPreviousPath('');
-      } else {
-        useRecordingStore.setState({ recordingStatus: status });
-      }
-    }
-  }, [
-    getRecordingStatusData,
-    isSuccessGetRecordingStatus,
-    resetRecording,
-    previousPath,
-    setPreviousPath,
-  ]);
 
   const saveConsult = useCallback(async () => {
     try {
@@ -353,8 +298,6 @@ export function Index() {
   }
 
   const consultStatus = hasPreviousConsult ? '재상담' : '초기 상담';
-  const isRecordingDialogClosed =
-    sessionStorage.getItem('isRecordingDialogClosed') === 'true';
 
   return (
     <>
@@ -381,13 +324,6 @@ export function Index() {
           <TabContents hasPreviousConsult={hasPreviousConsult} />
         )}
       </Tabs>
-
-      {/* 녹음 진행 여부 Dialog */}
-      {!isLeaveOutDialogOpen &&
-        !isRecordingDialogClosed &&
-        !isRecording &&
-        isSuccessGetIsRecordingPopup &&
-        isPopup && <RecordingDialog />}
 
       {/* 페이지 이탈 Dialog */}
       {isLeaveOutDialogOpen && (
