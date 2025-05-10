@@ -1,9 +1,3 @@
-// counselRecording 디렉토리의 모든 쿼리 훅 export
-export * from './counselRecording/useGetIsRecordingPopupQuery';
-export * from './counselRecording/useGetRecordingStatusQuery';
-export * from './counselRecording/useGetAiSummaryQuery';
-export * from './counselRecording/useGetSpeechToTextQuery';
-
 // medicationRecord 디렉토리의 모든 쿼리 훅 export
 export * from './medicationRecord/useMedicationRecordSave';
 export * from './medicationRecord/useMedicationRecordList';
