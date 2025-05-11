@@ -14,7 +14,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useCounselCardStatusMutation } from '@/pages/Survey/hooks/useCounselCardQuery';
-import { useCounseleeConsentQuery } from '@/pages/Survey/hooks/useCounseleeConsentQuery';
 import { useDetailCounselSessionStore } from '@/store/counselSessionStore';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -24,29 +23,23 @@ interface SurveyDialogProps {
   dialogState: CounselCardBaseInformationResCardRecordStatusEnum;
   counselSessionId: string;
   counseleeId: string;
+  isConsent?: boolean;
 }
 
 function SurveyDialog({
   dialogState,
   counselSessionId,
   counseleeId,
+  isConsent,
 }: SurveyDialogProps) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const { mutate: updateStatus } = useCounselCardStatusMutation();
-
-  // 내담자 개인정보 수집 동의 여부 조회
-  const { data, isLoading } = useCounseleeConsentQuery(
-    counselSessionId,
-    counseleeId,
-  );
-  // 상담 세션 상세 정보 조회
   const { setDetail } = useDetailCounselSessionStore();
 
   const handleStartSurvey = () => {
     setDetail({ counselSessionId, counseleeId });
 
-    // COMPLETED나 CANCELED 상태가 아닐 때만 IN_PROGRESS로 업데이트
     if (
       dialogState ===
       CounselCardBaseInformationResCardRecordStatusEnum.NotStarted
@@ -57,14 +50,10 @@ function SurveyDialog({
       });
     }
 
-    if (!isLoading && data) {
-      // 동의 한사람인 경우 기초 설문 작성 페이지로 이동
-      if (data.isConsent === true) {
-        navigate(`/survey/${counselSessionId}`);
-      } else {
-        // 동의하지 않은 사람인 경우 동의 페이지로 이동
-        navigate(`/survey/${counselSessionId}/consent`);
-      }
+    if (isConsent === true) {
+      navigate(`/survey/${counselSessionId}`);
+    } else {
+      navigate(`/survey/${counselSessionId}/consent`);
     }
   };
 
@@ -83,23 +72,35 @@ function SurveyDialog({
     },
   };
 
-  const renderTriggerButton = () => (
-    <Button
-      className="w-full"
-      type="button"
-      variant={buttonConfig[dialogState].variant}
-      disabled={
-        dialogState ===
-        CounselCardBaseInformationResCardRecordStatusEnum.Completed
-      }>
-      {buttonConfig[dialogState].text}
-    </Button>
-  );
+  const isTriggerDisabled =
+    dialogState === CounselCardBaseInformationResCardRecordStatusEnum.Completed;
+
+  const getTriggerButtonText = () => {
+    if (
+      dialogState ===
+      CounselCardBaseInformationResCardRecordStatusEnum.Completed
+    )
+      return '작성 완료';
+    if (
+      dialogState ===
+      CounselCardBaseInformationResCardRecordStatusEnum.InProgress
+    )
+      return '작성 중';
+    return '설문 작성';
+  };
 
   return (
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>{renderTriggerButton()}</DialogTrigger>
+        <DialogTrigger asChild>
+          <Button
+            className="w-full"
+            type="button"
+            variant={buttonConfig[dialogState]?.variant || 'secondary'}
+            disabled={isTriggerDisabled}>
+            {getTriggerButtonText()}
+          </Button>
+        </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>기초 설문을 작성하시겠어요?</DialogTitle>
@@ -111,7 +112,11 @@ function SurveyDialog({
           </DialogHeader>
           <div className="h-[1px] bg-grayscale-20" />
           <DialogDescription className="sm:justify-start">
-            상담 경험이 있는 내담자는 이전 기록이 적혀 있습니다.
+            {isConsent === false &&
+            dialogState ===
+              CounselCardBaseInformationResCardRecordStatusEnum.NotStarted
+              ? '내담자의 개인정보 수집 동의가 필요합니다. 먼저 동의를 받아주세요.'
+              : '상담 경험이 있는 내담자는 이전 기록이 적혀 있습니다.'}
           </DialogDescription>
           <DialogFooter className="sm:justify-end">
             <div>
@@ -124,7 +129,11 @@ function SurveyDialog({
                 variant="primary"
                 className="mx-[0.5rem]"
                 onClick={handleStartSurvey}>
-                작성하기
+                {isConsent === false &&
+                dialogState ===
+                  CounselCardBaseInformationResCardRecordStatusEnum.NotStarted
+                  ? '동의 페이지로'
+                  : '작성하기'}
               </Button>
             </div>
           </DialogFooter>

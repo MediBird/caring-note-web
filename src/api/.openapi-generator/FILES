@@ -20,18 +20,17 @@ common.ts
 configuration.ts
 git_push.sh
 index.ts
+models/accept-consent-res.ts
 models/add-and-update-medication-record-hist-req.ts
 models/add-and-update-medication-record-hist-res.ts
 models/add-and-update-waste-medication-record-req.ts
 models/add-and-update-waste-medication-record-res.ts
-models/add-counselee-consent-req.ts
-models/add-counselee-consent-res.ts
 models/add-counselee-req.ts
 models/add-medication-counsel-req.ts
 models/add-medication-counsel-res.ts
 models/allergy-dto.ts
 models/base-info-dto.ts
-models/common-res-add-counselee-consent-res.ts
+models/common-res-accept-consent-res.ts
 models/common-res-add-medication-counsel-res.ts
 models/common-res-counsel-card-base-information-res.ts
 models/common-res-counsel-card-health-information-res.ts
@@ -66,7 +65,6 @@ models/common-res-select-counselee-res.ts
 models/common-res-select-medication-counsel-res.ts
 models/common-res-select-previous-medication-counsel-res.ts
 models/common-res-string.ts
-models/common-res-update-counselee-consent-res.ts
 models/common-res-update-counselor-in-counsel-session-res.ts
 models/common-res-update-medication-counsel-res.ts
 models/common-res-update-status-in-counsel-session-res.ts
@@ -134,8 +132,6 @@ models/success-res.ts
 models/time-recorded-res-object.ts
 models/update-counsel-card-req.ts
 models/update-counsel-card-status-req.ts
-models/update-counselee-consent-req.ts
-models/update-counselee-consent-res.ts
 models/update-counselee-req.ts
 models/update-counselor-in-counsel-session-req.ts
 models/update-counselor-in-counsel-session-res.ts

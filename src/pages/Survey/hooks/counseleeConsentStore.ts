@@ -1,8 +1,4 @@
-import {
-  AddCounseleeConsentReq,
-  SelectCounseleeConsentByCounseleeIdRes,
-  UpdateCounseleeConsentReq,
-} from '@/api';
+import { SelectCounseleeConsentByCounseleeIdRes } from '@/api';
 import { create } from 'zustand';
 
 export interface CounseleeConsentState {
@@ -28,25 +24,3 @@ export const useCounseleeConsentStore = create<CounseleeConsentState>(
     setError: (error) => set({ error }),
   }),
 );
-
-export const getAddCounseleeConsentReq = (
-  counselSessionId: string,
-  counseleeId: string,
-  consent: boolean = false,
-): AddCounseleeConsentReq => {
-  return {
-    counselSessionId,
-    counseleeId,
-    consent,
-  };
-};
-
-export const getUpdateCounseleeConsentReq = (
-  counseleeConsentId: string,
-  consent: boolean = false,
-): UpdateCounseleeConsentReq => {
-  return {
-    counseleeConsentId,
-    consent,
-  };
-};

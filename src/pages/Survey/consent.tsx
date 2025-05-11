@@ -6,12 +6,11 @@ import {
   CardHeader,
 } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useCreateCounseleeConsentMutation } from './hooks/useCounseleeConsentQuery';
+import { useAcceptCounseleeConsentMutation } from './hooks/useCounseleeConsentQuery';
 
 // 동의서 섹션 타입 정의
 interface ContentSection {
@@ -177,10 +176,7 @@ function ConsentContent({ sections }: { sections: ContentSection[] }) {
 export default function Consent() {
   const navigate = useNavigate();
   const { counselSessionId } = useParams<{ counselSessionId: string }>();
-  const createConsentMutation = useCreateCounseleeConsentMutation();
-  const { data: counseleeInfo } = useSelectCounseleeInfo(
-    counselSessionId ?? '',
-  );
+  const acceptConsentMutation = useAcceptCounseleeConsentMutation();
   const [selectedConsent, setSelectedConsent] = useState<ConsentItem | null>(
     null,
   );
@@ -258,20 +254,18 @@ export default function Consent() {
             <CardFooter className="w-full">
               <Button
                 className="w-full text-body1 font-semibold text-white"
-                disabled={!counselSessionId || !counseleeInfo}
+                disabled={!counselSessionId}
                 size="xl"
                 variant={'primary'}
                 onClick={async () => {
-                  if (!counselSessionId || !counseleeInfo) {
-                    console.error('상담 세션 ID 또는 내담자 정보가 없습니다.');
+                  if (!counselSessionId) {
+                    console.error('상담 세션 ID가 없습니다.');
                     return;
                   }
 
                   try {
-                    await createConsentMutation.mutateAsync({
+                    await acceptConsentMutation.mutateAsync({
                       counselSessionId,
-                      counseleeId: counseleeInfo.counseleeId || '',
-                      consent: true,
                     });
                     navigate(`/survey/${counselSessionId}`);
                   } catch (error) {
