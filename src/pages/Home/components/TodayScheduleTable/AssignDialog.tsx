@@ -13,36 +13,43 @@ import { useAuthContext } from '@/context/AuthContext';
 import { XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCounselAssign } from '../hooks/query/useCounselAssign';
+import { useCounselAssign } from '../../hooks/query/useCounselAssign';
+import { SelectCounselSessionListItemStatusEnum } from '@/api';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
-import { useCounselSessionQueryById } from '@/hooks/useCounselSessionQueryById';
 
 interface AssignDialogProps {
   counselSessionId: string;
   counselorId: string;
+  isCounselorAssign?: boolean;
+  currentCounselorName?: string;
+  status: SelectCounselSessionListItemStatusEnum;
 }
 
 // TODO: counselorId 활용 상담 담당 약사 할당 다이얼로그 구현 필요
 
-function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
+function AssignDialog({
+  counselSessionId,
+  counselorId,
+  isCounselorAssign,
+  currentCounselorName,
+  status,
+}: AssignDialogProps) {
   const { user } = useAuthContext();
-  const { data: counselSessionInfo } = useCounselSessionQueryById(
-    counselSessionId ?? '',
-  );
-
-  const { mutate } = useCounselAssign();
-  const { mutate: updateCounselSessionStatus } = useUpdateCounselSessionStatus({
+  const { mutate: assignMutate } = useCounselAssign();
+  const { mutate: updateStatusMutate } = useUpdateCounselSessionStatus({
     counselSessionId,
   });
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
+  const isActuallyAssigned = counselorId && counselorId !== '';
+  const isAssignedToMe = isActuallyAssigned && counselorId === user?.id;
+
   const dialogState = {
-    UNASSIGNED: counselorId === null || counselorId === '',
-    ASSIGNED_TO_ME: counselorId === user?.id,
-    ASSIGNED_TO_OTHER:
-      counselorId !== null && counselorId !== user?.id && counselorId !== '',
+    UNASSIGNED: !isActuallyAssigned,
+    ASSIGNED_TO_ME: isAssignedToMe,
+    ASSIGNED_TO_OTHER: isActuallyAssigned && !isAssignedToMe,
   };
 
   const dialogContent = {
@@ -53,20 +60,22 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
     },
     description: {
       UNASSIGNED: '본인을 담당 약사로 지정하고 상담을 시작할 수 있습니다.',
-      ASSIGNED_TO_ME: '나에게 할당된 상담입니다',
-      ASSIGNED_TO_OTHER: '동료 약사님이 상담을 이미 담당하고 있습니다.',
+      ASSIGNED_TO_ME: '나에게 할당된 상담입니다.',
+      ASSIGNED_TO_OTHER: `${
+        currentCounselorName ?? '동료'
+      } 약사님이 상담을 이미 담당하고 있습니다.`,
     },
   };
 
   const handleStartConsult = () => {
-    if (counselSessionInfo?.status === 'SCHEDULED') {
-      updateCounselSessionStatus('IN_PROGRESS');
+    if (status === SelectCounselSessionListItemStatusEnum.Scheduled) {
+      updateStatusMutate(SelectCounselSessionListItemStatusEnum.InProgress);
     }
     navigate(`/consult/${counselSessionId}`);
   };
 
   const handleAssignAndConsult = () => {
-    mutate(
+    assignMutate(
       {
         counselSessionId,
         counselorId: user?.id as string,
@@ -81,11 +90,17 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
   };
 
   const handleAssign = () => {
-    mutate({
-      counselSessionId,
-      counselorId: user?.id as string,
-    });
-    setOpen(false);
+    assignMutate(
+      {
+        counselSessionId,
+        counselorId: user?.id as string,
+      },
+      {
+        onSuccess: () => {
+          setOpen(false);
+        },
+      },
+    );
   };
 
   const renderTriggerButton = () => (
@@ -93,8 +108,17 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
       type="button"
       className="w-full"
       size="md"
-      variant={dialogState.UNASSIGNED ? 'primary' : 'secondary'}>
-      {dialogState.UNASSIGNED ? '나에게 할당' : '할당 완료'}
+      variant={!isCounselorAssign ? 'primary' : 'secondary'}
+      disabled={status === SelectCounselSessionListItemStatusEnum.Completed}>
+      {status === SelectCounselSessionListItemStatusEnum.InProgress
+        ? '상담 중'
+        : status === SelectCounselSessionListItemStatusEnum.Completed
+          ? '상담 완료됨'
+          : isAssignedToMe
+            ? '상담 시작'
+            : isCounselorAssign
+              ? `할당 완료`
+              : '나에게 할당'}
     </Button>
   );
 
@@ -155,7 +179,7 @@ function AssignDialog({ counselSessionId, counselorId }: AssignDialogProps) {
             dialogContent.description.ASSIGNED_TO_OTHER}
         </DialogDescription>
         <DialogFooter>
-          <div>{renderActionButtons()}</div>
+          {renderActionButtons() && <div>{renderActionButtons()}</div>}
         </DialogFooter>
       </DialogContent>
     </Dialog>

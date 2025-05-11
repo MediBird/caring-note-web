@@ -6,8 +6,8 @@ import {
 } from '@/api';
 import CounselStatusCell from '@/components/common/DataTable/counsel-status-cell';
 import Tooltip from '@/components/common/Tooltip';
-import AssignDialog from '@/pages/Home/components/AssignDialog';
-import SurveyDialog from '@/pages/Home/components/SurveyDialog';
+import AssignDialog from '@/pages/Home/components/TodayScheduleTable/AssignDialog';
+import SurveyDialog from '@/pages/Home/components/TodayScheduleTable/SurveyDialog';
 import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';
 
@@ -27,12 +27,12 @@ export const createColumns = ({
       header: '예약 시각',
       size: 92,
       cell: ({ row }) => {
-        const counselSessionId = row.original.counselSessionId;
+        const counselSessionId = row.original.counselSessionId ?? '';
         return (
           <span
             className="inline-block h-full cursor-pointer content-center px-3"
             onClick={() => {
-              onCellClick(counselSessionId ?? '');
+              onCellClick(counselSessionId);
             }}>
             {row.original.scheduledTime}
           </span>
@@ -88,7 +88,6 @@ export const createColumns = ({
     },
     {
       id: 'counselorAssign',
-      accessorKey: 'counselorAssign',
       size: 116,
       header: () => {
         return (
@@ -96,7 +95,7 @@ export const createColumns = ({
             상담 할당
             <Tooltip
               className="text-grayscale-40"
-              id="counselorAssign"
+              id="counselorAssignTooltip"
               text="'나에게 할당' 버튼 클릭 시 담당 약사로 지정됩니다."
               place="top"
               eventType="hover"
@@ -107,11 +106,17 @@ export const createColumns = ({
       cell: ({ row }) => {
         const counselSessionId = row.original.counselSessionId ?? '';
         const counselorId = row.original.counselorId ?? '';
+        const isCounselorAssign = row.original.isCounselorAssign;
+        const currentCounselorName = row.original.counselorName;
+        const status = row.original.status;
         return (
           <div className="px-3">
             <AssignDialog
               counselSessionId={counselSessionId}
               counselorId={counselorId}
+              isCounselorAssign={isCounselorAssign}
+              currentCounselorName={currentCounselorName}
+              status={status as SelectCounselSessionListItemStatusEnum}
             />
           </div>
         );
@@ -126,6 +131,8 @@ export const createColumns = ({
         const counselSessionId = row.original.counselSessionId ?? '';
         const counseleeId = row.original.counseleeId ?? '';
         const dialogState = row.original.cardRecordStatus ?? '';
+        const isConsent = row.original.isConsent;
+
         return (
           <div className="px-3">
             <SurveyDialog
@@ -134,6 +141,7 @@ export const createColumns = ({
               dialogState={
                 dialogState as CounselCardBaseInformationResCardRecordStatusEnum
               }
+              isConsent={isConsent}
             />
           </div>
         );

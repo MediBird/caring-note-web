@@ -47,8 +47,8 @@ export const CounseleeFilterSection = () => {
   };
 
   return (
-    <div className="flex w-full flex-col gap-2 py-4">
-      <div className="flex flex-wrap items-center gap-4">
+    <div className="flex w-full flex-col gap-2">
+      <div className="flex flex-wrap items-center gap-3">
         <div className="flex flex-col">
           <SearchInput value={nameKeyword} onChange={handleNameFilterChange} />
           {keywordError && (

@@ -1,7 +1,4 @@
-import {
-  GetCounselorResRoleTypeEnum,
-  SelectCounselSessionListItem,
-} from '@/api';
+import { GetCounselorResRoleTypeEnum } from '@/api';
 import background from '@/assets/home/home-bg.webp';
 import logoWide from '@/assets/home/logo-wide.webp';
 import tableEmpty from '@/assets/home/table-empty.webp';
@@ -10,30 +7,18 @@ import onlypc from '@/assets/illusts/onlypc.webp';
 import Spinner from '@/components/common/Spinner';
 import DatePickerComponent from '@/components/ui/datepicker';
 import { useAuthContext } from '@/context/AuthContext';
-import { useSelectCounselSessionList } from '@/hooks/useCounselSessionListQuery';
-import { cn } from '@/lib/utils';
+import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
 import CollegeMessages from '@/pages/Home/components/CollegeMessages';
 import ConsultCountContainer from '@/pages/Home/components/MeaningfulStatistics';
 import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
-import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
-import { addMonths } from 'date-fns';
-import { useEffect, useMemo, useState } from 'react';
-import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
+import { useHomeDateStore } from './hooks/useHomeDateStore';
+import { cn } from '@/lib/utils';
 import MeaningfulStatistics from '@/pages/Home/components/MeaningfulStatistics';
 
 function Home() {
-  const today = new Date();
-
-  const thisMonth = addMonths(today, 0);
-  const [selectedDate, setSelectedDate] = useState(today);
-  const [selectedMonth, setSelectedMonth] = useState(thisMonth);
+  const { selectedDate, selectedMonth, setSelectedDate, setSelectedMonth } =
+    useHomeDateStore();
   const { user } = useAuthContext();
-
-  const { data: counselList, isLoading: isCounselListLoading } =
-    useSelectCounselSessionList({
-      baseDate: formatDateToHyphen(selectedDate),
-      page: 0,
-    });
 
   const { data: counselActiveDate, isLoading: isCounselActiveDateLoading } =
     useCounselActiveDate({
@@ -41,19 +26,6 @@ function Home() {
       month: selectedMonth.getMonth() + 1,
       userType: user?.roleType as GetCounselorResRoleTypeEnum,
     });
-
-  useEffect(() => {
-    sessionStorage.setItem('isRecordingDialogClosed', 'false');
-  }, []);
-
-  const formattedCounselList = useMemo(() => {
-    return counselList?.content?.map((item: SelectCounselSessionListItem) => {
-      return {
-        ...item,
-        id: item.counselSessionId,
-      };
-    });
-  }, [counselList]);
 
   return (
     <div
@@ -101,7 +73,7 @@ function Home() {
                       }
                       initialDate={selectedDate}
                       selectedMonth={selectedMonth}
-                      onMonthChange={setSelectedMonth}
+                      onMonthChange={(month) => setSelectedMonth(month as Date)}
                       handleClicked={(date?: Date) => {
                         setSelectedDate(date ?? new Date());
                       }}
@@ -130,7 +102,8 @@ function Home() {
                 )}
                 {user &&
                   user.roleType !== GetCounselorResRoleTypeEnum.None &&
-                  formattedCounselList?.length === 0 && (
+                  !counselActiveDate &&
+                  isCounselActiveDateLoading && (
                     <div className="flex flex-1 flex-col items-center justify-center">
                       <img src={tableEmpty} alt="table-empty" />
                       <span className="text-2xl font-bold">
@@ -144,21 +117,15 @@ function Home() {
 
                 {user &&
                   user.roleType !== GetCounselorResRoleTypeEnum.None &&
-                  isCounselListLoading && (
+                  isCounselActiveDateLoading && (
                     <div className="flex flex-1 flex-col items-center justify-center">
                       <Spinner className="h-10 w-10" />
                     </div>
                   )}
 
-                {user &&
-                  user.roleType !== GetCounselorResRoleTypeEnum.None &&
-                  formattedCounselList &&
-                  formattedCounselList.length > 0 && (
-                    <TodayScheduleTable
-                      counselList={formattedCounselList ?? []}
-                      userType={user.roleType as GetCounselorResRoleTypeEnum}
-                    />
-                  )}
+                {user && user.roleType !== GetCounselorResRoleTypeEnum.None && (
+                  <TodayScheduleTable />
+                )}
               </div>
             </div>
           </div>
