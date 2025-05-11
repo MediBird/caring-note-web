@@ -22,6 +22,7 @@ import FinishConsultDialog from './components/dialog/FinishConsultDialog';
 import TemporarySaveDialog from './components/dialog/TemporarySaveDialog';
 import { Button } from '@/components/ui/button';
 import PencilBlueIcon from '@/assets/icon/24/create.filled.blue.svg?react';
+import { ConsultRecordingControl } from './components/ConsultRecordingControl';
 
 interface InfoItemProps {
   content: React.ReactNode;
@@ -127,6 +128,9 @@ const ConsultHeader = ({
                   />
                 </div>
               </div>
+              <ConsultRecordingControl
+                counselSessionId={counselSessionId ?? ''}
+              />
               <HeaderButtons
                 onSave={saveConsult}
                 onComplete={completeConsult}
