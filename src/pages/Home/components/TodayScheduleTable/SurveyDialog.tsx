@@ -115,7 +115,7 @@ function SurveyDialog({
             {isConsent === false &&
             dialogState ===
               CounselCardBaseInformationResCardRecordStatusEnum.NotStarted
-              ? '내담자의 개인정보 수집 동의가 필요합니다. 먼저 동의를 받아주세요.'
+              ? '내담자의 개인정보 수집 동의가 필요합니다.'
               : '상담 경험이 있는 내담자는 이전 기록이 적혀 있습니다.'}
           </DialogDescription>
           <DialogFooter className="sm:justify-end">
@@ -132,7 +132,7 @@ function SurveyDialog({
                 {isConsent === false &&
                 dialogState ===
                   CounselCardBaseInformationResCardRecordStatusEnum.NotStarted
-                  ? '동의 페이지로'
+                  ? '동의받기'
                   : '작성하기'}
               </Button>
             </div>
