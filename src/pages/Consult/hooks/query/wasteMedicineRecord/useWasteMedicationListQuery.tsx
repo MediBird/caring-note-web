@@ -29,7 +29,7 @@ export interface WasteMedicationListItem
 }
 
 export const useWasteMedicationList = (counselSessionId: string) => {
-  const { data, isSuccess, isError } = useQuery<
+  const { data, isLoading, isSuccess, isError } = useQuery<
     SelectMedicationRecordListBySessionIdRes[],
     Error,
     WasteMedicationListItem[]
@@ -46,5 +46,5 @@ export const useWasteMedicationList = (counselSessionId: string) => {
     },
   });
 
-  return { data, isSuccess, isError };
+  return { data, isLoading, isSuccess, isError };
 };

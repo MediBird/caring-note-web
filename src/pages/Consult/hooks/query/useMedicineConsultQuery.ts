@@ -21,8 +21,12 @@ const selectMedicationCounsel = async (counselSessionId: string) => {
 };
 
 const saveMedicationCounsel = async (
-  medicationConsultDTO: MedicationConsultDTO,
+  medicationConsultDTO: MedicationConsultDTO | null,
 ) => {
+  if (!medicationConsultDTO) {
+    return;
+  }
+
   if (medicationConsultDTO.counselRecord === '') {
     return;
   }
