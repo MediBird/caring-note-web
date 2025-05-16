@@ -10,13 +10,14 @@ interface MedicineMemoState {
     data: MedicationRecordListDTO,
   ) => void;
   setIsListInitialized: (isInitialized: boolean) => void;
+  clearMedicationRecords: () => void;
 }
 
 const useMedicineMemoStore = create<MedicineMemoState>((set) => ({
   medicationRecordList: [],
   isListInitialized: false,
   setMedicationRecordList: (data: MedicationRecordListDTO[]) =>
-    set({ medicationRecordList: [...data] }),
+    set({ medicationRecordList: [...data], isListInitialized: true }),
   updateMedicationRecordListById: (id: string, data: MedicationRecordListDTO) =>
     set((state) => ({
       medicationRecordList: state.medicationRecordList.map((item) =>
@@ -25,6 +26,8 @@ const useMedicineMemoStore = create<MedicineMemoState>((set) => ({
     })),
   setIsListInitialized: (isInitialized: boolean) =>
     set({ isListInitialized: isInitialized }),
+  clearMedicationRecords: () =>
+    set({ medicationRecordList: [], isListInitialized: false }),
 }));
 
 export default useMedicineMemoStore;

@@ -29,6 +29,9 @@ const PastConsult = () => {
   const { data: prevCounselRecord, isLoading: isPrevCounselRecordLoading } =
     useSelectMedicineConsult(prevCounselSessionId);
 
+  console.log(prevCounselRecord, 'prevCounselRecord');
+  console.log(isPrevCounselRecordLoading, 'isPrevCounselRecordLoading');
+
   const handleClickPrevCounselSession = (
     rowData: PrevCounselSessionListDTO,
   ) => {
@@ -37,48 +40,15 @@ const PastConsult = () => {
     navigate(`/consult/${prevCounselSessionId}`);
   };
 
-  const highlightList = useMemo((): string[] => {
-    if (isPrevCounselRecordLoading) return [];
-
-    const parsedPrevCounselRecord: {
-      type: string;
-      children: { text: string; bold?: boolean }[];
-    }[] =
-      prevCounselRecord?.counselRecord &&
-      prevCounselRecord?.counselRecord !== ''
-        ? JSON.parse(prevCounselRecord?.counselRecord)
-        : [];
-
-    const childrenList = parsedPrevCounselRecord.map((item) => {
-      return item.children;
-    });
-
-    const highlightList = childrenList.map((item) => {
-      const boldList = item.filter((item) => item.bold);
-
-      return boldList.map((item) => item.text);
-    });
-
-    return highlightList.flat();
-  }, [isPrevCounselRecordLoading, prevCounselRecord]);
-
   return (
     <Card>
       <CardHeader>
         <CardTitle>지난번 상담에서의 핵심 내용</CardTitle>
       </CardHeader>
       <div className="flex flex-row items-start justify-between space-x-4">
-        <PastConsultContainer title="상담 기록 하이라이트" variant="primary">
-          <ul className="mt-4 space-y-2 text-body1 font-medium">
-            {highlightList?.map((item, index) => {
-              return (
-                <li key={index} className="border-l-2 border-grayscale-10 pl-2">
-                  {item}
-                </li>
-              );
-            })}
-          </ul>
-        </PastConsultContainer>
+        <PastConsultContainer
+          title="중재 기록"
+          variant="primary"></PastConsultContainer>
 
         <PastConsultContainer title="AI 요약" variant="secondary">
           <h2 className="flex items-center py-3 text-subtitle2 font-bold text-secondary-70"></h2>
