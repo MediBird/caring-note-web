@@ -3,7 +3,6 @@ import {
   SelectCounselSessionListItem,
 } from '@/api';
 import { DataTable } from '@/components/common/DataTable/data-table';
-import Spinner from '@/components/common/Spinner';
 import tableEmpty from '@/assets/home/table-empty.webp';
 import { useAuthContext } from '@/context/AuthContext';
 import { useSelectCounselSessionList } from '@/hooks/useCounselSessionListQuery';
@@ -43,11 +42,7 @@ function TodayScheduleTable() {
   });
 
   if (isCounselListLoading) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center">
-        <Spinner className="h-10 w-10" />
-      </div>
-    );
+    return null;
   }
 
   if (!formattedCounselList || formattedCounselList.length === 0) {

@@ -16,5 +16,5 @@ export const useSearchMedicationByKeyword = (keyword: string) => {
     enabled: keyword.length > 1,
   });
 
-  return { data, isSuccess };
+  return { data: data ?? [], isSuccess };
 };
