@@ -6,15 +6,19 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { ListItemNode, ListNode } from '@lexical/list';
+import { CodeNode } from '@lexical/code';
+import { LinkNode } from '@lexical/link';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import ToolbarPlugin from './plugins/ToolbarPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { EditorState } from 'lexical';
 import FloatingTextFormatToolbarPlugin from '@/pages/Consult/components/interventionEditor/plugins/FloaingTextFormatPlugin';
+import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
+import { HorizontalRuleNode } from '@lexical/react/LexicalHorizontalRuleNode';
 
 const theme = {
   heading: {
-    h1: 'mb-2 subtitle-1',
+    h1: 'mb-2 font-medium text-2xl',
   },
   list: {
     ul: 'list-disc pl-5 mb-2',
@@ -32,7 +36,15 @@ const initialConfig = {
   onError: (error: Error) => {
     console.error(error);
   },
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode],
+  nodes: [
+    HorizontalRuleNode,
+    CodeNode,
+    HeadingNode,
+    LinkNode,
+    ListNode,
+    ListItemNode,
+    QuoteNode,
+  ],
 };
 
 interface LexicalEditorProps {
@@ -57,6 +69,8 @@ const LexicalEditor = ({ onChange, initialContent }: LexicalEditorProps) => {
     },
     [onChange],
   );
+
+  console.log(editorState);
 
   return (
     <LexicalComposer
@@ -89,6 +103,7 @@ const LexicalEditor = ({ onChange, initialContent }: LexicalEditorProps) => {
           <HistoryPlugin />
           <OnChangePlugin onChange={handleChange} />
           <FloatingTextFormatToolbarPlugin />
+          <MarkdownShortcutPlugin />
         </div>
       </div>
     </LexicalComposer>
