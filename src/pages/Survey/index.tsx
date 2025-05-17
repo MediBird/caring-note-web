@@ -128,7 +128,7 @@ export default function Survey() {
           title={
             <div className="flex w-full items-end justify-between">
               <span>기초 설문 작성</span>
-              <div className="flex gap-2 text-body1 font-bold">
+              <div className="flex gap-2 text-body1 font-semibold">
                 {!isCompleted && (
                   <Button
                     variant="tertiary"

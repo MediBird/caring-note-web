@@ -21,7 +21,7 @@ export function AccountTableSection() {
   const counselorData = data?.content || [];
 
   const pagination: PaginationInfo = {
-    currentPage: params.page || 0,
+    currentPage: params.page ?? 0,
     totalPages: data?.totalPages || 1,
     hasPrevious: data?.hasPrevious || false,
     hasNext: data?.hasNext || false,
@@ -31,6 +31,13 @@ export function AccountTableSection() {
   const handlePageChange = useCallback(
     (page: number) => {
       setParams({ ...params, page });
+    },
+    [params, setParams],
+  );
+
+  const handleSizeChange = useCallback(
+    (size: number) => {
+      setParams({ ...params, size });
     },
     [params, setParams],
   );
@@ -45,6 +52,8 @@ export function AccountTableSection() {
       <DataTablePagination
         pagination={pagination}
         onPageChange={handlePageChange}
+        onSizeChange={handleSizeChange}
+        currentSize={params.size || 10}
       />
     </div>
   );
