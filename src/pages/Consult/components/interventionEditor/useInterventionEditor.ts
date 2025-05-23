@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useCounselSessionQueryById } from '@/hooks';
 import {
   useSaveMedicineConsult,
@@ -11,8 +11,11 @@ import { convertSlateToLexical } from '@/utils/convertSlateToLexcialState';
 import { getIsSlateNode } from '@/utils/convertSlateToLexcialState';
 import { toast } from 'sonner';
 
+type SAVE_STATUS = 'SAVED' | 'CHANGED' | 'SAVING' | 'INIT';
+
 export const useInterventionEditor = () => {
   const [isEditorReady, setIsEditorReady] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<SAVE_STATUS>('INIT');
 
   const { counselSessionId } = useParams();
   const { data: medicineConsultData } =
@@ -23,6 +26,7 @@ export const useInterventionEditor = () => {
   const {
     mutate: saveMedicationCounsel,
     isSuccess: isSuccessSaveMedicationCounsel,
+    isPending: isPendingSaveMedicationCounsel,
   } = useSaveMedicineConsult();
 
   const { data: counselSessionData } = useCounselSessionQueryById(
@@ -33,6 +37,28 @@ export const useInterventionEditor = () => {
     medicationConsult.counselRecord,
   );
 
+  const handleEditorChange = (content: string) => {
+    setEditorContent(content);
+    setMedicationConsult({
+      ...medicationConsult,
+      counselRecord: content,
+    });
+    setEditorContentOnLocalStorage(content);
+  };
+
+  const handleSave = () => {
+    setSaveStatus('SAVING');
+    saveMedicationCounsel();
+    setSaveStatus('SAVED');
+  };
+
+  const setEditorContentOnLocalStorage = useCallback(
+    (content: string) => {
+      localStorage.setItem(`editorContent_${counselSessionId}`, content);
+    },
+    [counselSessionId],
+  );
+
   //중재기록 init
   useEffect(() => {
     if (medicineConsultData) {
@@ -41,8 +67,18 @@ export const useInterventionEditor = () => {
         medicationCounselId: medicineConsultData.medicationCounselId as string,
         counselRecord: medicineConsultData.counselRecord as string,
       });
+      setEditorContent(medicineConsultData.counselRecord as string);
+      setEditorContentOnLocalStorage(
+        medicineConsultData.counselRecord as string,
+      );
     }
-  }, [medicineConsultData, setMedicationConsult, counselSessionId]);
+  }, [
+    medicineConsultData,
+    setMedicationConsult,
+    counselSessionId,
+    setEditorContent,
+    setEditorContentOnLocalStorage,
+  ]);
 
   useEffect(() => {
     if (medicineConsultData) {
@@ -72,20 +108,34 @@ export const useInterventionEditor = () => {
     }
   }, [isSuccessSaveMedicationCounsel]);
 
-  const handleEditorChange = (content: string) => {
-    setEditorContent(content);
-    setMedicationConsult({
-      ...medicationConsult,
-      counselRecord: content,
-    });
-  };
+  useEffect(() => {
+    const localStorageContent = localStorage.getItem(
+      `editorContent_${counselSessionId}`,
+    );
 
-  const handleSave = () => {
-    // API 호출로 저장 기능 구현
+    if (!localStorageContent || !medicineConsultData) {
+      return;
+    }
 
-    // TODO: 서버에 저장하는 로직 추가
-    saveMedicationCounsel();
-  };
+    const isContentChanged =
+      medicineConsultData?.counselRecord !== editorContent &&
+      medicineConsultData?.counselRecord !== localStorageContent;
+
+    if (isContentChanged) {
+      setSaveStatus('CHANGED');
+    } else if (isPendingSaveMedicationCounsel) {
+      setSaveStatus('SAVING');
+    } else if (isSuccessSaveMedicationCounsel) {
+      setSaveStatus('SAVED');
+    }
+  }, [
+    medicineConsultData?.counselRecord,
+    editorContent,
+    counselSessionId,
+    medicineConsultData,
+    isPendingSaveMedicationCounsel,
+    isSuccessSaveMedicationCounsel,
+  ]);
 
   return {
     isEditorReady,
@@ -93,5 +143,6 @@ export const useInterventionEditor = () => {
     handleEditorChange,
     handleSave,
     counselSessionData,
+    saveStatus,
   };
 };

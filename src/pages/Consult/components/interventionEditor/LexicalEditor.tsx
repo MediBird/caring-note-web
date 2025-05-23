@@ -70,8 +70,6 @@ const LexicalEditor = ({ onChange, initialContent }: LexicalEditorProps) => {
     [onChange],
   );
 
-  console.log(editorState);
-
   return (
     <LexicalComposer
       initialConfig={{
