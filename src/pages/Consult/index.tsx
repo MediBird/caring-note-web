@@ -1,7 +1,10 @@
-import { SelectCounseleeBaseInformationByCounseleeIdRes } from '@/api';
+import {
+  SelectCounseleeBaseInformationByCounseleeIdRes,
+  UpdateStatusInCounselSessionReqStatusEnum,
+} from '@/api';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Spinner from '@/components/common/Spinner';
-import { Tabs } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo, useCounselSessionQueryById } from '@/hooks';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
 import TabContents from '@/pages/Consult/components/TabContents';
@@ -18,6 +21,10 @@ import TemporarySaveDialog from './components/dialog/TemporarySaveDialog';
 import { Button } from '@/components/ui/button';
 import PencilBlueIcon from '@/assets/icon/24/create.filled.blue.svg?react';
 import { ConsultRecordingControl } from './components/ConsultRecordingControl';
+import EditConsultDialog from './components/dialog/EditConsultDialog';
+import { useInitializeIntervention } from './hooks/useInitializeIntervention';
+import { useInitializeMedicationRecord } from './hooks/useInitializeMedicationRecord';
+import { useInitializeWasteMedication } from './hooks/useInitializeWasteMedication';
 
 interface InfoItemProps {
   content: React.ReactNode;
