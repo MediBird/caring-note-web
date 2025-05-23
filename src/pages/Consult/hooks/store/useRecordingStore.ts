@@ -173,11 +173,28 @@ export const useRecordingStore = create<RecordingStore>((set, get) => ({
     });
   },
 
-  startRecording: () =>
-    set({ recordingStatus: 'recording', error: null, uploadProgress: 0 }),
-  pauseRecording: () => set({ recordingStatus: 'paused' }),
-  resumeRecording: () => set({ recordingStatus: 'recording' }),
-  stopRecording: () => set({ recordingStatus: 'stopped' }),
-  completeRecording: () =>
-    set({ recordingStatus: 'completed', uploadProgress: 100 }),
+  startRecording: () => {
+    console.log('[Store] startRecording called - changing status to recording');
+    set({ recordingStatus: 'recording', error: null, uploadProgress: 0 });
+  },
+  pauseRecording: () => {
+    console.log('[Store] pauseRecording called - changing status to paused');
+    set({ recordingStatus: 'paused' });
+  },
+  resumeRecording: () => {
+    console.log(
+      '[Store] resumeRecording called - changing status to recording',
+    );
+    set({ recordingStatus: 'recording' });
+  },
+  stopRecording: () => {
+    console.log('[Store] stopRecording called - changing status to stopped');
+    set({ recordingStatus: 'stopped' });
+  },
+  completeRecording: () => {
+    console.log(
+      '[Store] completeRecording called - changing status to completed',
+    );
+    set({ recordingStatus: 'completed', uploadProgress: 100 });
+  },
 }));
