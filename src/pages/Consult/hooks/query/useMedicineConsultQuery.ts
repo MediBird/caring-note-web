@@ -51,20 +51,39 @@ export const useSelectMedicineConsult = (counselSessionId?: string) => {
     queryKey: ['SelectMedicationConsult', counselSessionId],
     queryFn: () => selectMedicationCounsel(counselSessionId!),
     enabled: !!counselSessionId,
+    refetchOnWindowFocus: true,
   });
 };
 
 export const useSaveMedicineConsult = () => {
   const queryClient = useQueryClient();
-
   const { medicationConsult } = useMedicationConsultStore();
 
   return useMutation({
-    mutationFn: () => saveMedicationCounsel(medicationConsult),
-    onSuccess: (counselSessionId) => {
-      queryClient.invalidateQueries({
-        queryKey: ['SelectMedicationConsult', counselSessionId],
+    mutationFn: async () => {
+      const currentEditorContent = localStorage.getItem(
+        `editorContent_${medicationConsult.counselSessionId}`,
+      );
+
+      return saveMedicationCounsel({
+        ...medicationConsult,
+        counselRecord: currentEditorContent || '',
       });
+    },
+    onSuccess: (counselSessionId) => {
+      if (counselSessionId) {
+        queryClient.invalidateQueries({
+          queryKey: ['SelectMedicationConsult', counselSessionId],
+        });
+
+        if (window.editorWindows && window.editorWindows[counselSessionId]) {
+          window.editorWindows[counselSessionId]?.close();
+          delete window.editorWindows[counselSessionId];
+        }
+      }
+    },
+    onError: (error) => {
+      console.error('중재 기록 저장 중 오류가 발생했습니다:', error);
     },
   });
 };

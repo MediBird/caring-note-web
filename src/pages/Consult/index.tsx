@@ -9,6 +9,7 @@ import {
   useMedicationRecordSave,
   useSaveWasteMedication,
   usePrevCounselSessionList,
+  useSaveMedicineConsult,
 } from '@/pages/Consult/hooks/query';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 import { useParams } from 'react-router-dom';
@@ -55,11 +56,25 @@ export function Index() {
     isSuccess: isSuccessSaveMedicationRecordList,
   } = useMedicationRecordSave({ counselSessionId: counselSessionId ?? '' });
 
+  // 중재 기록 저장
+  const {
+    mutate: saveMedicationCounsel,
+    isSuccess: isSuccessSaveMedicationCounsel,
+  } = useSaveMedicineConsult();
+
   useEffect(() => {
-    if (isSuccessSaveMedicationRecordList && isSuccessWasteMedication) {
+    if (
+      isSuccessSaveMedicationRecordList &&
+      isSuccessWasteMedication &&
+      isSuccessSaveMedicationCounsel
+    ) {
       toast.info('작성하신 내용을 성공적으로 저장하였습니다.');
     }
-  }, [isSuccessSaveMedicationRecordList, isSuccessWasteMedication]);
+  }, [
+    isSuccessSaveMedicationRecordList,
+    isSuccessWasteMedication,
+    isSuccessSaveMedicationCounsel,
+  ]);
 
   const { activeTab, setActiveTab } = useConsultTabStore();
 
@@ -97,11 +112,15 @@ export function Index() {
 
   const saveConsult = useCallback(async () => {
     try {
-      await Promise.all([saveWasteMedication(), saveMedicationRecordList()]);
+      await Promise.all([
+        saveWasteMedication(),
+        saveMedicationRecordList(),
+        saveMedicationCounsel(),
+      ]);
     } catch (error) {
       console.error('저장 중 오류가 발생했습니다:', error);
     }
-  }, [saveWasteMedication, saveMedicationRecordList]);
+  }, [saveWasteMedication, saveMedicationRecordList, saveMedicationCounsel]);
 
   const completeConsult = async () => {
     await saveConsult();
