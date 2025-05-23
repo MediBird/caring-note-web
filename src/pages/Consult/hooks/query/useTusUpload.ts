@@ -10,6 +10,13 @@ import { useRef, useEffect, useCallback } from 'react';
 
 const VITE_API_URL = import.meta.env.VITE_API_URL; // Configuration basePath에 사용될 수 있음
 
+// 스트리밍 업로드 설정
+const STREAM_UPLOAD_CONFIG = {
+  CHUNK_SIZE_MB: 2, // 2MB 청크 크기
+  AUTO_UPLOAD_THRESHOLD_MB: 5, // 5MB마다 자동 업로드
+  MAX_CHUNK_SIZE_MB: 10, // 최대 청크 크기
+} as const;
+
 export interface UseTusUploadProps {
   counselSessionId: string;
 }
@@ -20,8 +27,8 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
     fileId: storedFileIdUrl, // 스토어에 저장된 fileId (TUS upload URL)
     completeRecording: storeCompleteRecordingMethod,
     setUploadProgress, // 진행률 표시를 위해 추가
-    recordedDuration, // 현재 녹음된 시간
-    setRecordedDuration, // 녹음 시간 설정
+    totalDuration,
+    setTotalDuration,
   } = useRecordingStore();
   const { keycloak } = useKeycloak();
   const axiosInstance: AxiosInstance = globalAxios;
@@ -31,11 +38,15 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
   const recordedChunksRef = useRef<Blob[]>([]); // 녹음된 데이터 청크들을 저장
   const isUploadCompletedRef = useRef<boolean>(false); // 업로드 완료 여부 추적
   const recordingStartTimeRef = useRef<number | null>(null); // 녹음 시작 시간
+  const streamingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const totalUploadedSizeRef = useRef<number>(0);
+  const currentUploadOffsetRef = useRef<number>(0);
 
   // counselSessionId가 변경되면 이전 업로드 상태 정리
   useEffect(() => {
-    // 새로운 세션 시작 시 업로드 완료 상태 초기화
     isUploadCompletedRef.current = false;
+    totalUploadedSizeRef.current = 0;
+    currentUploadOffsetRef.current = 0;
 
     return () => {
       if (tusUploadRef.current) {
@@ -51,10 +62,16 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
       ) {
         mediaRecorderRef.current.stop();
       }
+      if (streamingIntervalRef.current) {
+        clearInterval(streamingIntervalRef.current);
+        streamingIntervalRef.current = null;
+      }
       mediaRecorderRef.current = null;
       recordedChunksRef.current = []; // 녹음된 청크들도 초기화
       isUploadCompletedRef.current = false;
       recordingStartTimeRef.current = null; // 녹음 시작 시간 초기화
+      totalUploadedSizeRef.current = 0;
+      currentUploadOffsetRef.current = 0;
     };
   }, [counselSessionId]);
 
@@ -64,19 +81,18 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
     });
   }, []);
 
-  // 기존 업로드 상태를 확인하여 녹음 시간을 복원하는 함수
+  // 기존 업로드 상태를 확인하여 녹음 시간과 offset을 복원하는 함수
   const checkExistingUploadStatus = useCallback(
     async (fileUrl: string) => {
       if (!keycloak || !keycloak.token || !fileUrl) {
-        return;
+        return { duration: 0, offset: 0 };
       }
 
       try {
-        // fileUrl에서 fileId 추출 (URL의 마지막 부분)
         const fileId = fileUrl.split('/').pop();
         if (!fileId) {
           console.warn('[TUS] Cannot extract fileId from URL:', fileUrl);
-          return;
+          return { duration: 0, offset: 0 };
         }
 
         const config = getBaseApiConfig();
@@ -89,21 +105,34 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
         console.log(`[TUS] Checking upload status for fileId: ${fileId}`);
         const response = await tusApi.getUploadStatus(fileId);
 
-        // 응답 헤더에서 X-Recording-Duration 값 가져오기
+        // 응답 헤더에서 X-Recording-Duration과 Upload-Offset 값 가져오기
         const recordingDuration = response.headers?.['x-recording-duration'];
+        const uploadOffset = response.headers?.['upload-offset'];
+
+        let duration = 0;
+        let offset = 0;
+
         if (recordingDuration && !isNaN(Number(recordingDuration))) {
-          const duration = Number(recordingDuration);
+          duration = Number(recordingDuration);
           console.log(
             `[TUS] Found existing recording duration: ${duration} seconds`,
           );
-          setRecordedDuration(duration);
+          setTotalDuration(duration);
         }
+
+        if (uploadOffset && !isNaN(Number(uploadOffset))) {
+          offset = Number(uploadOffset);
+          currentUploadOffsetRef.current = offset;
+          console.log(`[TUS] Found existing upload offset: ${offset} bytes`);
+        }
+
+        return { duration, offset };
       } catch (error) {
         console.error('[TUS] Error checking upload status:', error);
-        // 에러가 발생해도 녹음 진행에는 영향을 주지 않도록 조용히 처리
+        return { duration: 0, offset: 0 };
       }
     },
-    [keycloak, getBaseApiConfig, axiosInstance, setRecordedDuration],
+    [keycloak, getBaseApiConfig, axiosInstance, setTotalDuration],
   );
 
   // 기존 업로드 파일이 있는 경우 상태 확인
@@ -139,6 +168,160 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
     return true;
   }, []);
 
+  // 스트리밍 업로드를 위한 청크 업로드 함수
+  const uploadChunks = useCallback(
+    async (chunks: Blob[], isComplete: boolean = false) => {
+      if (chunks.length === 0) return;
+
+      const combinedBlob = new Blob(chunks, { type: 'audio/webm' });
+      if (!validateBlob(combinedBlob)) {
+        console.warn('[TUS] Invalid chunk blob, skipping upload');
+        return;
+      }
+
+      try {
+        const refreshed = await keycloak.updateToken(30);
+        if (refreshed) console.log('[TUS] Token refreshed for chunk upload');
+      } catch (error) {
+        console.error('[TUS] Token refresh failed for chunk upload:', error);
+        throw new Error('토큰 갱신 실패. 다시 시도해주세요.');
+      }
+
+      // 현재 총 녹음 시간 계산
+      const currentTime = recordingStartTimeRef.current
+        ? Math.floor((Date.now() - recordingStartTimeRef.current) / 1000)
+        : 0;
+      const currentTotalDuration = totalDuration + currentTime;
+
+      console.log(
+        `[TUS] Uploading chunk: ${combinedBlob.size} bytes, total duration: ${currentTotalDuration}s`,
+      );
+
+      const baseConfig = getBaseApiConfig();
+      const tusMetadata = {
+        filename: `session-${counselSessionId}-${Date.now()}.webm`,
+        filetype: 'audio/webm',
+        counselSessionId: counselSessionId,
+      };
+
+      const options: tus.UploadOptions = {
+        endpoint: !storedFileIdUrl
+          ? `${baseConfig.basePath}/v1/tus`
+          : undefined,
+        uploadUrl: storedFileIdUrl || undefined,
+        retryDelays: [0, 1000, 3000, 5000],
+        metadata: tusMetadata,
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+          'X-Recording-Duration': currentTotalDuration.toString(),
+          'X-Counsel-Session-Id': counselSessionId,
+        },
+        chunkSize: STREAM_UPLOAD_CONFIG.CHUNK_SIZE_MB * 1024 * 1024,
+        onProgress: (bytesUploaded, bytesTotal) => {
+          const totalProgress = totalUploadedSizeRef.current + bytesUploaded;
+          if (bytesTotal > 0) {
+            const percentage = Math.min(
+              (totalProgress / (totalUploadedSizeRef.current + bytesTotal)) *
+                100,
+              100,
+            );
+            setUploadProgress(Math.round(percentage));
+            console.log(
+              `[TUS] Chunk Progress: ${bytesUploaded}/${bytesTotal} bytes (${percentage.toFixed(1)}%)`,
+            );
+          }
+        },
+        onError: (error: Error) => {
+          const detailedError = error as tus.DetailedError;
+          console.error(`[TUS] Chunk upload failed: ${detailedError.message}`);
+          throw new Error(`청크 업로드 실패: ${detailedError.message}`);
+        },
+        onSuccess: async () => {
+          if (tusUploadRef.current && tusUploadRef.current.url) {
+            const uploadUrl = tusUploadRef.current.url;
+            console.log('[TUS] Chunk upload succeeded:', uploadUrl);
+
+            if (!storedFileIdUrl) {
+              setFileId(uploadUrl);
+            }
+
+            totalUploadedSizeRef.current += combinedBlob.size;
+
+            if (isComplete) {
+              isUploadCompletedRef.current = true;
+              console.log(
+                '[TUS] All chunks uploaded successfully. Merge can be triggered now.',
+              );
+            }
+          }
+          tusUploadRef.current = null;
+        },
+      };
+
+      tusUploadRef.current = new tus.Upload(combinedBlob, options);
+
+      try {
+        console.log('[TUS] Starting chunk upload...');
+        if (storedFileIdUrl) {
+          console.log(`[TUS] Resuming upload from: ${storedFileIdUrl}`);
+        }
+        tusUploadRef.current.start();
+      } catch (error) {
+        console.error('[TUS] Error starting chunk upload:', error);
+        throw new Error('청크 업로드 시작 중 오류 발생');
+      }
+    },
+    [
+      keycloak,
+      getBaseApiConfig,
+      setFileId,
+      setUploadProgress,
+      validateBlob,
+      storedFileIdUrl,
+      counselSessionId,
+      totalDuration,
+    ],
+  );
+
+  // 주기적으로 청크를 업로드하는 함수
+  const startStreamingUpload = useCallback(() => {
+    if (streamingIntervalRef.current) {
+      clearInterval(streamingIntervalRef.current);
+    }
+
+    streamingIntervalRef.current = setInterval(() => {
+      if (recordedChunksRef.current.length === 0) return;
+
+      const totalSize = recordedChunksRef.current.reduce(
+        (acc, chunk) => acc + chunk.size,
+        0,
+      );
+      const thresholdSize =
+        STREAM_UPLOAD_CONFIG.AUTO_UPLOAD_THRESHOLD_MB * 1024 * 1024;
+
+      if (totalSize >= thresholdSize) {
+        console.log(
+          `[TUS] Auto-uploading chunks (${totalSize} bytes >= ${thresholdSize} bytes)`,
+        );
+        const chunksToUpload = [...recordedChunksRef.current];
+        recordedChunksRef.current = [];
+
+        uploadChunks(chunksToUpload, false).catch((error) => {
+          console.error('[TUS] Auto-upload failed:', error);
+          // 실패한 청크를 다시 큐에 넣기
+          recordedChunksRef.current.unshift(...chunksToUpload);
+        });
+      }
+    }, 2000); // 2초마다 확인
+  }, [uploadChunks]);
+
+  const stopStreamingUpload = useCallback(() => {
+    if (streamingIntervalRef.current) {
+      clearInterval(streamingIntervalRef.current);
+      streamingIntervalRef.current = null;
+    }
+  }, []);
+
   const handleMerge = useCallback(
     async (sessionIdToMerge: string, uploadedFileUrl?: string) => {
       const fileUrlToLog =
@@ -172,12 +355,10 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
         );
         console.log(`[TUS] Using file URL for merge: ${fileUrlToLog}`);
 
-        // 서버 API가 counselSessionId 외에 TUS file ID (URL의 마지막 부분)를 필요로 하는지 확인 필요
-        // 현재는 counselSessionId만 전달하고 있음. 서버가 이 ID로 TUS 파일들을 찾아야 함.
         const response = await tusApiForMerge.mergeMediaFile(sessionIdToMerge);
         console.log('[TUS] Merge API response:', response.data);
         storeCompleteRecordingMethod();
-        setUploadProgress(100); // 병합 성공 시 100%
+        setUploadProgress(100);
       } catch (error) {
         console.error('[TUS] Merge media file call failed:', error);
         if (error instanceof AxiosError) {
@@ -188,7 +369,6 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
             error.config,
           );
         }
-        // 에러를 다시 throw하여 상위 컴포넌트에서 처리할 수 있도록 함
         throw error;
       }
     },
@@ -205,7 +385,6 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
   const startStreamAndUpload = useCallback(
     async (
       recorder: MediaRecorder,
-      currentCounselSessionId: string,
       // storedUploadUrl은 페이지 로드 후 이어하기 시 사용될 수 있음.
       // 지금은 새 녹음 시작 시에는 undefined.
       initialUploadUrl?: string,
@@ -237,6 +416,8 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
       if (!initialUploadUrl) {
         recordedChunksRef.current = [];
         isUploadCompletedRef.current = false;
+        totalUploadedSizeRef.current = 0;
+        currentUploadOffsetRef.current = 0;
       }
 
       // 녹음 시작 시간 기록 (새 녹음이거나 이어하기인 경우)
@@ -256,63 +437,50 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
       };
 
       mediaRecorderRef.current.onstop = async () => {
-        console.log('[TUS] MediaRecorder stopped, starting upload...');
+        console.log(
+          '[TUS] MediaRecorder stopped, uploading remaining chunks...',
+        );
+        stopStreamingUpload();
 
-        // 녹음 중지 시 누적 시간 업데이트
+        // 녹음 시작 시간 초기화
         if (recordingStartTimeRef.current) {
-          const currentRecordingDuration = Math.floor(
-            (Date.now() - recordingStartTimeRef.current) / 1000,
-          );
-          const newTotalDuration = recordedDuration + currentRecordingDuration;
-          setRecordedDuration(newTotalDuration);
-          console.log(
-            `[TUS] Updated total recording duration: ${newTotalDuration} seconds`,
-          );
-          recordingStartTimeRef.current = null; // 시작 시간 초기화
+          recordingStartTimeRef.current = null;
         }
 
-        // 이미 업로드가 완료된 경우 중복 업로드 방지
         if (isUploadCompletedRef.current) {
           console.log('[TUS] Upload already completed, skipping...');
           return;
         }
 
+        // 남은 청크들을 최종 업로드
         if (recordedChunksRef.current.length > 0) {
-          // 모든 청크를 하나의 Blob으로 합치기
-          const finalBlob = new Blob(recordedChunksRef.current, {
-            type: 'audio/webm',
-          });
-          console.log(`[TUS] Final blob size: ${finalBlob.size} bytes`);
-
-          // Blob 유효성 검사
-          if (!validateBlob(finalBlob)) {
-            throw new Error(
-              '녹음된 파일이 유효하지 않습니다. 다시 녹음해주세요.',
-            );
-          }
-
-          // TUS 업로드 시작
-          await startTusUpload(
-            finalBlob,
-            currentCounselSessionId,
-            initialUploadUrl,
+          console.log(
+            `[TUS] Uploading ${recordedChunksRef.current.length} remaining chunks`,
           );
-        } else {
-          console.warn('[TUS] No recorded chunks to upload');
-          throw new Error('녹음된 데이터가 없습니다.');
+          await uploadChunks([...recordedChunksRef.current], true);
+          recordedChunksRef.current = [];
         }
       };
 
       mediaRecorderRef.current.onerror = (event: Event) => {
         const errorEvent = event as ErrorEvent;
         console.error('[TUS] MediaRecorder error:', errorEvent.error || event);
+        stopStreamingUpload();
         throw new Error(
           `녹음 중 오류: ${errorEvent.error?.message || '알 수 없는 오류'}`,
         );
       };
+
+      // 스트리밍 업로드 시작
+      startStreamingUpload();
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [keycloak, getBaseApiConfig, setUploadProgress, validateBlob],
+    [
+      keycloak,
+      setUploadProgress,
+      uploadChunks,
+      startStreamingUpload,
+      stopStreamingUpload,
+    ],
   );
 
   const abortUpload = useCallback(() => {
@@ -324,121 +492,23 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
         .catch((error) => console.error('[TUS] Error aborting upload:', error));
       tusUploadRef.current = null;
     }
-    // MediaRecorder 중지
+
+    stopStreamingUpload();
+
     if (
       mediaRecorderRef.current &&
       mediaRecorderRef.current.state === 'recording'
     ) {
       mediaRecorderRef.current.stop();
     }
-    // 녹음된 청크들 초기화
+
     recordedChunksRef.current = [];
     isUploadCompletedRef.current = false;
-    recordingStartTimeRef.current = null; // 녹음 시작 시간 초기화
-    setUploadProgress(0); // 중단 시 진행률 초기화
-  }, [setUploadProgress]);
-
-  // TUS 업로드를 시작하는 헬퍼 함수
-  const startTusUpload = useCallback(
-    async (blob: Blob, counselSessionId: string, initialUploadUrl?: string) => {
-      try {
-        const refreshed = await keycloak.updateToken(30);
-        if (refreshed) console.log('[TUS] Token refreshed for upload');
-      } catch (error) {
-        console.error('[TUS] Token refresh failed for upload:', error);
-        throw new Error('토큰 갱신 실패. 다시 시도해주세요.');
-      }
-
-      // 현재까지의 녹음 시간 계산 (기존 duration + 이번 녹음 시간)
-      const currentRecordingDuration = recordingStartTimeRef.current
-        ? Math.floor((Date.now() - recordingStartTimeRef.current) / 1000)
-        : 0;
-      const totalDuration = recordedDuration + currentRecordingDuration;
-
-      console.log(
-        `[TUS] Total recording duration: ${totalDuration} seconds (previous: ${recordedDuration}s, current: ${currentRecordingDuration}s)`,
-      );
-
-      const baseConfig = getBaseApiConfig();
-      const tusMetadata = {
-        filename: `session-${counselSessionId}-${Date.now()}.webm`,
-        filetype: 'audio/webm',
-        counselSessionId: counselSessionId,
-      };
-
-      const options: tus.UploadOptions = {
-        endpoint: !initialUploadUrl
-          ? `${baseConfig.basePath}/v1/tus`
-          : undefined,
-        uploadUrl: initialUploadUrl,
-        retryDelays: [0, 3000, 5000, 10000, 20000],
-        metadata: tusMetadata,
-        headers: {
-          Authorization: `Bearer ${keycloak.token}`,
-          'X-Recording-Duration': totalDuration.toString(), // 총 녹음 시간 추가
-        },
-        onProgress: (bytesUploaded, bytesTotal) => {
-          if (bytesTotal > 0) {
-            const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-            console.log(
-              `[TUS] Upload Progress: ${bytesUploaded} bytes / ${bytesTotal} bytes (${percentage}%)`,
-            );
-            setUploadProgress(parseFloat(percentage));
-          } else {
-            console.log(
-              `[TUS] Upload Progress: ${bytesUploaded} bytes uploaded`,
-            );
-          }
-        },
-        onError: (error: Error) => {
-          const detailedError = error as tus.DetailedError;
-          console.log(`[TUS] Failed because: ${detailedError.message}`);
-
-          let message = `[TUS] Upload Failed: ${detailedError.message}`;
-          if (detailedError.originalResponse) {
-            message += ` (Server status: ${detailedError.originalResponse.getStatus()}, Response: ${detailedError.originalResponse.getBody()})`;
-          }
-          console.error(
-            message,
-            detailedError.originalRequest,
-            detailedError.originalResponse,
-          );
-          throw new Error(`TUS 업로드 실패: ${detailedError.message}`);
-        },
-        onSuccess: async () => {
-          if (tusUploadRef.current && tusUploadRef.current.url) {
-            const uploadUrl = tusUploadRef.current.url;
-            const filename = options.metadata?.filename || 'unknown_file';
-            console.log(`[TUS] Download ${filename} from ${uploadUrl}`);
-
-            console.log('[TUS] Upload Succeeded.');
-            setFileId(uploadUrl);
-            isUploadCompletedRef.current = true; // 업로드 완료 표시
-            console.log('[TUS] Upload successful. Merge can be triggered now.');
-          } else {
-            console.error('[TUS] Upload succeeded but no URL found.');
-            throw new Error('업로드 성공했으나 파일 URL을 찾을 수 없습니다.');
-          }
-          tusUploadRef.current = null;
-        },
-      };
-
-      tusUploadRef.current = new tus.Upload(blob, options);
-      try {
-        console.log('[TUS] Starting TUS upload...');
-        if (initialUploadUrl) {
-          console.log(
-            `[TUS] Attempting to resume upload from: ${initialUploadUrl}`,
-          );
-        }
-        tusUploadRef.current.start();
-      } catch (error) {
-        console.error('[TUS] Error calling tusUpload.start():', error);
-        throw new Error('TUS 업로드 시작 중 오류 발생');
-      }
-    },
-    [keycloak, getBaseApiConfig, setFileId, setUploadProgress],
-  );
+    recordingStartTimeRef.current = null;
+    totalUploadedSizeRef.current = 0;
+    currentUploadOffsetRef.current = 0;
+    setUploadProgress(0);
+  }, [setUploadProgress, stopStreamingUpload]);
 
   // 페이지 로드 시 이어하기 위한 로직 (옵션)
   // 이 로직은 실제 MediaRecorder 인스턴스가 준비되고, 사용자가 이어하기를 원할 때 호출되어야 함.
@@ -450,5 +520,7 @@ export function useTusUpload({ counselSessionId }: UseTusUploadProps) {
     abortUpload,
     handleMerge,
     checkExistingUploadStatus,
+    uploadChunks,
+    STREAM_UPLOAD_CONFIG,
   };
 }

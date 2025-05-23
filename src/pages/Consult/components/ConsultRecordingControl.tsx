@@ -23,12 +23,24 @@ const formatDuration = (seconds: number): string => {
   ).padStart(2, '0')}`;
 };
 
+const formatDurationWithSession = (
+  totalSeconds: number,
+  sessionSeconds: number,
+): string => {
+  if (sessionSeconds === 0 || totalSeconds === sessionSeconds) {
+    return formatDuration(totalSeconds);
+  }
+  return `${formatDuration(totalSeconds)} (이번 세션: ${formatDuration(sessionSeconds)})`;
+};
+
 export const ConsultRecordingControl: React.FC<
   ConsultRecordingControlProps
 > = ({ counselSessionId, className }) => {
   const {
     recordingStatus,
     recordedDuration,
+    totalDuration,
+    currentSessionDuration,
     uploadProgress,
     incrementRecordedDuration,
     loadStateForSession,
@@ -40,6 +52,8 @@ export const ConsultRecordingControl: React.FC<
     stopRecording: storeStopRecording,
     fileId: storedFileIdUrl,
     setUploadProgress,
+    setTotalDuration,
+    setCurrentSessionDuration,
   } = useRecordingStore();
 
   const {
@@ -142,6 +156,7 @@ export const ConsultRecordingControl: React.FC<
     }
 
     storeStartRecording();
+    setCurrentSessionDuration(0); // 새 세션 시작 시 세션 시간 초기화
     startDurationTimer();
 
     try {
@@ -202,12 +217,18 @@ export const ConsultRecordingControl: React.FC<
         resetRecordingState(counselSessionId);
       };
 
-      await startStreamAndUpload(
-        recorder,
-        counselSessionId,
-        storedFileIdUrl || undefined,
-      );
-      recorder.start(1000);
+      await startStreamAndUpload(recorder, storedFileIdUrl || undefined);
+
+      // MediaRecorder 상태 확인 후 시작
+      if (recorder.state === 'inactive') {
+        // 스트리밍 업로드를 위해 더 자주 데이터 수집 (1초마다)
+        recorder.start(1000);
+      } else {
+        console.warn(
+          '[Recording] MediaRecorder is not in inactive state:',
+          recorder.state,
+        );
+      }
     } catch (err) {
       console.error('[Recording] Failed to start recording:', err);
       storeStopRecording();
@@ -300,6 +321,11 @@ export const ConsultRecordingControl: React.FC<
 
     // 즉시 타이머 중지 및 상태 변경
     stopDurationTimer();
+
+    // 현재 세션의 녹음을 총 시간에 반영
+    const newTotalDuration = totalDuration + currentSessionDuration;
+    setTotalDuration(newTotalDuration);
+
     storeStopRecording();
 
     if (
@@ -316,7 +342,14 @@ export const ConsultRecordingControl: React.FC<
     } else {
       cleanupRecordingResources();
     }
-  }, [stopDurationTimer, storeStopRecording, cleanupRecordingResources]);
+  }, [
+    stopDurationTimer,
+    totalDuration,
+    currentSessionDuration,
+    setTotalDuration,
+    storeStopRecording,
+    cleanupRecordingResources,
+  ]);
 
   const handleDeleteRecording = useCallback(() => {
     if (process.env.NODE_ENV === 'development')
@@ -437,7 +470,12 @@ export const ConsultRecordingControl: React.FC<
                 녹음 시작하기
               </span>
               <span className="text-body1 font-medium text-grayscale-50">
-                ({formatDuration(recordedDuration)})
+                (
+                {formatDurationWithSession(
+                  totalDuration || recordedDuration,
+                  currentSessionDuration,
+                )}
+                )
               </span>
             </div>
             <Button
@@ -454,7 +492,12 @@ export const ConsultRecordingControl: React.FC<
           <>
             <span className="flex animate-pulse items-center gap-2 whitespace-nowrap text-sm font-medium text-red-600">
               <div className="h-2 w-2 animate-pulse rounded-full bg-red-500"></div>
-              녹음 중 ({formatDuration(recordedDuration)})
+              녹음 중 (
+              {formatDurationWithSession(
+                totalDuration || recordedDuration,
+                currentSessionDuration,
+              )}
+              )
             </span>
             <div className="flex gap-2">
               <Button
@@ -480,7 +523,12 @@ export const ConsultRecordingControl: React.FC<
           <>
             <span className="flex items-center gap-2 whitespace-nowrap text-sm font-medium text-yellow-600">
               <div className="h-2 w-2 rounded-full bg-yellow-500"></div>
-              일시정지 ({formatDuration(recordedDuration)})
+              일시정지 (
+              {formatDurationWithSession(
+                totalDuration || recordedDuration,
+                currentSessionDuration,
+              )}
+              )
             </span>
             <div className="flex gap-2">
               <Button
@@ -506,7 +554,12 @@ export const ConsultRecordingControl: React.FC<
           <>
             <span className="flex items-center gap-2 whitespace-nowrap text-sm font-medium text-blue-600">
               <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-              녹음 완료 ({formatDuration(recordedDuration)})
+              녹음 완료 (
+              {formatDurationWithSession(
+                totalDuration || recordedDuration,
+                currentSessionDuration,
+              )}
+              )
             </span>
             <div className="flex gap-2">
               <Button
@@ -535,7 +588,12 @@ export const ConsultRecordingControl: React.FC<
                 녹음 저장 완료!
               </span>
               <span className="text-body1 font-medium text-grayscale-50">
-                ({formatDuration(recordedDuration)})
+                (
+                {formatDurationWithSession(
+                  totalDuration || recordedDuration,
+                  currentSessionDuration,
+                )}
+                )
               </span>
             </div>
             <div className="flex gap-2">
@@ -557,6 +615,8 @@ export const ConsultRecordingControl: React.FC<
   }, [
     recordingStatus,
     recordedDuration,
+    totalDuration,
+    currentSessionDuration,
     isUploadingOrMerging,
     handleStartRecording,
     handleGoToNoteTab,
