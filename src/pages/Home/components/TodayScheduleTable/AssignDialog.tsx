@@ -113,7 +113,7 @@ function AssignDialog({
       {status === SelectCounselSessionListItemStatusEnum.InProgress
         ? '상담 중'
         : status === SelectCounselSessionListItemStatusEnum.Completed
-          ? '상담 완료됨'
+          ? '상담 완료'
           : isAssignedToMe
             ? '상담 시작'
             : isCounselorAssign
