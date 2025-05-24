@@ -14,9 +14,9 @@
 
 
 
-export * from './api/default-api';
 export * from './api/aiapi';
 export * from './api/aicounsel-summary-controller-api';
+export * from './api/counsel-card-controller-api';
 export * from './api/counsel-session-controller-api';
 export * from './api/counselee-consent-controller-api';
 export * from './api/counselee-controller-api';
@@ -24,5 +24,7 @@ export * from './api/counselor-controller-api';
 export * from './api/medication-controller-api';
 export * from './api/medication-counsel-controller-api';
 export * from './api/medication-record-hist-controller-api';
+export * from './api/tusapi';
+export * from './api/tus-controller-api';
 export * from './api/waste-medication-controller-api';
 

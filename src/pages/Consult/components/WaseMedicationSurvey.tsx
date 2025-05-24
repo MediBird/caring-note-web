@@ -33,7 +33,7 @@ const WasteMedicationSurvey = ({
   return (
     <>
       <div className="rounded-lg bg-grayscale-3 p-4">
-        <p className="mb-4 text-body1 font-bold">
+        <p className="mb-4 text-body1 font-semibold">
           사용하지 않고 약이 남는 경우에 누구의 판단으로 사용하지 않게 되었나요?
         </p>
         <RadioGroup
@@ -94,7 +94,7 @@ const WasteMedicationSurvey = ({
           WasteMedicationDisposalDrugRemainActionTypeEnum.None && (
           <div className="mt-4 flex flex-col gap-6 rounded-lg bg-grayscale-3 p-4">
             <div>
-              <p className="mb-4 text-body1 font-bold">
+              <p className="mb-4 text-body1 font-semibold">
                 사용하지 않은 주된 이유
               </p>
               <form className="flex flex-row">
@@ -283,7 +283,7 @@ const WasteMedicationSurvey = ({
               </form>
             </div>
             <div>
-              <p className="mb-4 text-body1 font-bold">주된 처리 방법</p>
+              <p className="mb-4 text-body1 font-semibold">주된 처리 방법</p>
 
               <RadioGroup
                 id="whos-decision"
@@ -368,7 +368,7 @@ const WasteMedicationSurvey = ({
               </RadioGroup>
             </div>
             <div>
-              <p className="mb-4 text-body1 font-bold">폐의약품 회수</p>
+              <p className="mb-4 text-body1 font-semibold">폐의약품 회수</p>
               <RadioGroup
                 id="medicine-collection"
                 className="flex flex-row"
@@ -412,7 +412,7 @@ const WasteMedicationSurvey = ({
               </RadioGroup>
             </div>
             <div>
-              <p className="mb-4 text-body1 font-bold">폐의약품 무게</p>
+              <p className="mb-4 text-body1 font-semibold">폐의약품 무게</p>
               <span className="flex flex-row items-center justify-start gap-1">
                 <Input
                   placeholder="00"

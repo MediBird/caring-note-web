@@ -21,6 +21,7 @@ import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
 import { EditReservationDialog } from '../dialog/EditReservationDialog';
+import { COUNSEL_SESSION_STATUS_LABELS } from '@/constants/counselSessionConstants';
 
 export const createScheduleColumns = ({
   onDelete,
@@ -98,24 +99,10 @@ export const createScheduleColumns = ({
     size: 150,
     cell: ({ row }) => {
       const status = row.original.status;
-      let statusText = '';
-
-      switch (status) {
-        case SelectCounselSessionListItemStatusEnum.Scheduled:
-          statusText = '예정';
-          break;
-        case SelectCounselSessionListItemStatusEnum.InProgress:
-          statusText = '진행';
-          break;
-        case SelectCounselSessionListItemStatusEnum.Completed:
-          statusText = '완료';
-          break;
-        case SelectCounselSessionListItemStatusEnum.Canceled:
-          statusText = '취소';
-          break;
-        default:
-          statusText = '';
-      }
+      const statusText =
+        COUNSEL_SESSION_STATUS_LABELS[
+          status as keyof typeof COUNSEL_SESSION_STATUS_LABELS
+        ] || '';
 
       return (
         <TableCell

@@ -11,18 +11,28 @@ export const initialWasteMedicationDisposalState: AddAndUpdateWasteMedicationDis
     wasteMedicationGram: 0,
   };
 
-export const useWasteMedicationDisposalStore = create<{
+interface WasteMedicationDisposalState {
   wasteMedicationDisposal: AddAndUpdateWasteMedicationDisposalDTO;
   setWasteMedicationDisposal: (
     data: AddAndUpdateWasteMedicationDisposalDTO,
   ) => void;
   isDisposalInitialized: boolean;
   setIsDisposalInitialized: (initialized: boolean) => void;
-}>((set) => ({
-  wasteMedicationDisposal: initialWasteMedicationDisposalState,
-  setWasteMedicationDisposal: (data: AddAndUpdateWasteMedicationDisposalDTO) =>
-    set({ wasteMedicationDisposal: data }),
-  isDisposalInitialized: false,
-  setIsDisposalInitialized: (initialized) =>
-    set({ isDisposalInitialized: initialized }),
-}));
+  clearWasteMedicationDisposal: () => void;
+}
+
+export const useWasteMedicationDisposalStore =
+  create<WasteMedicationDisposalState>((set) => ({
+    wasteMedicationDisposal: initialWasteMedicationDisposalState,
+    setWasteMedicationDisposal: (
+      data: AddAndUpdateWasteMedicationDisposalDTO,
+    ) => set({ wasteMedicationDisposal: data, isDisposalInitialized: true }),
+    isDisposalInitialized: false,
+    setIsDisposalInitialized: (initialized) =>
+      set({ isDisposalInitialized: initialized }),
+    clearWasteMedicationDisposal: () =>
+      set({
+        wasteMedicationDisposal: initialWasteMedicationDisposalState,
+        isDisposalInitialized: false,
+      }),
+  }));
