@@ -11,7 +11,7 @@ import { convertSlateToLexical } from '@/utils/convertSlateToLexcialState';
 import { getIsSlateNode } from '@/utils/convertSlateToLexcialState';
 import { toast } from 'sonner';
 
-type SAVE_STATUS = 'SAVED' | 'CHANGED' | 'SAVING' | 'INIT';
+export type SAVE_STATUS = 'SAVED' | 'CHANGED' | 'SAVING' | 'INIT';
 
 export const useInterventionEditor = () => {
   const [isEditorReady, setIsEditorReady] = useState(false);
@@ -144,5 +144,7 @@ export const useInterventionEditor = () => {
     handleSave,
     counselSessionData,
     saveStatus,
+    setSaveStatus,
+    isSuccessSaveMedicationCounsel,
   };
 };

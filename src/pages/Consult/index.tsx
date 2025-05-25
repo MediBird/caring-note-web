@@ -273,16 +273,45 @@ export function Index() {
   ]);
 
   const saveConsult = useCallback(async () => {
+    if (!counselSessionId) return;
+
     try {
       await Promise.all([
         saveWasteMedication(),
         saveMedicationRecordList(),
         saveMedicationCounsel(),
       ]);
+
+      if (
+        window.editorWindows &&
+        window.editorWindows[counselSessionId] &&
+        !window.editorWindows[counselSessionId].closed
+      ) {
+        window.editorWindows[counselSessionId].postMessage(
+          { type: `MAIN_WINDOW_SAVED_${counselSessionId}` },
+          '*',
+        );
+
+        setTimeout(() => {
+          if (
+            window.editorWindows &&
+            window.editorWindows[counselSessionId] &&
+            !window.editorWindows[counselSessionId].closed
+          ) {
+            window.editorWindows[counselSessionId].close();
+            delete window.editorWindows[counselSessionId];
+          }
+        }, 300);
+      }
     } catch (error) {
       console.error('저장 중 오류가 발생했습니다:', error);
     }
-  }, [saveWasteMedication, saveMedicationRecordList, saveMedicationCounsel]);
+  }, [
+    counselSessionId,
+    saveWasteMedication,
+    saveMedicationRecordList,
+    saveMedicationCounsel,
+  ]);
 
   const completeConsult = async () => {
     await saveConsult();

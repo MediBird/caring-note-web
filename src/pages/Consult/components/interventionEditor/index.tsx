@@ -6,9 +6,8 @@ import { useInterventionEditor } from './useInterventionEditor';
 import WarningIcon from '@/assets/icon/20/warning.filled.red.svg?react';
 import CheckIcon from '@/assets/icon/16/check.outline.blue.svg?react';
 import LoadingIcon from '@/assets/icon/16/loading.svg?react';
-import { useEffect } from 'react';
-// import EditorSaveDialog from './EditorSaveDialog';
-// import { useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+import EditorSaveDialog from '@/pages/Consult/components/interventionEditor/EditorSaveDialog';
 
 function InterventionEditor() {
   const {
@@ -18,7 +17,10 @@ function InterventionEditor() {
     handleSave,
     counselSessionData,
     saveStatus,
+    setSaveStatus,
   } = useInterventionEditor();
+
+  const savedByMainWindow = useRef(false);
 
   const renderSaveStatus = () => {
     if (saveStatus === 'INIT') {
@@ -59,66 +61,71 @@ function InterventionEditor() {
     }
   };
 
-  // const [showSaveDialog, setShowSaveDialog] = useState(false);
-  // const forceCloseRef = useRef(false);
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (
+        event.data &&
+        event.data.type ===
+          `MAIN_WINDOW_SAVED_${counselSessionData?.counselSessionId}`
+      ) {
+        console.log('메인 윈도우에서 저장됨');
+        savedByMainWindow.current = true;
+      }
+    };
 
-  // useEffect(() => {
-  //   const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-  //     if (isSaveNeed && !forceCloseRef.current) {
-  //       const message = '변경 사항이 저장되지 않았습니다.';
-  //       e.preventDefault();
-  //       e.returnValue = message;
+    window.addEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [counselSessionData?.counselSessionId]);
 
-  //       setTimeout(() => {
-  //         setShowSaveDialog(true);
-  //       }, 0);
-
-  //       return message;
-  //     }
-  //   };
-
-  //   window.addEventListener('beforeunload', handleBeforeUnload);
-
-  //   return () => {
-  //     window.removeEventListener('beforeunload', handleBeforeUnload);
-  //   };
-  // }, [isSaveNeed]);
-
-  // const handleSaveAndClose = () => {
-  //   handleSave();
-  //   forceCloseRef.current = true;
-  //   setTimeout(() => {
-  //     window.close();
-  //   }, 300);
-  // };
-
-  // const handleClose = () => {
-  //   forceCloseRef.current = true;
-  //   window.close();
-  // };
-
-  // const handleCloseButtonClick = () => {
-  //   if (isSaveNeed) {
-  //     setShowSaveDialog(true);
-  //   } else {
-  //     window.close();
-  //   }
-  // };
+  const handleBeforeUnload = useCallback(
+    (e: BeforeUnloadEvent) => {
+      if (saveStatus === 'CHANGED' && !savedByMainWindow.current) {
+        const message =
+          '저장되지 않은 변경사항이 있습니다. 변경사항을 저장하시겠습니까?';
+        e.preventDefault();
+        e.returnValue = message;
+        return message;
+      }
+    },
+    [saveStatus],
+  );
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [handleBeforeUnload]);
+
+  const handleSaveAndClose = () => {
+    handleSave();
+
+    setTimeout(() => {
+      window.close();
+    }, 300);
+  };
+
+  const handleClose = () => {
+    setSaveStatus('SAVED');
+    window.close();
+  };
+
+  // 로컬스토리지 clear
+  useEffect(() => {
+    const clearLocalStorage = () => {
       localStorage.removeItem(
         `editorContent_${counselSessionData?.counselSessionId}`,
       );
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('beforeunload', clearLocalStorage);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      localStorage.removeItem(
-        `editorContent_${counselSessionData?.counselSessionId}`,
-      );
+      window.removeEventListener('beforeunload', clearLocalStorage);
+      clearLocalStorage();
     };
   }, [counselSessionData?.counselSessionId]);
 
@@ -136,13 +143,17 @@ function InterventionEditor() {
             <Button size="xl" onClick={handleSave}>
               내용 저장하기
             </Button>
-            {/* 닫기 버튼 추가 */}
-            {/* <Button
-              size="xl"
-              variant="secondary"
-              onClick={handleCloseButtonClick}>
-              창 닫기
-            </Button> */}
+            {saveStatus === 'CHANGED' ? (
+              <EditorSaveDialog
+                onSave={handleSaveAndClose}
+                setSaveStatus={setSaveStatus}
+                savedByMainWindowRef={savedByMainWindow}
+              />
+            ) : (
+              <Button size="xl" variant="secondary" onClick={handleClose}>
+                창 닫기
+              </Button>
+            )}
           </div>
         </div>
         <div className="mb-2 font-medium text-grayscale-70">
@@ -165,9 +176,6 @@ function InterventionEditor() {
           />
         )}
       </div>
-      {/* {showSaveDialog && (
-        <EditorSaveDialog onSave={handleSaveAndClose} onClose={handleClose} />
-      )} */}
     </div>
   );
 }
