@@ -17,11 +17,13 @@ import { useNavigate } from 'react-router-dom';
 interface FinishConsultDialogProps {
   name?: string;
   onComplete: () => void;
+  isSuccessSaveConsult: boolean;
 }
 
 const FinishConsultDialog = ({
   name = '',
   onComplete,
+  isSuccessSaveConsult,
 }: FinishConsultDialogProps) => {
   const [open, setOpen] = useState(false);
   const [isCompleteConsultDialogOpen, setIsCompleteConsultDialogOpen] =
@@ -82,7 +84,7 @@ const FinishConsultDialog = ({
 
       <CompleteConsultDialog
         name={name}
-        open={isCompleteConsultDialogOpen}
+        open={isCompleteConsultDialogOpen && isSuccessSaveConsult}
         onClose={() => {
           setIsCompleteConsultDialogOpen(false);
           navigate('/');

@@ -53,29 +53,33 @@ export function Index() {
 
   // 약물 기록 저장
   const {
-    mutate: saveMedicationRecordList,
+    mutateAsync: saveMedicationRecordList,
     isSuccess: isSuccessSaveMedicationRecordList,
   } = useMedicationRecordSave({ counselSessionId: counselSessionId ?? '' });
 
   // 중재 기록 저장
   const {
-    mutate: saveMedicationCounsel,
+    mutateAsync: saveMedicationCounsel,
     isSuccess: isSuccessSaveMedicationCounsel,
   } = useSaveMedicineConsult();
 
-  useEffect(() => {
-    if (
+  const isSuccessSaveConsult = useMemo(() => {
+    return (
       isSuccessSaveMedicationRecordList &&
       isSuccessWasteMedication &&
       isSuccessSaveMedicationCounsel
-    ) {
-      toast.info('작성하신 내용을 성공적으로 저장하였습니다.');
-    }
+    );
   }, [
     isSuccessSaveMedicationRecordList,
     isSuccessWasteMedication,
     isSuccessSaveMedicationCounsel,
   ]);
+
+  useEffect(() => {
+    if (isSuccessSaveConsult) {
+      toast.info('작성하신 내용을 성공적으로 저장하였습니다.');
+    }
+  }, [isSuccessSaveConsult]);
 
   const { activeTab, setActiveTab } = useConsultTabStore();
 
@@ -144,6 +148,7 @@ export function Index() {
       }
     } catch (error) {
       console.error('저장 중 오류가 발생했습니다:', error);
+      toast.error('저장 중 오류가 발생했습니다.');
     }
   }, [
     counselSessionId,
@@ -187,6 +192,7 @@ export function Index() {
           saveConsult={saveConsult}
           completeConsult={completeConsult}
           hasPreviousConsult={hasPreviousConsult}
+          isSuccessSaveConsult={isSuccessSaveConsult}
         />
         {isConsultDataLoading ? (
           <Spinner />
