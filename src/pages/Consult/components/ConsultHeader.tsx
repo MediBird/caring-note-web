@@ -4,12 +4,11 @@ import {
 } from '@/api';
 import { TabsList, TabsTrigger } from '@/components/ui/tabs';
 import EditConsultDialog from '@/pages/Consult/components/dialog/EditConsultDialog';
-import { useParams } from 'react-router-dom';
 import FinishConsultDialog from '@/pages/Consult/components/dialog/FinishConsultDialog';
 import TemporarySaveDialog from '@/pages/Consult/components/dialog/TemporarySaveDialog';
 import { Button } from '@/components/ui/button';
 import PencilBlueIcon from '@/assets/icon/24/create.filled.blue.svg?react';
-
+import { useParams } from 'react-router-dom';
 interface InfoItemProps {
   content: React.ReactNode;
   showDivider?: boolean;
@@ -51,10 +50,10 @@ const HeaderButtons = ({
 
 const ConsultTabs = ({
   hasPreviousConsult,
-  handleInterventionEditor,
+  counselSessionId,
 }: {
   hasPreviousConsult: boolean;
-  handleInterventionEditor: () => void;
+  counselSessionId: string | undefined;
 }) => (
   <TabsList className="w-full border-b border-grayscale-10">
     <div className="mx-auto flex h-full w-full max-w-layout items-center justify-start gap-5 px-layout pb-1 [&>*]:max-w-content">
@@ -62,7 +61,7 @@ const ConsultTabs = ({
         variant="tertiary"
         size="md"
         className="text-sm font-bold"
-        onClick={handleInterventionEditor}>
+        onClick={() => openInterventionEditor(counselSessionId ?? '')}>
         <PencilBlueIcon width={16} height={16} />
         중재 기록
       </Button>
@@ -95,40 +94,14 @@ const ConsultHeader = ({
 }) => {
   const { counselSessionId } = useParams();
 
-  const interventionEditorWindows: Record<string, Window | null> = {};
-
-  const handleInterventionEditor = () => {
-    if (!counselSessionId) return;
-
-    const url = `/intervention-editor/${counselSessionId}`;
-    const windowName = `interventionEditor_${counselSessionId}`;
-    const windowFeatures =
-      'width=1200,height=1020,resizable=yes,scrollbars=yes';
-
-    if (
-      interventionEditorWindows[counselSessionId] &&
-      !interventionEditorWindows[counselSessionId]!.closed
-    ) {
-      // 포커스 주기
-      interventionEditorWindows[counselSessionId]!.focus();
-    } else {
-      // 새 창 열기
-      interventionEditorWindows[counselSessionId] = window.open(
-        url,
-        windowName,
-        windowFeatures,
-      );
-    }
-  };
-
   return (
     <div className="flex-none">
       <div className="z-10 w-full bg-white">
         <div className="h-fit bg-white">
           <div className="pt-12">
             <div className="mx-auto flex w-full max-w-layout justify-between px-layout [&>*]:max-w-content">
-              <div className="flex flex-row items-end gap-5 pb-5">
-                <div className="text-h3 font-bold">
+              <div className="flex flex-row flex-wrap items-end gap-5 pb-5">
+                <div className="break-keep text-h3 font-bold">
                   {counseleeInfo?.name}
                   <span className="text-subtitle2 font-bold"> 님</span>
                 </div>
@@ -153,7 +126,7 @@ const ConsultHeader = ({
           </div>
           <ConsultTabs
             hasPreviousConsult={hasPreviousConsult}
-            handleInterventionEditor={handleInterventionEditor}
+            counselSessionId={counselSessionId}
           />
         </div>
       </div>
@@ -162,3 +135,25 @@ const ConsultHeader = ({
 };
 
 export default ConsultHeader;
+
+const openInterventionEditor = (counselSessionId: string) => {
+  if (!window.editorWindows) {
+    window.editorWindows = {};
+  }
+
+  if (
+    window.editorWindows[counselSessionId] &&
+    !window.editorWindows[counselSessionId].closed
+  ) {
+    window.editorWindows[counselSessionId].focus();
+    return;
+  }
+
+  const editorWindow = window.open(
+    `/intervention-editor/${counselSessionId}`,
+    `editor_${counselSessionId}`,
+    'width=1200,height=1020,resizable=yes,scrollbars=yes', // 기존 크기와 특성으로 변경
+  );
+
+  window.editorWindows[counselSessionId] = editorWindow;
+};
