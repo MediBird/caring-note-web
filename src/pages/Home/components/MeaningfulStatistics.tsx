@@ -1,6 +1,7 @@
 import timeStats from '@/assets/home/times-stats.webp';
 import doneStats from '@/assets/home/done-stats.webp';
 import counseleeStats from '@/assets/home/counselee-stats.webp';
+import contributerStats from '@/assets/home/message-stats.webp';
 
 import ConsultCount from './ConsultCount';
 function MeaningfulStatistics() {
@@ -29,10 +30,17 @@ function MeaningfulStatistics() {
         />
         <ConsultCount
           count={1234}
-          unit="회"
+          unit="건"
           title="복약 상담으로 <br /> 이어진 돌봄 횟수"
           image={doneStats}
           backgroundColor="linear-gradient(180deg, rgba(119, 182, 255, 0.2) 0%, rgba(37, 138, 255, 0.2) 100%)"
+        />
+        <ConsultCount
+          count={1234}
+          unit="건"
+          title="케어링 노트와 <br /> 함께 해온 사람"
+          image={contributerStats}
+          backgroundColor="linear-gradient(90deg, rgba(230, 132, 5, 0.15) 0%, rgba(255, 202, 68, 0.15) 100%)"
         />
       </div>
     </div>
