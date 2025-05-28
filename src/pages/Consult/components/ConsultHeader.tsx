@@ -30,6 +30,7 @@ interface HeaderButtonsProps {
   onComplete: () => void;
   name?: string;
   sessionStatus: UpdateStatusInCounselSessionReqStatusEnum | undefined;
+  isSuccessSaveConsult: boolean;
 }
 
 const HeaderButtons = ({
@@ -37,13 +38,18 @@ const HeaderButtons = ({
   onComplete,
   name,
   sessionStatus,
+  isSuccessSaveConsult,
 }: HeaderButtonsProps) => (
   <div className="flex gap-3">
     {sessionStatus !== 'COMPLETED' && <TemporarySaveDialog onSave={onSave} />}
     {sessionStatus === 'COMPLETED' ? (
       <EditConsultDialog onEdit={onComplete} />
     ) : (
-      <FinishConsultDialog name={name} onComplete={onComplete} />
+      <FinishConsultDialog
+        name={name}
+        onComplete={onComplete}
+        isSuccessSaveConsult={isSuccessSaveConsult}
+      />
     )}
   </div>
 );
@@ -84,6 +90,7 @@ const ConsultHeader = ({
   saveConsult,
   completeConsult,
   hasPreviousConsult,
+  isSuccessSaveConsult,
 }: {
   counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
   consultStatus: string;
@@ -91,6 +98,7 @@ const ConsultHeader = ({
   saveConsult: () => void;
   completeConsult: () => void;
   hasPreviousConsult: boolean;
+  isSuccessSaveConsult: boolean;
 }) => {
   const { counselSessionId } = useParams();
 
@@ -121,6 +129,7 @@ const ConsultHeader = ({
                 onComplete={completeConsult}
                 name={counseleeInfo?.name}
                 sessionStatus={sessionStatus}
+                isSuccessSaveConsult={isSuccessSaveConsult}
               />
             </div>
           </div>

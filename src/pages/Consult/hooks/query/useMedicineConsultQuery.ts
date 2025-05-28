@@ -61,14 +61,19 @@ export const useSaveMedicineConsult = () => {
 
   return useMutation({
     mutationFn: async () => {
-      const currentEditorContent = localStorage.getItem(
-        `editorContent_${medicationConsult.counselSessionId}`,
-      );
+      try {
+        const currentEditorContent = localStorage.getItem(
+          `editorContent_${medicationConsult.counselSessionId}`,
+        );
 
-      return saveMedicationCounsel({
-        ...medicationConsult,
-        counselRecord: currentEditorContent || '',
-      });
+        return saveMedicationCounsel({
+          ...medicationConsult,
+          counselRecord: currentEditorContent || '',
+        });
+      } catch (error) {
+        console.error('중재 기록 저장 중 오류가 발생했습니다:', error);
+        throw error;
+      }
     },
     onSuccess: (counselSessionId) => {
       if (counselSessionId) {
