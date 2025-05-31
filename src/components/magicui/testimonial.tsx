@@ -35,7 +35,7 @@ export const TestimonialCard = ({
 }: TestimonialCardProps) => (
   <div
     className={cn(
-      'mb-4 flex w-full cursor-pointer break-inside-avoid flex-col items-center justify-between gap-[0.625rem] rounded-xl p-4',
+      'mb-4 flex w-full cursor-pointer break-inside-avoid flex-col items-center justify-between gap-[0.625rem] rounded-xl p-3',
       // light styles
       'border border-neutral-200 bg-primary-5',
       // dark styles
@@ -44,13 +44,13 @@ export const TestimonialCard = ({
     )}
     {...props} // Spread the rest of the props here
   >
-    <div className="select-none text-sm font-normal text-neutral-700 dark:text-neutral-400">
+    <div className="select-none break-keep text-body1 font-normal text-grayscale-80">
       {description}
     </div>
 
     <div className="flex w-full select-none items-center justify-center">
       <div>
-        <p className="font-medium text-neutral-500">{name}</p>
+        <p className="text-body1font-medium text-grayscale-50">- {name}</p>
         {role && <p className="text-xs font-normal text-neutral-400">{role}</p>}
       </div>
     </div>
@@ -72,7 +72,6 @@ export interface SocialProofTestimonialsProps {
 }
 
 export function SocialProofTestimonials({
-  title = 'TESTIMONIALS',
   testimonials: customTestimonials,
   className,
   maxHeight = '650px',
@@ -273,12 +272,9 @@ export function SocialProofTestimonials({
 
   return (
     <section id="testimonials" className={className}>
-      <div className="py-[0.875rem]">
+      <div className="py-[0.75rem]">
         <div className="container mx-auto px-4 md:px-8">
-          <h3 className="text-center text-sm font-semibold text-gray-500">
-            {title}
-          </h3>
-          <div className="relative mt-6 overflow-hidden" style={{ maxHeight }}>
+          <div className="relative overflow-hidden" style={{ maxHeight }}>
             <div
               className={`gap-4 ${
                 columns === 1
