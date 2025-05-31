@@ -7,7 +7,7 @@ import AINote from './tabs/AINote';
 
 function TabContents({ hasPreviousConsult }: { hasPreviousConsult: boolean }) {
   return (
-    <div className="flex-grow overflow-y-auto">
+    <div className="flex-grow">
       <div className="mb-100 mt-6 h-full w-full px-layout pb-10 [&>*]:mx-auto [&>*]:max-w-content">
         {hasPreviousConsult && (
           <TabsContent value="pastConsult">
