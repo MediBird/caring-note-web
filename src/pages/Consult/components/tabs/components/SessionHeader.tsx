@@ -26,7 +26,7 @@ const SessionHeader = ({
   };
 
   return (
-    <div className="flex items-center justify-between p-4 hover:bg-primary-10">
+    <div className="flex items-center justify-between rounded-lg p-4 hover:bg-primary-10">
       <div className="flex items-center gap-2">
         <div className="h-2 w-2 rounded-full bg-primary-50"></div>
         <span className="text-subtitle1 font-semibold">
