@@ -3,6 +3,7 @@ import ConsultCard from '@/pages/Consult/components/tabs/ConsultCard';
 import DiscardMedicine from '@/pages/Consult/components/tabs/DiscardMedicine';
 import MedicineMemo from '@/pages/Consult/components/tabs/MedicineMemo';
 import PastConsult from '@/pages/Consult/components/tabs/PastConsult';
+import AINote from './tabs/AINote';
 
 function TabContents({ hasPreviousConsult }: { hasPreviousConsult: boolean }) {
   return (
@@ -21,6 +22,9 @@ function TabContents({ hasPreviousConsult }: { hasPreviousConsult: boolean }) {
         </TabsContent>
         <TabsContent value="wasteMedication">
           <DiscardMedicine />
+        </TabsContent>
+        <TabsContent value="note">
+          <AINote />
         </TabsContent>
       </div>
     </div>
