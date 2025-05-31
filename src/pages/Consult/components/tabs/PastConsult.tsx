@@ -1,70 +1,103 @@
-import PastConsultContainer from '@/components/consult/PastConsultContainer';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import PrevCounselTable from '@/pages/Consult/components/table/PrevCounselTable';
-import {
-  PrevCounselSessionListDTO,
-  usePrevCounselSessionList,
-} from '@/pages/Consult/hooks/query/usePrevCounselSessionList';
-import { useMemo } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import { usePrevCounselSessionDetailList } from '@/pages/Consult/hooks/query/usePrevCounselSessionDetailList';
+import SessionHeader from './components/SessionHeader';
+import RecordCard from './components/RecordCard';
 
 const PastConsult = () => {
   const navigate = useNavigate();
-
   const { counselSessionId } = useParams();
+  const [openSessions, setOpenSessions] = useState<Record<string, boolean>>({});
 
-  const { prevCounselSessionList } = usePrevCounselSessionList(
-    counselSessionId ?? '',
-  );
+  const { prevCounselSessionDetailList, isLoading } =
+    usePrevCounselSessionDetailList(counselSessionId ?? '', 0, 50);
 
-  const prevCounselSessionId = useMemo(() => {
-    if (prevCounselSessionList.length > 0) {
-      return prevCounselSessionList[0]?.counselSessionId;
-    }
-
-    return '';
-  }, [prevCounselSessionList]);
-
-  const { data: prevCounselRecord, isLoading: isPrevCounselRecordLoading } =
-    useSelectMedicineConsult(prevCounselSessionId);
-
-  console.log(prevCounselRecord, 'prevCounselRecord');
-  console.log(isPrevCounselRecordLoading, 'isPrevCounselRecordLoading');
-
-  const handleClickPrevCounselSession = (
-    rowData: PrevCounselSessionListDTO,
-  ) => {
-    const prevCounselSessionId = rowData.counselSessionId ?? '';
-
-    navigate(`/consult/${prevCounselSessionId}`);
+  const toggleSession = (sessionId: string) => {
+    setOpenSessions((prev) => ({
+      ...prev,
+      [sessionId]: !prev[sessionId],
+    }));
   };
 
+  const handleViewDetails = (sessionId: string) => {
+    navigate(`/consult/${sessionId}`);
+  };
+
+  if (isLoading) {
+    return (
+      <Card className="bg-primary-5">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>이전 상담 히스토리</CardTitle>
+          <p className="text-body2 font-normal text-grayscale-60">
+            * [자세히 보러 가기] 클릭 시 해당 회차 페이지로 이동합니다.
+          </p>
+        </CardHeader>
+        <div className="p-4">
+          <div className="text-center">로딩 중...</div>
+        </div>
+      </Card>
+    );
+  }
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>지난번 상담에서의 핵심 내용</CardTitle>
-      </CardHeader>
-      <div className="flex flex-row items-start justify-between space-x-4">
-        <PastConsultContainer
-          title="중재 기록"
-          variant="primary"></PastConsultContainer>
-
-        <PastConsultContainer title="AI 요약" variant="secondary">
-          <h2 className="flex items-center py-3 text-subtitle2 font-bold text-secondary-70"></h2>
-        </PastConsultContainer>
-      </div>
-
-      <CardHeader>
-        <CardTitle>이전 상담 자세히 보기</CardTitle>
-        <p className="!mt-0 text-body1 font-medium text-grayscale-70">
-          케어링 노트로 남긴 이전 회차 상담 목록
+    <Card className="bg-white">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>이전 상담 히스토리</CardTitle>
+        <p className="text-body2 font-normal text-grayscale-60">
+          * [자세히 보러 가기] 클릭 시 해당 회차 페이지로 이동합니다.
         </p>
       </CardHeader>
-      <div className="h-auto">
-        <PrevCounselTable
-          handleClickPrevCounselSession={handleClickPrevCounselSession}
-        />
+
+      <div className="space-y-4 pb-6">
+        {prevCounselSessionDetailList.length === 0 ? (
+          <div className="py-8 text-center text-grayscale-60">
+            이전 상담 히스토리가 없습니다.
+          </div>
+        ) : (
+          prevCounselSessionDetailList.map((session) => {
+            const sessionId = session.counselSessionId ?? '';
+            const isOpen = openSessions[sessionId] ?? false;
+
+            return (
+              <Collapsible
+                key={sessionId}
+                open={isOpen}
+                onOpenChange={() => toggleSession(sessionId)}
+                className="w-full rounded-lg bg-primary-5 shadow-sm">
+                <CollapsibleTrigger className="w-full">
+                  <SessionHeader
+                    sessionNumber={session.sessionNumber}
+                    counselSessionDate={session.counselSessionDate}
+                    counselorName={session.counselorName}
+                    isOpen={isOpen}
+                    onViewDetails={() => handleViewDetails(sessionId)}
+                  />
+                </CollapsibleTrigger>
+
+                <CollapsibleContent>
+                  <div className="flex gap-6 px-4 pb-4">
+                    <RecordCard
+                      title="중재기록"
+                      content={session.medicationCounselRecord}
+                      emptyMessage="중재기록이 없습니다."
+                    />
+                    <RecordCard
+                      title="AI 요약"
+                      content={session.aiSummary}
+                      emptyMessage="AI 요약이 없습니다."
+                    />
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            );
+          })
+        )}
       </div>
     </Card>
   );

@@ -142,8 +142,8 @@ function CollegeMessages() {
           (prevIndex) => (prevIndex + 2) % COLLEGE_MESSAGES.length,
         );
         setIsVisible(true);
-      }, 500); // CSS 트랜지션 지속 시간과 일치
-    }, 5000); // 5초마다 메시지 변경
+      }, 800); // CSS 트랜지션 지속 시간과 일치
+    }, 8000); // 5초마다 메시지 변경
 
     return () => clearInterval(interval);
   }, []);
