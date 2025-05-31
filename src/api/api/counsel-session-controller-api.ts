@@ -54,6 +54,8 @@ import type { PageResSelectCounselSessionListItem } from '../models';
 // @ts-ignore
 import type { PageResSelectCounselSessionRes } from '../models';
 // @ts-ignore
+import type { PageResSelectPreviousCounselSessionDetailRes } from '../models';
+// @ts-ignore
 import type { UpdateCounselorInCounselSessionReq } from '../models';
 // @ts-ignore
 import type { UpdateStatusInCounselSessionReq } from '../models';
@@ -427,6 +429,58 @@ export const CounselSessionControllerApiAxiosParamCreator = function (configurat
             };
         },
         /**
+         * 현재 회차의 이전 회차들을 최신순으로 조회합니다. 날짜, 회차, 중재기록, AI요약 정보를 포함합니다.
+         * @summary 이전 상담 내역 상세 조회 (페이징)
+         * @param {string} counselSessionId 
+         * @param {number} page 
+         * @param {number} size 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectPreviousCounselSessionDetailList: async (counselSessionId: string, page: number, size: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'counselSessionId' is not null or undefined
+            assertParamExists('selectPreviousCounselSessionDetailList', 'counselSessionId', counselSessionId)
+            // verify required parameter 'page' is not null or undefined
+            assertParamExists('selectPreviousCounselSessionDetailList', 'page', page)
+            // verify required parameter 'size' is not null or undefined
+            assertParamExists('selectPreviousCounselSessionDetailList', 'size', size)
+            const localVarPath = `/v1/counsel/session/{counselSessionId}/previous/details`
+                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 
          * @summary 이전 상담 내역 조회
          * @param {string} counselSessionId 
@@ -666,6 +720,21 @@ export const CounselSessionControllerApiFp = function(configuration?: Configurat
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * 현재 회차의 이전 회차들을 최신순으로 조회합니다. 날짜, 회차, 중재기록, AI요약 정보를 포함합니다.
+         * @summary 이전 상담 내역 상세 조회 (페이징)
+         * @param {string} counselSessionId 
+         * @param {number} page 
+         * @param {number} size 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async selectPreviousCounselSessionDetailList(counselSessionId: string, page: number, size: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageResSelectPreviousCounselSessionDetailRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.selectPreviousCounselSessionDetailList(counselSessionId, page, size, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselSessionControllerApi.selectPreviousCounselSessionDetailList']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * 
          * @summary 이전 상담 내역 조회
          * @param {string} counselSessionId 
@@ -800,6 +869,18 @@ export const CounselSessionControllerApiFactory = function (configuration?: Conf
          */
         selectCounselSessionListByBaseDateAndCursorAndSize(page: number, size: number, baseDate?: string, options?: RawAxiosRequestConfig): AxiosPromise<PageResSelectCounselSessionListItem> {
             return localVarFp.selectCounselSessionListByBaseDateAndCursorAndSize(page, size, baseDate, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 현재 회차의 이전 회차들을 최신순으로 조회합니다. 날짜, 회차, 중재기록, AI요약 정보를 포함합니다.
+         * @summary 이전 상담 내역 상세 조회 (페이징)
+         * @param {string} counselSessionId 
+         * @param {number} page 
+         * @param {number} size 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        selectPreviousCounselSessionDetailList(counselSessionId: string, page: number, size: number, options?: RawAxiosRequestConfig): AxiosPromise<PageResSelectPreviousCounselSessionDetailRes> {
+            return localVarFp.selectPreviousCounselSessionDetailList(counselSessionId, page, size, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -942,6 +1023,20 @@ export class CounselSessionControllerApi extends BaseAPI {
      */
     public selectCounselSessionListByBaseDateAndCursorAndSize(page: number, size: number, baseDate?: string, options?: RawAxiosRequestConfig) {
         return CounselSessionControllerApiFp(this.configuration).selectCounselSessionListByBaseDateAndCursorAndSize(page, size, baseDate, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 현재 회차의 이전 회차들을 최신순으로 조회합니다. 날짜, 회차, 중재기록, AI요약 정보를 포함합니다.
+     * @summary 이전 상담 내역 상세 조회 (페이징)
+     * @param {string} counselSessionId 
+     * @param {number} page 
+     * @param {number} size 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselSessionControllerApi
+     */
+    public selectPreviousCounselSessionDetailList(counselSessionId: string, page: number, size: number, options?: RawAxiosRequestConfig) {
+        return CounselSessionControllerApiFp(this.configuration).selectPreviousCounselSessionDetailList(counselSessionId, page, size, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
