@@ -110,6 +110,7 @@ models/page-res-counselor-info-list-res.ts
 models/page-res-select-counsel-session-list-item.ts
 models/page-res-select-counsel-session-res.ts
 models/page-res-select-counselee-res.ts
+models/page-res-select-previous-counsel-session-detail-res.ts
 models/reset-password-req.ts
 models/search-medication-by-keyword-res.ts
 models/select-aicounsel-summary-pop-up-res.ts
@@ -124,6 +125,7 @@ models/select-counselee-res.ts
 models/select-medication-counsel-res.ts
 models/select-medication-record-hist-res.ts
 models/select-medication-record-list-by-session-id-res.ts
+models/select-previous-counsel-session-detail-res.ts
 models/select-previous-counsel-session-list-res.ts
 models/select-previous-medication-counsel-res.ts
 models/select-speech-to-text-res.ts
