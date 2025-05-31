@@ -80,11 +80,6 @@ export const useSaveMedicineConsult = () => {
         queryClient.invalidateQueries({
           queryKey: ['SelectMedicationConsult', counselSessionId],
         });
-
-        if (window.editorWindows && window.editorWindows[counselSessionId]) {
-          window.editorWindows[counselSessionId]?.close();
-          delete window.editorWindows[counselSessionId];
-        }
       }
     },
     onError: (error) => {

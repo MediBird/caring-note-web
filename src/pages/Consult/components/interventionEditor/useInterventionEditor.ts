@@ -50,7 +50,15 @@ export const useInterventionEditor = () => {
     setSaveStatus('SAVING');
     saveMedicationCounsel();
     setSaveStatus('SAVED');
+    setEditorSaveTimestampLocalStorage();
   };
+
+  const setEditorSaveTimestampLocalStorage = useCallback(() => {
+    localStorage.setItem(
+      `editorSaveTimestamp_${counselSessionId}`,
+      new Date().toISOString(),
+    );
+  }, [counselSessionId]);
 
   const setEditorContentOnLocalStorage = useCallback(
     (content: string) => {
