@@ -26,12 +26,17 @@ const saveMedicationRecord = async ({
     }),
   );
 
-  const response =
-    await medicationRecordHistControllerApi.addAndUpdateMedicationRecordHist(
-      counselSessionId,
-      medicationRecordHistListPayload,
-    );
-  return response.data;
+  try {
+    const response =
+      await medicationRecordHistControllerApi.addAndUpdateMedicationRecordHist(
+        counselSessionId,
+        medicationRecordHistListPayload,
+      );
+    return response.data;
+  } catch (error) {
+    console.error('약물 기록 저장 중 오류가 발생했습니다:', error);
+    throw error;
+  }
 };
 
 export const useMedicationRecordSave = ({

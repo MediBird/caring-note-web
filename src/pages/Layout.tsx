@@ -1,45 +1,20 @@
+import Footer from '@/components/common/Footer';
 import NavigationLeft from '@/components/common/NavigationLeft';
-import NavigationRight from '@/components/common/NavigationRight';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import { useMemo } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 function Layout() {
-  const location = useLocation();
-
-  const isSidebarOpen = useMemo(() => {
-    const isSurvey = location.pathname.includes('/survey');
-
-    if (isSurvey) {
-      return false;
-    }
-
-    return true;
-  }, [location.pathname]);
-
-  const isRightSideBarActive = useMemo(() => {
-    const isConsult = location.pathname.includes('/consult');
-
-    if (isConsult) {
-      return true;
-    }
-
-    return false;
-  }, [location.pathname]);
-
   return (
-    <SidebarProvider defaultOpen={isSidebarOpen}>
-      <div className="flex h-auto w-full justify-start bg-white">
+    <SidebarProvider>
+      <div className="flex w-full bg-white">
         <NavigationLeft />
-        <main
-          className={cn(
-            'flex-1 overflow-x-auto overflow-y-hidden',
-            isRightSideBarActive ? 'pr-[64px]' : '',
-          )}>
-          <Outlet />
-        </main>
-        {isRightSideBarActive && <NavigationRight />}
+        <div className="flex flex-1 flex-col">
+          <main className={cn('min-h-[calc(100vh)] flex-1')}>
+            <Outlet />
+          </main>
+          <Footer />
+        </div>
       </div>
     </SidebarProvider>
   );

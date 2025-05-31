@@ -1,0 +1,43 @@
+/* Lexical 에디터 커서 위치 수정 */
+.editor-container [contenteditable] {
+  caret-color: black;
+  line-height: 1.5;
+  font-size: 16px;
+  text-align: left;
+  word-break: keep-all; /* 한글 단어 분리 방지 */
+  overflow-wrap: break-word;
+}
+
+.editor-container p {
+  line-height: 1.5;
+}
+
+/* 텍스트 커서가 중앙에 위치하는 문제 해결 */
+.editor-container * {
+  vertical-align: baseline;
+}
+
+/* 한글 커서 위치 수정을 위한 추가 스타일 */
+.editor-container [contenteditable] * {
+  vertical-align: middle !important;
+  line-height: 1.5 !important;
+}
+
+/* IME 조합 중인 텍스트 스타일 */
+.editor-container [contenteditable] .composition-text {
+  display: inline-block;
+  vertical-align: baseline !important;
+}
+
+/* 한글 입력 시 추가 설정 */
+@font-face {
+  font-family: 'KoreanCompatible';
+  src:
+    local('Apple SD Gothic Neo'), local('Noto Sans CJK KR'),
+    local('Malgun Gothic');
+  unicode-range: U+AC00-D7AF; /* 한글 유니코드 범위 */
+}
+
+.editor-container [contenteditable] {
+  font-family: 'KoreanCompatible', sans-serif;
+}

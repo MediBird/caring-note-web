@@ -21,8 +21,12 @@ const selectMedicationCounsel = async (counselSessionId: string) => {
 };
 
 const saveMedicationCounsel = async (
-  medicationConsultDTO: MedicationConsultDTO,
+  medicationConsultDTO: MedicationConsultDTO | null,
 ) => {
+  if (!medicationConsultDTO) {
+    return;
+  }
+
   if (medicationConsultDTO.counselRecord === '') {
     return;
   }
@@ -30,12 +34,12 @@ const saveMedicationCounsel = async (
   if (medicationConsultDTO.medicationCounselId === '') {
     await medicationCounselControllerApi.addMedicationCounsel({
       counselSessionId: medicationConsultDTO.counselSessionId,
-      counselRecord: medicationConsultDTO.counselRecord,
+      counselRecord: medicationConsultDTO.counselRecord || '',
     });
   } else {
     await medicationCounselControllerApi.updateMedicationCounsel({
       medicationCounselId: medicationConsultDTO.medicationCounselId,
-      counselRecord: medicationConsultDTO.counselRecord,
+      counselRecord: medicationConsultDTO.counselRecord || '',
     });
   }
 
@@ -47,20 +51,39 @@ export const useSelectMedicineConsult = (counselSessionId?: string) => {
     queryKey: ['SelectMedicationConsult', counselSessionId],
     queryFn: () => selectMedicationCounsel(counselSessionId!),
     enabled: !!counselSessionId,
+    refetchOnWindowFocus: true,
   });
 };
 
 export const useSaveMedicineConsult = () => {
   const queryClient = useQueryClient();
-
   const { medicationConsult } = useMedicationConsultStore();
 
   return useMutation({
-    mutationFn: () => saveMedicationCounsel(medicationConsult),
+    mutationFn: async () => {
+      try {
+        const currentEditorContent = localStorage.getItem(
+          `editorContent_${medicationConsult.counselSessionId}`,
+        );
+
+        return saveMedicationCounsel({
+          ...medicationConsult,
+          counselRecord: currentEditorContent || '',
+        });
+      } catch (error) {
+        console.error('중재 기록 저장 중 오류가 발생했습니다:', error);
+        throw error;
+      }
+    },
     onSuccess: (counselSessionId) => {
-      queryClient.invalidateQueries({
-        queryKey: ['SelectMedicationConsult', counselSessionId],
-      });
+      if (counselSessionId) {
+        queryClient.invalidateQueries({
+          queryKey: ['SelectMedicationConsult', counselSessionId],
+        });
+      }
+    },
+    onError: (error) => {
+      console.error('중재 기록 저장 중 오류가 발생했습니다:', error);
     },
   });
 };

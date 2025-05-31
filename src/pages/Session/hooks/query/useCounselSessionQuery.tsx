@@ -1,4 +1,8 @@
-import { CounselorControllerApi, CounselSessionControllerApi } from '@/api';
+import {
+  CounselorControllerApi,
+  CounselSessionControllerApi,
+  SearchCounselSessionsStatusesEnum,
+} from '@/api';
 import {
   COUNSEL_SESSION_KEYS,
   useCreateCounselSession,
@@ -32,7 +36,7 @@ export const useCounselSessionList = (
     queryFn: () =>
       counselSessionControllerApi.selectCounselSessionListByBaseDateAndCursorAndSize(
         page ?? 1,
-        size ?? 15,
+        size ?? 50,
         baseDate,
       ),
     enabled: enabled,
@@ -61,6 +65,7 @@ export const SEARCH_COUNSEL_SESSIONS_KEYS = {
     counseleeNameKeyword?: string;
     counselorNames?: string[];
     scheduledDates?: string[];
+    statuses?: SearchCounselSessionsStatusesEnum[];
   }) => [...SEARCH_COUNSEL_SESSIONS_KEYS.all, params] as const,
 };
 
@@ -71,6 +76,7 @@ export const useSearchCounselSessions = (
   counseleeNameKeyword?: string,
   counselorNames?: string[],
   scheduledDates?: string[],
+  statuses?: SearchCounselSessionsStatusesEnum[],
   enabled = true,
 ) => {
   // 키워드 유효성 검증
@@ -87,6 +93,7 @@ export const useSearchCounselSessions = (
       counseleeNameKeyword,
       counselorNames,
       scheduledDates,
+      statuses,
     }),
     queryFn: () =>
       counselSessionControllerApi.searchCounselSessions(
@@ -95,6 +102,7 @@ export const useSearchCounselSessions = (
         counseleeNameKeyword,
         counselorNames,
         scheduledDates,
+        statuses,
       ),
     enabled: shouldEnableQuery,
     select: (response) => response.data,
