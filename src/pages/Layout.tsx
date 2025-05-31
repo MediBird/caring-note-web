@@ -10,7 +10,7 @@ function Layout() {
       <div className="flex w-full bg-white">
         <NavigationLeft />
         <div className="flex flex-1 flex-col">
-          <main className={cn('min-h-[calc(100vh+80px)] flex-1')}>
+          <main className={cn('min-h-[calc(100vh)] flex-1')}>
             <Outlet />
           </main>
           <Footer />

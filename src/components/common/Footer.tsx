@@ -4,7 +4,7 @@ import TECHPO_LOGO from '@/assets/footer/tfi-logo.svg?react';
 function Footer() {
   return (
     <footer className="h-[80px] border-t border-t-grayscale-3 bg-white px-6 py-5 transition-opacity duration-300">
-      <div className="flex flex-col gap-[10px] leading-3 text-grayscale-40">
+      <div className="flex flex-col items-center gap-[10px] leading-3 text-grayscale-40">
         <div className="flex items-center gap-3">
           <KAKAO_LOGO />|
           <span
