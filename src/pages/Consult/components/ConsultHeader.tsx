@@ -104,7 +104,7 @@ const ConsultHeader = ({
   const { counselSessionId } = useParams();
 
   return (
-    <div className="flex-none">
+    <div className="sticky top-0 z-10 flex-none">
       <div className="z-10 w-full bg-white">
         <div className="h-fit bg-white">
           <div className="pt-12">

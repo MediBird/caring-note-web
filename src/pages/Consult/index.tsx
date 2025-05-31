@@ -178,7 +178,7 @@ export function Index() {
   return (
     <>
       <Tabs
-        className="flex h-screen w-full flex-col"
+        className="flex w-full flex-col"
         value={activeTab}
         onValueChange={(value) => {
           setActiveTab(value as ConsultTab);
