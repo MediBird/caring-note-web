@@ -21,29 +21,7 @@ const RecordCard = ({ title, content, emptyMessage }: RecordCardProps) => {
       </div>
       <div className="flex-1 overflow-y-auto p-4">
         {content ? (
-          <ReactMarkdown
-            className="prose prose-sm prose-gray max-w-none prose-headings:text-gray-800 prose-p:text-gray-700 prose-li:text-gray-700"
-            components={{
-              p: ({ children }) => (
-                <p className="mb-3 leading-relaxed">{children}</p>
-              ),
-              ul: ({ children }) => (
-                <ul className="mb-3 ml-4 list-disc">{children}</ul>
-              ),
-              ol: ({ children }) => (
-                <ol className="mb-3 ml-4 list-decimal">{children}</ol>
-              ),
-              li: ({ children }) => <li className="mb-1">{children}</li>,
-              h1: ({ children }) => (
-                <h1 className="mb-3 text-lg font-bold">{children}</h1>
-              ),
-              h2: ({ children }) => (
-                <h2 className="mb-2 text-base font-bold">{children}</h2>
-              ),
-              h3: ({ children }) => (
-                <h3 className="mb-2 text-sm font-bold">{children}</h3>
-              ),
-            }}>
+          <ReactMarkdown className="prose prose-sm prose-gray max-w-none prose-headings:text-gray-800 prose-p:text-gray-700 prose-li:text-gray-700">
             {formatContent(content)}
           </ReactMarkdown>
         ) : (
