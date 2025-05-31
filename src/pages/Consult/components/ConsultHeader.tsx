@@ -9,6 +9,7 @@ import TemporarySaveDialog from '@/pages/Consult/components/dialog/TemporarySave
 import { Button } from '@/components/ui/button';
 import PencilBlueIcon from '@/assets/icon/24/create.filled.blue.svg?react';
 import { useParams } from 'react-router-dom';
+import { ConsultRecordingControl } from './ConsultRecordingControl';
 interface InfoItemProps {
   content: React.ReactNode;
   showDivider?: boolean;
@@ -124,13 +125,18 @@ const ConsultHeader = ({
                   />
                 </div>
               </div>
-              <HeaderButtons
-                onSave={saveConsult}
-                onComplete={completeConsult}
-                name={counseleeInfo?.name}
-                sessionStatus={sessionStatus}
-                isSuccessSaveConsult={isSuccessSaveConsult}
-              />
+              <div className="flex items-center gap-3">
+                <ConsultRecordingControl
+                  counselSessionId={counselSessionId ?? ''}
+                />
+                <HeaderButtons
+                  onSave={saveConsult}
+                  onComplete={completeConsult}
+                  name={counseleeInfo?.name}
+                  sessionStatus={sessionStatus}
+                  isSuccessSaveConsult={isSuccessSaveConsult}
+                />
+              </div>
             </div>
           </div>
           <ConsultTabs
