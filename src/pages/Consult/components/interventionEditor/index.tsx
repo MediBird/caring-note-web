@@ -8,6 +8,7 @@ import CheckIcon from '@/assets/icon/16/check.outline.blue.svg?react';
 import LoadingIcon from '@/assets/icon/16/loading.svg?react';
 import { useCallback, useEffect, useRef } from 'react';
 import EditorSaveDialog from '@/pages/Consult/components/interventionEditor/EditorSaveDialog';
+import { formatToKSTDotFormat } from '@/pages/Session/utils/dateTimeUtils';
 
 function InterventionEditor() {
   const {
@@ -22,6 +23,10 @@ function InterventionEditor() {
 
   const savedByMainWindow = useRef(false);
 
+  const editorSaveTimestamp = localStorage.getItem(
+    `editorSaveTimestamp_${counselSessionData?.counselSessionId}`,
+  );
+
   const renderSaveStatus = () => {
     if (saveStatus === 'INIT') {
       return '';
@@ -32,7 +37,7 @@ function InterventionEditor() {
         <span className="text-sm text-error-50">
           <div className="flex items-center gap-1">
             <WarningIcon width={16} height={16} />
-            저장 필요
+            {`저장 필요  ${editorSaveTimestamp ? `(마지막 저장: ${formatToKSTDotFormat(editorSaveTimestamp)})` : ''}`}
           </div>
         </span>
       );
@@ -54,7 +59,10 @@ function InterventionEditor() {
         <span className="text-sm text-primary-50">
           <div className="flex items-center gap-1">
             <CheckIcon width={16} height={16} />
-            저장 완료
+            저장 완료{' '}
+            {editorSaveTimestamp
+              ? formatToKSTDotFormat(editorSaveTimestamp)
+              : ''}
           </div>
         </span>
       );
@@ -119,6 +127,9 @@ function InterventionEditor() {
       localStorage.removeItem(
         `editorContent_${counselSessionData?.counselSessionId}`,
       );
+      localStorage.removeItem(
+        `editorSaveTimestamp_${counselSessionData?.counselSessionId}`,
+      );
     };
 
     window.addEventListener('beforeunload', clearLocalStorage);
@@ -137,7 +148,7 @@ function InterventionEditor() {
             <h1 className="text-2xl font-bold">
               {counselSessionData?.counseleeName}님 중재 기록
             </h1>
-            <span className="text-sm text-error-50">{renderSaveStatus()}</span>
+            <span className="text-sm">{renderSaveStatus()}</span>
           </div>
           <div className="flex gap-2">
             <Button size="xl" onClick={handleSave}>
