@@ -122,8 +122,8 @@ export default function Survey() {
     <Tabs
       value={activeTab}
       onValueChange={setActiveTab}
-      className="flex h-screen w-full flex-col">
-      <div className="flex-none">
+      className="flex w-full flex-col">
+      <div className="sticky top-0 z-10 flex-none">
         <Header
           title={
             <div className="flex w-full items-end justify-between">
