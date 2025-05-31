@@ -44,7 +44,13 @@ export const createScheduleColumns = ({
     header: '상담 회차',
     size: 100,
     cell: ({ row }) => {
+      const status = row.original.status;
       const sessionCount = row.original.sessionNumber;
+
+      if (status === SelectCounselSessionListItemStatusEnum.Canceled) {
+        return <TableCell text="-" />;
+      }
+      
       return <TableCell text={sessionCount?.toString() + '회차'} />;
     },
   },
@@ -68,7 +74,13 @@ export const createScheduleColumns = ({
     ),
     size: 150,
     cell: ({ row }) => {
+      const status = row.original.status;
       const counselorName = row.original.counselorName;
+
+      if (status === SelectCounselSessionListItemStatusEnum.Canceled) {
+        return <TableCell text="-" />;
+      }
+      
       return <TableCell text={formatDisplayText(counselorName)} />;
     },
   },
