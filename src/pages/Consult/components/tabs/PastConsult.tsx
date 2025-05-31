@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -17,6 +17,20 @@ const PastConsult = () => {
 
   const { prevCounselSessionDetailList, isLoading } =
     usePrevCounselSessionDetailList(counselSessionId ?? '', 0, 50);
+
+  // 데이터 로드 완료 시 첫 번째 세션 자동 열기
+  useEffect(() => {
+    if (!isLoading && prevCounselSessionDetailList.length > 0) {
+      const firstSessionId =
+        prevCounselSessionDetailList[0].counselSessionId ?? '';
+      if (firstSessionId) {
+        setOpenSessions((prev) => ({
+          ...prev,
+          [firstSessionId]: true,
+        }));
+      }
+    }
+  }, [isLoading, prevCounselSessionDetailList]);
 
   const toggleSession = (sessionId: string) => {
     setOpenSessions((prev) => ({
