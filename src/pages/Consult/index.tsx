@@ -125,6 +125,7 @@ export function Index() {
         saveMedicationCounsel(),
       ]);
 
+      //window.editorWindows 존재 여부 확인
       if (
         window.editorWindows &&
         window.editorWindows[counselSessionId] &&

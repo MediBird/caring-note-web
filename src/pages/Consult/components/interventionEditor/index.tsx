@@ -76,7 +76,6 @@ function InterventionEditor() {
         event.data.type ===
           `MAIN_WINDOW_SAVED_${counselSessionData?.counselSessionId}`
       ) {
-        console.log('메인 윈도우에서 저장됨');
         savedByMainWindow.current = true;
       }
     };
