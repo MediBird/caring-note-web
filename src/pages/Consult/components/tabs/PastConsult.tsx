@@ -9,6 +9,7 @@ import {
 import { usePrevCounselSessionDetailList } from '@/pages/Consult/hooks/query/usePrevCounselSessionDetailList';
 import SessionHeader from './components/SessionHeader';
 import RecordCard from './components/RecordCard';
+import { getMarkdownFromLexical } from '@/utils/getMarkdownFromLexical';
 
 const PastConsult = () => {
   const navigate = useNavigate();
@@ -98,7 +99,9 @@ const PastConsult = () => {
                   <div className="flex gap-6 px-4 pb-4">
                     <RecordCard
                       title="중재기록"
-                      content={session.medicationCounselRecord}
+                      content={getMarkdownFromLexical(
+                        session.medicationCounselRecord,
+                      )}
                       emptyMessage="중재기록이 없습니다."
                     />
                     <RecordCard
