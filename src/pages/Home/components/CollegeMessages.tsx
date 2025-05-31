@@ -65,8 +65,8 @@ function CollegeMessages() {
   ];
 
   return (
-    <div className="rounded-xl border-white bg-white shadow-container">
-      <div className="p-4 pb-0">
+    <div className="h-[340px] rounded-xl border-white bg-white shadow-container">
+      <div className="p-4">
         <h1 className="w-full break-keep text-left text-xl font-bold leading-[26px] text-primary-50">
           동료약사의 따뜻한 마음 ✨
         </h1>
@@ -77,7 +77,7 @@ function CollegeMessages() {
         <SocialProofTestimonials
           title=""
           testimonials={originalMessages}
-          maxHeight="340px"
+          maxHeight="224px"
           columns={1}
           vertical={true}
           className="[&_.container]:mx-0 [&_.container]:max-w-none [&_.container]:px-1 [&_section]:py-0"
@@ -85,7 +85,7 @@ function CollegeMessages() {
       </div>
 
       {/* 중간 화면: 수직 스크롤 */}
-      <div className="hidden md:block xl:hidden">
+      <div className="hidden md:block hd:hidden">
         <SocialProofTestimonials
           title=""
           testimonials={originalMessages}
@@ -96,12 +96,11 @@ function CollegeMessages() {
         />
       </div>
 
-      {/* 큰 화면: 수평 스크롤 */}
-      <div className="hidden xl:block">
+      <div className="hidden hd:block">
         <SocialProofTestimonials
           title=""
           testimonials={originalMessages}
-          maxHeight="340px"
+          maxHeight="224px"
           columns={1}
           vertical={true}
           className="[&_.container]:mx-0 [&_.container]:max-w-none [&_.container]:px-1 [&_section]:py-0"
