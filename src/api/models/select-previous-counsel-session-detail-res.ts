@@ -52,9 +52,9 @@ export interface SelectPreviousCounselSessionDetailRes {
     'medicationCounselRecord'?: string;
     /**
      * 
-     * @type {object}
+     * @type {string}
      * @memberof SelectPreviousCounselSessionDetailRes
      */
-    'aiSummary'?: object;
+    'aiSummary'?: string;
 }
 

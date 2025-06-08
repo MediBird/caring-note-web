@@ -22,6 +22,8 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { ChangePasswordReq } from '../models';
+// @ts-ignore
 import type { CounselorNameListRes } from '../models';
 // @ts-ignore
 import type { DeleteCounselor400Response } from '../models';
@@ -38,6 +40,8 @@ import type { UpdateCounselorReq } from '../models';
 // @ts-ignore
 import type { UpdateCounselorRes } from '../models';
 // @ts-ignore
+import type { UpdateMyInfoReq } from '../models';
+// @ts-ignore
 import type { UpdateRoleReq } from '../models';
 /**
  * CounselorControllerApi - axios parameter creator
@@ -45,6 +49,46 @@ import type { UpdateRoleReq } from '../models';
  */
 export const CounselorControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 자기 자신의 비밀번호를 변경한다. Keycloak에서 비밀번호를 변경한다.
+         * @summary 내 비밀번호 변경
+         * @param {ChangePasswordReq} changePasswordReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        changeMyPassword: async (changePasswordReq: ChangePasswordReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'changePasswordReq' is not null or undefined
+            assertParamExists('changeMyPassword', 'changePasswordReq', changePasswordReq)
+            const localVarPath = `/v1/counselor/my-password`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(changePasswordReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 상담사를 삭제한다. Keycloak에서도 해당 사용자를 삭제한다.
          * @summary 상담사 삭제
@@ -57,6 +101,40 @@ export const CounselorControllerApiAxiosParamCreator = function (configuration?:
             assertParamExists('deleteCounselor', 'counselorId', counselorId)
             const localVarPath = `/v1/counselor/{counselorId}`
                 .replace(`{${"counselorId"}}`, encodeURIComponent(String(counselorId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 자기 자신의 계정을 탈퇴한다. Keycloak에서도 해당 사용자를 삭제한다.
+         * @summary 내 계정 탈퇴
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteMyAccount: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/v1/counselor/my-account`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -284,6 +362,46 @@ export const CounselorControllerApiAxiosParamCreator = function (configuration?:
             };
         },
         /**
+         * 자기 자신의 이름과 전화번호를 업데이트한다.
+         * @summary 내 정보 업데이트
+         * @param {UpdateMyInfoReq} updateMyInfoReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateMyInfo: async (updateMyInfoReq: UpdateMyInfoReq, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'updateMyInfoReq' is not null or undefined
+            assertParamExists('updateMyInfo', 'updateMyInfoReq', updateMyInfoReq)
+            const localVarPath = `/v1/counselor/my-info`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer-jwt required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateMyInfoReq, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 상담사의 권한을 변경한다. DB와 Keycloak 모두에서 권한을 업데이트한다.
          * @summary 상담사 권한 변경
          * @param {string} counselorId 
@@ -338,6 +456,19 @@ export const CounselorControllerApiFp = function(configuration?: Configuration) 
     const localVarAxiosParamCreator = CounselorControllerApiAxiosParamCreator(configuration)
     return {
         /**
+         * 자기 자신의 비밀번호를 변경한다. Keycloak에서 비밀번호를 변경한다.
+         * @summary 내 비밀번호 변경
+         * @param {ChangePasswordReq} changePasswordReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async changeMyPassword(changePasswordReq: ChangePasswordReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.changeMyPassword(changePasswordReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.changeMyPassword']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * 상담사를 삭제한다. Keycloak에서도 해당 사용자를 삭제한다.
          * @summary 상담사 삭제
          * @param {string} counselorId 
@@ -348,6 +479,18 @@ export const CounselorControllerApiFp = function(configuration?: Configuration) 
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteCounselor(counselorId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.deleteCounselor']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 자기 자신의 계정을 탈퇴한다. Keycloak에서도 해당 사용자를 삭제한다.
+         * @summary 내 계정 탈퇴
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteMyAccount(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteMyAccount(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.deleteMyAccount']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -417,6 +560,19 @@ export const CounselorControllerApiFp = function(configuration?: Configuration) 
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * 자기 자신의 이름과 전화번호를 업데이트한다.
+         * @summary 내 정보 업데이트
+         * @param {UpdateMyInfoReq} updateMyInfoReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateMyInfo(updateMyInfoReq: UpdateMyInfoReq, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateCounselorRes>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateMyInfo(updateMyInfoReq, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CounselorControllerApi.updateMyInfo']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * 상담사의 권한을 변경한다. DB와 Keycloak 모두에서 권한을 업데이트한다.
          * @summary 상담사 권한 변경
          * @param {string} counselorId 
@@ -441,6 +597,16 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
     const localVarFp = CounselorControllerApiFp(configuration)
     return {
         /**
+         * 자기 자신의 비밀번호를 변경한다. Keycloak에서 비밀번호를 변경한다.
+         * @summary 내 비밀번호 변경
+         * @param {ChangePasswordReq} changePasswordReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        changeMyPassword(changePasswordReq: ChangePasswordReq, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.changeMyPassword(changePasswordReq, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 상담사를 삭제한다. Keycloak에서도 해당 사용자를 삭제한다.
          * @summary 상담사 삭제
          * @param {string} counselorId 
@@ -449,6 +615,15 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
          */
         deleteCounselor(counselorId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.deleteCounselor(counselorId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 자기 자신의 계정을 탈퇴한다. Keycloak에서도 해당 사용자를 삭제한다.
+         * @summary 내 계정 탈퇴
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteMyAccount(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteMyAccount(options).then((request) => request(axios, basePath));
         },
         /**
          * 모든 상담사의 이름 목록을 조회한다. 결과는 캐싱됩니다.
@@ -502,6 +677,16 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
             return localVarFp.updateCounselor(counselorId, updateCounselorReq, options).then((request) => request(axios, basePath));
         },
         /**
+         * 자기 자신의 이름과 전화번호를 업데이트한다.
+         * @summary 내 정보 업데이트
+         * @param {UpdateMyInfoReq} updateMyInfoReq 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateMyInfo(updateMyInfoReq: UpdateMyInfoReq, options?: RawAxiosRequestConfig): AxiosPromise<UpdateCounselorRes> {
+            return localVarFp.updateMyInfo(updateMyInfoReq, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 상담사의 권한을 변경한다. DB와 Keycloak 모두에서 권한을 업데이트한다.
          * @summary 상담사 권한 변경
          * @param {string} counselorId 
@@ -523,6 +708,18 @@ export const CounselorControllerApiFactory = function (configuration?: Configura
  */
 export class CounselorControllerApi extends BaseAPI {
     /**
+     * 자기 자신의 비밀번호를 변경한다. Keycloak에서 비밀번호를 변경한다.
+     * @summary 내 비밀번호 변경
+     * @param {ChangePasswordReq} changePasswordReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselorControllerApi
+     */
+    public changeMyPassword(changePasswordReq: ChangePasswordReq, options?: RawAxiosRequestConfig) {
+        return CounselorControllerApiFp(this.configuration).changeMyPassword(changePasswordReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * 상담사를 삭제한다. Keycloak에서도 해당 사용자를 삭제한다.
      * @summary 상담사 삭제
      * @param {string} counselorId 
@@ -532,6 +729,17 @@ export class CounselorControllerApi extends BaseAPI {
      */
     public deleteCounselor(counselorId: string, options?: RawAxiosRequestConfig) {
         return CounselorControllerApiFp(this.configuration).deleteCounselor(counselorId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 자기 자신의 계정을 탈퇴한다. Keycloak에서도 해당 사용자를 삭제한다.
+     * @summary 내 계정 탈퇴
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselorControllerApi
+     */
+    public deleteMyAccount(options?: RawAxiosRequestConfig) {
+        return CounselorControllerApiFp(this.configuration).deleteMyAccount(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -593,6 +801,18 @@ export class CounselorControllerApi extends BaseAPI {
      */
     public updateCounselor(counselorId: string, updateCounselorReq: UpdateCounselorReq, options?: RawAxiosRequestConfig) {
         return CounselorControllerApiFp(this.configuration).updateCounselor(counselorId, updateCounselorReq, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 자기 자신의 이름과 전화번호를 업데이트한다.
+     * @summary 내 정보 업데이트
+     * @param {UpdateMyInfoReq} updateMyInfoReq 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CounselorControllerApi
+     */
+    public updateMyInfo(updateMyInfoReq: UpdateMyInfoReq, options?: RawAxiosRequestConfig) {
+        return CounselorControllerApiFp(this.configuration).updateMyInfo(updateMyInfoReq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
