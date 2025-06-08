@@ -8,33 +8,31 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
 
-import recordingDialog from '@/assets/recording/recordingDialog.webp';
+import recordingDialog from '@/assets/illusts/recordingDialog.webp';
 
-function RecordingDialog() {
-  const [open, setOpen] = useState(true);
+interface RecordingDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onStartRecording: () => void;
+}
 
-  const setDialogClosed = () => {
-    sessionStorage.setItem('isRecordingDialogClosed', 'true');
-  };
-
-  const handleClickSaveRecording = () => {
-    setDialogClosed();
-    setOpen(false);
-  };
-
-  const handleCloseDialog = () => {
-    setDialogClosed();
-    setOpen(false);
+function RecordingDialog({
+  open,
+  onClose,
+  onStartRecording,
+}: RecordingDialogProps) {
+  const handleClickStartRecording = () => {
+    onStartRecording();
+    onClose();
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleCloseDialog}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="w-[480px]">
-        <DialogHeader className="mt-4 items-center justify-center">
+        <DialogHeader className="mt-4 h-[80px] items-center justify-center">
           <DialogTitle>
-            <p className="center text-h3 font-bold">
+            <p className="text-center text-h3 font-bold">
               상담 녹음을 시작하시겠어요?
             </p>
           </DialogTitle>
@@ -42,7 +40,7 @@ function RecordingDialog() {
         <DialogDescription asChild className="m-0 flex flex-col items-center">
           <div>
             <img
-              className="mb-4 h-[240px] w-[240px]"
+              className="mt-4 h-[240px] w-[240px]"
               src={recordingDialog}
               alt="recordingDialog"
             />
@@ -63,7 +61,7 @@ function RecordingDialog() {
             variant="primary"
             size="xl"
             className="w-1/2"
-            onClick={handleClickSaveRecording}>
+            onClick={handleClickStartRecording}>
             녹음 시작
           </Button>
         </DialogFooter>

@@ -92,6 +92,7 @@ const ConsultHeader = ({
   completeConsult,
   hasPreviousConsult,
   isSuccessSaveConsult,
+  recordingControlRef,
 }: {
   counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
   consultStatus: string;
@@ -100,6 +101,9 @@ const ConsultHeader = ({
   completeConsult: () => void;
   hasPreviousConsult: boolean;
   isSuccessSaveConsult: boolean;
+  recordingControlRef?: React.MutableRefObject<{
+    startRecording: () => Promise<void>;
+  } | null>;
 }) => {
   const { counselSessionId } = useParams();
 
@@ -128,6 +132,11 @@ const ConsultHeader = ({
               <div className="flex items-center gap-3">
                 <ConsultRecordingControl
                   counselSessionId={counselSessionId ?? ''}
+                  onRecordingControlReady={(controls) => {
+                    if (recordingControlRef) {
+                      recordingControlRef.current = controls;
+                    }
+                  }}
                 />
                 <HeaderButtons
                   onSave={saveConsult}

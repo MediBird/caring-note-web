@@ -61,18 +61,29 @@ export const useTusUpload = ({
   // AI 요약 상태 폴링
   const { data: aiSummaryStatus } = useAISummaryStatus(counselSessionId);
 
+  // 이전 AI 요약 상태를 추적하기 위한 ref
+  const prevAiSummaryStatusRef = useRef<string | null>(null);
+
   // AI 요약 상태 변화 감지
   useEffect(() => {
     if (aiSummaryStatus?.aiCounselSummaryStatus) {
+      const currentStatus = aiSummaryStatus.aiCounselSummaryStatus.toString();
+      const prevStatus = prevAiSummaryStatusRef.current;
+
       setAiSummaryStatus(aiSummaryStatus.aiCounselSummaryStatus);
 
-      // STT 완료 시 최종 완료 상태로 변경
+      // 이전 상태가 있고, 상태가 변화했을 때만 toast 표시
       if (
-        aiSummaryStatus.aiCounselSummaryStatus?.toString() === 'GPT_COMPLETE'
+        prevStatus &&
+        prevStatus !== currentStatus &&
+        currentStatus === 'GPT_COMPLETE'
       ) {
         completeRecording();
-        toast.success('AI 요약이 완료되었습니다! 🎉');
+        toast.info('AI 요약이 완료되었습니다! 🎉');
       }
+
+      // 현재 상태를 이전 상태로 저장
+      prevAiSummaryStatusRef.current = currentStatus;
     }
   }, [aiSummaryStatus, setAiSummaryStatus, completeRecording]);
 

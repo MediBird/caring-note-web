@@ -13,6 +13,9 @@ import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
 interface ConsultRecordingControlProps {
   counselSessionId: string;
   className?: string;
+  onRecordingControlReady?: (controls: {
+    startRecording: () => Promise<void>;
+  }) => void;
 }
 
 const formatDuration = (seconds: number): string => {
@@ -25,7 +28,7 @@ const formatDuration = (seconds: number): string => {
 
 export const ConsultRecordingControl: React.FC<
   ConsultRecordingControlProps
-> = ({ counselSessionId, className }) => {
+> = ({ counselSessionId, className, onRecordingControlReady }) => {
   const {
     recordingStatus,
     recordedDuration,
@@ -295,7 +298,7 @@ export const ConsultRecordingControl: React.FC<
       abortUpload();
       cleanupRecordingResources();
       await resetRecordingState(counselSessionId);
-      toast.success('녹음이 삭제되었습니다.');
+      toast.info('녹음이 삭제되었습니다.');
     } catch (error) {
       console.error('삭제 실패:', error);
     }
@@ -337,7 +340,7 @@ export const ConsultRecordingControl: React.FC<
 
   const handleGoToNoteTab = useCallback(() => {
     setActiveTab(ConsultTab.consultNote);
-    toast.success('AI 요약 탭으로 이동합니다.');
+    toast.info('AI 요약 탭으로 이동합니다.');
   }, [setActiveTab]);
 
   const displayDuration = useMemo(() => {
@@ -496,7 +499,9 @@ export const ConsultRecordingControl: React.FC<
                 <span className="text-xs text-grayscale-60">
                   {aiSummaryStatus === 'STT_PROGRESS'
                     ? 'STT 처리 중'
-                    : aiSummaryStatus}
+                    : aiSummaryStatus === 'GPT_PROGRESS'
+                      ? 'GPT 처리 중'
+                      : aiSummaryStatus}
                 </span>
               )}
             </div>
@@ -551,6 +556,15 @@ export const ConsultRecordingControl: React.FC<
     'flex items-center justify-between gap-4 border shadow-sm bg-grayscale-03',
     className,
   );
+
+  // 부모 컴포넌트에게 녹음 제어 함수 전달
+  useEffect(() => {
+    if (onRecordingControlReady) {
+      onRecordingControlReady({
+        startRecording: handleStartRecording,
+      });
+    }
+  }, [onRecordingControlReady, handleStartRecording]);
 
   return <div className={containerClasses}>{renderControls()}</div>;
 };
