@@ -9,7 +9,7 @@ import TemporarySaveDialog from '@/pages/Consult/components/dialog/TemporarySave
 import { Button } from '@/components/ui/button';
 import PencilBlueIcon from '@/assets/icon/24/create.filled.blue.svg?react';
 import { useParams } from 'react-router-dom';
-import { ConsultRecordingControl } from './ConsultRecordingControl';
+import { ConsultRecordingControl } from './recording/ConsultRecordingControl';
 interface InfoItemProps {
   content: React.ReactNode;
   showDivider?: boolean;
