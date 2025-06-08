@@ -15,24 +15,11 @@ import { EditorState } from 'lexical';
 import FloatingTextFormatToolbarPlugin from '@/pages/Consult/components/interventionEditor/plugins/FloaingTextFormatPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { HorizontalRuleNode } from '@lexical/react/LexicalHorizontalRuleNode';
-
-const theme = {
-  heading: {
-    h1: 'mb-2 font-medium text-2xl',
-  },
-  list: {
-    ul: 'list-disc pl-5 mb-2',
-    ol: 'list-decimal pl-5 mb-2',
-  },
-  text: {
-    bold: 'font-bold',
-    highlight: 'bg-[#FFFBB2]',
-  },
-};
+import { EDITOR_THEME } from '@/pages/Consult/constants/EditorTheme';
 
 const initialConfig = {
   namespace: 'InterventionEditor',
-  theme,
+  theme: EDITOR_THEME,
   onError: (error: Error) => {
     console.error(error);
   },
