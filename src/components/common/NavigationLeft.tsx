@@ -1,4 +1,3 @@
-import { SelectCounselSessionResStatusEnum } from '@/api';
 import AdminIcon from '@/assets/icon/24/accountcircle.fiiled.svg?react';
 import QuestionIcon from '@/assets/icon/24/help.fiiled.svg?react';
 import HomeIcon from '@/assets/icon/24/home.filled.svg?react';
@@ -20,16 +19,11 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useAuthContext } from '@/context/AuthContext';
-import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
-import { useRecording } from '@/hooks/useRecording';
 import { cn } from '@/lib/utils';
-import { useLeaveOutDialogStore } from '@/pages/Consult/hooks/store/useLeaveOutDialogStore';
-import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
-import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
 import { ROLE_TYPE_MAP } from '@/utils/constants';
 import { useKeycloak } from '@react-keycloak/web';
 import { useLayoutEffect, useMemo } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const cleanName = (name?: string): string => {
   if (!name) return '';
@@ -41,11 +35,6 @@ interface NavigationLeftProps {
 }
 
 const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
-  const { counselSessionId } = useParams();
-  const { data: counselSessionInfo } = useCounselSessionQueryById(
-    counselSessionId ?? '',
-  );
-
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -53,11 +42,6 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
 
   const { user } = useAuthContext();
   const { keycloak } = useKeycloak();
-
-  const { resetRecording } = useRecording();
-  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
-  const openDialog = useLeaveOutDialogStore((state) => state.openDialog);
-  const setOnConfirm = useLeaveOutDialogStore((state) => state.setOnConfirm);
 
   const getIsActive = (route: string) => {
     return location.pathname === route;
@@ -82,13 +66,6 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
         roles: ['ROLE_ADMIN', 'ROLE_USER'],
         action: null,
       },
-      // 기능 구현 전 임시 주석 처리
-      // {
-      //   name: '메세지 보관함',
-      //   collapsedName: '메세지 보관함',
-      //   icon: <PaperPlainIcon width={24} height={24} />,
-      //   roles: ['ROLE_ADMIN', 'ROLE_ASSISTANT', 'ROLE_USER'],
-      // },
       {
         name: '내담자 관리',
         collapsedName: '내담자 관리',
@@ -147,26 +124,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
     if (action) action();
 
     if (route) {
-      const isRecording =
-        recordingStatus !== RecordingStatus.Ready &&
-        recordingStatus !== RecordingStatus.AICompleted;
-
-      const isCounselSessionInProgress =
-        counselSessionInfo?.status ===
-        SelectCounselSessionResStatusEnum.InProgress;
-
-      if (
-        isRecording ||
-        (isCounselSessionInProgress && location.pathname.includes('consult'))
-      ) {
-        openDialog();
-        setOnConfirm(() => {
-          navigate(route);
-        });
-      } else {
-        resetRecording();
-        navigate(route);
-      }
+      navigate(route);
     }
   };
 
@@ -220,7 +178,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                     className={cn(
                       'flex flex-row items-center gap-2',
                       !open
-                        ? 'flex-col justify-center gap-1 overflow-hidden p-[3px] text-center text-xs font-bold text-grayscale-50 hover:!text-grayscale-70 [&>svg]:text-grayscale-90'
+                        ? 'flex-col justify-center gap-1 overflow-hidden p-[3px] text-center text-caption1 font-bold text-grayscale-50 hover:!text-grayscale-70 [&>svg]:text-grayscale-90'
                         : 'text-grayscale-90',
                       getIsActive(item.route ?? '') &&
                         'text-primary-50 [&>svg]:text-primary-50',
@@ -230,7 +188,7 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                       className={cn(
                         'w-full overflow-hidden whitespace-nowrap',
                         !open &&
-                          'w-full whitespace-pre-wrap text-center text-body1 font-medium',
+                          'w-full whitespace-pre-wrap text-center text-caption1 font-bold',
                       )}>
                       {open ? item.name : item.collapsedName}
                     </span>
@@ -256,7 +214,8 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
                     <span
                       className={cn(
                         'w-full overflow-hidden whitespace-nowrap',
-                        !open && 'w-full whitespace-pre-wrap text-center',
+                        !open &&
+                          'w-full whitespace-pre-wrap text-center text-caption1 font-bold',
                       )}>
                       {open ? item.name : item.collapsedName}
                     </span>

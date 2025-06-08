@@ -11,13 +11,18 @@ const wasteMedicationControllerApi = new WasteMedicationControllerApi();
 const saveWasteMedicationList = async (
   wasteMedicationListSaveDTO: WasteMedicationListSaveDTO,
 ) => {
-  const response =
-    await wasteMedicationControllerApi.addAndUpdateWasteMedicationRecord(
-      wasteMedicationListSaveDTO.counselSessionId,
-      wasteMedicationListSaveDTO.wasteMedicationList,
-    );
+  try {
+    const response =
+      await wasteMedicationControllerApi.addAndUpdateWasteMedicationRecord(
+        wasteMedicationListSaveDTO.counselSessionId,
+        wasteMedicationListSaveDTO.wasteMedicationList,
+      );
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error('폐의약품 기록 저장 중 오류가 발생했습니다:', error);
+    throw error;
+  }
 };
 
 const saveWasteMedicationDisposal = async (
@@ -30,13 +35,18 @@ const saveWasteMedicationDisposal = async (
     modifiedDisposal.unusedReasonDetail = '';
   }
 
-  const response =
-    await wasteMedicationControllerApi.addWasteMedicationDisposal(
-      counselSessionId,
-      modifiedDisposal,
-    );
+  try {
+    const response =
+      await wasteMedicationControllerApi.addWasteMedicationDisposal(
+        counselSessionId,
+        modifiedDisposal,
+      );
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    console.error('폐의약품 처리 저장 중 오류가 발생했습니다:', error);
+    throw error;
+  }
 };
 
 export const useWasteMedicationMutate = () => {

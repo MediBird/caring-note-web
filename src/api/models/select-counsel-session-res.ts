@@ -64,10 +64,10 @@ export interface SelectCounselSessionRes {
     'counselorName'?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof SelectCounselSessionRes
      */
-    'sessionNumber'?: number;
+    'sessionNumber'?: string;
     /**
      * 
      * @type {string}

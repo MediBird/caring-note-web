@@ -1,216 +1,113 @@
-import {
-  SelectCounseleeBaseInformationByCounseleeIdRes,
-  SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum,
-  UpdateStatusInCounselSessionReqStatusEnum,
-} from '@/api';
+import { SelectCounseleeBaseInformationByCounseleeIdRes } from '@/api';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import Spinner from '@/components/common/Spinner';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
-import useCounselSessionQueryById from '@/hooks/useCounselSessionQueryById';
-import { useRecording } from '@/hooks/useRecording';
-import { useRouteStore } from '@/hooks/useRouteStore';
+import { Tabs } from '@/components/ui/tabs';
+import { useSelectCounseleeInfo, useCounselSessionQueryById } from '@/hooks';
 import useUpdateCounselSessionStatus from '@/hooks/useUpdateCounselSessionStatus';
-import EditConsultDialog from '@/pages/Consult/components/EditConsultDialog';
 import TabContents from '@/pages/Consult/components/TabContents';
-import { useGetIsRecordingPopupQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetIsRecordingPopupQuery';
-import { useGetRecordingStatusQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetRecordingStatusQuery';
-import { useMedicationRecordSave } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordSave';
-import { useSaveMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
-import { usePrevCounselSessionList } from '@/pages/Consult/hooks/query/usePrevCounselSessionList';
-import { useSaveWasteMedication } from '@/pages/Consult/hooks/query/wasteMedicineRecord/useSaveWasteMedication';
-import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
-import { useInitializeAllTabsData } from '@/pages/Consult/hooks/useInitializeAllTabsData';
-import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
+import {
+  useMedicationRecordSave,
+  useSaveWasteMedication,
+  usePrevCounselSessionList,
+  useSaveMedicineConsult,
+} from '@/pages/Consult/hooks/query';
 import useConsultTabStore, { ConsultTab } from '@/store/consultTabStore';
-import { DISEASE_MAP } from '@/utils/constants';
-import { useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import CheckLeaveOutDialog from './components/CheckLeaveOutDialog';
-import FinishConsultDialog from './components/FinishConsultDialog';
-import RecordingDialog from './components/recording/RecordingDialog';
-import TemporarySaveDialog from './components/TemporarySaveDialog';
-import { useLeaveOutDialogStore } from './hooks/store/useLeaveOutDialogStore';
 
-interface InfoItemProps {
-  icon: string;
-  content: React.ReactNode;
-  showDivider?: boolean;
-}
-
-const InfoItem = ({ icon, content, showDivider = true }: InfoItemProps) => (
-  <div className="flex items-center gap-[6px]">
-    <div className="flex items-center">
-      <span className="text-subtitle-2 pr-[0.25rem]">{icon}</span>
-      <span className="text-grayscale-70">{content}</span>
-    </div>
-    {showDivider && (
-      <div className="mr-[6px] h-[16px] w-[1px] bg-grayscale-10" />
-    )}
-  </div>
-);
-
-interface HeaderButtonsProps {
-  onSave: () => void;
-  onComplete: () => void;
-  name?: string;
-  sessionStatus: UpdateStatusInCounselSessionReqStatusEnum | undefined;
-}
-
-const HeaderButtons = ({
-  onSave,
-  onComplete,
-  name,
-  sessionStatus,
-}: HeaderButtonsProps) => (
-  <div className="flex gap-3">
-    {sessionStatus !== 'COMPLETED' && <TemporarySaveDialog onSave={onSave} />}
-    {sessionStatus === 'COMPLETED' ? (
-      <EditConsultDialog onEdit={onComplete} />
-    ) : (
-      <FinishConsultDialog name={name} onComplete={onComplete} />
-    )}
-  </div>
-);
-
-const ConsultHeader = ({
-  counseleeInfo,
-  sessionStatus,
-  consultStatus,
-  age,
-  diseases,
-  saveConsult,
-  completeConsult,
-  hasPreviousConsult,
-}: {
-  counseleeInfo: SelectCounseleeBaseInformationByCounseleeIdRes;
-  consultStatus: string;
-  sessionStatus: UpdateStatusInCounselSessionReqStatusEnum | undefined;
-  age: string;
-  diseases: React.ReactNode;
-  saveConsult: () => void;
-  recordingStatus: RecordingStatus;
-  completeConsult: () => void;
-  hasPreviousConsult: boolean;
-}) => {
-  return (
-    <div className="flex-none">
-      <div className="z-10 w-full bg-white">
-        <div className="h-fit bg-white">
-          <div className="border-grayscale-05 border-b pb-1 pt-12">
-            <div className="mx-auto flex w-full max-w-layout justify-between px-layout [&>*]:max-w-content">
-              <div>
-                <div className="text-h3 font-bold">
-                  {counseleeInfo?.name}
-                  <span className="text-subtitle2 font-bold"> 님</span>
-                </div>
-                <div className="mt-3 flex items-center pl-[7px] text-body1 font-medium text-grayscale-60">
-                  <InfoItem icon="📍" content={consultStatus} />
-                  <InfoItem icon="🎂" content={age} />
-                  <InfoItem icon="💊" content={diseases} showDivider={false} />
-                </div>
-              </div>
-              <HeaderButtons
-                onSave={saveConsult}
-                onComplete={completeConsult}
-                name={counseleeInfo?.name}
-                sessionStatus={sessionStatus}
-              />
-            </div>
-          </div>
-          <ConsultTabs hasPreviousConsult={hasPreviousConsult} />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ConsultTabs = ({
-  hasPreviousConsult,
-}: {
-  hasPreviousConsult: boolean;
-}) => (
-  <TabsList className="w-full border-b border-grayscale-10">
-    <div className="mx-auto flex h-full w-full max-w-layout justify-start gap-5 px-layout [&>*]:max-w-content">
-      {hasPreviousConsult && (
-        <TabsTrigger value="pastConsult">상담 히스토리</TabsTrigger>
-      )}
-      <TabsTrigger value="survey">기초 설문 내역</TabsTrigger>
-      <TabsTrigger value="medicine">약물 기록</TabsTrigger>
-      <TabsTrigger value="note">중재 기록 작성</TabsTrigger>
-      <TabsTrigger value="wasteMedication">폐의약품 처리</TabsTrigger>
-    </div>
-  </TabsList>
-);
+import { useInitializeIntervention } from './hooks/useInitializeIntervention';
+import { useInitializeMedicationRecord } from './hooks/useInitializeMedicationRecord';
+import { useInitializeWasteMedication } from './hooks/useInitializeWasteMedication';
+import ConsultHeader from '@/pages/Consult/components/ConsultHeader';
+import RecordingDialog from '@/pages/Consult/components/recording/RecordingDialog';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
+import { useAISummaryStatus } from '@/pages/Consult/hooks/query/useAISummaryQuery';
 
 export function Index() {
   const { counselSessionId } = useParams();
 
-  const { isLoading: isInitializeAllTabsDataLoading } =
-    useInitializeAllTabsData(counselSessionId ?? '');
+  const [isConsultDataLoading, setIsConsultDataLoading] = useState(false);
+  const [isRecordingDialogOpen, setIsRecordingDialogOpen] = useState(false);
 
+  // 페이지 첫 진입 여부를 추적하는 ref
+  const hasShownDialogRef = useRef(false);
+
+  // 녹음 상태 가져오기
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
+  const recordedBlob = useRecordingStore((state) => state.recordedBlob);
+  const aiSummaryStatus = useRecordingStore((state) => state.aiSummaryStatus);
+  const totalDuration = useRecordingStore((state) => state.totalDuration);
+
+  // AI 요약 상태 조회 (로딩 상태 확인용)
+  const { data: aiSummaryStatusData, isLoading: isAISummaryStatusLoading } =
+    useAISummaryStatus(counselSessionId ?? '');
+
+  // recording store의 완료 함수
+  const completeRecording = useRecordingStore(
+    (state) => state.completeRecording,
+  );
+
+  // ConsultRecordingControl의 함수들을 참조하기 위한 ref
+  const recordingControlRef = useRef<{
+    startRecording: () => Promise<void>;
+  } | null>(null);
+
+  const { isLoading: isInitializeInterventionLoading } =
+    useInitializeIntervention(counselSessionId ?? '');
+  const { isLoading: isInitializeMedicationRecordLoading } =
+    useInitializeMedicationRecord(counselSessionId ?? '');
+  const { isLoading: isInitializeWasteMedicationLoading } =
+    useInitializeWasteMedication(counselSessionId ?? '');
+
+  // 내담자 정보 조회
   const { data: counseleeInfo, isLoading } = useSelectCounseleeInfo(
     counselSessionId ?? '',
   );
 
+  // 상담 세션 정보 조회
   const { data: counselSessionInfo } = useCounselSessionQueryById(
     counselSessionId ?? '',
   );
 
+  // 이전 상담 내역 조회
   const { prevCounselSessionList } = usePrevCounselSessionList(
     counselSessionId ?? '',
   );
-
-  const previousPath = useRouteStore((state) => state.previousPath);
-  const setPreviousPath = useRouteStore((state) => state.setPreviousPath);
-
-  const { resetRecording, submitRecordingForLeavingOut } = useRecording(
-    counselSessionId ?? '',
-  );
-  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
-
-  const {
-    isOpen: isLeaveOutDialogOpen,
-    closeDialog,
-    onConfirm,
-  } = useLeaveOutDialogStore();
 
   // 폐의약품 처리 저장
   const { saveWasteMedication, isSuccessWasteMedication } =
     useSaveWasteMedication(counselSessionId ?? '');
 
-  // 중재기록 저장
-  const {
-    mutate: saveMedicationCounsel,
-    isSuccess: isSuccessSaveMedicationCounsel,
-  } = useSaveMedicineConsult();
-
   // 약물 기록 저장
   const {
-    mutate: saveMedicationRecordList,
+    mutateAsync: saveMedicationRecordList,
     isSuccess: isSuccessSaveMedicationRecordList,
   } = useMedicationRecordSave({ counselSessionId: counselSessionId ?? '' });
 
-  useEffect(() => {
-    if (
-      isSuccessSaveMedicationCounsel &&
+  // 중재 기록 저장
+  const {
+    mutateAsync: saveMedicationCounsel,
+    isSuccess: isSuccessSaveMedicationCounsel,
+  } = useSaveMedicineConsult();
+
+  const isSuccessSaveConsult = useMemo(() => {
+    return (
       isSuccessSaveMedicationRecordList &&
-      isSuccessWasteMedication
-    ) {
-      toast.info('작성하신 내용을 성공적으로 저장하였습니다.');
-    }
+      isSuccessWasteMedication &&
+      isSuccessSaveMedicationCounsel
+    );
   }, [
-    isSuccessSaveMedicationCounsel,
     isSuccessSaveMedicationRecordList,
     isSuccessWasteMedication,
+    isSuccessSaveMedicationCounsel,
   ]);
 
-  const { isSuccess: isSuccessGetIsRecordingPopup, data: isPopup } =
-    useGetIsRecordingPopupQuery(counselSessionId);
-  const {
-    data: getRecordingStatusData,
-    isSuccess: isSuccessGetRecordingStatus,
-  } = useGetRecordingStatusQuery(counselSessionId ?? '', recordingStatus);
+  useEffect(() => {
+    if (isSuccessSaveConsult) {
+      toast.info('작성하신 내용을 성공적으로 저장하였습니다.');
+    }
+  }, [isSuccessSaveConsult]);
+
   const { activeTab, setActiveTab } = useConsultTabStore();
 
   const { mutate: updateCounselSessionStatus } = useUpdateCounselSessionStatus({
@@ -221,10 +118,6 @@ export function Index() {
     return prevCounselSessionList?.length > 0;
   }, [prevCounselSessionList]);
 
-  const isRecording =
-    recordingStatus !== RecordingStatus.Ready &&
-    recordingStatus !== RecordingStatus.AICompleted;
-
   useEffect(() => {
     if (!hasPreviousConsult) {
       setActiveTab(ConsultTab.consultCard);
@@ -234,83 +127,143 @@ export function Index() {
   }, [hasPreviousConsult, setActiveTab]);
 
   useEffect(() => {
-    if (!isSuccessGetRecordingStatus) {
-      return;
-    }
-
-    if (!getRecordingStatusData?.aiCounselSummaryStatus) {
-      return;
-    }
-
-    const statusMapping: { [key: string]: RecordingStatus } = {
-      STT_PROGRESS: RecordingStatus.STTLoading,
-      STT_COMPLETE: RecordingStatus.STTCompleted,
-      STT_FAILED: RecordingStatus.Error,
-      GPT_COMPLETE: RecordingStatus.AICompleted,
-      GPT_FAILED: RecordingStatus.Error,
-    };
-
-    const status = statusMapping[getRecordingStatusData.aiCounselSummaryStatus];
-
-    if (status) {
-      if (previousPath?.startsWith('/survey')) {
-        setPreviousPath('');
-      } else {
-        useRecordingStore.setState({ recordingStatus: status });
-      }
+    if (
+      isInitializeInterventionLoading ||
+      isInitializeMedicationRecordLoading ||
+      isInitializeWasteMedicationLoading
+    ) {
+      setIsConsultDataLoading(true);
+    } else {
+      setIsConsultDataLoading(false);
     }
   }, [
-    getRecordingStatusData,
-    isSuccessGetRecordingStatus,
-    resetRecording,
-    previousPath,
-    setPreviousPath,
+    isInitializeInterventionLoading,
+    isInitializeMedicationRecordLoading,
+    isInitializeWasteMedicationLoading,
+  ]);
+
+  // AI 요약이 이미 완료된 상태라면 recording 상태를 완료로 설정
+  useEffect(() => {
+    if (
+      !isAISummaryStatusLoading &&
+      aiSummaryStatusData?.aiCounselSummaryStatus?.toString() ===
+        'GPT_COMPLETE' &&
+      recordingStatus !== 'completed'
+    ) {
+      completeRecording();
+    }
+  }, [
+    isAISummaryStatusLoading,
+    aiSummaryStatusData,
+    recordingStatus,
+    completeRecording,
+  ]);
+
+  // 페이지 첫 진입시에만 녹음 다이얼로그 표시
+  useEffect(() => {
+    // 상담 데이터 로딩이 완료되고, AI 요약 상태 로딩이 완료되고,
+    // 아직 다이얼로그를 보여준 적이 없으며,
+    // 녹음이 시작되지 않은 상태이고, AI 요약이 없는 상태에서만 다이얼로그 표시
+    const shouldShowDialog =
+      !isConsultDataLoading &&
+      !isAISummaryStatusLoading &&
+      !hasShownDialogRef.current &&
+      recordingStatus === 'idle' &&
+      !recordedBlob &&
+      totalDuration === 0 &&
+      !aiSummaryStatus; // AI 요약이 없는 경우에만 다이얼로그 표시
+
+    if (shouldShowDialog) {
+      setIsRecordingDialogOpen(true);
+      hasShownDialogRef.current = true;
+    }
+  }, [
+    isConsultDataLoading,
+    isAISummaryStatusLoading,
+    recordingStatus,
+    recordedBlob,
+    totalDuration,
+    aiSummaryStatus,
   ]);
 
   const saveConsult = useCallback(async () => {
+    if (!counselSessionId) return;
+
     try {
       await Promise.all([
         saveWasteMedication(),
-        saveMedicationCounsel(),
         saveMedicationRecordList(),
+        saveMedicationCounsel(),
       ]);
+
+      //window.editorWindows 존재 여부 확인
+      if (
+        window.editorWindows &&
+        window.editorWindows[counselSessionId] &&
+        !window.editorWindows[counselSessionId].closed
+      ) {
+        window.editorWindows[counselSessionId].postMessage(
+          { type: `MAIN_WINDOW_SAVED_${counselSessionId}` },
+          '*',
+        );
+
+        setTimeout(() => {
+          if (
+            window.editorWindows &&
+            window.editorWindows[counselSessionId] &&
+            !window.editorWindows[counselSessionId].closed
+          ) {
+            window.editorWindows[counselSessionId].close();
+            delete window.editorWindows[counselSessionId];
+          }
+        }, 300);
+      }
     } catch (error) {
       console.error('저장 중 오류가 발생했습니다:', error);
+      toast.error('저장 중 오류가 발생했습니다.');
     }
-  }, [saveWasteMedication, saveMedicationCounsel, saveMedicationRecordList]);
-
-  const handleConfirmLeave = () => {
-    if (isRecording) {
-      submitRecordingForLeavingOut();
-    }
-
-    const isCounselSessionInProgress =
-      counselSessionInfo?.status ===
-      UpdateStatusInCounselSessionReqStatusEnum.InProgress;
-
-    if (isCounselSessionInProgress) {
-      saveConsult();
-    }
-
-    onConfirm();
-    closeDialog();
-  };
+  }, [
+    counselSessionId,
+    saveWasteMedication,
+    saveMedicationRecordList,
+    saveMedicationCounsel,
+  ]);
 
   const completeConsult = async () => {
-    const isRecording =
-      recordingStatus !== RecordingStatus.Ready &&
-      recordingStatus !== RecordingStatus.AICompleted;
-
     await saveConsult();
 
     if (counselSessionInfo?.status !== 'COMPLETED') {
       updateCounselSessionStatus('COMPLETED');
     }
-
-    if (isRecording) {
-      submitRecordingForLeavingOut();
-    }
   };
+
+  // 녹음 시작 함수 - ConsultRecordingControl의 로직을 사용
+  const handleStartRecording = useCallback(async () => {
+    if (recordingControlRef.current?.startRecording) {
+      try {
+        await recordingControlRef.current.startRecording();
+      } catch (error) {
+        console.error('녹음 시작 실패:', error);
+      }
+    } else {
+      // fallback: 통합된 MediaRecorder 관리 기능 사용
+      try {
+        // 1. 마이크 권한 요청
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+
+        // 2. 통합된 MediaRecorder 시작
+        await useRecordingStore.getState().startMediaRecording(stream);
+
+        toast.success('녹음이 시작되었습니다.');
+      } catch (error) {
+        console.error('Fallback 녹음 시작 실패:', error);
+        useRecordingStore.getState().setError('마이크 접근이 거부되었습니다.');
+        toast.error('마이크 접근이 거부되었습니다.');
+      }
+    }
+  }, []);
 
   if (isLoading) {
     return (
@@ -320,45 +273,12 @@ export function Index() {
     );
   }
 
-  const formatDiseases = (
-    diseases:
-      | SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum[]
-      | Set<SelectCounseleeBaseInformationByCounseleeIdResDiseasesEnum>
-      | undefined,
-  ) => {
-    if (!diseases) return '';
-
-    const diseaseArray = Array.isArray(diseases)
-      ? diseases
-      : Array.from(diseases);
-    if (!diseaseArray.length) return '';
-
-    const mappedDiseases = diseaseArray.map((disease) => DISEASE_MAP[disease]);
-
-    if (mappedDiseases.length <= 3) {
-      return mappedDiseases.join(' · ');
-    }
-
-    return (
-      <>
-        {mappedDiseases.slice(0, 3).join(' · ')}
-        <span className="text-grayscale-30">
-          {` 외 ${mappedDiseases.length - 3}개의 질병`}
-        </span>
-      </>
-    );
-  };
-
   const consultStatus = hasPreviousConsult ? '재상담' : '초기 상담';
-  const age = `만 ${counseleeInfo?.age}세`;
-  const diseases = formatDiseases(counseleeInfo?.diseases);
-  const isRecordingDialogClosed =
-    sessionStorage.getItem('isRecordingDialogClosed') === 'true';
 
   return (
     <>
       <Tabs
-        className="flex h-screen w-full flex-col"
+        className="flex w-full flex-col"
         value={activeTab}
         onValueChange={(value) => {
           setActiveTab(value as ConsultTab);
@@ -369,31 +289,25 @@ export function Index() {
           }
           sessionStatus={counselSessionInfo?.status}
           consultStatus={consultStatus}
-          age={age}
-          diseases={diseases}
           saveConsult={saveConsult}
-          recordingStatus={recordingStatus}
           completeConsult={completeConsult}
           hasPreviousConsult={hasPreviousConsult}
+          isSuccessSaveConsult={isSuccessSaveConsult}
+          recordingControlRef={recordingControlRef}
         />
-        {isInitializeAllTabsDataLoading ? (
+        {isConsultDataLoading ? (
           <Spinner />
         ) : (
           <TabContents hasPreviousConsult={hasPreviousConsult} />
         )}
       </Tabs>
 
-      {/* 녹음 진행 여부 Dialog */}
-      {!isLeaveOutDialogOpen &&
-        !isRecordingDialogClosed &&
-        !isRecording &&
-        isSuccessGetIsRecordingPopup &&
-        isPopup && <RecordingDialog />}
-
-      {/* 페이지 이탈 Dialog */}
-      {isLeaveOutDialogOpen && (
-        <CheckLeaveOutDialog onConfirm={handleConfirmLeave} />
-      )}
+      {/* 녹음 시작 다이얼로그 */}
+      <RecordingDialog
+        open={isRecordingDialogOpen}
+        onClose={() => setIsRecordingDialogOpen(false)}
+        onStartRecording={handleStartRecording}
+      />
     </>
   );
 }

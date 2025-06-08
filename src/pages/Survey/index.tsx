@@ -122,13 +122,13 @@ export default function Survey() {
     <Tabs
       value={activeTab}
       onValueChange={setActiveTab}
-      className="flex h-screen w-full flex-col">
-      <div className="flex-none">
+      className="flex w-full flex-col">
+      <div className="sticky top-0 z-10 flex-none">
         <Header
           title={
             <div className="flex w-full items-end justify-between">
               <span>기초 설문 작성</span>
-              <div className="flex gap-2 text-body1 font-bold">
+              <div className="flex gap-2 text-body1 font-semibold">
                 {!isCompleted && (
                   <Button
                     variant="tertiary"

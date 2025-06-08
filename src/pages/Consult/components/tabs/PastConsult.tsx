@@ -1,114 +1,119 @@
-import PastConsultContainer from '@/components/consult/PastConsultContainer';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import PrevCounselTable from '@/pages/Consult/components/table/PrevCounselTable';
-import {
-  PrevCounselSessionListDTO,
-  usePrevCounselSessionList,
-} from '@/pages/Consult/hooks/query/usePrevCounselSessionList';
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useGetAiSummaryQuery } from '@/pages/Consult/hooks/query/counselRecording/useGetAiSummaryQuery';
-import { RecordingStatus } from '@/pages/Consult/types/Recording.enum';
-import ReactMarkdown from 'react-markdown';
-import { useSelectMedicineConsult } from '@/pages/Consult/hooks/query/useMedicineConsultQuery';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import { usePrevCounselSessionDetailList } from '@/pages/Consult/hooks/query/usePrevCounselSessionDetailList';
+import SessionHeader from './components/SessionHeader';
+import RecordCard from './components/RecordCard';
 
 const PastConsult = () => {
   const navigate = useNavigate();
-
   const { counselSessionId } = useParams();
+  const [openSessions, setOpenSessions] = useState<Record<string, boolean>>({});
 
-  const { prevCounselSessionList } = usePrevCounselSessionList(
-    counselSessionId ?? '',
-  );
+  const { prevCounselSessionDetailList, isLoading } =
+    usePrevCounselSessionDetailList(counselSessionId ?? '', 0, 50);
 
-  const prevCounselSessionId = useMemo(() => {
-    if (prevCounselSessionList.length > 0) {
-      return prevCounselSessionList[0]?.counselSessionId;
+  // 데이터 로드 완료 시 첫 번째 세션 자동 열기
+  useEffect(() => {
+    if (!isLoading && prevCounselSessionDetailList.length > 0) {
+      const firstSessionId =
+        prevCounselSessionDetailList[0].counselSessionId ?? '';
+      if (firstSessionId) {
+        setOpenSessions((prev) => ({
+          ...prev,
+          [firstSessionId]: true,
+        }));
+      }
     }
+  }, [isLoading, prevCounselSessionDetailList]);
 
-    return '';
-  }, [prevCounselSessionList]);
-
-  const { data: aiSummary, isSuccess } = useGetAiSummaryQuery(
-    prevCounselSessionId,
-    RecordingStatus.AICompleted,
-  );
-
-  const { data: prevCounselRecord, isLoading: isPrevCounselRecordLoading } =
-    useSelectMedicineConsult(prevCounselSessionId);
-
-  const handleClickPrevCounselSession = (
-    rowData: PrevCounselSessionListDTO,
-  ) => {
-    const prevCounselSessionId = rowData.counselSessionId ?? '';
-
-    navigate(`/consult/${prevCounselSessionId}`);
+  const toggleSession = (sessionId: string) => {
+    setOpenSessions((prev) => ({
+      ...prev,
+      [sessionId]: !prev[sessionId],
+    }));
   };
 
-  const highlightList = useMemo((): string[] => {
-    if (isPrevCounselRecordLoading) return [];
+  const handleViewDetails = (sessionId: string) => {
+    navigate(`/consult/${sessionId}`);
+  };
 
-    const parsedPrevCounselRecord: {
-      type: string;
-      children: { text: string; bold?: boolean }[];
-    }[] =
-      prevCounselRecord?.counselRecord &&
-      prevCounselRecord?.counselRecord !== ''
-        ? JSON.parse(prevCounselRecord?.counselRecord)
-        : [];
-
-    const childrenList = parsedPrevCounselRecord.map((item) => {
-      return item.children;
-    });
-
-    const highlightList = childrenList.map((item) => {
-      const boldList = item.filter((item) => item.bold);
-
-      return boldList.map((item) => item.text);
-    });
-
-    return highlightList.flat();
-  }, [isPrevCounselRecordLoading, prevCounselRecord]);
+  if (isLoading) {
+    return (
+      <Card className="bg-primary-5">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>이전 상담 히스토리</CardTitle>
+          <p className="text-body2 font-normal text-grayscale-60">
+            * [자세히 보러 가기] 클릭 시 해당 회차 페이지로 이동합니다.
+          </p>
+        </CardHeader>
+        <div className="p-4">
+          <div className="text-center">로딩 중...</div>
+        </div>
+      </Card>
+    );
+  }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>지난번 상담에서의 핵심 내용</CardTitle>
-      </CardHeader>
-      <div className="flex flex-row items-start justify-between space-x-4">
-        <PastConsultContainer title="상담 기록 하이라이트" variant="primary">
-          <ul className="mt-4 space-y-2 text-body1 font-medium">
-            {highlightList?.map((item, index) => {
-              return (
-                <li key={index} className="border-l-2 border-grayscale-10 pl-2">
-                  {item}
-                </li>
-              );
-            })}
-          </ul>
-        </PastConsultContainer>
-
-        <PastConsultContainer title="AI 요약" variant="secondary">
-          <h2 className="flex items-center py-3 text-subtitle2 font-bold text-secondary-70"></h2>
-
-          {isSuccess && (
-            <ReactMarkdown className={'prose'}>
-              {aiSummary?.analysedText}
-            </ReactMarkdown>
-          )}
-        </PastConsultContainer>
-      </div>
-
-      <CardHeader>
-        <CardTitle>이전 상담 자세히 보기</CardTitle>
-        <p className="!mt-0 text-body1 font-medium text-grayscale-70">
-          케어링 노트로 남긴 이전 회차 상담 목록
+    <Card className="bg-white">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>이전 상담 히스토리</CardTitle>
+        <p className="text-body2 font-normal text-grayscale-60">
+          * [자세히 보러 가기] 클릭 시 해당 회차 페이지로 이동합니다.
         </p>
       </CardHeader>
-      <div className="h-auto">
-        <PrevCounselTable
-          handleClickPrevCounselSession={handleClickPrevCounselSession}
-        />
+
+      <div className="space-y-4 pb-6">
+        {prevCounselSessionDetailList.length === 0 ? (
+          <div className="py-8 text-center text-grayscale-60">
+            이전 상담 히스토리가 없습니다.
+          </div>
+        ) : (
+          prevCounselSessionDetailList.map((session) => {
+            const sessionId = session.counselSessionId ?? '';
+            const isOpen = openSessions[sessionId] ?? false;
+
+            return (
+              <Collapsible
+                key={sessionId}
+                open={isOpen}
+                className="w-full rounded-lg bg-primary-5 shadow-sm">
+                <CollapsibleTrigger className="w-full">
+                  <SessionHeader
+                    sessionNumber={session.sessionNumber}
+                    counselSessionDate={session.counselSessionDate}
+                    counselorName={session.counselorName}
+                    isOpen={isOpen}
+                    onViewDetails={() => handleViewDetails(sessionId)}
+                    onOpenChange={() => toggleSession(sessionId)}
+                  />
+                </CollapsibleTrigger>
+
+                <CollapsibleContent>
+                  <div className="flex gap-6 px-4 pb-4">
+                    <RecordCard
+                      title="중재기록"
+                      content={session.medicationCounselRecord}
+                      emptyMessage="중재기록이 없습니다."
+                      isLexical={true}
+                    />
+                    <RecordCard
+                      title="AI 요약"
+                      content={session.aiSummary}
+                      emptyMessage="AI 요약이 없습니다."
+                      isLexical={false}
+                    />
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            );
+          })
+        )}
       </div>
     </Card>
   );

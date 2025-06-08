@@ -1,45 +1,32 @@
+import Footer from '@/components/common/Footer';
 import NavigationLeft from '@/components/common/NavigationLeft';
-import NavigationRight from '@/components/common/NavigationRight';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import { useMemo } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 function Layout() {
-  const location = useLocation();
-
-  const isSidebarOpen = useMemo(() => {
-    const isSurvey = location.pathname.includes('/survey');
-
-    if (isSurvey) {
-      return false;
-    }
-
-    return true;
-  }, [location.pathname]);
-
-  const isRightSideBarActive = useMemo(() => {
-    const isConsult = location.pathname.includes('/consult');
-
-    if (isConsult) {
-      return true;
-    }
-
-    return false;
-  }, [location.pathname]);
-
   return (
-    <SidebarProvider defaultOpen={isSidebarOpen}>
-      <div className="flex h-auto w-full justify-start bg-white">
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-white">
         <NavigationLeft />
-        <main
-          className={cn(
-            'flex-1 overflow-x-auto overflow-y-hidden',
-            isRightSideBarActive ? 'pr-[64px]' : '',
-          )}>
-          <Outlet />
-        </main>
-        {isRightSideBarActive && <NavigationRight />}
+        <div className="flex flex-1 flex-col">
+          {/* 접근성을 위한 스킵 링크 */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary-50 focus:px-3 focus:py-2 focus:text-white">
+            메인 콘텐츠로 건너뛰기
+          </a>
+
+          <main
+            id="main-content"
+            className={cn(
+              'min-h-[calc(100vh-80px)] flex-1', // Footer 높이(80px) 제외
+              'overflow-auto', // 콘텐츠가 길 때 스크롤 처리
+            )}>
+            <Outlet />
+          </main>
+          <Footer />
+        </div>
       </div>
     </SidebarProvider>
   );

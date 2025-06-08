@@ -6,12 +6,11 @@ import {
   CardHeader,
 } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { useSelectCounseleeInfo } from '@/hooks/useCounseleeQuery';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useCreateCounseleeConsentMutation } from './hooks/useCounseleeConsentQuery';
+import { useAcceptCounseleeConsentMutation } from './hooks/useCounseleeConsentQuery';
 
 // 동의서 섹션 타입 정의
 interface ContentSection {
@@ -137,7 +136,7 @@ function ConsentContent({ sections }: { sections: ContentSection[] }) {
             return (
               <h3
                 key={index}
-                className="mb-3 text-body1 font-bold text-grayscale-90">
+                className="mb-3 text-body1 font-semibold text-grayscale-90">
                 {section.content}
               </h3>
             );
@@ -177,10 +176,7 @@ function ConsentContent({ sections }: { sections: ContentSection[] }) {
 export default function Consent() {
   const navigate = useNavigate();
   const { counselSessionId } = useParams<{ counselSessionId: string }>();
-  const createConsentMutation = useCreateCounseleeConsentMutation();
-  const { data: counseleeInfo } = useSelectCounseleeInfo(
-    counselSessionId ?? '',
-  );
+  const acceptConsentMutation = useAcceptCounseleeConsentMutation();
   const [selectedConsent, setSelectedConsent] = useState<ConsentItem | null>(
     null,
   );
@@ -204,7 +200,7 @@ export default function Consent() {
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-grayscale-3 p-4">
-      <Card className="flex w-[30rem] flex-col items-center justify-center bg-white px-5 pb-5 pt-10 shadow-md">
+      <Card className="flex w-[30rem] flex-col items-center justify-center rounded-[20px] bg-white px-5 pb-5 pt-10 shadow-md">
         {selectedConsent ? (
           // 선택된 동의 상세 내용 페이지
           <div className="w-full p-4">
@@ -230,10 +226,11 @@ export default function Consent() {
         ) : (
           // 메인 동의서 페이지
           <>
-            <CardHeader>
-              <h3 className="text-h3 font-bold">
-                개인정보 수집 동의서를 작성해주세요.
-              </h3>
+            <CardHeader className="w-full">
+              <div className="mx-[10px] w-full text-left text-h3 font-bold">
+                개인정보 수집 동의서를 <br />
+                작성해주세요.
+              </div>
             </CardHeader>
 
             <CardContent className="w-full pb-5">
@@ -256,21 +253,19 @@ export default function Consent() {
 
             <CardFooter className="w-full">
               <Button
-                className="w-full"
-                disabled={!counselSessionId || !counseleeInfo}
+                className="w-full text-body1 font-semibold text-white"
+                disabled={!counselSessionId}
                 size="xl"
                 variant={'primary'}
                 onClick={async () => {
-                  if (!counselSessionId || !counseleeInfo) {
-                    console.error('상담 세션 ID 또는 내담자 정보가 없습니다.');
+                  if (!counselSessionId) {
+                    console.error('상담 세션 ID가 없습니다.');
                     return;
                   }
 
                   try {
-                    await createConsentMutation.mutateAsync({
+                    await acceptConsentMutation.mutateAsync({
                       counselSessionId,
-                      counseleeId: counseleeInfo.counseleeId || '',
-                      consent: true,
                     });
                     navigate(`/survey/${counselSessionId}`);
                   } catch (error) {

@@ -86,6 +86,12 @@ export interface UpdateCounseleeReq {
      * @memberof UpdateCounseleeReq
      */
     'careManagerName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCounseleeReq
+     */
+    'healthInsuranceType'?: UpdateCounseleeReqHealthInsuranceTypeEnum;
 }
 
 export const UpdateCounseleeReqGenderTypeEnum = {
@@ -95,5 +101,13 @@ export const UpdateCounseleeReqGenderTypeEnum = {
 } as const;
 
 export type UpdateCounseleeReqGenderTypeEnum = typeof UpdateCounseleeReqGenderTypeEnum[keyof typeof UpdateCounseleeReqGenderTypeEnum];
+export const UpdateCounseleeReqHealthInsuranceTypeEnum = {
+    HealthInsurance: 'HEALTH_INSURANCE',
+    MedicalAid: 'MEDICAL_AID',
+    VeteransBenefits: 'VETERANS_BENEFITS',
+    NonCovered: 'NON_COVERED'
+} as const;
+
+export type UpdateCounseleeReqHealthInsuranceTypeEnum = typeof UpdateCounseleeReqHealthInsuranceTypeEnum[keyof typeof UpdateCounseleeReqHealthInsuranceTypeEnum];
 
 

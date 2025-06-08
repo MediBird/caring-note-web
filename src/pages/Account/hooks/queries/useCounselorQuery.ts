@@ -2,6 +2,8 @@ import {
   CounselorControllerApi,
   type ResetPasswordReq,
   type UpdateCounselorReq,
+  type UpdateMyInfoReq,
+  type ChangePasswordReq,
 } from '@/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CounselorFetchParams } from '../store/useCounselorStore';
@@ -96,5 +98,52 @@ export const useResetPassword = () => {
       );
       return response.data;
     },
+  });
+};
+
+// 내 정보 업데이트 훅
+export const useUpdateMyInfo = (
+  onSuccess?: () => void,
+  onError?: (error: unknown) => void,
+) => {
+  return useMutation({
+    mutationFn: async (updateMyInfoReq: UpdateMyInfoReq) => {
+      const response =
+        await counselorControllerApi.updateMyInfo(updateMyInfoReq);
+      return response.data;
+    },
+    onSuccess,
+    onError,
+  });
+};
+
+// 내 비밀번호 변경 훅
+export const useChangeMyPassword = (
+  onSuccess?: () => void,
+  onError?: (error: unknown) => void,
+) => {
+  return useMutation({
+    mutationFn: async (changePasswordReq: ChangePasswordReq) => {
+      const response =
+        await counselorControllerApi.changeMyPassword(changePasswordReq);
+      return response.data;
+    },
+    onSuccess,
+    onError,
+  });
+};
+
+// 내 계정 탈퇴 훅
+export const useDeleteMyAccount = (
+  onSuccess?: () => void,
+  onError?: (error: unknown) => void,
+) => {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await counselorControllerApi.deleteMyAccount();
+      return response.data;
+    },
+    onSuccess,
+    onError,
   });
 };

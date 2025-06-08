@@ -1,7 +1,4 @@
-import {
-  GetCounselorResRoleTypeEnum,
-  SelectCounselSessionListItem,
-} from '@/api';
+import { GetCounselorResRoleTypeEnum } from '@/api';
 import background from '@/assets/home/home-bg.webp';
 import logoWide from '@/assets/home/logo-wide.webp';
 import tableEmpty from '@/assets/home/table-empty.webp';
@@ -10,29 +7,19 @@ import onlypc from '@/assets/illusts/onlypc.webp';
 import Spinner from '@/components/common/Spinner';
 import DatePickerComponent from '@/components/ui/datepicker';
 import { useAuthContext } from '@/context/AuthContext';
-import { useSelectCounselSessionList } from '@/hooks/useCounselSessionListQuery';
-import { cn } from '@/lib/utils';
-import CollegeMessages from '@/pages/Home/components/CollegeMessages';
-import ConsultCountContainer from '@/pages/Home/components/ConsultCountContainer';
-import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
-import { formatDateToHyphen } from '@/utils/formatDateToHyphen';
-import { addMonths } from 'date-fns';
-import { useEffect, useMemo, useState } from 'react';
 import { useCounselActiveDate } from './hooks/query/useCounselActiveDate';
+import CollegeMessages from '@/pages/Home/components/CollegeMessages';
+import ConsultCountContainer from '@/pages/Home/components/MeaningfulStatistics';
+import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
+import { useHomeDateStore } from './hooks/useHomeDateStore';
+import { cn } from '@/lib/utils';
+import MeaningfulStatistics from '@/pages/Home/components/MeaningfulStatistics';
+import { MyProfileDialog } from '@/components/common/MyProfileDialog';
 
 function Home() {
-  const today = new Date();
-
-  const thisMonth = addMonths(today, 0);
-  const [selectedDate, setSelectedDate] = useState(today);
-  const [selectedMonth, setSelectedMonth] = useState(thisMonth);
+  const { selectedDate, selectedMonth, setSelectedDate, setSelectedMonth } =
+    useHomeDateStore();
   const { user } = useAuthContext();
-
-  const { data: counselList, isLoading: isCounselListLoading } =
-    useSelectCounselSessionList({
-      baseDate: formatDateToHyphen(selectedDate),
-      page: 0,
-    });
 
   const { data: counselActiveDate, isLoading: isCounselActiveDateLoading } =
     useCounselActiveDate({
@@ -40,19 +27,6 @@ function Home() {
       month: selectedMonth.getMonth() + 1,
       userType: user?.roleType as GetCounselorResRoleTypeEnum,
     });
-
-  useEffect(() => {
-    sessionStorage.setItem('isRecordingDialogClosed', 'false');
-  }, []);
-
-  const formattedCounselList = useMemo(() => {
-    return counselList?.content?.map((item: SelectCounselSessionListItem) => {
-      return {
-        ...item,
-        id: item.counselSessionId,
-      };
-    });
-  }, [counselList]);
 
   return (
     <div
@@ -62,9 +36,9 @@ function Home() {
         <div className="flex w-full items-center justify-between">
           <img src={logoWide} alt="logo" width={310} />
           <div className="flex items-center gap-4 font-medium text-primary-50">
-            <a className="border-b-2 border-primary-50" href="/">
-              내 정보
-            </a>
+            <MyProfileDialog>
+              <button className="border-b-2 border-primary-50">내 정보</button>
+            </MyProfileDialog>
             <a
               className="border-b-2 border-primary-50"
               href="https://withnp.campaignus.me/"
@@ -92,7 +66,7 @@ function Home() {
                       trigger={
                         <button
                           className={cn(
-                            'flex items-center gap-0.5 px-2 text-right text-body1 font-bold',
+                            'flex items-center gap-0.5 px-2 text-right text-body1 font-semibold',
                           )}>
                           <CalendarIcon />
                           날짜 선택
@@ -100,7 +74,7 @@ function Home() {
                       }
                       initialDate={selectedDate}
                       selectedMonth={selectedMonth}
-                      onMonthChange={setSelectedMonth}
+                      onMonthChange={(month) => setSelectedMonth(month as Date)}
                       handleClicked={(date?: Date) => {
                         setSelectedDate(date ?? new Date());
                       }}
@@ -129,7 +103,8 @@ function Home() {
                 )}
                 {user &&
                   user.roleType !== GetCounselorResRoleTypeEnum.None &&
-                  formattedCounselList?.length === 0 && (
+                  !counselActiveDate &&
+                  isCounselActiveDateLoading && (
                     <div className="flex flex-1 flex-col items-center justify-center">
                       <img src={tableEmpty} alt="table-empty" />
                       <span className="text-2xl font-bold">
@@ -143,27 +118,21 @@ function Home() {
 
                 {user &&
                   user.roleType !== GetCounselorResRoleTypeEnum.None &&
-                  isCounselListLoading && (
+                  isCounselActiveDateLoading && (
                     <div className="flex flex-1 flex-col items-center justify-center">
                       <Spinner className="h-10 w-10" />
                     </div>
                   )}
 
-                {user &&
-                  user.roleType !== GetCounselorResRoleTypeEnum.None &&
-                  formattedCounselList &&
-                  formattedCounselList.length > 0 && (
-                    <TodayScheduleTable
-                      counselList={formattedCounselList ?? []}
-                      userType={user.roleType as GetCounselorResRoleTypeEnum}
-                    />
-                  )}
+                {user && user.roleType !== GetCounselorResRoleTypeEnum.None && (
+                  <TodayScheduleTable />
+                )}
               </div>
             </div>
           </div>
           {/* min-width 1440px 이하 */}
           <div className="flex w-full flex-col justify-center gap-4 hd:hidden">
-            <ConsultCountContainer />
+            <MeaningfulStatistics />
             <CollegeMessages />
           </div>
         </div>

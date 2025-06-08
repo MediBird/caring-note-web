@@ -29,8 +29,8 @@ const UsableSiteInfo = [
   },
   {
     name: '건강보험심사평가원',
-    description: '최근 1년간의 의약훔 내역 확인',
-    url: 'https://www.hira.or.kr/main.do',
+    description: '최근 1년간의 의약품 내역 확인',
+    url: 'https://www.hira.or.kr/rb/dur/form.do?pgmid=HIRAA050300000100&WT.ac=%EB%82%B4%EA%B0%80%EB%A8%B9%EB%8A%94%EC%95%BD%ED%95%9C%EB%88%88%EC%97%90%EB%B0%94%EB%A1%9C%EA%B0%80%EA%B8%B0#',
     image: InsuranceImg,
     backgroundColor: 'bg-primary-5',
   },
