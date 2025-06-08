@@ -246,15 +246,20 @@ export function Index() {
         console.error('녹음 시작 실패:', error);
       }
     } else {
-      // fallback: 기본 로직
+      // fallback: 통합된 MediaRecorder 관리 기능 사용
       try {
-        await navigator.mediaDevices.getUserMedia({
+        // 1. 마이크 권한 요청
+        const stream = await navigator.mediaDevices.getUserMedia({
           audio: true,
         });
-        useRecordingStore.getState().startRecording();
-        toast.info('녹음이 시작되었습니다.');
+
+        // 2. 통합된 MediaRecorder 시작
+        await useRecordingStore.getState().startMediaRecording(stream);
+
+        toast.success('녹음이 시작되었습니다.');
       } catch (error) {
-        console.error('녹음 시작 실패:', error);
+        console.error('Fallback 녹음 시작 실패:', error);
+        useRecordingStore.getState().setError('마이크 접근이 거부되었습니다.');
         toast.error('마이크 접근이 거부되었습니다.');
       }
     }

@@ -38,10 +38,6 @@ export const ConsultRecordingControl: React.FC<
     loadStateForSession,
     setCurrentCounselSessionId,
     resetRecordingState,
-    startRecording: storeStartRecording,
-    pauseRecording: storePauseRecording,
-    resumeRecording: storeResumeRecording,
-    stopRecording: storeStopRecording,
     setTotalDuration,
     setCurrentSessionDuration,
     aiSummaryStatus,
@@ -51,8 +47,6 @@ export const ConsultRecordingControl: React.FC<
   } = useRecordingStore();
 
   const {
-    startRecording,
-    stopRecording,
     uploadRecording,
     abortUpload,
     handleMerge: tusHandleMerge,
@@ -114,6 +108,10 @@ export const ConsultRecordingControl: React.FC<
   }, [stopAutoSaveTimer, saveRecordingToStorage]);
 
   const cleanupRecordingResources = useCallback(() => {
+    // 통합된 MediaRecorder 정리
+    const { cleanupMediaRecorder } = useRecordingStore.getState();
+    cleanupMediaRecorder();
+
     if (mediaStreamRef.current) {
       mediaStreamRef.current.getTracks().forEach((track) => track.stop());
       mediaStreamRef.current = null;
@@ -215,13 +213,12 @@ export const ConsultRecordingControl: React.FC<
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaStreamRef.current = stream;
 
-      // 스토어 상태 업데이트
-      storeStartRecording();
+      // 통합된 MediaRecorder 시작
+      const { startMediaRecording } = useRecordingStore.getState();
+      await startMediaRecording(stream);
+
       startDurationTimer();
       startAutoSaveTimer(); // 자동 저장 시작
-
-      // TUS 녹음 시작 (업로드는 저장 버튼 클릭 시)
-      await startRecording(stream);
 
       toast.success('녹음이 시작되었습니다.');
     } catch (error) {
@@ -229,26 +226,25 @@ export const ConsultRecordingControl: React.FC<
       toast.error('마이크 접근이 거부되었습니다.');
       cleanupRecordingResources();
     }
-  }, [
-    startRecording,
-    storeStartRecording,
-    startDurationTimer,
-    startAutoSaveTimer,
-    cleanupRecordingResources,
-  ]);
+  }, [startDurationTimer, startAutoSaveTimer, cleanupRecordingResources]);
 
   const handlePauseRecording = useCallback(() => {
     stopDurationTimer();
     stopAutoSaveTimer(); // 자동 저장 중단
-    storePauseRecording();
-  }, [stopDurationTimer, stopAutoSaveTimer, storePauseRecording]);
+
+    // 통합된 MediaRecorder 일시정지
+    const { pauseMediaRecording } = useRecordingStore.getState();
+    pauseMediaRecording();
+  }, [stopDurationTimer, stopAutoSaveTimer]);
 
   const handleResumeRecording = useCallback(() => {
-    storeResumeRecording();
+    // 통합된 MediaRecorder 재개
+    const { resumeMediaRecording } = useRecordingStore.getState();
+    resumeMediaRecording();
+
     startDurationTimer();
     startAutoSaveTimer(); // 자동 저장 재개
-    // MediaRecorder 재개는 useTusUpload에서 처리하지 않음
-  }, [storeResumeRecording, startDurationTimer, startAutoSaveTimer]);
+  }, [startDurationTimer, startAutoSaveTimer]);
 
   const handleStopRecording = useCallback(async () => {
     stopDurationTimer();
@@ -258,11 +254,11 @@ export const ConsultRecordingControl: React.FC<
     const newTotalDuration = totalDuration + currentSessionDuration;
     setTotalDuration(newTotalDuration);
     setCurrentSessionDuration(0);
-    storeStopRecording();
 
     try {
-      // TUS 녹음 정지 (Blob 생성)
-      const blob = await stopRecording();
+      // 통합된 MediaRecorder 정지 (Blob 생성)
+      const { stopMediaRecording } = useRecordingStore.getState();
+      const blob = await stopMediaRecording();
 
       if (mediaStreamRef.current) {
         mediaStreamRef.current.getTracks().forEach((track) => track.stop());
@@ -287,8 +283,6 @@ export const ConsultRecordingControl: React.FC<
     currentSessionDuration,
     setTotalDuration,
     setCurrentSessionDuration,
-    storeStopRecording,
-    stopRecording,
     counselSessionId,
     saveRecordingToStorage,
   ]);
