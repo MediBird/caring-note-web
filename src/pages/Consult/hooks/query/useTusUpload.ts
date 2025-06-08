@@ -206,26 +206,42 @@ export const useTusUpload = ({
           },
           onSuccess: () => {
             console.log('TUS 업로드 완료:', upload.url);
+            setProgress(95);
+            setIsUploading(false);
+            toast.success('녹음 업로드가 완료되었습니다!');
+
             if (upload.url) {
               const extractedFileId = extractFileIdFromUrl(upload.url);
               setFileId(extractedFileId);
               resolve(extractedFileId);
+            } else {
+              const errorMessage =
+                '업로드가 완료되었지만 파일 URL을 받지 못했습니다.';
+              setError(errorMessage);
+              reject(new Error(errorMessage));
             }
-            setProgress(95);
-            setIsUploading(false);
-            toast.success('녹음 업로드가 완료되었습니다!');
           },
         });
 
         uploadRef.current = upload;
 
         // 이전 업로드 확인 및 시작
-        upload.findPreviousUploads().then((previousUploads) => {
-          if (previousUploads.length) {
-            upload.resumeFromPreviousUpload(previousUploads[0]);
-          }
-          upload.start();
-        });
+        upload
+          .findPreviousUploads()
+          .then((previousUploads) => {
+            if (previousUploads.length) {
+              upload.resumeFromPreviousUpload(previousUploads[0]);
+            }
+            upload.start();
+          })
+          .catch((findError) => {
+            console.warn(
+              '이전 업로드 조회 실패, 새로운 업로드를 시작합니다:',
+              findError,
+            );
+            // 이전 업로드 조회에 실패해도 새로운 업로드는 시작
+            upload.start();
+          });
       });
     } catch (uploadError) {
       const errorMessage =
