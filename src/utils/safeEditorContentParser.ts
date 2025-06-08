@@ -1,17 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * Slate 데이터 형식을 Lexical 형식으로 변환하는 함수
- * @param slateContent Slate 에디터에서 직렬화된 JSON
+ * 에디터 콘텐츠를 안전하게 파싱하는 함수
+ * @param editorContent 에디터에서 직렬화된 JSON
  * @returns Lexical 형식의 JSON 문자열
  */
-export function convertSlateToLexical(slateContent: string): string | null {
-  if (slateContent === '') {
+export function safeEditorContentParser(editorContent: string): string | null {
+  if (editorContent === null || editorContent === '') {
     return null;
   }
 
   try {
     // Slate 콘텐츠 파싱
-    const slateData = JSON.parse(slateContent);
+    const slateData = JSON.parse(editorContent);
+
+    if (slateData.root) {
+      return editorContent;
+    }
 
     // 지정된 형식의 Lexical 구조 생성
     const lexicalData: any = {

@@ -7,6 +7,7 @@ interface SessionHeaderProps {
   counselorName?: string;
   isOpen: boolean;
   onViewDetails: () => void;
+  onOpenChange: () => void;
 }
 
 const SessionHeader = ({
@@ -15,6 +16,7 @@ const SessionHeader = ({
   counselorName,
   isOpen,
   onViewDetails,
+  onOpenChange,
 }: SessionHeaderProps) => {
   const formatDate = (dateString?: string) => {
     if (!dateString) return '';
@@ -26,7 +28,7 @@ const SessionHeader = ({
   };
 
   return (
-    <div className="flex items-center justify-between rounded-lg p-4 hover:bg-primary-10">
+    <div className="flex items-center justify-between rounded-lg p-4">
       <div className="flex items-center gap-2">
         <div className="h-2 w-2 rounded-full bg-primary-50"></div>
         <span className="text-subtitle1 font-semibold">
@@ -48,11 +50,23 @@ const SessionHeader = ({
           자세히 보러 가기
         </Button>
         {isOpen ? (
-          <Button variant="secondary" size="lg">
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenChange();
+            }}>
             <ChevronDownIcon className="h-5 w-5" />
           </Button>
         ) : (
-          <Button variant="secondary" size="lg">
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenChange();
+            }}>
             <ChevronUpIcon className="h-5 w-5" />
           </Button>
         )}

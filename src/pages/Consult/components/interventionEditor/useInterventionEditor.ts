@@ -7,8 +7,8 @@ import {
 import { useMedicationConsultStore } from '@/pages/Consult/hooks/store/useMedicationConsultStore';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { convertSlateToLexical } from '@/utils/convertSlateToLexcialState';
-import { getIsSlateNode } from '@/utils/convertSlateToLexcialState';
+import { safeEditorContentParser } from '@/utils/safeEditorContentParser';
+import { getIsSlateNode } from '@/utils/safeEditorContentParser';
 import { toast } from 'sonner';
 
 export type SAVE_STATUS = 'SAVED' | 'CHANGED' | 'SAVING' | 'INIT';
@@ -96,7 +96,7 @@ export const useInterventionEditor = () => {
 
       if (isSlateNode) {
         setEditorContent(
-          convertSlateToLexical(medicineConsultData?.counselRecord || ''),
+          safeEditorContentParser(medicineConsultData?.counselRecord || ''),
         );
       } else {
         if (medicineConsultData?.counselRecord === '') {
