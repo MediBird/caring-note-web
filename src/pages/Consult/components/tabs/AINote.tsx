@@ -240,7 +240,7 @@ const AINote: React.FC = () => {
   return (
     <div className="grid grid-cols-2 gap-6">
       <AISummarySection
-        analysedText={analysedText}
+        analysedText={analysedText || { analysedText: '' }}
         isLoading={isAnalysedTextLoading}
         statusProps={statusProps}
       />
