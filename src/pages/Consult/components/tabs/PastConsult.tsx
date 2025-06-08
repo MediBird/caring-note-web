@@ -9,7 +9,6 @@ import {
 import { usePrevCounselSessionDetailList } from '@/pages/Consult/hooks/query/usePrevCounselSessionDetailList';
 import SessionHeader from './components/SessionHeader';
 import RecordCard from './components/RecordCard';
-import { getMarkdownFromLexical } from '@/utils/getMarkdownFromLexical';
 
 const PastConsult = () => {
   const navigate = useNavigate();
@@ -83,7 +82,6 @@ const PastConsult = () => {
               <Collapsible
                 key={sessionId}
                 open={isOpen}
-                onOpenChange={() => toggleSession(sessionId)}
                 className="w-full rounded-lg bg-primary-5 shadow-sm">
                 <CollapsibleTrigger className="w-full">
                   <SessionHeader
@@ -92,6 +90,7 @@ const PastConsult = () => {
                     counselorName={session.counselorName}
                     isOpen={isOpen}
                     onViewDetails={() => handleViewDetails(sessionId)}
+                    onOpenChange={() => toggleSession(sessionId)}
                   />
                 </CollapsibleTrigger>
 
@@ -99,15 +98,15 @@ const PastConsult = () => {
                   <div className="flex gap-6 px-4 pb-4">
                     <RecordCard
                       title="중재기록"
-                      content={getMarkdownFromLexical(
-                        session.medicationCounselRecord,
-                      )}
+                      content={session.medicationCounselRecord}
                       emptyMessage="중재기록이 없습니다."
+                      isLexical={true}
                     />
                     <RecordCard
                       title="AI 요약"
                       content={session.aiSummary}
                       emptyMessage="AI 요약이 없습니다."
+                      isLexical={false}
                     />
                   </div>
                 </CollapsibleContent>
