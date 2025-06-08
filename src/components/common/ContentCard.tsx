@@ -5,7 +5,7 @@ import { History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ContentItem {
-  label: string;
+  label?: string;
   value: string | React.ReactNode;
 }
 
@@ -14,19 +14,26 @@ interface ContentCardProps {
   items: ContentItem[];
   hasHistory?: boolean;
   historyActive?: boolean;
-  badgeVariant?: 'default' | 'destructive' | 'secondary' | 'outline';
+  badgeVariant?:
+    | 'default'
+    | 'destructive'
+    | 'secondary'
+    | 'outline'
+    | 'errorLight'
+    | 'primaryLight';
   badgeText?: string;
   className?: string;
+  horizontalLayout?: boolean;
 }
 
 const ContentCard: React.FC<ContentCardProps> = ({
   title,
   items,
   hasHistory = false,
-  historyActive = false,
   badgeVariant,
   badgeText,
   className,
+  horizontalLayout = false,
 }) => {
   return (
     <Card className={cn('h-fit p-4', className)}>
@@ -37,10 +44,8 @@ const ContentCard: React.FC<ContentCardProps> = ({
             {hasHistory && (
               <History
                 className={cn(
-                  'h-4 w-4',
-                  historyActive
-                    ? 'text-primary hover:text-primary/80 cursor-pointer'
-                    : 'text-muted-foreground/50',
+                  'h-6 w-6',
+                  'text-primary hover:text-primary/80 cursor-pointer rounded-lg bg-grayscale-5 p-[2px]',
                 )}
               />
             )}
@@ -52,10 +57,18 @@ const ContentCard: React.FC<ContentCardProps> = ({
       </CardHeader>
       <CardContent className="space-y-3">
         {items.map((item, index) => (
-          <div key={index} className="flex flex-col space-y-1">
-            <span className="text-body1 font-semibold text-grayscale-100">
-              {item.label}
-            </span>
+          <div
+            key={index}
+            className={cn(
+              horizontalLayout
+                ? 'flex items-center justify-between'
+                : 'flex flex-col space-y-1',
+            )}>
+            {item.label && (
+              <span className="text-body1 font-semibold text-grayscale-100">
+                {item.label}
+              </span>
+            )}
             <span
               className={cn(
                 'text-body1 font-normal',
