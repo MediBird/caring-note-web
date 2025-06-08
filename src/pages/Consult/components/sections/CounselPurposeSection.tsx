@@ -1,13 +1,9 @@
 import React from 'react';
 import {
-  BaseInfoDTOHealthInsuranceTypeEnum,
   CounselCardBaseInformationRes,
   CounselPurposeAndNoteDTOCounselPurposeEnum,
 } from '@/api';
-import {
-  COUNSEL_PURPOSE_MAP,
-  HEALTH_INSURANCE_TYPE_MAP,
-} from '@/utils/constants';
+import { COUNSEL_PURPOSE_MAP } from '@/utils/constants';
 import ContentCard from '@/components/common/ContentCard';
 import SectionContainer from '@/components/common/SectionContainer';
 
@@ -18,29 +14,8 @@ interface CounselPurposeSectionProps {
 const CounselPurposeSection: React.FC<CounselPurposeSectionProps> = ({
   baseInfoData,
 }) => {
-  const baseInfoItems = [
-    {
-      label: '성명',
-      value: baseInfoData?.baseInfo?.counseleeName || '-',
-    },
-    {
-      label: '생년월일',
-      value: baseInfoData?.baseInfo?.birthDate || '-',
-    },
-    {
-      label: '의료보장형태',
-      value: baseInfoData?.baseInfo?.healthInsuranceType
-        ? HEALTH_INSURANCE_TYPE_MAP[
-            baseInfoData.baseInfo
-              .healthInsuranceType as BaseInfoDTOHealthInsuranceTypeEnum
-          ]
-        : '-',
-    },
-  ];
-
   const counselPurposeItems = [
     {
-      label: '상담 목적',
       value: Array.isArray(baseInfoData?.counselPurposeAndNote?.counselPurpose)
         ? baseInfoData?.counselPurposeAndNote.counselPurpose
             .map(
@@ -50,34 +25,44 @@ const CounselPurposeSection: React.FC<CounselPurposeSectionProps> = ({
                 ],
             )
             .join(', ')
-        : '-',
+        : null,
     },
+  ];
+
+  const significantNoteItems = [
     {
-      label: '특이사항',
-      value: baseInfoData?.counselPurposeAndNote?.significantNote || '-',
+      value: baseInfoData?.counselPurposeAndNote?.significantNote || null,
     },
+  ];
+
+  const medicationItems = [
     {
-      label: '의약품',
-      value: baseInfoData?.counselPurposeAndNote?.medicationNote || '-',
+      value: baseInfoData?.counselPurposeAndNote?.medicationNote || null,
     },
   ];
 
   return (
     <SectionContainer title="상담 목적 및 특이사항" variant="default">
       <ContentCard
-        title="기본 정보"
-        items={baseInfoItems}
-        hasHistory={false}
-        badgeVariant="default"
-        badgeText="기본"
-      />
-      <ContentCard
-        title="상담 목적 및 특이사항"
+        title="상담 목적"
         items={counselPurposeItems}
         hasHistory={true}
         historyActive={true}
-        badgeVariant="default"
         badgeText="상담"
+      />
+      <ContentCard
+        title="특이사항"
+        items={significantNoteItems}
+        hasHistory={true}
+        historyActive={true}
+        badgeText="특이사항"
+      />
+      <ContentCard
+        title="약물"
+        items={medicationItems}
+        hasHistory={true}
+        historyActive={true}
+        badgeText="약물"
       />
     </SectionContainer>
   );

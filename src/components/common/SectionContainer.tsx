@@ -28,15 +28,15 @@ const SectionContainer: React.FC<SectionContainerProps> = ({
   };
 
   return (
-    <div
-      className={cn(
-        'space-y-4 rounded-lg border p-2',
-        getVariantStyles(),
-        className,
-      )}>
+    <div>
       <h2 className="text-foreground mb-4 text-xl font-bold">{title}</h2>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-        {children}
+      <div
+        className={cn(
+          'space-y-4 rounded-lg border p-2',
+          getVariantStyles(),
+          className,
+        )}>
+        <div className="flex flex-col gap-2">{children}</div>
       </div>
     </div>
   );
