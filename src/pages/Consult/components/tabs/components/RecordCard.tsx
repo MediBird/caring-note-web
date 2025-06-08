@@ -9,6 +9,7 @@ import { CodeNode } from '@lexical/code';
 import { LinkNode } from '@lexical/link';
 import { HorizontalRuleNode } from '@lexical/react/LexicalHorizontalRuleNode';
 import { EDITOR_THEME } from '@/pages/Consult/constants/EditorTheme';
+import { safeEditorContentParser } from '@/utils/safeEditorContentParser';
 
 interface RecordCardProps {
   title: string;
@@ -34,7 +35,7 @@ const LexicalReadOnlyRenderer = ({ content }: { content: string }) => {
       ListItemNode,
       QuoteNode,
     ],
-    editorState: content,
+    editorState: safeEditorContentParser(content),
   };
 
   return (
