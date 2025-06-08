@@ -34,52 +34,14 @@ export const TusControllerApiAxiosParamCreator = function (configuration?: Confi
         /**
          * 
          * @summary 업로드된 tus 파일을 삭제합니다.
-         * @param {string} fileId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteUploadedFile: async (fileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'fileId' is not null or undefined
-            assertParamExists('deleteUploadedFile', 'fileId', fileId)
-            const localVarPath = `/v1/tus/{fileId}`
-                .replace(`{${"fileId"}}`, encodeURIComponent(String(fileId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary 상담세션의 모든 업로드된 tus 파일들을 삭제합니다.
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteUploadedFilesByCounselSession: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteUploadedFile: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'counselSessionId' is not null or undefined
-            assertParamExists('deleteUploadedFilesByCounselSession', 'counselSessionId', counselSessionId)
-            const localVarPath = `/v1/tus/session/{counselSessionId}`
+            assertParamExists('deleteUploadedFile', 'counselSessionId', counselSessionId)
+            const localVarPath = `/v1/tus/{counselSessionId}`
                 .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -147,16 +109,16 @@ export const TusControllerApiAxiosParamCreator = function (configuration?: Confi
         },
         /**
          * 
-         * @summary 상담세션의 업로드 리소스들의 현재 상태를 조회합니다.
-         * @param {string} counselSessionId 
+         * @summary 지정된 업로드 리소스의 현재 업로드 오프셋, 길이 및 녹음 길이를 조회합니다.
+         * @param {string} tusFileId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUploadStatus: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'counselSessionId' is not null or undefined
-            assertParamExists('getUploadStatus', 'counselSessionId', counselSessionId)
-            const localVarPath = `/v1/tus/status/{counselSessionId}`
-                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
+        getUploadStatus: async (tusFileId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tusFileId' is not null or undefined
+            assertParamExists('getUploadStatus', 'tusFileId', tusFileId)
+            const localVarPath = `/v1/tus/{tusFileId}`
+                .replace(`{${"tusFileId"}}`, encodeURIComponent(String(tusFileId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -185,7 +147,7 @@ export const TusControllerApiAxiosParamCreator = function (configuration?: Confi
         },
         /**
          * 
-         * @summary 업로드한 상담세션 녹음 파일을 병합합니다.
+         * @summary 업로드한 상담세션 녹음 파일을 병합합니다. 테스트용 API 입니다.
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -259,14 +221,15 @@ export const TusControllerApiAxiosParamCreator = function (configuration?: Confi
          * 
          * @summary 새로운 tus 업로드 리소스를 생성합니다. X-Recording-Duration 헤더로 녹음 길이(초)를 전달할 수 있습니다.
          * @param {string} uploadMetadata 업로드 메타데이터
-         * @param {number} [uploadLength] 전체 파일 크기 (bytes)
-         * @param {boolean} [uploadDeferLength] 업로드 크기 지연 여부 (1이면 true)
+         * @param {boolean} uploadDeferLength 업로드 크기 지연 여부 (1이면 true)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startUpload: async (uploadMetadata: string, uploadLength?: number, uploadDeferLength?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        startUpload: async (uploadMetadata: string, uploadDeferLength: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'uploadMetadata' is not null or undefined
             assertParamExists('startUpload', 'uploadMetadata', uploadMetadata)
+            // verify required parameter 'uploadDeferLength' is not null or undefined
+            assertParamExists('startUpload', 'uploadDeferLength', uploadDeferLength)
             const localVarPath = `/v1/tus`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -287,11 +250,6 @@ export const TusControllerApiAxiosParamCreator = function (configuration?: Confi
     
             if (uploadMetadata != null) {
                 localVarHeaderParameter['Upload-Metadata'] = String(uploadMetadata);
-            }
-            if (uploadLength != null) {
-                localVarHeaderParameter['Upload-Length'] = typeof uploadLength === 'string'
-                    ? uploadLength
-                    : JSON.stringify(uploadLength);
             }
             if (uploadDeferLength != null) {
                 localVarHeaderParameter['Upload-Defer-Length'] = typeof uploadDeferLength === 'string'
@@ -363,44 +321,6 @@ export const TusControllerApiAxiosParamCreator = function (configuration?: Confi
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * 
-         * @summary 상담세션의 업로드된 파일들이 병합 가능한 상태인지 검증합니다.
-         * @param {string} counselSessionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        validateUploadedFiles: async (counselSessionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'counselSessionId' is not null or undefined
-            assertParamExists('validateUploadedFiles', 'counselSessionId', counselSessionId)
-            const localVarPath = `/v1/tus/validate/{counselSessionId}`
-                .replace(`{${"counselSessionId"}}`, encodeURIComponent(String(counselSessionId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer-jwt required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -414,27 +334,14 @@ export const TusControllerApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary 업로드된 tus 파일을 삭제합니다.
-         * @param {string} fileId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteUploadedFile(fileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUploadedFile(fileId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['TusControllerApi.deleteUploadedFile']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary 상담세션의 모든 업로드된 tus 파일들을 삭제합니다.
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteUploadedFilesByCounselSession(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUploadedFilesByCounselSession(counselSessionId, options);
+        async deleteUploadedFile(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUploadedFile(counselSessionId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['TusControllerApi.deleteUploadedFilesByCounselSession']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['TusControllerApi.deleteUploadedFile']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -452,20 +359,20 @@ export const TusControllerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary 상담세션의 업로드 리소스들의 현재 상태를 조회합니다.
-         * @param {string} counselSessionId 
+         * @summary 지정된 업로드 리소스의 현재 업로드 오프셋, 길이 및 녹음 길이를 조회합니다.
+         * @param {string} tusFileId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUploadStatus(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUploadStatus(counselSessionId, options);
+        async getUploadStatus(tusFileId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUploadStatus(tusFileId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TusControllerApi.getUploadStatus']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
-         * @summary 업로드한 상담세션 녹음 파일을 병합합니다.
+         * @summary 업로드한 상담세션 녹음 파일을 병합합니다. 테스트용 API 입니다.
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -492,13 +399,12 @@ export const TusControllerApiFp = function(configuration?: Configuration) {
          * 
          * @summary 새로운 tus 업로드 리소스를 생성합니다. X-Recording-Duration 헤더로 녹음 길이(초)를 전달할 수 있습니다.
          * @param {string} uploadMetadata 업로드 메타데이터
-         * @param {number} [uploadLength] 전체 파일 크기 (bytes)
-         * @param {boolean} [uploadDeferLength] 업로드 크기 지연 여부 (1이면 true)
+         * @param {boolean} uploadDeferLength 업로드 크기 지연 여부 (1이면 true)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async startUpload(uploadMetadata: string, uploadLength?: number, uploadDeferLength?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.startUpload(uploadMetadata, uploadLength, uploadDeferLength, options);
+        async startUpload(uploadMetadata: string, uploadDeferLength: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.startUpload(uploadMetadata, uploadDeferLength, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TusControllerApi.startUpload']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -519,19 +425,6 @@ export const TusControllerApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['TusControllerApi.uploadProcess']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
-        /**
-         * 
-         * @summary 상담세션의 업로드된 파일들이 병합 가능한 상태인지 검증합니다.
-         * @param {string} counselSessionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async validateUploadedFiles(counselSessionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.validateUploadedFiles(counselSessionId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['TusControllerApi.validateUploadedFiles']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
     }
 };
 
@@ -545,22 +438,12 @@ export const TusControllerApiFactory = function (configuration?: Configuration, 
         /**
          * 
          * @summary 업로드된 tus 파일을 삭제합니다.
-         * @param {string} fileId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteUploadedFile(fileId: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
-            return localVarFp.deleteUploadedFile(fileId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary 상담세션의 모든 업로드된 tus 파일들을 삭제합니다.
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteUploadedFilesByCounselSession(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
-            return localVarFp.deleteUploadedFilesByCounselSession(counselSessionId, options).then((request) => request(axios, basePath));
+        deleteUploadedFile(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.deleteUploadedFile(counselSessionId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -574,17 +457,17 @@ export const TusControllerApiFactory = function (configuration?: Configuration, 
         },
         /**
          * 
-         * @summary 상담세션의 업로드 리소스들의 현재 상태를 조회합니다.
-         * @param {string} counselSessionId 
+         * @summary 지정된 업로드 리소스의 현재 업로드 오프셋, 길이 및 녹음 길이를 조회합니다.
+         * @param {string} tusFileId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUploadStatus(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
-            return localVarFp.getUploadStatus(counselSessionId, options).then((request) => request(axios, basePath));
+        getUploadStatus(tusFileId: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.getUploadStatus(tusFileId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary 업로드한 상담세션 녹음 파일을 병합합니다.
+         * @summary 업로드한 상담세션 녹음 파일을 병합합니다. 테스트용 API 입니다.
          * @param {string} counselSessionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -605,13 +488,12 @@ export const TusControllerApiFactory = function (configuration?: Configuration, 
          * 
          * @summary 새로운 tus 업로드 리소스를 생성합니다. X-Recording-Duration 헤더로 녹음 길이(초)를 전달할 수 있습니다.
          * @param {string} uploadMetadata 업로드 메타데이터
-         * @param {number} [uploadLength] 전체 파일 크기 (bytes)
-         * @param {boolean} [uploadDeferLength] 업로드 크기 지연 여부 (1이면 true)
+         * @param {boolean} uploadDeferLength 업로드 크기 지연 여부 (1이면 true)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        startUpload(uploadMetadata: string, uploadLength?: number, uploadDeferLength?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<object> {
-            return localVarFp.startUpload(uploadMetadata, uploadLength, uploadDeferLength, options).then((request) => request(axios, basePath));
+        startUpload(uploadMetadata: string, uploadDeferLength: boolean, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.startUpload(uploadMetadata, uploadDeferLength, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -626,16 +508,6 @@ export const TusControllerApiFactory = function (configuration?: Configuration, 
         uploadProcess(fileId: string, uploadOffset: number, xRecordingDuration?: number, body?: File, options?: RawAxiosRequestConfig): AxiosPromise<object> {
             return localVarFp.uploadProcess(fileId, uploadOffset, xRecordingDuration, body, options).then((request) => request(axios, basePath));
         },
-        /**
-         * 
-         * @summary 상담세션의 업로드된 파일들이 병합 가능한 상태인지 검증합니다.
-         * @param {string} counselSessionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        validateUploadedFiles(counselSessionId: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
-            return localVarFp.validateUploadedFiles(counselSessionId, options).then((request) => request(axios, basePath));
-        },
     };
 };
 
@@ -649,25 +521,13 @@ export class TusControllerApi extends BaseAPI {
     /**
      * 
      * @summary 업로드된 tus 파일을 삭제합니다.
-     * @param {string} fileId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TusControllerApi
-     */
-    public deleteUploadedFile(fileId: string, options?: RawAxiosRequestConfig) {
-        return TusControllerApiFp(this.configuration).deleteUploadedFile(fileId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary 상담세션의 모든 업로드된 tus 파일들을 삭제합니다.
      * @param {string} counselSessionId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TusControllerApi
      */
-    public deleteUploadedFilesByCounselSession(counselSessionId: string, options?: RawAxiosRequestConfig) {
-        return TusControllerApiFp(this.configuration).deleteUploadedFilesByCounselSession(counselSessionId, options).then((request) => request(this.axios, this.basePath));
+    public deleteUploadedFile(counselSessionId: string, options?: RawAxiosRequestConfig) {
+        return TusControllerApiFp(this.configuration).deleteUploadedFile(counselSessionId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -684,19 +544,19 @@ export class TusControllerApi extends BaseAPI {
 
     /**
      * 
-     * @summary 상담세션의 업로드 리소스들의 현재 상태를 조회합니다.
-     * @param {string} counselSessionId 
+     * @summary 지정된 업로드 리소스의 현재 업로드 오프셋, 길이 및 녹음 길이를 조회합니다.
+     * @param {string} tusFileId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TusControllerApi
      */
-    public getUploadStatus(counselSessionId: string, options?: RawAxiosRequestConfig) {
-        return TusControllerApiFp(this.configuration).getUploadStatus(counselSessionId, options).then((request) => request(this.axios, this.basePath));
+    public getUploadStatus(tusFileId: string, options?: RawAxiosRequestConfig) {
+        return TusControllerApiFp(this.configuration).getUploadStatus(tusFileId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary 업로드한 상담세션 녹음 파일을 병합합니다.
+     * @summary 업로드한 상담세션 녹음 파일을 병합합니다. 테스트용 API 입니다.
      * @param {string} counselSessionId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -721,14 +581,13 @@ export class TusControllerApi extends BaseAPI {
      * 
      * @summary 새로운 tus 업로드 리소스를 생성합니다. X-Recording-Duration 헤더로 녹음 길이(초)를 전달할 수 있습니다.
      * @param {string} uploadMetadata 업로드 메타데이터
-     * @param {number} [uploadLength] 전체 파일 크기 (bytes)
-     * @param {boolean} [uploadDeferLength] 업로드 크기 지연 여부 (1이면 true)
+     * @param {boolean} uploadDeferLength 업로드 크기 지연 여부 (1이면 true)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof TusControllerApi
      */
-    public startUpload(uploadMetadata: string, uploadLength?: number, uploadDeferLength?: boolean, options?: RawAxiosRequestConfig) {
-        return TusControllerApiFp(this.configuration).startUpload(uploadMetadata, uploadLength, uploadDeferLength, options).then((request) => request(this.axios, this.basePath));
+    public startUpload(uploadMetadata: string, uploadDeferLength: boolean, options?: RawAxiosRequestConfig) {
+        return TusControllerApiFp(this.configuration).startUpload(uploadMetadata, uploadDeferLength, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -744,18 +603,6 @@ export class TusControllerApi extends BaseAPI {
      */
     public uploadProcess(fileId: string, uploadOffset: number, xRecordingDuration?: number, body?: File, options?: RawAxiosRequestConfig) {
         return TusControllerApiFp(this.configuration).uploadProcess(fileId, uploadOffset, xRecordingDuration, body, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary 상담세션의 업로드된 파일들이 병합 가능한 상태인지 검증합니다.
-     * @param {string} counselSessionId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TusControllerApi
-     */
-    public validateUploadedFiles(counselSessionId: string, options?: RawAxiosRequestConfig) {
-        return TusControllerApiFp(this.configuration).validateUploadedFiles(counselSessionId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
