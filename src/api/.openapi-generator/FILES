@@ -30,6 +30,7 @@ models/add-medication-counsel-req.ts
 models/add-medication-counsel-res.ts
 models/allergy-dto.ts
 models/base-info-dto.ts
+models/change-password-req.ts
 models/common-res-accept-consent-res.ts
 models/common-res-add-medication-counsel-res.ts
 models/common-res-counsel-card-base-information-res.ts
@@ -175,6 +176,7 @@ models/update-counselor-req.ts
 models/update-counselor-res.ts
 models/update-medication-counsel-req.ts
 models/update-medication-counsel-res.ts
+models/update-my-info-req.ts
 models/update-role-req.ts
 models/update-status-in-counsel-session-req.ts
 models/update-status-in-counsel-session-res.ts

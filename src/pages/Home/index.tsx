@@ -14,6 +14,7 @@ import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
 import { useHomeDateStore } from './hooks/useHomeDateStore';
 import { cn } from '@/lib/utils';
 import MeaningfulStatistics from '@/pages/Home/components/MeaningfulStatistics';
+import { MyProfileDialog } from '@/components/common/MyProfileDialog';
 
 function Home() {
   const { selectedDate, selectedMonth, setSelectedDate, setSelectedMonth } =
@@ -35,9 +36,9 @@ function Home() {
         <div className="flex w-full items-center justify-between">
           <img src={logoWide} alt="logo" width={310} />
           <div className="flex items-center gap-4 font-medium text-primary-50">
-            <a className="border-b-2 border-primary-50" href="/">
-              내 정보
-            </a>
+            <MyProfileDialog>
+              <button className="border-b-2 border-primary-50">내 정보</button>
+            </MyProfileDialog>
             <a
               className="border-b-2 border-primary-50"
               href="https://withnp.campaignus.me/"
