@@ -1,5 +1,5 @@
 import { SelectCounseleeBaseInformationByCounseleeIdRes } from '@/api';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import Spinner from '@/components/common/Spinner';
 import { Tabs } from '@/components/ui/tabs';
 import { useSelectCounseleeInfo, useCounselSessionQueryById } from '@/hooks';
@@ -19,11 +19,38 @@ import { useInitializeIntervention } from './hooks/useInitializeIntervention';
 import { useInitializeMedicationRecord } from './hooks/useInitializeMedicationRecord';
 import { useInitializeWasteMedication } from './hooks/useInitializeWasteMedication';
 import ConsultHeader from '@/pages/Consult/components/ConsultHeader';
+import RecordingDialog from '@/pages/Consult/components/recording/RecordingDialog';
+import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
+import { useAISummaryStatus } from '@/pages/Consult/hooks/query/useAISummaryQuery';
 
 export function Index() {
   const { counselSessionId } = useParams();
 
   const [isConsultDataLoading, setIsConsultDataLoading] = useState(false);
+  const [isRecordingDialogOpen, setIsRecordingDialogOpen] = useState(false);
+
+  // 페이지 첫 진입 여부를 추적하는 ref
+  const hasShownDialogRef = useRef(false);
+
+  // 녹음 상태 가져오기
+  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
+  const recordedBlob = useRecordingStore((state) => state.recordedBlob);
+  const aiSummaryStatus = useRecordingStore((state) => state.aiSummaryStatus);
+  const totalDuration = useRecordingStore((state) => state.totalDuration);
+
+  // AI 요약 상태 조회 (로딩 상태 확인용)
+  const { data: aiSummaryStatusData, isLoading: isAISummaryStatusLoading } =
+    useAISummaryStatus(counselSessionId ?? '');
+
+  // recording store의 완료 함수
+  const completeRecording = useRecordingStore(
+    (state) => state.completeRecording,
+  );
+
+  // ConsultRecordingControl의 함수들을 참조하기 위한 ref
+  const recordingControlRef = useRef<{
+    startRecording: () => Promise<void>;
+  } | null>(null);
 
   const { isLoading: isInitializeInterventionLoading } =
     useInitializeIntervention(counselSessionId ?? '');
@@ -115,6 +142,50 @@ export function Index() {
     isInitializeWasteMedicationLoading,
   ]);
 
+  // AI 요약이 이미 완료된 상태라면 recording 상태를 완료로 설정
+  useEffect(() => {
+    if (
+      !isAISummaryStatusLoading &&
+      aiSummaryStatusData?.aiCounselSummaryStatus?.toString() ===
+        'GPT_COMPLETE' &&
+      recordingStatus !== 'completed'
+    ) {
+      completeRecording();
+    }
+  }, [
+    isAISummaryStatusLoading,
+    aiSummaryStatusData,
+    recordingStatus,
+    completeRecording,
+  ]);
+
+  // 페이지 첫 진입시에만 녹음 다이얼로그 표시
+  useEffect(() => {
+    // 상담 데이터 로딩이 완료되고, AI 요약 상태 로딩이 완료되고,
+    // 아직 다이얼로그를 보여준 적이 없으며,
+    // 녹음이 시작되지 않은 상태이고, AI 요약이 없는 상태에서만 다이얼로그 표시
+    const shouldShowDialog =
+      !isConsultDataLoading &&
+      !isAISummaryStatusLoading &&
+      !hasShownDialogRef.current &&
+      recordingStatus === 'idle' &&
+      !recordedBlob &&
+      totalDuration === 0 &&
+      !aiSummaryStatus; // AI 요약이 없는 경우에만 다이얼로그 표시
+
+    if (shouldShowDialog) {
+      setIsRecordingDialogOpen(true);
+      hasShownDialogRef.current = true;
+    }
+  }, [
+    isConsultDataLoading,
+    isAISummaryStatusLoading,
+    recordingStatus,
+    recordedBlob,
+    totalDuration,
+    aiSummaryStatus,
+  ]);
+
   const saveConsult = useCallback(async () => {
     if (!counselSessionId) return;
 
@@ -166,6 +237,29 @@ export function Index() {
     }
   };
 
+  // 녹음 시작 함수 - ConsultRecordingControl의 로직을 사용
+  const handleStartRecording = useCallback(async () => {
+    if (recordingControlRef.current?.startRecording) {
+      try {
+        await recordingControlRef.current.startRecording();
+      } catch (error) {
+        console.error('녹음 시작 실패:', error);
+      }
+    } else {
+      // fallback: 기본 로직
+      try {
+        await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+        useRecordingStore.getState().startRecording();
+        toast.info('녹음이 시작되었습니다.');
+      } catch (error) {
+        console.error('녹음 시작 실패:', error);
+        toast.error('마이크 접근이 거부되었습니다.');
+      }
+    }
+  }, []);
+
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -194,6 +288,7 @@ export function Index() {
           completeConsult={completeConsult}
           hasPreviousConsult={hasPreviousConsult}
           isSuccessSaveConsult={isSuccessSaveConsult}
+          recordingControlRef={recordingControlRef}
         />
         {isConsultDataLoading ? (
           <Spinner />
@@ -201,6 +296,13 @@ export function Index() {
           <TabContents hasPreviousConsult={hasPreviousConsult} />
         )}
       </Tabs>
+
+      {/* 녹음 시작 다이얼로그 */}
+      <RecordingDialog
+        open={isRecordingDialogOpen}
+        onClose={() => setIsRecordingDialogOpen(false)}
+        onStartRecording={handleStartRecording}
+      />
     </>
   );
 }

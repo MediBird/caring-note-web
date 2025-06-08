@@ -13,9 +13,8 @@ import ReactMarkdown from 'react-markdown';
 import { useParams } from 'react-router-dom';
 import React, { useMemo } from 'react';
 import {
-  SPEAKER_COLOR_LIST,
-  STATUS_MESSAGES,
   RECORDING_SCROLL_HEIGHT,
+  SPEAKER_COLOR_LIST,
 } from '@/pages/Consult/constants/aiNote';
 // @/illusts/img_stt_empty.webp 이미지 import 추가
 import imgSttEmpty from '@/assets/illusts/img_stt_empty.webp';
@@ -38,10 +37,6 @@ interface SpeechTextData {
 const useAISummaryState = (counselSessionId: string) => {
   const { data: summaryStatus } = useAISummaryStatus(counselSessionId);
 
-  const statusMessage = summaryStatus?.aiCounselSummaryStatus
-    ? STATUS_MESSAGES[summaryStatus.aiCounselSummaryStatus]
-    : null;
-
   const isInProgress =
     summaryStatus?.aiCounselSummaryStatus ===
       SelectAICounselSummaryStatusResAiCounselSummaryStatusEnum.SttProgress ||
@@ -56,7 +51,7 @@ const useAISummaryState = (counselSessionId: string) => {
 
   return {
     status: summaryStatus?.aiCounselSummaryStatus,
-    message: statusMessage,
+    message: '',
     isInProgress,
     isFailed,
   };

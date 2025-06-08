@@ -16,7 +16,6 @@ interface CompleteConsultDialogProps {
 }
 
 const CompleteConsultDialog = ({
-  name = '',
   open,
   onClose,
 }: CompleteConsultDialogProps) => {
@@ -26,7 +25,7 @@ const CompleteConsultDialog = ({
         <DialogHeader className="mt-4 h-[80px] items-center justify-center">
           <DialogTitle>
             <p className="center text-center text-h3 font-bold">
-              {name}님, 고생하셨습니다! <br />
+              고생하셨습니다! <br />
               상담 기록을 잘 보관해 둘게요.
             </p>
           </DialogTitle>
