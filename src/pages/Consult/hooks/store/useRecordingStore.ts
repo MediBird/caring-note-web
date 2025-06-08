@@ -29,6 +29,10 @@ export interface RecordingState {
   error: string | null;
   aiSummaryStatus: string | null; // AI 요약 상태 ('STT_PROGRESS', 'STT_COMPLETED', 'GPT_PROGRESS', 'GPT_COMPLETED' 등)
   recordedBlob: Blob | null; // 녹음된 파일 데이터 (저장 버튼을 위해)
+  // MediaRecorder 관련 상태 (내부적으로만 사용)
+  _mediaRecorder: MediaRecorder | null;
+  _mediaStream: MediaStream | null;
+  _chunks: Blob[];
 }
 
 export interface RecordingActions {
@@ -52,6 +56,13 @@ export interface RecordingActions {
   ) => Promise<void>;
   loadRecordingFromStorage: (counselSessionId: string) => Promise<boolean>;
   deleteRecordingFromStorage: (counselSessionId: string) => Promise<void>;
+
+  // MediaRecorder 관리 액션
+  startMediaRecording: (stream: MediaStream) => Promise<void>;
+  pauseMediaRecording: () => void;
+  resumeMediaRecording: () => void;
+  stopMediaRecording: () => Promise<Blob | null>;
+  cleanupMediaRecorder: () => void;
 
   // 복합 액션
   incrementRecordedDuration: () => void;
@@ -80,6 +91,10 @@ const INITIAL_STATE: RecordingState = {
   error: null,
   aiSummaryStatus: null,
   recordedBlob: null,
+  // MediaRecorder 관련 상태
+  _mediaRecorder: null,
+  _mediaStream: null,
+  _chunks: [],
 };
 
 export const useRecordingStore = create<RecordingStore>((set, get) => ({
@@ -98,6 +113,120 @@ export const useRecordingStore = create<RecordingStore>((set, get) => ({
   setError: (error) => set({ error }),
   setAiSummaryStatus: (status) => set({ aiSummaryStatus: status }),
   setRecordedBlob: (blob) => set({ recordedBlob: blob }),
+
+  // MediaRecorder 관리 액션
+  startMediaRecording: async (stream) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const state = get();
+
+        // 기존 MediaRecorder가 있다면 정리
+        if (state._mediaRecorder) {
+          state._mediaRecorder.stop();
+        }
+
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'audio/webm',
+        });
+
+        set({
+          _mediaRecorder: mediaRecorder,
+          _mediaStream: stream,
+          _chunks: [],
+        });
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            const currentState = get();
+            set({ _chunks: [...currentState._chunks, event.data] });
+          }
+        };
+
+        mediaRecorder.onstart = () => {
+          console.log('MediaRecorder 시작됨');
+          set({ recordingStatus: 'recording', error: null });
+          resolve();
+        };
+
+        mediaRecorder.onerror = (event) => {
+          console.error('MediaRecorder 에러:', event);
+          set({ error: '녹음 중 오류가 발생했습니다.' });
+          reject(new Error('녹음 실패'));
+        };
+
+        mediaRecorder.onstop = () => {
+          console.log('MediaRecorder 정지됨');
+          const currentState = get();
+          if (currentState._chunks.length > 0) {
+            const blob = new Blob(currentState._chunks, { type: 'audio/webm' });
+            set({ recordedBlob: blob });
+          }
+        };
+
+        mediaRecorder.start(1000); // 1초마다 데이터 생성
+      } catch (error) {
+        console.error('MediaRecorder 시작 실패:', error);
+        set({ error: '녹음 시작에 실패했습니다.' });
+        reject(error);
+      }
+    });
+  },
+
+  pauseMediaRecording: () => {
+    const state = get();
+    if (state._mediaRecorder && state._mediaRecorder.state === 'recording') {
+      state._mediaRecorder.pause();
+      set({ recordingStatus: 'paused' });
+    }
+  },
+
+  resumeMediaRecording: () => {
+    const state = get();
+    if (state._mediaRecorder && state._mediaRecorder.state === 'paused') {
+      state._mediaRecorder.resume();
+      set({ recordingStatus: 'recording' });
+    }
+  },
+
+  stopMediaRecording: async () => {
+    return new Promise((resolve) => {
+      const state = get();
+      if (state._mediaRecorder && state._mediaRecorder.state !== 'inactive') {
+        state._mediaRecorder.onstop = () => {
+          const currentState = get();
+          const blob = new Blob(currentState._chunks, { type: 'audio/webm' });
+          set({
+            recordedBlob: blob,
+            recordingStatus: 'stopped',
+          });
+          resolve(blob);
+        };
+        state._mediaRecorder.stop();
+      } else {
+        resolve(null);
+      }
+    });
+  },
+
+  cleanupMediaRecorder: () => {
+    const state = get();
+
+    // MediaRecorder 정리
+    if (state._mediaRecorder && state._mediaRecorder.state !== 'inactive') {
+      state._mediaRecorder.stop();
+    }
+
+    // MediaStream 정리
+    if (state._mediaStream) {
+      state._mediaStream.getTracks().forEach((track) => track.stop());
+    }
+
+    set({
+      _mediaRecorder: null,
+      _mediaStream: null,
+      _chunks: [],
+    });
+  },
 
   // 저장소 관련 액션
   saveRecordingToStorage: async (counselSessionId, blob, duration) => {
@@ -207,6 +336,9 @@ export const useRecordingStore = create<RecordingStore>((set, get) => ({
   },
 
   resetRecordingState: async (counselSessionId) => {
+    // MediaRecorder 정리
+    get().cleanupMediaRecorder();
+
     const newState = { ...INITIAL_STATE };
     if (counselSessionId) {
       newState.currentCounselSessionId = counselSessionId;
