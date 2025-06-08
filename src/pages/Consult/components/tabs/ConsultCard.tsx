@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader } from '@/components/ui/card';
 import { useCounselCardStore } from '@/pages/Survey/hooks/counselCardStore';
 import {
   useCounselCardBaseInfoQuery,
@@ -47,21 +47,18 @@ const ConsultCard: React.FC = () => {
     <div className="space-y-6">
       {/* 헤더 카드 */}
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl font-bold">기초 설문</CardTitle>
-            <Button
-              variant="secondary"
-              onClick={() =>
-                navigate(`/survey/${counselSessionId}`, {
-                  state: { fromConsult: true },
-                })
-              }>
-              수정하기
-            </Button>
-          </div>
+        <CardHeader className="absolute right-10">
+          <Button
+            variant="secondary"
+            onClick={() =>
+              navigate(`/survey/${counselSessionId}`, {
+                state: { fromConsult: true },
+              })
+            }>
+            기초 설문 수정하기
+          </Button>
         </CardHeader>
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="columns-1 gap-6 md:columns-2 [&>*]:mb-6 [&>*]:break-inside-avoid">
           {/* 상담 목적 및 특이사항 섹션 */}
           <CounselPurposeSection baseInfoData={baseInfoData} />
 
@@ -69,16 +66,12 @@ const ConsultCard: React.FC = () => {
           <HealthInfoSection healthInfoData={healthInfoData} />
 
           {/* 생활 정보 섹션 */}
-          <div className="lg:col-span-2">
-            <LivingInfoSection livingInfoData={livingInfoData} />
-          </div>
+          <LivingInfoSection livingInfoData={livingInfoData} />
 
           {/* 자립생활 역량 섹션 */}
-          <div className="lg:col-span-2">
-            <IndependentLifeSection
-              independentLifeInfoData={independentLifeInfoData}
-            />
-          </div>
+          <IndependentLifeSection
+            independentLifeInfoData={independentLifeInfoData}
+          />
         </div>
       </Card>
     </div>
