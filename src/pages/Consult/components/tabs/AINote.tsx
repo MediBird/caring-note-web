@@ -16,8 +16,9 @@ import {
   SPEAKER_COLOR_LIST,
   STATUS_MESSAGES,
   RECORDING_SCROLL_HEIGHT,
-  EMPTY_MESSAGES,
 } from '@/pages/Consult/constants/aiNote';
+// @/illusts/img_stt_empty.webp 이미지 import 추가
+import imgSttEmpty from '@/assets/illusts/img_stt_empty.webp';
 
 // 타입 정의
 interface StatusMessageProps {
@@ -94,9 +95,26 @@ const StatusMessage = React.memo<StatusMessageProps>(
 );
 StatusMessage.displayName = 'StatusMessage';
 
-// 빈 콘텐츠 메시지 컴포넌트
-const EmptyContent = React.memo<{ message: string }>(({ message }) => (
-  <p className="text-center text-body1 text-grayscale-50">{message}</p>
+// 빈 콘텐츠 메시지 컴포넌트 (ErrorCommon 스타일로 교체)
+const EmptyContent = React.memo(() => (
+  <div
+    className="flex items-center justify-center p-6"
+    style={{ height: `${RECORDING_SCROLL_HEIGHT}px` }}>
+    <div className="w-full text-center">
+      <div className="flex flex-col items-center justify-center gap-[1.5rem]">
+        <img src={imgSttEmpty} alt="녹음 내용 없음" />
+        <div>
+          <p className="mb-2 text-subtitle1 font-bold text-grayscale-70">
+            아직 녹음 파일이 존재하지 않아요
+          </p>
+          <div className="text-subtitle2 font-medium text-grayscale-50">
+            <p>녹음을 완료하면 이 곳에 대한 내용과 AI 요약이 저장돼요.</p>
+            <p>우측 상단에 있는 녹음 상태를 먼저 확인해주세요.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 ));
 EmptyContent.displayName = 'EmptyContent';
 
@@ -122,7 +140,7 @@ const AISummarySection: React.FC<{
             {analysedText.analysedText}
           </ReactMarkdown>
         ) : (
-          <EmptyContent message={EMPTY_MESSAGES.AI_SUMMARY} />
+          <EmptyContent />
         )}
       </ScrollArea>
     );
@@ -157,6 +175,12 @@ const RecordingTextItem = React.memo<{
   </div>
 ));
 RecordingTextItem.displayName = 'RecordingTextItem';
+
+// 전체 녹음용 빈 콘텐츠 컴포넌트
+const EmptyRecordingContent = React.memo<{ message: string }>(({ message }) => (
+  <p className="text-center text-body1 text-grayscale-50">{message}</p>
+));
+EmptyRecordingContent.displayName = 'EmptyRecordingContent';
 
 // 전체 녹음 섹션 컴포넌트
 const RecordingSection: React.FC<{
@@ -208,7 +232,7 @@ const RecordingSection: React.FC<{
               />
             ))
           ) : (
-            <EmptyContent message={EMPTY_MESSAGES.RECORDING} />
+            <EmptyRecordingContent message="녹음 내용이 없습니다." />
           )}
         </div>
       </ScrollArea>
@@ -236,6 +260,18 @@ const AINote: React.FC = () => {
     useAnalysedText(sessionId);
   const { data: speechToTextList, isLoading: isSpeechToTextLoading } =
     useSpeechToText(sessionId);
+
+  // 로딩 중이 아니고 데이터가 없는 경우 빈 상태만 표시
+  const hasNoData =
+    !isAnalysedTextLoading &&
+    !isSpeechToTextLoading &&
+    !analysedText?.analysedText &&
+    (!speechToTextList || speechToTextList.length === 0) &&
+    !statusProps.isInProgress;
+
+  if (hasNoData) {
+    return <EmptyContent />;
+  }
 
   return (
     <div className="grid grid-cols-2 gap-6">
