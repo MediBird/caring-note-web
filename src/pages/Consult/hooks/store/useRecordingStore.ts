@@ -1,233 +1,340 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import {
+  saveRecordingBlob,
+  loadRecordingBlob,
+  deleteRecordingBlob,
+  isIndexedDBSupported,
+  saveRecordingBlobFallback,
+  loadRecordingBlobFallback,
+  cleanupOldRecordings,
+} from '../../utils/recordingStorage';
 
-export type RecordingStatusType =
+export type RecordingStatus =
   | 'idle'
   | 'recording'
   | 'paused'
   | 'stopped'
+  | 'uploading'
+  | 'processing'
   | 'completed';
 
 export interface RecordingState {
-  recordingStatus: RecordingStatusType;
-  recordedDuration: number; // seconds
+  recordingStatus: RecordingStatus;
+  recordedDuration: number; // 현재 세션 기록 시간
+  totalDuration: number; // 전체 기록 시간
+  currentSessionDuration: number; // 현재 진행 중인 세션 시간
   uploadProgress: number; // 0-100
-  fileId: string | null; // TUS file ID from server (actually TUS URL)
+  fileId: string | null;
+  currentCounselSessionId: string | null;
   error: string | null;
-  currentCounselSessionId: string | null; // 현재 활성화된 세션 ID
-  currentSessionDuration: number; // 현재 세션에서의 녹음 시간
-  totalDuration: number; // 전체 녹음 시간 (resume 시 누적)
+  aiSummaryStatus: string | null; // AI 요약 상태 ('STT_PROGRESS', 'STT_COMPLETED', 'GPT_PROGRESS', 'GPT_COMPLETED' 등)
+  recordedBlob: Blob | null; // 녹음된 파일 데이터 (저장 버튼을 위해)
 }
 
 export interface RecordingActions {
-  setRecordingStatus: (status: RecordingStatusType) => void;
+  // 기본 액션
+  setRecordingStatus: (status: RecordingStatus) => void;
   setRecordedDuration: (duration: number) => void;
-  incrementRecordedDuration: () => void;
+  setTotalDuration: (duration: number) => void;
+  setCurrentSessionDuration: (duration: number) => void;
   setUploadProgress: (progress: number) => void;
   setFileId: (fileId: string | null) => void;
+  setCurrentCounselSessionId: (id: string | null) => void;
   setError: (error: string | null) => void;
-  setCurrentCounselSessionId: (counselSessionId: string | null) => void;
-  setCurrentSessionDuration: (duration: number) => void;
-  setTotalDuration: (duration: number) => void;
-  loadStateForSession: (counselSessionId: string) => void;
-  resetRecordingState: (counselSessionIdToClear?: string) => void;
+  setAiSummaryStatus: (status: string | null) => void;
+  setRecordedBlob: (blob: Blob | null) => void;
+
+  // 저장소 관련 액션
+  saveRecordingToStorage: (
+    counselSessionId: string,
+    blob: Blob,
+    duration: number,
+  ) => Promise<void>;
+  loadRecordingFromStorage: (counselSessionId: string) => Promise<boolean>;
+  deleteRecordingFromStorage: (counselSessionId: string) => Promise<void>;
+
+  // 복합 액션
+  incrementRecordedDuration: () => void;
   startRecording: () => void;
   pauseRecording: () => void;
   resumeRecording: () => void;
   stopRecording: () => void;
+  startUploading: () => void;
+  startProcessing: () => void; // AI 요약 처리 시작
   completeRecording: () => void;
+  resetRecordingState: (counselSessionId?: string) => Promise<void>;
+  loadStateForSession: (counselSessionId: string) => Promise<void>;
+  initializeApp: () => Promise<void>;
 }
 
 export type RecordingStore = RecordingState & RecordingActions;
 
-const baseInitialState: Pick<
-  RecordingState,
-  | 'recordingStatus'
-  | 'recordedDuration'
-  | 'uploadProgress'
-  | 'fileId'
-  | 'error'
-  | 'currentSessionDuration'
-  | 'totalDuration'
-> = {
+const INITIAL_STATE: RecordingState = {
   recordingStatus: 'idle',
   recordedDuration: 0,
+  totalDuration: 0,
+  currentSessionDuration: 0,
   uploadProgress: 0,
   fileId: null,
+  currentCounselSessionId: null,
   error: null,
-  currentSessionDuration: 0,
-  totalDuration: 0,
+  aiSummaryStatus: null,
+  recordedBlob: null,
 };
 
+export const useRecordingStore = create<RecordingStore>((set, get) => ({
+  // 초기 상태
+  ...INITIAL_STATE,
 
+  // 기본 액션
+  setRecordingStatus: (status) => set({ recordingStatus: status }),
+  setRecordedDuration: (duration) => set({ recordedDuration: duration }),
+  setTotalDuration: (duration) => set({ totalDuration: duration }),
+  setCurrentSessionDuration: (duration) =>
+    set({ currentSessionDuration: duration }),
+  setUploadProgress: (progress) => set({ uploadProgress: progress }),
+  setFileId: (fileId) => set({ fileId }),
+  setCurrentCounselSessionId: (id) => set({ currentCounselSessionId: id }),
+  setError: (error) => set({ error }),
+  setAiSummaryStatus: (status) => set({ aiSummaryStatus: status }),
+  setRecordedBlob: (blob) => set({ recordedBlob: blob }),
 
-export const useRecordingStore = create<RecordingStore>()(
-  persist(
-    (set, get) => ({
-      ...baseInitialState,
-      currentCounselSessionId: null,
+  // 저장소 관련 액션
+  saveRecordingToStorage: async (counselSessionId, blob, duration) => {
+    try {
+      if (isIndexedDBSupported()) {
+        await saveRecordingBlob(counselSessionId, blob, duration);
+      } else {
+        await saveRecordingBlobFallback(counselSessionId, blob, duration);
+      }
+    } catch (error) {
+      console.error('녹음 파일 저장 실패:', error);
+      // 에러 발생해도 메모리에는 유지
+    }
+  },
 
-      setRecordingStatus: (status) => set({ recordingStatus: status }),
+  loadRecordingFromStorage: async (counselSessionId) => {
+    try {
+      let recordingData;
 
-      setRecordedDuration: (recordedDuration) => {
-        set({ recordedDuration });
-      },
+      if (isIndexedDBSupported()) {
+        recordingData = await loadRecordingBlob(counselSessionId);
+      } else {
+        recordingData = await loadRecordingBlobFallback(counselSessionId);
+      }
 
-      incrementRecordedDuration: () => {
-        const current = get().recordedDuration;
+      if (recordingData) {
         set({
-          recordedDuration: current + 1,
-          currentSessionDuration: get().currentSessionDuration + 1,
+          recordedBlob: recordingData.blob,
+          totalDuration: recordingData.duration,
         });
-      },
+        return true;
+      }
 
-      setUploadProgress: (uploadProgress) => set({ uploadProgress }),
+      return false;
+    } catch (error) {
+      console.error('녹음 파일 로드 실패:', error);
+      return false;
+    }
+  },
 
-      setFileId: (fileId) => {
-        set({ fileId });
-      },
+  deleteRecordingFromStorage: async (counselSessionId) => {
+    try {
+      if (isIndexedDBSupported()) {
+        await deleteRecordingBlob(counselSessionId);
+      } else {
+        localStorage.removeItem(`recording_blob_${counselSessionId}`);
+      }
+    } catch (error) {
+      console.error('녹음 파일 삭제 실패:', error);
+    }
+  },
 
-      setError: (error) => set({ error }),
+  // 복합 액션
+  incrementRecordedDuration: () => {
+    const state = get();
+    set({
+      recordedDuration: state.recordedDuration + 1,
+      currentSessionDuration: state.currentSessionDuration + 1,
+    });
+  },
 
-      setCurrentCounselSessionId: (counselSessionId) => {
-        set({ currentCounselSessionId: counselSessionId });
-      },
+  startRecording: () => {
+    set({
+      recordingStatus: 'recording',
+      error: null,
+    });
+  },
 
-      setCurrentSessionDuration: (duration) => {
-        set({ currentSessionDuration: duration });
-      },
+  pauseRecording: () => {
+    set({
+      recordingStatus: 'paused',
+    });
+  },
 
-      setTotalDuration: (duration) => {
-        set({ totalDuration: duration });
-      },
+  resumeRecording: () => {
+    set({
+      recordingStatus: 'recording',
+    });
+  },
 
-      loadStateForSession: (counselSessionId) => {
-        if (!counselSessionId) return;
+  stopRecording: () => {
+    set({
+      recordingStatus: 'stopped',
+    });
+  },
 
-        try {
-          const storageKey = `consultRecordingState_${counselSessionId}`;
-          const storedStateString = localStorage.getItem(storageKey);
+  startUploading: () => {
+    set({
+      recordingStatus: 'uploading',
+      uploadProgress: 0,
+    });
+  },
 
-          if (storedStateString) {
-            const storedState = JSON.parse(storedStateString);
-            const newStatus: RecordingStatusType =
-              storedState.fileId && storedState.recordedDuration > 0
-                ? 'stopped'
-                : 'idle';
+  startProcessing: () => {
+    set({
+      recordingStatus: 'processing',
+      aiSummaryStatus: 'STT_PROGRESS',
+    });
+  },
 
-            set({
-              currentCounselSessionId: counselSessionId,
-              recordedDuration: storedState.recordedDuration || 0,
-              totalDuration:
-                storedState.totalDuration || storedState.recordedDuration || 0,
-              currentSessionDuration: 0,
-              fileId: storedState.fileId || null,
-              recordingStatus: newStatus,
-              uploadProgress: 0,
-              error: null,
-            });
-          } else {
-            set({
-              ...baseInitialState,
-              currentCounselSessionId: counselSessionId,
-            });
-          }
-        } catch (e) {
-          console.error('Error loading state from localStorage', e);
-          set({
-            ...baseInitialState,
-            currentCounselSessionId: counselSessionId,
-          });
+  completeRecording: () => {
+    set({
+      recordingStatus: 'completed',
+      uploadProgress: 100,
+      aiSummaryStatus: 'COMPLETED',
+    });
+  },
+
+  resetRecordingState: async (counselSessionId) => {
+    const newState = { ...INITIAL_STATE };
+    if (counselSessionId) {
+      newState.currentCounselSessionId = counselSessionId;
+    }
+    set(newState);
+
+    // localStorage에서도 제거
+    if (counselSessionId) {
+      localStorage.removeItem(`recording_${counselSessionId}`);
+
+      // IndexedDB/localStorage에서 녹음 파일도 삭제
+      try {
+        if (isIndexedDBSupported()) {
+          await deleteRecordingBlob(counselSessionId);
+        } else {
+          localStorage.removeItem(`recording_blob_${counselSessionId}`);
         }
-      },
+      } catch (error) {
+        console.error('녹음 파일 삭제 실패:', error);
+      }
+    }
+  },
 
-      resetRecordingState: (counselSessionIdToClear) => {
-        const idToClear =
-          counselSessionIdToClear || get().currentCounselSessionId;
+  loadStateForSession: async (counselSessionId) => {
+    const state = get();
 
-        if (idToClear) {
-          try {
-            const storageKey = `consultRecordingState_${idToClear}`;
-            localStorage.removeItem(storageKey);
-          } catch (e) {
-            console.error('Error removing state from localStorage', e);
-          }
-        }
+    // 이미 같은 세션이면 로드하지 않음
+    if (state.currentCounselSessionId === counselSessionId) {
+      return;
+    }
 
-        set({
-          ...baseInitialState,
-          currentCounselSessionId: null,
-        });
-      },
-
-      startRecording: () => {
-        console.log(
-          '[Store] startRecording called - changing status to recording',
-        );
-        set({
-          recordingStatus: 'recording',
-          error: null,
-          uploadProgress: 0,
-          currentSessionDuration: 0,
-        });
-      },
-
-      pauseRecording: () => {
-        console.log(
-          '[Store] pauseRecording called - changing status to paused',
-        );
-        set({ recordingStatus: 'paused' });
-      },
-
-      resumeRecording: () => {
-        console.log(
-          '[Store] resumeRecording called - changing status to recording',
-        );
-        set({ recordingStatus: 'recording' });
-      },
-
-      stopRecording: () => {
-        console.log(
-          '[Store] stopRecording called - changing status to stopped',
-        );
-        set({ recordingStatus: 'stopped' });
-      },
-
-      completeRecording: () => {
-        console.log(
-          '[Store] completeRecording called - changing status to completed',
-        );
-        set({ recordingStatus: 'completed', uploadProgress: 100 });
-      },
-    }),
-    {
-      name: 'recording-store',
-      storage: createJSONStorage(() => ({
-        getItem: () => null, // 기본 저장소 비활성화
-        setItem: () => {},
-        removeItem: () => {},
-      })),
-      partialize: (state) => {
-        // 세션별로 중요한 상태만 저장
-        if (!state.currentCounselSessionId) return {};
-
-        const sessionKey = `consultRecordingState_${state.currentCounselSessionId}`;
-        const sessionData = {
+    // 현재 상태를 localStorage에 저장 (세션 변경 전)
+    if (state.currentCounselSessionId) {
+      try {
+        const stateToSave = {
+          recordingStatus: state.recordingStatus,
           recordedDuration: state.recordedDuration,
           totalDuration: state.totalDuration,
+          currentSessionDuration: state.currentSessionDuration,
+          uploadProgress: state.uploadProgress,
           fileId: state.fileId,
-          recordingStatus: state.recordingStatus,
+          error: state.error,
+          aiSummaryStatus: state.aiSummaryStatus,
+          // recordedBlob은 저장하지 않음 (별도 저장소에서 관리)
         };
+        localStorage.setItem(
+          `recording_${state.currentCounselSessionId}`,
+          JSON.stringify(stateToSave),
+        );
 
-        // 수동으로 세션별 localStorage에 저장
-        try {
-          localStorage.setItem(sessionKey, JSON.stringify(sessionData));
-        } catch (e) {
-          console.error('Error saving session state:', e);
+        // 현재 세션의 녹음 파일도 저장
+        if (state.recordedBlob && state.totalDuration > 0) {
+          try {
+            if (isIndexedDBSupported()) {
+              await saveRecordingBlob(
+                state.currentCounselSessionId,
+                state.recordedBlob,
+                state.totalDuration,
+              );
+            } else {
+              await saveRecordingBlobFallback(
+                state.currentCounselSessionId,
+                state.recordedBlob,
+                state.totalDuration,
+              );
+            }
+          } catch (error) {
+            console.warn('녹음 파일 저장 실패:', error);
+          }
         }
+      } catch (error) {
+        console.warn('녹음 상태 저장 실패:', error);
+      }
+    }
 
-        return {};
-      },
-    },
-  ),
-);
+    // 새로운 세션이면 상태 초기화하고 세션 ID 설정
+    set({
+      ...INITIAL_STATE,
+      currentCounselSessionId: counselSessionId,
+    });
+
+    // localStorage에서 해당 세션의 상태 로드
+    try {
+      const savedState = localStorage.getItem(`recording_${counselSessionId}`);
+      if (savedState) {
+        const parsedState = JSON.parse(savedState);
+        set({
+          ...parsedState,
+          currentCounselSessionId: counselSessionId,
+          recordedBlob: null, // Blob은 별도로 로드
+        });
+      }
+    } catch (error) {
+      console.warn('녹음 상태 로드 실패:', error);
+    }
+
+    // IndexedDB/localStorage에서 녹음 파일 로드
+    try {
+      let recordingData;
+
+      if (isIndexedDBSupported()) {
+        recordingData = await loadRecordingBlob(counselSessionId);
+      } else {
+        recordingData = await loadRecordingBlobFallback(counselSessionId);
+      }
+
+      if (recordingData) {
+        set({
+          recordedBlob: recordingData.blob,
+          totalDuration: recordingData.duration,
+          recordingStatus: 'stopped', // 복원된 녹음은 stopped 상태
+        });
+        console.log(
+          `녹음 파일 복원 완료: ${counselSessionId} (${recordingData.duration}초)`,
+        );
+      }
+    } catch (error) {
+      console.warn('녹음 파일 로드 실패:', error);
+    }
+  },
+
+  initializeApp: async () => {
+    try {
+      // 오래된 녹음 파일 정리 (7일 이상)
+      await cleanupOldRecordings();
+      console.log('앱 초기화 완료: 오래된 녹음 파일 정리');
+    } catch (error) {
+      console.warn('앱 초기화 중 오류:', error);
+    }
+  },
+}));
