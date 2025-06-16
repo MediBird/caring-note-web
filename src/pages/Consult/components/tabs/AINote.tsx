@@ -1,5 +1,11 @@
 import { SelectAICounselSummaryStatusResAiCounselSummaryStatusEnum } from '@/api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -145,6 +151,9 @@ const AISummarySection: React.FC<{
     <Card>
       <CardHeader>
         <CardTitle>AI 요약</CardTitle>
+        <CardDescription>
+          <p>상담 요약은 일부 오류나 부정확한 정보가 포함될 수 있습니다.</p>
+        </CardDescription>
       </CardHeader>
       <CardContent className="p-0">{renderContent()}</CardContent>
     </Card>
@@ -236,6 +245,12 @@ const RecordingSection: React.FC<{
     <Card>
       <CardHeader>
         <CardTitle>전체 녹음</CardTitle>
+        <CardDescription>
+          <p>
+            상담 녹음의 전체 발화 기록이며, 각 발화자는 색상으로 구분되어
+            표시됩니다.
+          </p>
+        </CardDescription>
       </CardHeader>
       <CardContent className="p-0">{renderContent()}</CardContent>
     </Card>
