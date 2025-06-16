@@ -296,12 +296,15 @@ export const useSaveCounselCardDraft = () => {
         if (
           store.infoData.base.baseInfo?.counseleeId &&
           (store.infoData.base.baseInfo?.counseleeName ||
-            store.infoData.base.baseInfo?.birthDate)
+            store.infoData.base.baseInfo?.birthDate ||
+            store.infoData.base.baseInfo?.healthInsuranceType)
         ) {
           const updateCounseleeReq: UpdateCounseleeReq = {
             counseleeId: store.infoData.base.baseInfo.counseleeId,
             name: store.infoData.base.baseInfo.counseleeName || '',
             dateOfBirth: store.infoData.base.baseInfo.birthDate || '',
+            healthInsuranceType:
+              store.infoData.base.baseInfo.healthInsuranceType,
           };
 
           try {
@@ -364,6 +367,18 @@ export const useSaveCounselCardDraft = () => {
           updateCounselCardReq.medicationManagement =
             store.infoData.living.medicationManagement;
         }
+      }
+
+      // 기본 정보 필수 필드 유효성 검증
+      if (!store.infoData.base?.baseInfo?.healthInsuranceType) {
+        throw new Error('의료보장형태를 선택해주세요.');
+      }
+
+      if (
+        !store.infoData.base?.counselPurposeAndNote?.counselPurpose ||
+        store.infoData.base.counselPurposeAndNote.counselPurpose.length === 0
+      ) {
+        throw new Error('상담 목적을 선택해주세요.');
       }
 
       // 건강 정보 유효성 검증

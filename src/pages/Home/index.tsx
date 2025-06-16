@@ -14,7 +14,7 @@ import TodayScheduleTable from '@/pages/Home/components/TodayScheduleTable';
 import { useHomeDateStore } from './hooks/useHomeDateStore';
 import { cn } from '@/lib/utils';
 import MeaningfulStatistics from '@/pages/Home/components/MeaningfulStatistics';
-import { MyProfileDialog } from '@/components/common/MyProfileDialog';
+import { MyProfileDialog } from '@/pages/Home/components/MyProfileDialog';
 
 function Home() {
   const { selectedDate, selectedMonth, setSelectedDate, setSelectedMonth } =

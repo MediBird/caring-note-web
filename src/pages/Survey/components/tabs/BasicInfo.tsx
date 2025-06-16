@@ -16,8 +16,9 @@ import { validateDateOfBirth } from '@/utils/inputValidations';
 import { useCounselCardStore } from '../../hooks/counselCardStore';
 
 export default function BasicInfo() {
-  const { infoData, setInfoData } = useCounselCardStore();
+  const { infoData, setInfoData, error } = useCounselCardStore();
   const baseInfo = infoData.base;
+  const baseError = error.base;
 
   const handleUpdateBaseInfo = (
     field: 'healthInsuranceType' | 'significantNote' | 'medicationNote',
@@ -92,22 +93,33 @@ export default function BasicInfo() {
             ),
           },
           {
-            label: '의료보장형태',
+            label: (
+              <>
+                의료보장형태<span className="text-red-500">*</span>
+              </>
+            ),
             value: (
-              <ButtonGroup
-                options={HEALTH_INSURANCE_TYPE_OPTIONS}
-                value={baseInfo?.baseInfo?.healthInsuranceType || ''}
-                onChange={(value) => {
-                  setInfoData('base', {
-                    ...baseInfo,
-                    baseInfo: {
-                      ...baseInfo?.baseInfo,
-                      healthInsuranceType:
-                        value as BaseInfoDTOHealthInsuranceTypeEnum,
-                    },
-                  });
-                }}
-              />
+              <div className="flex flex-col gap-2">
+                <ButtonGroup
+                  options={HEALTH_INSURANCE_TYPE_OPTIONS}
+                  value={baseInfo?.baseInfo?.healthInsuranceType || ''}
+                  onChange={(value) => {
+                    setInfoData('base', {
+                      ...baseInfo,
+                      baseInfo: {
+                        ...baseInfo?.baseInfo,
+                        healthInsuranceType:
+                          value as BaseInfoDTOHealthInsuranceTypeEnum,
+                      },
+                    });
+                  }}
+                />
+                {baseError === '의료보장형태를 선택해주세요.' && (
+                  <p className="text-sm text-red-500">
+                    의료보장형태를 선택해주세요.
+                  </p>
+                )}
+              </div>
             ),
           },
           {
@@ -127,35 +139,45 @@ export default function BasicInfo() {
             ),
             subLabel: '여러 개를 동시에 선택할 수 있어요',
             value: (
-              <ButtonGroup
-                options={COUNSEL_PURPOSE_OPTIONS}
-                value={Array.from(
-                  baseInfo?.counselPurposeAndNote?.counselPurpose || [],
+              <div className="flex flex-col gap-2">
+                <ButtonGroup
+                  options={COUNSEL_PURPOSE_OPTIONS}
+                  value={Array.from(
+                    baseInfo?.counselPurposeAndNote?.counselPurpose || [],
+                  )}
+                  onChange={(value) => {
+                    const currentPurposes =
+                      baseInfo?.counselPurposeAndNote?.counselPurpose || [];
+                    const valueAsEnum =
+                      value as CounselPurposeAndNoteDTOCounselPurposeEnum;
+
+                    const updatedPurposes = currentPurposes.includes(
+                      valueAsEnum,
+                    )
+                      ? currentPurposes.filter(
+                          (
+                            purpose: CounselPurposeAndNoteDTOCounselPurposeEnum,
+                          ) => purpose !== valueAsEnum,
+                        )
+                      : [...currentPurposes, valueAsEnum];
+
+                    setInfoData('base', {
+                      ...baseInfo,
+                      counselPurposeAndNote: {
+                        ...baseInfo?.counselPurposeAndNote,
+                        counselPurpose: updatedPurposes,
+                      },
+                    });
+                  }}
+                  className="flex-wrap"
+                  multiple
+                />
+                {baseError === '상담 목적을 선택해주세요.' && (
+                  <p className="text-sm text-red-500">
+                    상담 목적을 선택해주세요.
+                  </p>
                 )}
-                onChange={(value) => {
-                  const currentPurposes =
-                    baseInfo?.counselPurposeAndNote?.counselPurpose || [];
-                  const valueAsEnum =
-                    value as CounselPurposeAndNoteDTOCounselPurposeEnum;
-
-                  const updatedPurposes = currentPurposes.includes(valueAsEnum)
-                    ? currentPurposes.filter(
-                        (purpose: CounselPurposeAndNoteDTOCounselPurposeEnum) =>
-                          purpose !== valueAsEnum,
-                      )
-                    : [...currentPurposes, valueAsEnum];
-
-                  setInfoData('base', {
-                    ...baseInfo,
-                    counselPurposeAndNote: {
-                      ...baseInfo?.counselPurposeAndNote,
-                      counselPurpose: updatedPurposes,
-                    },
-                  });
-                }}
-                className="flex-wrap"
-                multiple
-              />
+              </div>
             ),
           },
           {
