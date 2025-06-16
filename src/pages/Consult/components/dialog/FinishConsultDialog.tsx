@@ -10,142 +10,207 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import CompleteConsultDialog from '@/pages/Consult/components/dialog/CompleteConsultDialog';
-import { useRecordingStore } from '@/pages/Consult/hooks/store/useRecordingStore';
-import { useTusUpload } from '@/pages/Consult/hooks/query/useTusUpload';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import CompleteConsultDialog from './CompleteConsultDialog';
+import {
+  useRecordingStore,
+  recordingSelectors,
+} from '../../hooks/store/useRecordingStore';
+import { useState, useCallback, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import { RecordingControllerRef } from '../recording/RecordingController';
+import { RECORDING_CONFIG } from '../../types/recording.types';
+import React from 'react';
 
 interface FinishConsultDialogProps {
   name?: string;
   onComplete: () => void;
   isSuccessSaveConsult: boolean;
+  recordingControlRef?: React.RefObject<RecordingControllerRef>;
 }
 
-const FinishConsultDialog = ({
+interface RecordingState {
+  hasRecording: boolean;
+  isRecording: boolean;
+  isPaused: boolean;
+  hasUnsavedRecording: boolean;
+  duration: number;
+  canSave: boolean;
+}
+
+const FinishConsultDialog: React.FC<FinishConsultDialogProps> = ({
   name = '',
   onComplete,
   isSuccessSaveConsult,
-}: FinishConsultDialogProps) => {
+  recordingControlRef,
+}) => {
   const [open, setOpen] = useState(false);
   const [isCompleteConsultDialogOpen, setIsCompleteConsultDialogOpen] =
     useState(false);
-  const [isProcessingRecording, setIsProcessingRecording] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const navigate = useNavigate();
   const { counselSessionId } = useParams();
 
-  // 녹음 상태 가져오기
-  const recordedBlob = useRecordingStore((state) => state.recordedBlob);
-  const recordingStatus = useRecordingStore((state) => state.recordingStatus);
-  const recordedDuration = useRecordingStore((state) => state.recordedDuration);
+  // 녹음 상태 가져오기 (선택자 사용으로 성능 최적화)
+  const session = useRecordingStore(recordingSelectors.session);
+  const file = useRecordingStore(recordingSelectors.file);
+  const displayDuration = useRecordingStore(recordingSelectors.displayDuration);
+  const hasUnsavedRecording = useRecordingStore(
+    recordingSelectors.hasUnsavedRecording,
+  );
+  const canSave = useRecordingStore(recordingSelectors.canSave);
 
-  // TUS 업로드 훅
-  const { uploadRecording, handleMerge } = useTusUpload({
-    counselSessionId: counselSessionId ?? '',
-  });
+  // 녹음 상태 계산
+  const recordingState: RecordingState = useMemo(
+    () => ({
+      hasRecording: !!file.blob || displayDuration > 0,
+      isRecording: session.status === 'recording',
+      isPaused: session.status === 'paused',
+      hasUnsavedRecording: !!hasUnsavedRecording,
+      duration: displayDuration,
+      canSave: !!canSave,
+    }),
+    [file.blob, displayDuration, session.status, hasUnsavedRecording, canSave],
+  );
 
-  // 녹음 파일이 있고 저장되지 않은 상태인지 확인
-  const hasUnsavedRecording = recordedBlob && recordingStatus === 'stopped';
+  // 녹음 처리 로직
+  const handleRecordingProcess = useCallback(async (): Promise<void> => {
+    if (
+      !recordingState.hasRecording ||
+      !counselSessionId ||
+      !recordingControlRef?.current
+    ) {
+      return;
+    }
 
-  // 상담 완료 처리 함수
-  const handleCompleteConsult = async () => {
-    setIsProcessingRecording(true);
+    // 최소 녹음 시간 확인
+    if (recordingState.duration < RECORDING_CONFIG.MIN_RECORDING_DURATION) {
+      throw new Error(
+        `녹음 시간이 너무 짧습니다. 최소 ${RECORDING_CONFIG.MIN_RECORDING_DURATION}초 이상 녹음해주세요.`,
+      );
+    }
 
     try {
-      // 녹음 파일이 있고 저장되지 않은 경우 업로드 및 STT 요청
-      if (hasUnsavedRecording && counselSessionId) {
-        // 녹음 시간 체크
-        if (recordedDuration < 3) {
-          toast.error('녹음 시간이 너무 짧습니다. 최소 3초 이상 녹음해주세요.');
-          setIsProcessingRecording(false);
-          return;
-        }
-
-        toast.info('녹음 파일을 업로드하고 있습니다...');
-
-        // 1단계: 녹음 파일 업로드
-        await uploadRecording();
-
-        // 2단계: STT 요청
-        await handleMerge(counselSessionId);
-
-        toast.info('녹음이 저장되었습니다.');
+      // 녹음 중이거나 일시정지 상태인 경우 먼저 중지
+      if (recordingState.isRecording || recordingState.isPaused) {
+        await recordingControlRef.current.stopRecording();
       }
 
-      // 기존 상담 완료 처리
-      setOpen(false);
-      setIsCompleteConsultDialogOpen(true);
-      onComplete();
+      // 저장되지 않은 녹음이 있는 경우 저장 처리
+      if (recordingState.hasUnsavedRecording) {
+        await recordingControlRef.current.saveRecording();
+      }
     } catch (error) {
       console.error('녹음 처리 실패:', error);
-      toast.error('녹음 저장에 실패했습니다.');
-    } finally {
-      setIsProcessingRecording(false);
+      throw error;
     }
+  }, [recordingState, counselSessionId, recordingControlRef]);
+
+  // 상담 완료 처리
+  const handleCompleteConsult = useCallback(async () => {
+    setIsProcessing(true);
+
+    try {
+      // 녹음 처리
+      await handleRecordingProcess();
+
+      // 상담 완료 처리
+      onComplete();
+      setOpen(false);
+      setIsCompleteConsultDialogOpen(true);
+    } catch (error) {
+      console.error('상담 완료 처리 실패:', error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : '상담 완료 처리에 실패했습니다.';
+      toast.error(errorMessage);
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [handleRecordingProcess, onComplete]);
+
+  // 처리 중 상태 확인
+  const isDisabled =
+    isProcessing ||
+    session.status === 'uploading' ||
+    session.status === 'processing';
+
+  // 다이얼로그 제목과 설명 생성
+  const getDialogContent = () => {
+    if (recordingState.hasRecording) {
+      return {
+        title: '녹음을 저장하고 상담을 완료하시겠어요?',
+        description: (
+          <>
+            녹음 파일이 업로드되고 상담이 완료됩니다.
+            <br />
+            상담 내역에서 기록하신 내용을 확인할 수 있습니다.
+          </>
+        ),
+      };
+    }
+
+    return {
+      title: '상담을 완료하시겠어요?',
+      description: (
+        <>상담 완료 후, 상담 내역에서 기록하신 내용을 확인할 수 있습니다.</>
+      ),
+    };
   };
+
+  const dialogContent = getDialogContent();
 
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant={'primary'} size={'xl'}>
+          <Button variant="primary" size="xl">
             상담 완료
           </Button>
         </DialogTrigger>
+
         <DialogContent className="w-[480px]">
           <DialogHeader className="mt-4 h-[80px] items-center justify-center">
             <DialogTitle>
               <p className="center text-center text-h3 font-bold">
-                {hasUnsavedRecording ? (
-                  <>녹음을 저장하고 상담을 완료하시겠어요?</>
-                ) : (
-                  <>상담을 완료하시겠어요?</>
-                )}
+                {dialogContent.title}
               </p>
             </DialogTitle>
           </DialogHeader>
+
           <DialogDescription asChild className="m-0 flex flex-col items-center">
             <div>
               <img
                 className="my-4 h-[240px] w-[240px]"
                 src={finishConsult}
-                alt="finishConsult"
+                alt="상담 완료"
               />
               <p className="text-center text-body1 font-medium text-grayscale-100">
-                {hasUnsavedRecording ? (
-                  <>
-                    녹음 파일이 업로드되고 상담이 완료됩니다.
-                    <br />
-                    상담 내역에서 기록하신 내용을 확인할 수 있습니다.
-                  </>
-                ) : (
-                  <>
-                    상담 완료 후, 상담 내역에서 기록하신 내용을 확인할 수
-                    있습니다.
-                  </>
-                )}
+                {dialogContent.description}
               </p>
             </div>
           </DialogDescription>
+
           <DialogFooter className="m-0 flex w-full items-center justify-center p-5">
             <DialogClose asChild>
               <Button
                 variant="secondary"
                 size="xl"
                 className="m-0 w-1/2 p-0"
-                disabled={isProcessingRecording}>
+                disabled={isDisabled}>
                 취소
               </Button>
             </DialogClose>
+
             <Button
               variant="primary"
               size="xl"
               className="w-1/2"
               onClick={handleCompleteConsult}
-              disabled={isProcessingRecording}>
-              {isProcessingRecording ? '처리 중...' : '상담 완료'}
+              disabled={isDisabled}>
+              {isDisabled ? '처리 중...' : '상담 완료'}
             </Button>
           </DialogFooter>
         </DialogContent>
