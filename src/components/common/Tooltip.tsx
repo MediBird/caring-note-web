@@ -24,10 +24,11 @@ const Tooltip: React.FC<TooltipProps> = ({
         <TooltipBlackIcon width={20} height={20} data-tooltip-id={id} />
       </div>
       <ReactTooltip
-        className="!fixed !rounded-[4px] bg-grayscale-10 !p-1 !px-2 !font-normal"
+        className="!rounded-[4px] bg-grayscale-10 !p-1 !px-2 !font-normal"
         id={id}
         place={place}
         content={text}
+        positionStrategy="fixed"
         openEvents={{
           click: eventType === 'click',
           mouseover: eventType === 'hover',
