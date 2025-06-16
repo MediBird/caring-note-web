@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { usePrevCounselSessionDetailList } from '@/pages/Consult/hooks/query/usePrevCounselSessionDetailList';
+import { SelectPreviousCounselSessionDetailRes } from '@/api';
 import SessionHeader from './components/SessionHeader';
 import RecordCard from './components/RecordCard';
 
@@ -73,45 +70,47 @@ const PastConsult = () => {
             이전 상담 히스토리가 없습니다.
           </div>
         ) : (
-          prevCounselSessionDetailList.map((session) => {
-            const sessionId = session.counselSessionId ?? '';
-            const isOpen = openSessions[sessionId] ?? false;
+          prevCounselSessionDetailList.map(
+            (session: SelectPreviousCounselSessionDetailRes) => {
+              const sessionId = session.counselSessionId ?? '';
+              const isOpen = openSessions[sessionId] ?? false;
 
-            return (
-              <Collapsible
-                key={sessionId}
-                open={isOpen}
-                className="w-full rounded-lg bg-primary-5 shadow-sm">
-                <CollapsibleTrigger className="w-full">
-                  <SessionHeader
-                    sessionNumber={session.sessionNumber}
-                    counselSessionDate={session.counselSessionDate}
-                    counselorName={session.counselorName}
-                    isOpen={isOpen}
-                    onViewDetails={() => handleViewDetails(sessionId)}
-                    onOpenChange={() => toggleSession(sessionId)}
-                  />
-                </CollapsibleTrigger>
-
-                <CollapsibleContent>
-                  <div className="flex gap-6 px-4 pb-4">
-                    <RecordCard
-                      title="중재기록"
-                      content={session.medicationCounselRecord}
-                      emptyMessage="중재기록이 없습니다."
-                      isLexical={true}
-                    />
-                    <RecordCard
-                      title="AI 요약"
-                      content={session.aiSummary}
-                      emptyMessage="AI 요약이 없습니다."
-                      isLexical={false}
+              return (
+                <Collapsible
+                  key={sessionId}
+                  open={isOpen}
+                  className="w-full rounded-lg bg-primary-5 shadow-sm">
+                  <div className="w-full">
+                    <SessionHeader
+                      sessionNumber={session.sessionNumber}
+                      counselSessionDate={session.counselSessionDate}
+                      counselorName={session.counselorName}
+                      isOpen={isOpen}
+                      onViewDetails={() => handleViewDetails(sessionId)}
+                      onOpenChange={() => toggleSession(sessionId)}
                     />
                   </div>
-                </CollapsibleContent>
-              </Collapsible>
-            );
-          })
+
+                  <CollapsibleContent>
+                    <div className="flex gap-6 px-4 pb-4">
+                      <RecordCard
+                        title="중재기록"
+                        content={session.medicationCounselRecord}
+                        emptyMessage="중재기록이 없습니다."
+                        isLexical={true}
+                      />
+                      <RecordCard
+                        title="AI 요약"
+                        content={session.aiSummary}
+                        emptyMessage="AI 요약이 없습니다."
+                        isLexical={false}
+                      />
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              );
+            },
+          )
         )}
       </div>
     </Card>

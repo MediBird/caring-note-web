@@ -40,7 +40,7 @@ export const DeleteCounseleeDialog = ({
         <DialogDescription>
           삭제된 데이터는 복구하기 어렵습니다.
         </DialogDescription>
-        <DialogFooter className="mt-4 flex justify-end gap-2">
+        <DialogFooter className="mt-4 flex justify-end gap-3">
           <DialogClose asChild>
             <Button variant="secondary">취소</Button>
           </DialogClose>

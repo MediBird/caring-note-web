@@ -84,9 +84,9 @@ const LeavePageDialog: React.FC<LeavePageDialogProps> = ({
           {content.description}
         </DialogDescription>
         <DialogFooter className="sm:justify-end">
-          <div>
+          <div className="flex items-center gap-2">
             <DialogClose asChild>
-              <Button variant="secondary" className="mx-[0.5rem]">
+              <Button variant={isRecording ? 'secondaryError' : 'secondary'}>
                 취소
               </Button>
             </DialogClose>

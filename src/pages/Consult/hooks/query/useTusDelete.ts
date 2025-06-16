@@ -24,13 +24,13 @@ export const useTusDelete = () => {
 
       return response;
     },
-    onSuccess: (_, counselSessionId) => {
+    onSuccess: (_: unknown, counselSessionId: string) => {
       queryClient.invalidateQueries({
         queryKey: ['recording', counselSessionId],
       });
       toast.info('녹음 파일이 삭제되었습니다.');
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       console.error('삭제 실패:', error);
       toast.error('파일 삭제에 실패했습니다.');
     },

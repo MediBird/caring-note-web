@@ -4,6 +4,7 @@ import {
   useImperativeHandle,
   forwardRef,
   useRef,
+  memo,
 } from 'react';
 import { toast } from 'sonner';
 import {
@@ -31,13 +32,13 @@ interface RecordingControllerProps {
   }) => void;
 }
 
-export const RecordingController = forwardRef<
+const RecordingControllerComponent = forwardRef<
   RecordingControllerRef,
   RecordingControllerProps
 >(({ counselSessionId, className, onRecordingReady }, ref) => {
   const streamRef = useRef<MediaStream | null>(null);
 
-  // 스토어 상태
+  // 스토어 상태 - 선택적 구독으로 최적화
   const session = useRecordingStore(recordingSelectors.session);
   const timer = useRecordingStore(recordingSelectors.timer);
   const file = useRecordingStore(recordingSelectors.file);
@@ -61,15 +62,10 @@ export const RecordingController = forwardRef<
   } = useRecordingStore();
 
   // TUS 업로드
-  const {
-    uploadRecording,
-    handleMerge,
-    checkExistingRecording,
-    abortUpload,
-    isUploading,
-  } = useTusUpload({
-    counselSessionId,
-  });
+  const { uploadRecording, handleMerge, abortUpload, isUploading } =
+    useTusUpload({
+      counselSessionId,
+    });
 
   // 에러 처리
   const handleRecordingError = useCallback(
@@ -87,7 +83,7 @@ export const RecordingController = forwardRef<
       startRecordingAction();
       toast.info('녹음이 시작되었습니다.');
     },
-    onStop: (blob) => {
+    onStop: (blob: Blob) => {
       setFile({ blob });
       stopRecordingAction();
     },
@@ -121,7 +117,10 @@ export const RecordingController = forwardRef<
 
   // 타이머 훅
   const recordingTimer = useRecordingTimer({
-    onTick: incrementDuration,
+    onTick: () => {
+      console.log('타이머 틱 - 현재 상태:', session.status);
+      incrementDuration();
+    },
     onAutoSave: handleAutoSave,
   });
 
@@ -129,7 +128,6 @@ export const RecordingController = forwardRef<
   useEffect(() => {
     if (counselSessionId) {
       loadSession(counselSessionId);
-      checkExistingRecording();
     }
 
     return () => {
@@ -184,15 +182,23 @@ export const RecordingController = forwardRef<
 
   // 녹음 시작
   const handleStartRecording = useCallback(async () => {
+    console.log('녹음 시작 시도...');
     try {
       // 마이크 권한 요청
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log('마이크 권한 요청 중...');
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
       streamRef.current = stream;
+      console.log('마이크 권한 획득 성공');
 
       // 녹음 시작
+      console.log('MediaRecorder 시작 중...');
       await mediaRecorder.startRecording(stream);
+      console.log('타이머 시작 중...');
       recordingTimer.startDurationTimer();
       recordingTimer.startAutoSaveTimer();
+      console.log('녹음 시작 완료');
     } catch (error) {
       console.error('녹음 시작 실패:', error);
       toast.error('마이크 접근이 거부되었습니다.');
@@ -355,7 +361,9 @@ export const RecordingController = forwardRef<
   );
 });
 
-RecordingController.displayName = 'RecordingController';
+RecordingControllerComponent.displayName = 'RecordingController';
+
+export const RecordingController = memo(RecordingControllerComponent);
 
 // 유틸리티 함수
 const formatDuration = (seconds: number): string => {

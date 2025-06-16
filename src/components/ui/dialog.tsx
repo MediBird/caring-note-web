@@ -51,19 +51,12 @@ const DialogClose = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Close>,
   DialogCloseProps
 >(({ asChild, sizeClasses, className, ...props }, ref) => {
-  // asChild가 true이면 Button의 사이즈가 적용되도록 기본 크기 클래스를 제외
-  // asChild일 경우 기본 크기 클래스를 빈 문자열로 처리하거나, 혹은 sizeClasses prop을 통해 사용자 정의 클래스를 적용
   const defaultSizeClasses = asChild ? '' : 'w-14 h-8 rounded';
   return (
     <DialogPrimitive.Close
       asChild={asChild}
       ref={ref}
-      className={cn(
-        'border-2 border-primary-50 px-3 py-1 text-sm font-bold text-primary-50',
-        // sizeClasses prop이 있으면 그것을 우선 사용하고, 없으면 defaultSizeClasses 사용
-        sizeClasses ?? defaultSizeClasses,
-        className,
-      )}
+      className={cn(sizeClasses ?? defaultSizeClasses, className)}
       {...props}
     />
   );
