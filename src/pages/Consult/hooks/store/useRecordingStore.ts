@@ -114,71 +114,15 @@ export const useRecordingStore = create<RecordingStore>()(
       }));
 
       try {
-        // 이전 세션 상태 저장
-        if (state.session.currentSessionId) {
-          await get().saveToStorage(
-            state.session.currentSessionId,
-            state.file.blob!,
-            state.timer.totalDuration,
-          );
-
-          // localStorage에 상태 저장
-          const stateToSave = {
-            session: state.session,
-            timer: state.timer,
-            upload: state.upload,
-          };
-          localStorage.setItem(
-            STORAGE_KEYS.RECORDING_STATE(state.session.currentSessionId),
-            JSON.stringify(stateToSave),
-          );
-        }
-
-        // 새 세션으로 초기화
+        // 새 세션으로 완전 초기화 (로컬스토리지 저장/로드 제거)
         set({
           ...INITIAL_STATE,
           session: {
             ...INITIAL_STATE.session,
             currentSessionId: sessionId,
-            isLoading: true,
+            isLoading: false,
           },
         });
-
-        // 저장된 상태 로드
-        const savedState = localStorage.getItem(
-          STORAGE_KEYS.RECORDING_STATE(sessionId),
-        );
-        if (savedState) {
-          const parsedState = JSON.parse(savedState);
-          set((state) => ({
-            ...state,
-            ...parsedState,
-            session: {
-              ...parsedState.session,
-              currentSessionId: sessionId,
-            },
-          }));
-        }
-
-        // 파일 로드
-        const hasFile = await get().loadFromStorage(sessionId);
-        if (hasFile) {
-          set((state) => ({
-            session: {
-              ...state.session,
-              status: 'stopped',
-              isLoading: false,
-            },
-            file: {
-              ...state.file,
-              isFromStorage: true,
-            },
-          }));
-        } else {
-          set((state) => ({
-            session: { ...state.session, isLoading: false },
-          }));
-        }
       } catch (error) {
         console.error('세션 로드 실패:', error);
         set((state) => ({

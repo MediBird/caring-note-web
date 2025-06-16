@@ -1,5 +1,9 @@
 import { AICounselSummaryControllerApi } from '@/api';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 const aiCounselSummaryApi = new AICounselSummaryControllerApi();
@@ -25,8 +29,11 @@ export const useAISummaryStatus = (counselSessionId: string) => {
       const data = query.state.data;
       // 진행 중인 상태면 5초마다 재조회
       if (
-        data?.aiCounselSummaryStatus === 'STT_PROGRESS' ||
-        data?.aiCounselSummaryStatus === 'GPT_PROGRESS'
+        data &&
+        typeof data === 'object' &&
+        'aiCounselSummaryStatus' in data &&
+        (data.aiCounselSummaryStatus === 'STT_PROGRESS' ||
+          data.aiCounselSummaryStatus === 'GPT_PROGRESS')
       ) {
         return 5000;
       }
@@ -86,14 +93,14 @@ export const useConvertSpeechToText = () => {
         throw error;
       }
     },
-    onSuccess: (_, counselSessionId) => {
+    onSuccess: (_: unknown, counselSessionId: string) => {
       // AI 요약 상태 쿼리 무효화하여 폴링 시작
       queryClient.invalidateQueries({
         queryKey: ['aiSummaryStatus', counselSessionId],
       });
       toast.info('AI 요약 처리를 시작합니다.');
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       console.error('Speech to Text 변환 실패:', error);
       toast.error('AI 요약 처리 시작에 실패했습니다.');
     },

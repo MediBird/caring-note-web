@@ -6,10 +6,10 @@ import { useDeleteMedicationRecordList } from '@/pages/Consult/hooks/query/medic
 import { MedicationRecordListDTO } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordList';
 import { initSelectMedicationRecordHistRes } from '@/pages/Consult/hooks/store/useWasteMedicationListStore';
 import useMedicineMemoStore from '@/store/medicineMemoStore';
-import { useMemo } from 'react';
+import { useMemo, useCallback, memo } from 'react';
 import { useParams } from 'react-router-dom';
 
-const MedicineMemo: React.FC = () => {
+const MedicineMemo: React.FC = memo(() => {
   const { counselSessionId } = useParams();
 
   const { deleteMedicationRecordListMutation } =
@@ -35,67 +35,76 @@ const MedicineMemo: React.FC = () => {
     );
   }, [medicationRecordList]);
 
-  const handleAddTableRowButton = (divisionCode: string) => {
-    setMedicationRecordList([
-      ...medicationRecordList,
-      {
-        ...initSelectMedicationRecordHistRes,
-        divisionCode:
-          divisionCode as SelectMedicationRecordHistResDivisionCodeEnum,
-        id: 'temp' + Math.random().toString(36).substring(2, 15),
-      },
-    ]);
-  };
+  const handleAddTableRowButton = useCallback(
+    (divisionCode: string) => {
+      setMedicationRecordList([
+        ...medicationRecordList,
+        {
+          ...initSelectMedicationRecordHistRes,
+          divisionCode:
+            divisionCode as SelectMedicationRecordHistResDivisionCodeEnum,
+          id: 'temp' + Math.random().toString(36).substring(2, 15),
+        },
+      ]);
+    },
+    [medicationRecordList, setMedicationRecordList],
+  );
 
-  const handleUpdateCell = (
-    id: string,
-    field: string,
-    value: string | number | null,
-  ) => {
-    const updatedItem: MedicationRecordListDTO | undefined =
-      medicationRecordList.find((item) => {
-        return item.id === id;
+  const handleUpdateCell = useCallback(
+    (id: string, field: string, value: string | number | null) => {
+      const updatedItem: MedicationRecordListDTO | undefined =
+        medicationRecordList.find((item) => {
+          return item.id === id;
+        });
+
+      if (!updatedItem) return;
+
+      updateMedicationRecordListById(id, {
+        ...updatedItem,
+        [field as keyof MedicationRecordListDTO]: value,
       });
+    },
+    [medicationRecordList, updateMedicationRecordListById],
+  );
 
-    if (!updatedItem) return;
+  const handleSearchEnter = useCallback(
+    (id: string, medicationId: string, medicationName: string) => {
+      const updatedItem: MedicationRecordListDTO | undefined =
+        medicationRecordList.find((item) => item.id === id);
 
-    updateMedicationRecordListById(id, {
-      ...updatedItem,
-      [field as keyof MedicationRecordListDTO]: value,
-    });
-  };
+      if (!updatedItem) return;
 
-  const handleSearchEnter = (
-    id: string,
-    medicationId: string,
-    medicationName: string,
-  ) => {
-    const updatedItem: MedicationRecordListDTO | undefined =
-      medicationRecordList.find((item) => item.id === id);
-
-    if (!updatedItem) return;
-
-    updateMedicationRecordListById(id, {
-      ...updatedItem,
-      medicationId,
-      medicationName,
-    });
-  };
-
-  const handleDelete = (id: string) => {
-    if (id.includes('temp')) {
-      const filteredList = medicationRecordList.filter(
-        (item) => item.id !== id,
-      );
-
-      setMedicationRecordList(filteredList);
-    } else {
-      deleteMedicationRecordListMutation.mutate({
-        id,
-        counselSessionId: counselSessionId as string,
+      updateMedicationRecordListById(id, {
+        ...updatedItem,
+        medicationId,
+        medicationName,
       });
-    }
-  };
+    },
+    [medicationRecordList, updateMedicationRecordListById],
+  );
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      if (id.includes('temp')) {
+        const filteredList = medicationRecordList.filter(
+          (item) => item.id !== id,
+        );
+
+        setMedicationRecordList(filteredList);
+      } else {
+        deleteMedicationRecordListMutation.mutate({
+          id,
+          counselSessionId: counselSessionId as string,
+        });
+      }
+    },
+    [
+      medicationRecordList,
+      setMedicationRecordList,
+      deleteMedicationRecordListMutation,
+      counselSessionId,
+    ],
+  );
 
   return (
     <div className="flex flex-col gap-10">
@@ -134,6 +143,8 @@ const MedicineMemo: React.FC = () => {
       <UsableSiteList />
     </div>
   );
-};
+});
+
+MedicineMemo.displayName = 'MedicineMemo';
 
 export default MedicineMemo;

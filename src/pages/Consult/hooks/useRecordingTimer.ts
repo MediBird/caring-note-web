@@ -1,11 +1,8 @@
 import { useRef, useCallback } from 'react';
-import {
-  RecordingTimerState,
-  RECORDING_CONFIG,
-} from '../types/recording.types';
+import { RECORDING_CONFIG } from '../types/recording.types';
 
 interface UseRecordingTimerProps {
-  onTick?: (timerState: RecordingTimerState) => void;
+  onTick?: () => void;
   onAutoSave?: () => Promise<void>;
 }
 
@@ -35,11 +32,7 @@ export const useRecordingTimer = ({
     stopDurationTimer();
     durationTimerRef.current = setInterval(() => {
       if (onTick) {
-        onTick({
-          recordedDuration: 0, // Will be managed by the calling component
-          currentSessionDuration: 0,
-          totalDuration: 0,
-        });
+        onTick();
       }
     }, 1000);
   }, [onTick, stopDurationTimer]);

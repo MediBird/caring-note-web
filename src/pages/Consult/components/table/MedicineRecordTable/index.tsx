@@ -1,8 +1,9 @@
 import { SelectMedicationRecordHistResDivisionCodeEnum } from '@/api';
 import AddTableRowButton from '@/components/common/DataTable/add-table-row-button';
 import { DataTable } from '@/components/common/DataTable/data-table';
-import { createColumns } from '@/pages/Consult/components/table/MedicineRecordTable/medicineRecordTableColumns';
+import { useColumns } from '@/pages/Consult/components/table/MedicineRecordTable/medicineRecordTableColumns';
 import { MedicationRecordListDTO } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordList';
+import { memo } from 'react';
 
 interface MedicineRecordTableProps {
   divisionCode: SelectMedicationRecordHistResDivisionCodeEnum;
@@ -21,33 +22,37 @@ interface MedicineRecordTableProps {
   onDelete: (id: string) => void;
 }
 
-const MedicineRecordTable = ({
-  divisionCode,
-  medicineRecordList,
-  handleAddTableRowButton,
-  handleUpdateCell,
-  handleSearchEnter,
-  onDelete,
-}: MedicineRecordTableProps) => {
-  const columns = createColumns({
-    onDelete,
+const MedicineRecordTable = memo(
+  ({
+    divisionCode,
+    medicineRecordList,
+    handleAddTableRowButton,
     handleUpdateCell,
     handleSearchEnter,
-  });
+    onDelete,
+  }: MedicineRecordTableProps) => {
+    const columns = useColumns({
+      onDelete,
+      handleUpdateCell,
+      handleSearchEnter,
+    });
 
-  return (
-    <DataTable
-      columns={columns}
-      data={medicineRecordList}
-      footer={
-        <AddTableRowButton
-          onClickAddButton={() => {
-            handleAddTableRowButton(divisionCode);
-          }}
-        />
-      }
-    />
-  );
-};
+    return (
+      <DataTable
+        columns={columns}
+        data={medicineRecordList}
+        footer={
+          <AddTableRowButton
+            onClickAddButton={() => {
+              handleAddTableRowButton(divisionCode);
+            }}
+          />
+        }
+      />
+    );
+  },
+);
+
+MedicineRecordTable.displayName = 'MedicineRecordTable';
 
 export default MedicineRecordTable;
