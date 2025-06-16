@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Collapsible,
@@ -11,7 +11,6 @@ import SessionHeader from './components/SessionHeader';
 import RecordCard from './components/RecordCard';
 
 const PastConsult = () => {
-  const navigate = useNavigate();
   const { counselSessionId } = useParams();
   const [openSessions, setOpenSessions] = useState<Record<string, boolean>>({});
 
@@ -40,7 +39,7 @@ const PastConsult = () => {
   };
 
   const handleViewDetails = (sessionId: string) => {
-    navigate(`/consult/${sessionId}`);
+    window.open(`/consult/${sessionId}`, '_blank', 'noopener,noreferrer');
   };
 
   if (isLoading) {
