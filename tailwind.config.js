@@ -113,11 +113,11 @@ export default {
         'cell-shadow': '0px 2px 8px 0px #12121233',
       },
       maxWidth: {
-        layout: '1584px',
+        layout: '1480px',
         content: '1400px',
       },
       padding: {
-        layout: '92px',
+        layout: '40px',
       },
       transitionDuration: {
         1500: '1500ms',
