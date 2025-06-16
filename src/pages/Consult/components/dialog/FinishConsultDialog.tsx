@@ -76,11 +76,7 @@ const FinishConsultDialog: React.FC<FinishConsultDialogProps> = ({
 
   // 녹음 처리 로직
   const handleRecordingProcess = useCallback(async (): Promise<void> => {
-    if (
-      !recordingState.hasRecording ||
-      !counselSessionId ||
-      !recordingControlRef?.current
-    ) {
+    if (!counselSessionId || !recordingControlRef?.current) {
       return;
     }
 
@@ -97,8 +93,8 @@ const FinishConsultDialog: React.FC<FinishConsultDialogProps> = ({
         await recordingControlRef.current.stopRecording();
       }
 
-      // 저장되지 않은 녹음이 있는 경우 저장 처리
-      if (recordingState.hasUnsavedRecording) {
+      // 녹음이 있는 경우 항상 저장 처리 (canSave 체크는 saveRecording 내부에서 수행)
+      if (recordingState.hasRecording) {
         await recordingControlRef.current.saveRecording();
       }
     } catch (error) {
@@ -141,7 +137,13 @@ const FinishConsultDialog: React.FC<FinishConsultDialogProps> = ({
   const getDialogContent = () => {
     if (recordingState.hasRecording) {
       return {
-        title: '녹음을 저장하고 상담을 완료하시겠어요?',
+        title: (
+          <>
+            녹음을 저장하고
+            <br />
+            상담을 완료하시겠어요?
+          </>
+        ),
         description: (
           <>
             녹음 파일이 업로드되고 상담이 완료됩니다.

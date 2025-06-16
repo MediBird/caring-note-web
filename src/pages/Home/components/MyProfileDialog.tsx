@@ -121,11 +121,6 @@ export function MyProfileDialog({ children }: MyProfileDialogProps) {
       return;
     }
 
-    if (!newPassword || newPassword.length < 8) {
-      alert('비밀번호는 8글자 이상이어야 합니다.');
-      return;
-    }
-
     const changePasswordData: ChangePasswordReq = {
       newPassword: newPassword,
     };

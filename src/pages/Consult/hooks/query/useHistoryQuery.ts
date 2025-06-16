@@ -3,7 +3,11 @@ import {
   CounselCardControllerApi,
   SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
 } from '@/api';
-import { useHistoryStore } from '../store/useHistoryStore';
+import {
+  useHistoryStore,
+  LocalHistoryTypeEnum,
+  AllHistoryType,
+} from '../store/useHistoryStore';
 import { useEffect } from 'react';
 
 const counselCardControllerApi = new CounselCardControllerApi();
@@ -31,10 +35,10 @@ export const useBaseInformationHistoryQuery = (
   const { data, isSuccess, isError, error, isLoading } = queryResult;
 
   useEffect(() => {
-    setLoading(
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
-      isLoading,
-    );
+    // 각 분리된 타입에 대해 로딩 상태 설정
+    setLoading(LocalHistoryTypeEnum.CounselPurpose, isLoading);
+    setLoading(LocalHistoryTypeEnum.SignificantNote, isLoading);
+    setLoading(LocalHistoryTypeEnum.MedicationNote, isLoading);
   }, [isLoading, setLoading]);
 
   useEffect(() => {
@@ -43,20 +47,24 @@ export const useBaseInformationHistoryQuery = (
       const significantNoteHistory = data?.significantNote?.history || [];
       const medicationNoteHistory = data?.medicationNote?.history || [];
 
-      const allHistory = [
-        ...counselPurposeHistory,
-        ...significantNoteHistory,
-        ...medicationNoteHistory,
-      ];
-
+      // 각 히스토리를 분리해서 저장
       setHistoryData(
-        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
-        allHistory,
+        LocalHistoryTypeEnum.CounselPurpose,
+        counselPurposeHistory,
       );
-      setError(
-        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
-        null,
+      setHistoryData(
+        LocalHistoryTypeEnum.SignificantNote,
+        significantNoteHistory,
       );
+      setHistoryData(
+        LocalHistoryTypeEnum.MedicationNote,
+        medicationNoteHistory,
+      );
+
+      // 에러 상태도 각각 설정
+      setError(LocalHistoryTypeEnum.CounselPurpose, null);
+      setError(LocalHistoryTypeEnum.SignificantNote, null);
+      setError(LocalHistoryTypeEnum.MedicationNote, null);
     }
   }, [isSuccess, data, setHistoryData, setError]);
 
@@ -66,10 +74,11 @@ export const useBaseInformationHistoryQuery = (
         error instanceof Error
           ? error.message
           : '기본 정보 히스토리 조회 중 오류가 발생했습니다.';
-      setError(
-        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
-        errorMessage,
-      );
+
+      // 각 타입에 대해 에러 설정
+      setError(LocalHistoryTypeEnum.CounselPurpose, errorMessage);
+      setError(LocalHistoryTypeEnum.SignificantNote, errorMessage);
+      setError(LocalHistoryTypeEnum.MedicationNote, errorMessage);
     }
   }, [isError, error, setError]);
 
@@ -99,10 +108,10 @@ export const useHealthInformationHistoryQuery = (
   const { data, isSuccess, isError, error, isLoading } = queryResult;
 
   useEffect(() => {
-    setLoading(
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.DiseaseInfo,
-      isLoading,
-    );
+    // 각 분리된 타입에 대해 로딩 상태 설정
+    setLoading(LocalHistoryTypeEnum.Diseases, isLoading);
+    setLoading(LocalHistoryTypeEnum.DiseaseHistoryNote, isLoading);
+    setLoading(LocalHistoryTypeEnum.MainInconvenienceNote, isLoading);
     setLoading(
       SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Allergy,
       isLoading,
@@ -115,14 +124,20 @@ export const useHealthInformationHistoryQuery = (
 
   useEffect(() => {
     if (isSuccess && data) {
-      const diseaseHistory = [
-        ...(data?.diseases?.history || []),
-        ...(data?.historyNote?.history || []),
-        ...(data?.mainInconvenienceNote?.history || []),
-      ];
+      // 각 히스토리를 분리해서 저장
+      const diseasesHistory = data?.diseases?.history || [];
+      const diseaseHistoryNoteHistory = data?.historyNote?.history || [];
+      const mainInconvenienceNoteHistory =
+        data?.mainInconvenienceNote?.history || [];
+
+      setHistoryData(LocalHistoryTypeEnum.Diseases, diseasesHistory);
       setHistoryData(
-        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.DiseaseInfo,
-        diseaseHistory,
+        LocalHistoryTypeEnum.DiseaseHistoryNote,
+        diseaseHistoryNoteHistory,
+      );
+      setHistoryData(
+        LocalHistoryTypeEnum.MainInconvenienceNote,
+        mainInconvenienceNoteHistory,
       );
 
       const allergyHistory = data?.allergy?.history || [];
@@ -138,10 +153,10 @@ export const useHealthInformationHistoryQuery = (
         medicationSideEffectHistory,
       );
 
-      setError(
-        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.DiseaseInfo,
-        null,
-      );
+      // 에러 상태도 각각 설정
+      setError(LocalHistoryTypeEnum.Diseases, null);
+      setError(LocalHistoryTypeEnum.DiseaseHistoryNote, null);
+      setError(LocalHistoryTypeEnum.MainInconvenienceNote, null);
       setError(
         SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Allergy,
         null,
@@ -159,10 +174,11 @@ export const useHealthInformationHistoryQuery = (
         error instanceof Error
           ? error.message
           : '건강 정보 히스토리 조회 중 오류가 발생했습니다.';
-      setError(
-        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.DiseaseInfo,
-        errorMessage,
-      );
+
+      // 각 타입에 대해 에러 설정
+      setError(LocalHistoryTypeEnum.Diseases, errorMessage);
+      setError(LocalHistoryTypeEnum.DiseaseHistoryNote, errorMessage);
+      setError(LocalHistoryTypeEnum.MainInconvenienceNote, errorMessage);
       setError(
         SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Allergy,
         errorMessage,
@@ -463,9 +479,7 @@ export const useInitializeAllHistoryData = (counselSessionId: string) => {
 };
 
 // 스토어에서 히스토리 데이터를 가져오는 훅
-export const useHistoryData = (
-  type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
-) => {
+export const useHistoryData = (type: AllHistoryType) => {
   const {
     getHistoryData,
     isHistoryLoading,

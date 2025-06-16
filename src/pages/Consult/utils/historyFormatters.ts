@@ -36,17 +36,17 @@ import {
 // 상담 목적 히스토리 포맷팅 함수
 export const formatCounselPurposeHistory = (data: unknown): string[] => {
   if (typeof data === 'object' && data !== null) {
-    const purposeData = data as {
+    const counselData = data as {
       counselPurpose?: string[];
     };
 
     const items: string[] = [];
 
     if (
-      purposeData.counselPurpose &&
-      Array.isArray(purposeData.counselPurpose)
+      counselData.counselPurpose &&
+      Array.isArray(counselData.counselPurpose)
     ) {
-      const purposes = purposeData.counselPurpose
+      const purposes = counselData.counselPurpose
         .map(
           (purpose) =>
             COUNSEL_PURPOSE_MAP[
@@ -66,14 +66,14 @@ export const formatCounselPurposeHistory = (data: unknown): string[] => {
 // 특이사항 히스토리 포맷팅 함수
 export const formatSignificantNoteHistory = (data: unknown): string[] => {
   if (typeof data === 'object' && data !== null) {
-    const purposeData = data as {
+    const noteData = data as {
       significantNote?: string;
     };
 
     const items: string[] = [];
 
-    if (purposeData.significantNote) {
-      items.push(purposeData.significantNote);
+    if (noteData.significantNote) {
+      items.push(noteData.significantNote);
     }
 
     return items.length > 0 ? items : ['데이터 없음'];
@@ -84,14 +84,14 @@ export const formatSignificantNoteHistory = (data: unknown): string[] => {
 // 약물 히스토리 포맷팅 함수
 export const formatMedicationHistory = (data: unknown): string[] => {
   if (typeof data === 'object' && data !== null) {
-    const purposeData = data as {
+    const medicationData = data as {
       medicationNote?: string;
     };
 
     const items: string[] = [];
 
-    if (purposeData.medicationNote) {
-      items.push(purposeData.medicationNote);
+    if (medicationData.medicationNote) {
+      items.push(medicationData.medicationNote);
     }
 
     return items.length > 0 ? items : ['데이터 없음'];
