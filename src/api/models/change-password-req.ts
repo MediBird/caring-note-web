@@ -25,12 +25,6 @@ export interface ChangePasswordReq {
      * @type {string}
      * @memberof ChangePasswordReq
      */
-    'currentPassword'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ChangePasswordReq
-     */
     'newPassword'?: string;
 }
 
