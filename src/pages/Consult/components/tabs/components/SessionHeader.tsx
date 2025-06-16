@@ -51,19 +51,27 @@ const SessionHeader = ({
           className="border-primary-60 text-body1 font-normal text-primary-60 hover:bg-primary-5">
           자세히 보러 가기
         </Button>
-        <Button
-          variant="secondary"
-          size="lg"
-          onClick={(e) => {
-            e.stopPropagation();
-            onOpenChange();
-          }}>
-          {isOpen ? (
-            <ChevronDownIcon className="h-5 w-5" />
-          ) : (
+        {isOpen ? (
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenChange();
+            }}>
             <ChevronUpIcon className="h-5 w-5" />
-          )}
-        </Button>
+          </Button>
+        ) : (
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenChange();
+            }}>
+            <ChevronDownIcon className="h-5 w-5" />
+          </Button>
+        )}
       </div>
     </div>
   );

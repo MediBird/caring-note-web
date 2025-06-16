@@ -103,7 +103,11 @@ const EmptyContent = React.memo(() => (
     style={{ height: `${RECORDING_SCROLL_HEIGHT}px` }}>
     <div className="w-full text-center">
       <div className="flex flex-col items-center justify-center gap-[1.5rem]">
-        <img src={imgSttEmpty} alt="녹음 내용 없음" />
+        <img
+          src={imgSttEmpty}
+          alt="녹음 내용 없음"
+          className="h-[280px] w-[456px]"
+        />
         <div>
           <p className="mb-2 text-subtitle1 font-bold text-grayscale-70">
             아직 녹음 파일이 존재하지 않아요
