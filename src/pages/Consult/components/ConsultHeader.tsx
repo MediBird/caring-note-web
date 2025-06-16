@@ -70,8 +70,8 @@ const ConsultTabs = ({
   hasPreviousConsult: boolean;
   counselSessionId: string | undefined;
 }) => (
-  <TabsList className="w-full border-b border-grayscale-10">
-    <div className="mx-auto flex h-full w-full max-w-layout items-center justify-start gap-5 px-layout pb-1 [&>*]:max-w-content">
+  <TabsList className="mx-auto w-full">
+    <div className="t flex h-full w-full items-center justify-start gap-5 pb-1">
       <Button
         variant="tertiary"
         size="md"
@@ -114,48 +114,42 @@ const ConsultHeader = ({
   const { counselSessionId } = useParams();
 
   return (
-    <div className="sticky top-0 z-10 flex-none">
-      <div className="z-10 w-full bg-white">
-        <div className="h-fit bg-white">
-          <div className="pt-12">
-            <div className="mx-auto flex w-full max-w-layout justify-between px-layout [&>*]:max-w-content">
-              <div className="flex flex-row flex-wrap items-end gap-5 pb-5">
-                <div className="break-keep text-h3 font-bold">
-                  {counseleeInfo?.name}
-                  <span className="text-subtitle2 font-bold"> 님</span>
-                </div>
-                <div className="flex items-center text-body1 font-medium text-grayscale-60">
-                  <InfoItem content={consultStatus} />
-                  <InfoItem content={`만 ${counseleeInfo?.age}세`} />
-                  <InfoItem
-                    content={
-                      counseleeInfo?.isDisability ? '장애인' : '비장애인'
-                    }
-                    showDivider={false}
-                  />
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <RecordingController
-                  ref={recordingControlRef}
-                  counselSessionId={counselSessionId ?? ''}
-                />
-                <HeaderButtons
-                  onSave={saveConsult}
-                  onComplete={completeConsult}
-                  name={counseleeInfo?.name}
-                  sessionStatus={sessionStatus}
-                  isSuccessSaveConsult={isSuccessSaveConsult}
-                  recordingControlRef={recordingControlRef}
-                />
-              </div>
+    <div className="sticky top-0 z-10 w-full flex-none bg-white px-layout [&>*]:max-w-content">
+      <div className="mx-auto h-fit bg-white pt-12">
+        <div className="flex w-full justify-between">
+          <div className="flex flex-row flex-wrap items-end gap-5 pb-5">
+            <div className="break-keep text-h3 font-bold">
+              {counseleeInfo?.name}
+              <span className="text-subtitle2 font-bold"> 님</span>
+            </div>
+            <div className="flex items-center text-body1 font-medium text-grayscale-60">
+              <InfoItem content={consultStatus} />
+              <InfoItem content={`만 ${counseleeInfo?.age}세`} />
+              <InfoItem
+                content={counseleeInfo?.isDisability ? '장애인' : '비장애인'}
+                showDivider={false}
+              />
             </div>
           </div>
-          <ConsultTabs
-            hasPreviousConsult={hasPreviousConsult}
-            counselSessionId={counselSessionId}
-          />
+          <div className="flex items-center gap-3">
+            <RecordingController
+              ref={recordingControlRef}
+              counselSessionId={counselSessionId ?? ''}
+            />
+            <HeaderButtons
+              onSave={saveConsult}
+              onComplete={completeConsult}
+              name={counseleeInfo?.name}
+              sessionStatus={sessionStatus}
+              isSuccessSaveConsult={isSuccessSaveConsult}
+              recordingControlRef={recordingControlRef}
+            />
+          </div>
         </div>
+        <ConsultTabs
+          hasPreviousConsult={hasPreviousConsult}
+          counselSessionId={counselSessionId}
+        />
       </div>
     </div>
   );

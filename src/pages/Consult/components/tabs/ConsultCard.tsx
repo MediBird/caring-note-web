@@ -53,10 +53,10 @@ const ConsultCard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="relative space-y-6">
       {/* 헤더 카드 */}
       <Card>
-        <CardHeader className="absolute right-10">
+        <CardHeader className="absolute right-0">
           <Button variant="secondary" onClick={handleOpenSurveyInNewTab}>
             기초 설문 수정하기
           </Button>
