@@ -264,7 +264,9 @@ const LivingInfoSection: React.FC<LivingInfoSectionProps> = ({
             </CardHeader>
             <CardContent className="space-y-3">
               {medicationManagementItems.map((item, index) => (
-                <div key={index} className="flex items-center justify-between">
+                <div
+                  key={index}
+                  className="flex flex-wrap items-center justify-between gap-x-1">
                   <span className="text-body1 font-semibold text-grayscale-100">
                     {item.label}
                   </span>
