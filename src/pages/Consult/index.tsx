@@ -26,13 +26,14 @@ import {
 } from '@/pages/Consult/hooks/store/useRecordingStore';
 import { useAISummaryStatus } from '@/pages/Consult/hooks/query/useAISummaryQuery';
 import { RecordingControllerRef } from '@/pages/Consult/components/recording/RecordingController';
+import { usePageLeaveGuard } from './hooks/usePageLeaveGuard';
+import LeavePageDialog from './components/dialog/LeavePageDialog';
 
 export function Index() {
   const { counselSessionId } = useParams();
 
   const [isConsultDataLoading, setIsConsultDataLoading] = useState(false);
   const [isRecordingDialogOpen, setIsRecordingDialogOpen] = useState(false);
-  // const [isRecordingControlReady, setIsRecordingControlReady] = useState(false);
 
   // 페이지 첫 진입 여부를 추적하는 ref
   const hasShownDialogRef = useRef(false);
@@ -256,6 +257,26 @@ export function Index() {
     }
   }, []);
 
+  // 페이지 이탈 감지 및 처리
+  const {
+    isLeaveDialogOpen,
+    handleLeaveConfirm,
+    handleLeaveCancel,
+    isRecording,
+    hasUnsavedChanges,
+  } = usePageLeaveGuard({
+    hasUnsavedChanges: !isSuccessSaveConsult, // 저장되지 않은 변경사항이 있는지 확인
+    sessionStatus: counselSessionInfo?.status, // 상담 세션 상태 전달
+    onBeforeLeave: async () => {
+      // 페이지 이탈 전 필요한 처리 (예: 임시 저장)
+      console.log('페이지를 떠나기 전 처리 중...');
+    },
+    onLeaveConfirmed: () => {
+      // 페이지 이탈 확인 후 처리
+      console.log('페이지 이탈이 확인되었습니다.');
+    },
+  });
+
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -299,6 +320,15 @@ export function Index() {
         open={isRecordingDialogOpen}
         onClose={() => setIsRecordingDialogOpen(false)}
         onStartRecording={handleStartRecording}
+      />
+
+      {/* 페이지 이탈 확인 다이얼로그 */}
+      <LeavePageDialog
+        open={isLeaveDialogOpen}
+        onClose={handleLeaveCancel}
+        onConfirm={handleLeaveConfirm}
+        isRecording={isRecording}
+        hasUnsavedChanges={hasUnsavedChanges}
       />
     </>
   );

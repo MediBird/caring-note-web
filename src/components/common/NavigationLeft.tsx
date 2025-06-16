@@ -121,10 +121,24 @@ const NavigationLeft = ({ initialOpen = true }: NavigationLeftProps) => {
     route?: string | null,
     action?: null | (() => void),
   ) => {
-    if (action) action();
+    if (action) {
+      action();
+      return;
+    }
 
     if (route) {
-      navigate(route);
+      // 네비게이션 시도를 알리는 커스텀 이벤트 발생
+      const navigationEvent = new CustomEvent('navigation-attempt', {
+        detail: { path: route },
+        cancelable: true,
+      });
+
+      const eventCanceled = !window.dispatchEvent(navigationEvent);
+
+      // 이벤트가 취소되지 않았다면 네비게이션 실행
+      if (!eventCanceled) {
+        navigate(route);
+      }
     }
   };
 
