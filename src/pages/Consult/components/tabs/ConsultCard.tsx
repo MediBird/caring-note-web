@@ -9,8 +9,8 @@ import {
   useCounselCardIndependentLifeInfoQuery,
   useCounselCardLivingInfoQuery,
 } from '@/pages/Survey/hooks/useCounselCardQuery';
-import { SelectPreviousItemListByInformationNameAndItemNameTypeEnum } from '@/api';
-import { useInitializeHistoryData } from '../../hooks/query/useHistoryQuery';
+
+import { useInitializeAllHistoryData } from '../../hooks/query/useHistoryQuery';
 
 // 새로운 섹션 컴포넌트들 import
 import CounselPurposeSection from '../sections/CounselPurposeSection';
@@ -23,20 +23,7 @@ const ConsultCard: React.FC = () => {
   const { setShouldFetch } = useCounselCardStore();
 
   // 히스토리 데이터 초기화
-  useInitializeHistoryData(counselSessionId || '', [
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.DiseaseInfo,
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Allergy,
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationSideEffect,
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Smoking,
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Drinking,
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Exercise,
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationManagement,
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Nutrition,
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Communication,
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Walking,
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Evacuation,
-  ]);
+  useInitializeAllHistoryData(counselSessionId || '');
 
   // 컴포넌트 마운트시 데이터 새로고침 트리거
   useEffect(() => {
@@ -76,16 +63,26 @@ const ConsultCard: React.FC = () => {
         </CardHeader>
         <div className="columns-1 gap-6 md:columns-2 [&>*]:mb-6 [&>*]:break-inside-avoid">
           {/* 상담 목적 및 특이사항 섹션 */}
-          <CounselPurposeSection baseInfoData={baseInfoData} />
+          <CounselPurposeSection
+            baseInfoData={baseInfoData}
+            counselSessionId={counselSessionId || ''}
+          />
           {/* 생활 정보 섹션 */}
-          <LivingInfoSection livingInfoData={livingInfoData} />
+          <LivingInfoSection
+            livingInfoData={livingInfoData}
+            counselSessionId={counselSessionId || ''}
+          />
 
           {/* 건강 정보 섹션 */}
-          <HealthInfoSection healthInfoData={healthInfoData} />
+          <HealthInfoSection
+            healthInfoData={healthInfoData}
+            counselSessionId={counselSessionId || ''}
+          />
 
           {/* 자립생활 역량 섹션 */}
           <IndependentLifeSection
             independentLifeInfoData={independentLifeInfoData}
+            counselSessionId={counselSessionId || ''}
           />
         </div>
       </Card>
