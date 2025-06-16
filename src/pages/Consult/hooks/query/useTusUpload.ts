@@ -219,7 +219,7 @@ export const useTusUpload = ({
             console.log('TUS 업로드 완료:', upload.url);
             setProgress(95);
             setIsUploading(false);
-            toast.success('녹음 업로드가 완료되었습니다!');
+            toast.info('녹음 업로드가 완료되었습니다!');
 
             if (upload.url) {
               const extractedFileId = extractFileIdFromUrl(upload.url);

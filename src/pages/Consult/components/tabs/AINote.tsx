@@ -162,9 +162,7 @@ const RecordingTextItem = React.memo<{
       colorClass,
     )}>
     <div className="flex flex-row items-center gap-3">
-      <p className="max-w-[340px] break-words text-body1 text-grayscale-90">
-        {data.text}
-      </p>
+      <p className="break-words text-body1 text-grayscale-90">{data.text}</p>
     </div>
     <p className="ml-2 text-body2 text-grayscale-30">{data.startTime}</p>
   </div>

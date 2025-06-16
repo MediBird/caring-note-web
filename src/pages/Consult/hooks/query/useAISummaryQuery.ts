@@ -91,7 +91,7 @@ export const useConvertSpeechToText = () => {
       queryClient.invalidateQueries({
         queryKey: ['aiSummaryStatus', counselSessionId],
       });
-      toast.success('AI 요약 처리를 시작합니다.');
+      toast.info('AI 요약 처리를 시작합니다.');
     },
     onError: (error) => {
       console.error('Speech to Text 변환 실패:', error);

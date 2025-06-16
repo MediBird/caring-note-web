@@ -77,7 +77,7 @@ export const useTusUpload = ({
       queryClient.invalidateQueries({
         queryKey: ['recording', counselSessionId],
       });
-      toast.success('녹음 파일이 성공적으로 업로드되었습니다!');
+      toast.info('녹음 파일이 성공적으로 업로드되었습니다!');
     },
     onError: (error) => {
       console.error('업로드 실패:', error);
@@ -148,7 +148,7 @@ export const useTusDelete = () => {
       queryClient.invalidateQueries({
         queryKey: ['recording', counselSessionId],
       });
-      toast.success('녹음 파일이 삭제되었습니다.');
+      toast.info('녹음 파일이 삭제되었습니다.');
     },
     onError: (error) => {
       console.error('삭제 실패:', error);
