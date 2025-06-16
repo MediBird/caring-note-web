@@ -24,6 +24,7 @@ interface SurveyDialogProps {
   counselSessionId: string;
   counseleeId: string;
   isConsent?: boolean;
+  disabled?: boolean;
 }
 
 function SurveyDialog({
@@ -31,6 +32,7 @@ function SurveyDialog({
   counselSessionId,
   counseleeId,
   isConsent,
+  disabled,
 }: SurveyDialogProps) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -73,7 +75,8 @@ function SurveyDialog({
   };
 
   const isTriggerDisabled =
-    dialogState === CounselCardBaseInformationResCardRecordStatusEnum.Completed;
+    dialogState ===
+      CounselCardBaseInformationResCardRecordStatusEnum.Completed || disabled;
 
   const getTriggerButtonText = () => {
     if (
