@@ -131,6 +131,7 @@ const RecordingControlButtons: React.FC<{
   status,
   hasBlob,
   canSave,
+  isUploading,
   onStart,
   onPause,
   onResume,
@@ -155,7 +156,11 @@ const RecordingControlButtons: React.FC<{
   switch (status) {
     case 'idle':
       return (
-        <Button {...commonButtonProps} onClick={onStart} aria-label="녹음 시작">
+        <Button
+          {...commonButtonProps}
+          onClick={onStart}
+          aria-label="녹음 시작"
+          disabled={isUploading}>
           <RecordFillIcon className={iconClass} />
         </Button>
       );
@@ -167,14 +172,16 @@ const RecordingControlButtons: React.FC<{
             {...commonButtonProps}
             onClick={onPause}
             variant="outline"
-            aria-label="일시정지">
+            aria-label="일시정지"
+            disabled={isUploading}>
             <PauseFillIcon className={iconClass} />
           </Button>
           <Button
             {...commonButtonProps}
             onClick={onStop}
             variant="primary"
-            aria-label="녹음 중지">
+            aria-label="녹음 중지"
+            disabled={isUploading}>
             <StopFillIcon className={iconClass} />
           </Button>
         </div>
@@ -187,14 +194,16 @@ const RecordingControlButtons: React.FC<{
             {...commonButtonProps}
             onClick={onResume}
             variant="outline"
-            aria-label="녹음 재개">
+            aria-label="녹음 재개"
+            disabled={isUploading}>
             <PlayFillIcon className={iconClass} />
           </Button>
           <Button
             {...commonButtonProps}
             onClick={onStop}
             variant="primary"
-            aria-label="녹음 중지">
+            aria-label="녹음 중지"
+            disabled={isUploading}>
             <StopFillIcon className={iconClass} />
           </Button>
         </div>
@@ -207,14 +216,15 @@ const RecordingControlButtons: React.FC<{
             onClick={onDelete}
             variant="secondary"
             size="sm"
-            aria-label="녹음 삭제">
+            aria-label="녹음 삭제"
+            disabled={isUploading}>
             삭제
           </Button>
           <Button
             onClick={onSave}
             variant="primary"
             size="sm"
-            disabled={!hasBlob || !canSave}
+            disabled={!hasBlob || !canSave || isUploading}
             aria-label="녹음 저장">
             저장
           </Button>
