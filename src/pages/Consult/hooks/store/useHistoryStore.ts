@@ -1,14 +1,17 @@
 import { create } from 'zustand';
-import {
-  SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
-  TimeRecordedResObject,
-} from '@/api';
+import { SelectPreviousItemListByInformationNameAndItemNameTypeEnum } from '@/api';
+
+// 히스토리 데이터의 기본 구조
+interface BaseTimeRecordedRes {
+  counselDate?: string;
+  data?: unknown;
+}
 
 // 히스토리 상태 인터페이스
 export interface HistoryState {
   historyData: Record<
     SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
-    TimeRecordedResObject[]
+    BaseTimeRecordedRes[] | null
   >;
   isLoading: Record<
     SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
@@ -25,7 +28,7 @@ export interface HistoryState {
 export interface HistoryActions {
   setHistoryData: (
     type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
-    data: TimeRecordedResObject[],
+    data: BaseTimeRecordedRes[],
   ) => void;
   setLoading: (
     type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
@@ -37,13 +40,17 @@ export interface HistoryActions {
   ) => void;
   setCounselSessionId: (counselSessionId: string) => void;
   clearHistoryData: () => void;
+  resetHistoryForSession: (counselSessionId: string) => void;
   getHistoryData: (
     type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
-  ) => TimeRecordedResObject[];
+  ) => BaseTimeRecordedRes[];
   isHistoryLoading: (
     type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
   ) => boolean;
   hasHistoryData: (
+    type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
+  ) => boolean;
+  isHistoryInitialized: (
     type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
   ) => boolean;
 }
@@ -59,12 +66,12 @@ const createInitialState = (): HistoryState => {
   return {
     historyData: types.reduce(
       (acc, type) => {
-        acc[type] = [];
+        acc[type] = null;
         return acc;
       },
       {} as Record<
         SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
-        TimeRecordedResObject[]
+        BaseTimeRecordedRes[] | null
       >,
     ),
     isLoading: types.reduce(
@@ -124,12 +131,27 @@ export const useHistoryStore = create<HistoryStore>((set, get) => ({
 
   clearHistoryData: () => set(createInitialState()),
 
+  resetHistoryForSession: (counselSessionId) => {
+    const currentSessionId = get().currentCounselSessionId;
+    if (currentSessionId !== counselSessionId) {
+      set({
+        ...createInitialState(),
+        currentCounselSessionId: counselSessionId,
+      });
+    }
+  },
+
   getHistoryData: (type) => get().historyData[type] || [],
 
   isHistoryLoading: (type) => get().isLoading[type] || false,
 
   hasHistoryData: (type) => {
     const data = get().historyData[type];
-    return data && data.length > 0;
+    return Array.isArray(data) && data.length > 0;
+  },
+
+  isHistoryInitialized: (type) => {
+    const data = get().historyData[type];
+    return data !== null;
   },
 }));

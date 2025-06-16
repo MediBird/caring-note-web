@@ -29,7 +29,6 @@ export const RecordingDialog: React.FC<RecordingDialogProps> = ({
 }) => {
   // 스토어에서 상태 확인
   const session = useRecordingStore(recordingSelectors.session);
-  const isDisabled = session.status !== 'idle' || session.isLoading;
 
   const handleStartRecording = useCallback(async () => {
     try {
@@ -46,11 +45,8 @@ export const RecordingDialog: React.FC<RecordingDialogProps> = ({
   }, [onStartRecording, onClose, session.currentSessionId]);
 
   const handleClose = useCallback(() => {
-    // 녹음 중이 아닐 때만 닫기 허용
-    if (!isDisabled) {
-      onClose();
-    }
-  }, [onClose, isDisabled]);
+    onClose();
+  }, [onClose]);
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -88,11 +84,7 @@ export const RecordingDialog: React.FC<RecordingDialogProps> = ({
 
         <DialogFooter className="m-0 flex w-full items-center justify-center p-5">
           <DialogClose asChild>
-            <Button
-              variant="secondary"
-              size="xl"
-              className="m-0 w-1/2 p-0"
-              disabled={isDisabled}>
+            <Button variant="secondary" size="xl" className="m-0 w-1/2 p-0">
               나중에 시작
             </Button>
           </DialogClose>
@@ -100,8 +92,7 @@ export const RecordingDialog: React.FC<RecordingDialogProps> = ({
             variant="primary"
             size="xl"
             className="w-1/2"
-            onClick={handleStartRecording}
-            disabled={isDisabled}>
+            onClick={handleStartRecording}>
             {session.isLoading ? '준비 중...' : '녹음 시작'}
           </Button>
         </DialogFooter>
