@@ -29,6 +29,8 @@ export interface RecordingState {
   error: string | null;
   aiSummaryStatus: string | null; // AI 요약 상태 ('STT_PROGRESS', 'STT_COMPLETED', 'GPT_PROGRESS', 'GPT_COMPLETED' 등)
   recordedBlob: Blob | null; // 녹음된 파일 데이터 (저장 버튼을 위해)
+  isLoadingSession: boolean; // 세션 로딩 상태
+  isRestoredFromStorage: boolean; // 저장소에서 복원된 녹음인지 여부
   // MediaRecorder 관련 상태 (내부적으로만 사용)
   _mediaRecorder: MediaRecorder | null;
   _mediaStream: MediaStream | null;
@@ -47,6 +49,8 @@ export interface RecordingActions {
   setError: (error: string | null) => void;
   setAiSummaryStatus: (status: string | null) => void;
   setRecordedBlob: (blob: Blob | null) => void;
+  setIsLoadingSession: (isLoading: boolean) => void;
+  setIsRestoredFromStorage: (isRestored: boolean) => void;
 
   // 저장소 관련 액션
   saveRecordingToStorage: (
@@ -91,6 +95,8 @@ const INITIAL_STATE: RecordingState = {
   error: null,
   aiSummaryStatus: null,
   recordedBlob: null,
+  isLoadingSession: false,
+  isRestoredFromStorage: false,
   // MediaRecorder 관련 상태
   _mediaRecorder: null,
   _mediaStream: null,
@@ -113,6 +119,9 @@ export const useRecordingStore = create<RecordingStore>((set, get) => ({
   setError: (error) => set({ error }),
   setAiSummaryStatus: (status) => set({ aiSummaryStatus: status }),
   setRecordedBlob: (blob) => set({ recordedBlob: blob }),
+  setIsLoadingSession: (isLoading) => set({ isLoadingSession: isLoading }),
+  setIsRestoredFromStorage: (isRestored) =>
+    set({ isRestoredFromStorage: isRestored }),
 
   // MediaRecorder 관리 액션
   startMediaRecording: async (stream) => {
@@ -144,7 +153,11 @@ export const useRecordingStore = create<RecordingStore>((set, get) => ({
 
         mediaRecorder.onstart = () => {
           console.log('MediaRecorder 시작됨');
-          set({ recordingStatus: 'recording', error: null });
+          set({
+            recordingStatus: 'recording',
+            error: null,
+            isRestoredFromStorage: false, // 새로운 녹음 시작 시 복원 상태 리셋
+          });
           resolve();
         };
 
@@ -292,6 +305,7 @@ export const useRecordingStore = create<RecordingStore>((set, get) => ({
     set({
       recordingStatus: 'recording',
       error: null,
+      isRestoredFromStorage: false, // 새로운 녹음 시작 시 복원 상태 리셋
     });
   },
 
@@ -370,6 +384,9 @@ export const useRecordingStore = create<RecordingStore>((set, get) => ({
       return;
     }
 
+    // 세션 로딩 시작
+    set({ isLoadingSession: true });
+
     // 현재 상태를 localStorage에 저장 (세션 변경 전)
     if (state.currentCounselSessionId) {
       try {
@@ -418,6 +435,7 @@ export const useRecordingStore = create<RecordingStore>((set, get) => ({
     set({
       ...INITIAL_STATE,
       currentCounselSessionId: counselSessionId,
+      isLoadingSession: true, // 로딩 상태 유지
     });
 
     // localStorage에서 해당 세션의 상태 로드
@@ -429,6 +447,7 @@ export const useRecordingStore = create<RecordingStore>((set, get) => ({
           ...parsedState,
           currentCounselSessionId: counselSessionId,
           recordedBlob: null, // Blob은 별도로 로드
+          isLoadingSession: true, // 로딩 상태 유지
         });
       }
     } catch (error) {
@@ -449,14 +468,22 @@ export const useRecordingStore = create<RecordingStore>((set, get) => ({
         set({
           recordedBlob: recordingData.blob,
           totalDuration: recordingData.duration,
+          recordedDuration: recordingData.duration, // recordedDuration도 함께 설정
           recordingStatus: 'stopped', // 복원된 녹음은 stopped 상태
+          isLoadingSession: false, // 로딩 완료
+          isRestoredFromStorage: true, // 저장소에서 복원됨
         });
         console.log(
           `녹음 파일 복원 완료: ${counselSessionId} (${recordingData.duration}초)`,
         );
+      } else {
+        // 녹음 파일이 없는 경우에도 로딩 완료
+        set({ isLoadingSession: false });
       }
     } catch (error) {
       console.warn('녹음 파일 로드 실패:', error);
+      // 에러 발생 시에도 로딩 완료
+      set({ isLoadingSession: false });
     }
   },
 

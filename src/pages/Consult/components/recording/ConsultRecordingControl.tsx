@@ -195,17 +195,28 @@ export const ConsultRecordingControl: React.FC<
   }, [recordingStatus, recordedBlob, saveRecordingToStorage]);
 
   // 복원된 녹음 알림
+  const isRestoredFromStorage = useRecordingStore(
+    (state) => state.isRestoredFromStorage,
+  );
+
   useEffect(() => {
-    if (recordedBlob && recordingStatus === 'stopped' && totalDuration > 0) {
+    if (
+      recordedBlob &&
+      recordingStatus === 'stopped' &&
+      totalDuration > 0 &&
+      isRestoredFromStorage
+    ) {
       const timer = setTimeout(() => {
         toast.info(
           `이전 녹음이 복원되었습니다. (${formatDuration(totalDuration)})`,
         );
+        // 토스트 표시 후 복원 상태 리셋
+        useRecordingStore.getState().setIsRestoredFromStorage(false);
       }, 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [recordedBlob, recordingStatus, totalDuration]);
+  }, [recordedBlob, recordingStatus, totalDuration, isRestoredFromStorage]);
 
   const handleStartRecording = useCallback(async () => {
     try {

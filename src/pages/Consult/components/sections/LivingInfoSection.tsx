@@ -139,17 +139,16 @@ const LivingInfoSection: React.FC<LivingInfoSectionProps> = ({
       };
 
       const items: string[] = [];
+      if (smokingData.smokingPeriodNote) {
+        items.push(`총 흡연 기간: ${smokingData.smokingPeriodNote}`);
+      }
 
       if (smokingData.smokingAmount) {
         const amount =
           SMOKING_AMOUNT_MAP[
             smokingData.smokingAmount as SmokingDTOSmokingAmountEnum
           ];
-        if (amount) items.push(`흡연량: ${amount}`);
-      }
-
-      if (smokingData.smokingPeriodNote) {
-        items.push(`흡연 기간: ${smokingData.smokingPeriodNote}`);
+        if (amount) items.push(`하루 평균 흡연량: ${amount}`);
       }
 
       return items.length > 0 ? items : ['데이터 없음'];
