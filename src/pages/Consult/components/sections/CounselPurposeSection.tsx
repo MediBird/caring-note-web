@@ -2,7 +2,6 @@ import React from 'react';
 import {
   CounselCardBaseInformationRes,
   CounselPurposeAndNoteDTOCounselPurposeEnum,
-  SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
 } from '@/api';
 import { COUNSEL_PURPOSE_MAP } from '@/utils/constants';
 import ContentCard from '@/components/common/ContentCard';
@@ -11,6 +10,7 @@ import {
   useBaseInformationHistoryQuery,
   useHistoryData,
 } from '../../hooks/query/useHistoryQuery';
+import { LocalHistoryTypeEnum } from '../../hooks/store/useHistoryStore';
 import {
   formatCounselPurposeHistory,
   formatMedicationHistory,
@@ -29,9 +29,14 @@ const CounselPurposeSection: React.FC<CounselPurposeSectionProps> = ({
   // 히스토리 쿼리 실행
   useBaseInformationHistoryQuery(counselSessionId);
 
-  const { historyData, isLoading, hasData, isInitialized } = useHistoryData(
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
+  // 각 타입별로 분리된 히스토리 데이터 가져오기
+  const counselPurposeHistory = useHistoryData(
+    LocalHistoryTypeEnum.CounselPurpose,
   );
+  const significantNoteHistory = useHistoryData(
+    LocalHistoryTypeEnum.SignificantNote,
+  );
+  const medicationHistory = useHistoryData(LocalHistoryTypeEnum.MedicationNote);
 
   const counselPurposeItems = [
     {
@@ -66,9 +71,11 @@ const CounselPurposeSection: React.FC<CounselPurposeSectionProps> = ({
         title="상담 목적"
         items={counselPurposeItems}
         hasHistory={true}
-        historyData={historyData}
-        isHistoryLoading={isLoading}
-        hasHistoryData={hasData && isInitialized}
+        historyData={counselPurposeHistory.historyData}
+        isHistoryLoading={counselPurposeHistory.isLoading}
+        hasHistoryData={
+          counselPurposeHistory.hasData && counselPurposeHistory.isInitialized
+        }
         badgeText="상담"
         formatHistoryItem={formatCounselPurposeHistory}
       />
@@ -76,9 +83,11 @@ const CounselPurposeSection: React.FC<CounselPurposeSectionProps> = ({
         title="특이사항"
         items={significantNoteItems}
         hasHistory={true}
-        historyData={historyData}
-        isHistoryLoading={isLoading}
-        hasHistoryData={hasData && isInitialized}
+        historyData={significantNoteHistory.historyData}
+        isHistoryLoading={significantNoteHistory.isLoading}
+        hasHistoryData={
+          significantNoteHistory.hasData && significantNoteHistory.isInitialized
+        }
         badgeText="특이사항"
         formatHistoryItem={formatSignificantNoteHistory}
       />
@@ -86,9 +95,11 @@ const CounselPurposeSection: React.FC<CounselPurposeSectionProps> = ({
         title="약물"
         items={medicationItems}
         hasHistory={true}
-        historyData={historyData}
-        isHistoryLoading={isLoading}
-        hasHistoryData={hasData && isInitialized}
+        historyData={medicationHistory.historyData}
+        isHistoryLoading={medicationHistory.isLoading}
+        hasHistoryData={
+          medicationHistory.hasData && medicationHistory.isInitialized
+        }
         badgeText="약물"
         formatHistoryItem={formatMedicationHistory}
       />

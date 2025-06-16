@@ -143,7 +143,7 @@ const RecordingControlButtons: React.FC<{
 
   const handleGoToNoteTab = () => {
     setActiveTab(ConsultTab.consultNote);
-    toast.info('AI 요약 탭으로 이동합니다.');
+    toast.info('AI 요약 탭에서 확인할 수 있습니다.');
   };
 
   const commonButtonProps = {
