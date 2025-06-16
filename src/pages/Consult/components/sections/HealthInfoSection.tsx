@@ -10,6 +10,7 @@ import {
   useHealthInformationHistoryQuery,
   useHistoryData,
 } from '../../hooks/query/useHistoryQuery';
+import { LocalHistoryTypeEnum } from '../../hooks/store/useHistoryStore';
 import {
   formatAllergyHistory,
   formatDiseaseHistory,
@@ -30,29 +31,18 @@ const HealthInfoSection: React.FC<HealthInfoSectionProps> = ({
   // 히스토리 쿼리 실행
   useHealthInformationHistoryQuery(counselSessionId);
 
-  // 히스토리 데이터 가져오기
-  const {
-    historyData: diseaseHistoryData,
-    isLoading: diseaseHistoryLoading,
-    hasData: diseaseHistoryHasData,
-    isInitialized: diseaseHistoryInitialized,
-  } = useHistoryData(
-    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.DiseaseInfo,
+  // 각 타입별로 분리된 히스토리 데이터 가져오기
+  const diseasesHistory = useHistoryData(LocalHistoryTypeEnum.Diseases);
+  const diseaseHistoryNoteHistory = useHistoryData(
+    LocalHistoryTypeEnum.DiseaseHistoryNote,
   );
-  const {
-    historyData: allergyHistoryData,
-    isLoading: allergyHistoryLoading,
-    hasData: allergyHistoryHasData,
-    isInitialized: allergyHistoryInitialized,
-  } = useHistoryData(
+  const mainInconvenienceHistory = useHistoryData(
+    LocalHistoryTypeEnum.MainInconvenienceNote,
+  );
+  const allergyHistory = useHistoryData(
     SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Allergy,
   );
-  const {
-    historyData: medicationSideEffectHistoryData,
-    isLoading: medicationSideEffectHistoryLoading,
-    hasData: medicationSideEffectHistoryHasData,
-    isInitialized: medicationSideEffectHistoryInitialized,
-  } = useHistoryData(
+  const medicationSideEffectHistory = useHistoryData(
     SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationSideEffect,
   );
 
@@ -129,9 +119,11 @@ const HealthInfoSection: React.FC<HealthInfoSectionProps> = ({
         title="앓고 있는 질병"
         items={diseaseItems}
         hasHistory={true}
-        historyData={diseaseHistoryData}
-        isHistoryLoading={diseaseHistoryLoading}
-        hasHistoryData={diseaseHistoryHasData && diseaseHistoryInitialized}
+        historyData={diseasesHistory.historyData}
+        isHistoryLoading={diseasesHistory.isLoading}
+        hasHistoryData={
+          diseasesHistory.hasData && diseasesHistory.isInitialized
+        }
         formatHistoryItem={formatDiseaseHistory}
       />
 
@@ -140,9 +132,12 @@ const HealthInfoSection: React.FC<HealthInfoSectionProps> = ({
         title="질병 및 수술 이력"
         items={diseaseHistoryItems}
         hasHistory={true}
-        historyData={diseaseHistoryData}
-        isHistoryLoading={diseaseHistoryLoading}
-        hasHistoryData={diseaseHistoryHasData && diseaseHistoryInitialized}
+        historyData={diseaseHistoryNoteHistory.historyData}
+        isHistoryLoading={diseaseHistoryNoteHistory.isLoading}
+        hasHistoryData={
+          diseaseHistoryNoteHistory.hasData &&
+          diseaseHistoryNoteHistory.isInitialized
+        }
         formatHistoryItem={formatDiseaseHistoryNote}
       />
 
@@ -151,9 +146,12 @@ const HealthInfoSection: React.FC<HealthInfoSectionProps> = ({
         title="주요 불편 증상"
         items={mainInconvenienceItems}
         hasHistory={true}
-        historyData={diseaseHistoryData}
-        isHistoryLoading={diseaseHistoryLoading}
-        hasHistoryData={diseaseHistoryHasData && diseaseHistoryInitialized}
+        historyData={mainInconvenienceHistory.historyData}
+        isHistoryLoading={mainInconvenienceHistory.isLoading}
+        hasHistoryData={
+          mainInconvenienceHistory.hasData &&
+          mainInconvenienceHistory.isInitialized
+        }
         formatHistoryItem={formatMainInconvenienceHistory}
       />
 
@@ -169,11 +167,11 @@ const HealthInfoSection: React.FC<HealthInfoSectionProps> = ({
           title="약물 부작용"
           items={medicationSideEffectItems}
           hasHistory={true}
-          historyData={medicationSideEffectHistoryData}
-          isHistoryLoading={medicationSideEffectHistoryLoading}
+          historyData={medicationSideEffectHistory.historyData}
+          isHistoryLoading={medicationSideEffectHistory.isLoading}
           hasHistoryData={
-            medicationSideEffectHistoryHasData &&
-            medicationSideEffectHistoryInitialized
+            medicationSideEffectHistory.hasData &&
+            medicationSideEffectHistory.isInitialized
           }
           badgeVariant={
             healthInfoData?.medicationSideEffect?.isMedicationSideEffect
@@ -193,9 +191,11 @@ const HealthInfoSection: React.FC<HealthInfoSectionProps> = ({
           title="알레르기"
           items={allergyItems}
           hasHistory={true}
-          historyData={allergyHistoryData}
-          isHistoryLoading={allergyHistoryLoading}
-          hasHistoryData={allergyHistoryHasData && allergyHistoryInitialized}
+          historyData={allergyHistory.historyData}
+          isHistoryLoading={allergyHistory.isLoading}
+          hasHistoryData={
+            allergyHistory.hasData && allergyHistory.isInitialized
+          }
           badgeVariant={
             healthInfoData?.allergy?.isAllergic ? 'errorLight' : 'primaryLight'
           }
