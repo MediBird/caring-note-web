@@ -32,7 +32,6 @@ export function MyProfileDialog({ children }: MyProfileDialogProps) {
   const { user, initAuthState } = useAuthContext();
   const [activeTab, setActiveTab] = useState('basic');
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   // 비밀번호 변경 상태
@@ -270,21 +269,11 @@ export function MyProfileDialog({ children }: MyProfileDialogProps) {
                 </Label>
                 <div className="relative mt-1">
                   <Input
-                    type={showConfirmPassword ? 'text' : 'password'}
+                    type={'password'}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="비밀번호를 다시 입력하세요"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
                 </div>
               </div>
             </div>
