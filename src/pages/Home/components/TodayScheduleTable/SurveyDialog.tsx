@@ -69,7 +69,7 @@ function SurveyDialog({
       text: '작성 중',
     },
     [CounselCardBaseInformationResCardRecordStatusEnum.Completed]: {
-      variant: 'primary' as const,
+      variant: 'secondary' as const,
       text: '작성 완료',
     },
   };
