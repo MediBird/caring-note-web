@@ -122,16 +122,11 @@ function SurveyDialog({
               : '상담 경험이 있는 내담자는 이전 기록이 적혀 있습니다.'}
           </DialogDescription>
           <DialogFooter className="sm:justify-end">
-            <div>
+            <div className="flex items-center gap-3">
               <DialogClose asChild>
-                <Button variant="secondary" className="mx-[0.5rem]">
-                  취소
-                </Button>
+                <Button variant="secondary">취소</Button>
               </DialogClose>
-              <Button
-                variant="primary"
-                className="mx-[0.5rem]"
-                onClick={handleStartSurvey}>
+              <Button variant="primary" onClick={handleStartSurvey}>
                 {isConsent === false &&
                 dialogState ===
                   CounselCardBaseInformationResCardRecordStatusEnum.NotStarted

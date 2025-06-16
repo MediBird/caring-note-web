@@ -7,11 +7,7 @@ import {
   useConvertSpeechToText,
   useAISummaryStatus,
 } from './useAISummaryQuery';
-import {
-  getTusUploadConfig,
-  extractFileIdFromUrl,
-  checkExistingRecording as checkExistingRecordingUtil,
-} from '../../utils/tusUtils';
+import { getTusUploadConfig, extractFileIdFromUrl } from '../../utils/tusUtils';
 import {
   RecordingError,
   RECORDING_CONFIG,
@@ -27,7 +23,6 @@ interface UseTusUploadReturn {
   abortUpload: () => void;
   handleMerge: (counselSessionId: string) => Promise<void>;
   deleteFile: (counselSessionId: string) => Promise<void>;
-  checkExistingRecording: () => Promise<void>;
   isUploading: boolean;
   error: string | null;
 }
@@ -63,45 +58,37 @@ export const useTusUpload = ({
 
   // AI 요약 상태 변화 감지
   useEffect(() => {
-    if (aiSummaryStatus?.aiCounselSummaryStatus) {
+    // 타입 가드: aiSummaryStatus가 올바른 타입인지 확인
+    if (
+      aiSummaryStatus &&
+      typeof aiSummaryStatus === 'object' &&
+      'aiCounselSummaryStatus' in aiSummaryStatus &&
+      aiSummaryStatus.aiCounselSummaryStatus
+    ) {
       const currentStatus = aiSummaryStatus.aiCounselSummaryStatus.toString();
       const prevStatus = prevAiSummaryStatusRef.current;
 
-      setSession({ aiSummaryStatus: currentStatus as AISummaryStatus });
+      // 현재 활성 세션의 상태만 업데이트
+      const currentSessionId =
+        useRecordingStore.getState().session.currentSessionId;
+      if (currentSessionId === counselSessionId) {
+        setSession({ aiSummaryStatus: currentStatus as AISummaryStatus });
 
-      // 이전 상태가 있고, 상태가 변화했을 때만 toast 표시
-      if (
-        prevStatus &&
-        prevStatus !== currentStatus &&
-        currentStatus === 'GPT_COMPLETE'
-      ) {
-        completeRecording();
-        toast.info('AI 요약이 완료되었습니다! 🎉');
+        // 이전 상태가 있고, 상태가 변화했을 때만 toast 표시 및 완료 처리
+        if (
+          prevStatus &&
+          prevStatus !== currentStatus &&
+          currentStatus === 'GPT_COMPLETE'
+        ) {
+          completeRecording();
+          toast.info('AI 요약이 완료되었습니다! 🎉');
+        }
       }
 
       // 현재 상태를 이전 상태로 저장
       prevAiSummaryStatusRef.current = currentStatus;
     }
-  }, [aiSummaryStatus, setSession, completeRecording]);
-
-  // 기존 녹음 파일 확인 함수
-  const checkExistingRecording = useCallback(async () => {
-    try {
-      const result = await checkExistingRecordingUtil(counselSessionId);
-
-      if (result.exists && result.duration && result.fileId) {
-        setFile({
-          fileId: result.fileId,
-          duration: result.duration,
-          isFromStorage: false,
-        });
-        setSession({ status: 'completed' });
-        console.log(`기존 녹음 파일 발견: ${result.duration}초`);
-      }
-    } catch (error) {
-      console.log('기존 녹음 파일 조회 실패', error);
-    }
-  }, [counselSessionId, setFile, setSession]);
+  }, [aiSummaryStatus, setSession, completeRecording, counselSessionId]);
 
   // 녹음 파일 업로드
   const uploadRecording = useCallback(async (): Promise<string> => {
@@ -309,7 +296,6 @@ export const useTusUpload = ({
     abortUpload,
     handleMerge,
     deleteFile,
-    checkExistingRecording,
     isUploading:
       currentUploadState.isUploading ||
       deleteMutation.isPending ||

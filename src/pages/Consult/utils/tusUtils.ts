@@ -43,35 +43,3 @@ export const getTusUploadConfig = async (counselSessionId: string) => {
 export const extractFileIdFromUrl = (url: string): string => {
   return url.split('/').pop() || '';
 };
-
-// 기존 녹음 파일 확인 함수
-export const checkExistingRecording = async (counselSessionId: string) => {
-  try {
-    const authHeaders = await getAuthHeaders();
-
-    const response = await fetch(
-      `${import.meta.env.VITE_BASE_API_URL}/v1/tus/${counselSessionId}`,
-      {
-        method: 'HEAD',
-        headers: authHeaders,
-      },
-    );
-
-    if (response.ok) {
-      const recordingDuration = response.headers.get('X-Recording-Duration');
-      if (recordingDuration) {
-        const duration = parseInt(recordingDuration, 10);
-        return {
-          exists: true,
-          duration,
-          fileId: counselSessionId,
-        };
-      }
-    }
-
-    return { exists: false };
-  } catch (error) {
-    console.log('기존 녹음 파일 조회 실패', error);
-    return { exists: false };
-  }
-};

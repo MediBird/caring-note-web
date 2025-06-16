@@ -46,9 +46,9 @@ function EditConsultDialog({ onEdit }: EditConsultDialogProps) {
             수정하신 내용으로 교체되어 저장됩니다.
           </p>
         </DialogDescription>
-        <DialogFooter className="m-0 flex w-full items-center justify-end p-5">
+        <DialogFooter className="m-0 flex w-full items-center justify-end gap-3 p-5">
           <DialogClose asChild>
-            <Button variant="secondary" size="md" className="px-2">
+            <Button variant="secondary" size="md">
               취소
             </Button>
           </DialogClose>

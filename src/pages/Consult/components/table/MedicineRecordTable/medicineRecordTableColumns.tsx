@@ -11,6 +11,7 @@ import {
 import { MedicationRecordListDTO } from '@/pages/Consult/hooks/query/medicationRecord/useMedicationRecordList';
 import { ColumnDef } from '@tanstack/react-table';
 import { Ellipsis } from 'lucide-react';
+import { useMemo } from 'react';
 
 interface PrescriptionMedicineTableColumnsProps {
   onDelete: (id: string) => void;
@@ -26,165 +27,345 @@ interface PrescriptionMedicineTableColumnsProps {
   ) => void;
 }
 
-export const createColumns = ({
+export const useColumns = ({
   onDelete,
   handleUpdateCell,
   handleSearchEnter,
-}: PrescriptionMedicineTableColumnsProps): ColumnDef<MedicationRecordListDTO>[] => [
-  {
-    id: 'usageStatusCode',
-    header: '사용 상태',
-    accessorKey: 'usageStatusCode',
-    cell: ({ row }) => {
-      const usageStatusCode = row.original.usageStatusCode || '';
-      const selectedOption = USAGE_STATUS_CODE_OPTIONS.find(
-        (option) => option.value === usageStatusCode,
-      );
-      const initialValue =
-        selectedOption?.value || USAGE_STATUS_CODE_OPTIONS[0].value;
+}: PrescriptionMedicineTableColumnsProps): ColumnDef<MedicationRecordListDTO>[] => {
+  return useMemo(
+    () => [
+      {
+        id: 'usageStatusCode',
+        header: '사용 상태',
+        accessorKey: 'usageStatusCode',
+        cell: ({ row }) => {
+          const usageStatusCode = row.original.usageStatusCode || '';
+          const selectedOption = USAGE_STATUS_CODE_OPTIONS.find(
+            (option) => option.value === usageStatusCode,
+          );
+          const initialValue =
+            selectedOption?.value || USAGE_STATUS_CODE_OPTIONS[0].value;
 
-      if (!row.original.usageStatusCode && row.original.id) {
-        handleUpdateCell(
-          row.original.id as string,
-          'usageStatusCode',
-          USAGE_STATUS_CODE_OPTIONS[0].value,
+          const shouldSetDefault =
+            !row.original.usageStatusCode &&
+            row.original.id &&
+            !row.original.id.includes('temp');
+
+          if (shouldSetDefault) {
+            setTimeout(() => {
+              handleUpdateCell(
+                row.original.id as string,
+                'usageStatusCode',
+                USAGE_STATUS_CODE_OPTIONS[0].value,
+              );
+            }, 0);
+          }
+
+          return (
+            <SelectCell
+              initialValue={initialValue}
+              options={USAGE_STATUS_CODE_OPTIONS}
+              placeholder="사용 상태를 선택하세요"
+              onValueChange={(value) => {
+                handleUpdateCell(
+                  row.original.id as string,
+                  'usageStatusCode',
+                  value,
+                );
+              }}
+            />
+          );
+        },
+      },
+      {
+        id: 'medicationName',
+        header: '성분명 / 상품명',
+        accessorKey: 'medicationName',
+        cell: ({ row }) => {
+          return (
+            <MedicineSearchCell
+              row={row}
+              value={row.original.medicationName as string}
+              handleSearchEnter={handleSearchEnter}
+            />
+          );
+        },
+      },
+      {
+        id: 'usageObject',
+        header: '약물 사용 목적',
+        accessorKey: 'usageObject',
+        cell: ({ row }) => {
+          return (
+            <TextInputCell
+              value={row.original.usageObject as unknown as string}
+              field="usageObject"
+              row={row}
+              handleUpdateCell={handleUpdateCell}
+              placeholder="사용 목적"
+            />
+          );
+        },
+      },
+      {
+        id: 'prescriptionDate',
+        header: '처방 날짜',
+        accessorKey: 'prescriptionDate',
+        cell: ({ row }) => {
+          const getInitialDate = () => {
+            if (
+              row.original.prescriptionDate &&
+              row.original.prescriptionDate !== null
+            ) {
+              return new Date(row.original.prescriptionDate);
+            }
+            return undefined;
+          };
+
+          return (
+            <DatePickerComponent
+              initialDate={getInitialDate()}
+              isDateUnknown={row.original.prescriptionDate === null}
+              isPrescriptionDate={true}
+              handleDateUnknown={() => {
+                handleUpdateCell(
+                  row.original.id as string,
+                  'prescriptionDate',
+                  null,
+                );
+              }}
+              placeholder="연도-월-일"
+              handleClicked={(value) => {
+                if (!value) return;
+
+                const dateString = value.toISOString();
+                const formattedDate = dateString.split('T')[0];
+
+                handleUpdateCell(
+                  row.original.id as string,
+                  'prescriptionDate',
+                  formattedDate,
+                );
+              }}
+              disableFutureDates={true}
+            />
+          );
+        },
+      },
+      {
+        id: 'prescriptionDays',
+        header: '처방 일수',
+        accessorKey: 'prescriptionDays',
+        size: 100,
+        cell: ({ row }) => {
+          return (
+            <TextInputCell
+              value={row.original.prescriptionDays as unknown as string}
+              field="prescriptionDays"
+              row={row}
+              handleUpdateCell={handleUpdateCell}
+              unit={'일'}
+            />
+          );
+        },
+      },
+      {
+        id: 'actions',
+        cell: ({ row }) => {
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="flex w-full items-center justify-center">
+                  <button className="content-center rounded-[4px] p-1 text-center text-grayscale-60 hover:bg-grayscale-5">
+                    <Ellipsis className="h-4 w-4" />
+                  </button>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() => {
+                    onDelete(row.original.id as string);
+                  }}>
+                  삭제하기
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
+        size: 20,
+      },
+    ],
+    [onDelete, handleUpdateCell, handleSearchEnter],
+  );
+};
+
+// 기존 createColumns 함수는 하위 호환성을 위해 유지
+export const createColumns = (
+  props: PrescriptionMedicineTableColumnsProps,
+): ColumnDef<MedicationRecordListDTO>[] => {
+  return [
+    {
+      id: 'usageStatusCode',
+      header: '사용 상태',
+      accessorKey: 'usageStatusCode',
+      cell: ({ row }) => {
+        const usageStatusCode = row.original.usageStatusCode || '';
+        const selectedOption = USAGE_STATUS_CODE_OPTIONS.find(
+          (option) => option.value === usageStatusCode,
         );
-      }
+        const initialValue =
+          selectedOption?.value || USAGE_STATUS_CODE_OPTIONS[0].value;
 
-      return (
-        <SelectCell
-          initialValue={initialValue}
-          options={USAGE_STATUS_CODE_OPTIONS}
-          placeholder="사용 상태를 선택하세요"
-          onValueChange={(value) => {
-            handleUpdateCell(
+        const shouldSetDefault =
+          !row.original.usageStatusCode &&
+          row.original.id &&
+          !row.original.id.includes('temp');
+
+        if (shouldSetDefault) {
+          setTimeout(() => {
+            props.handleUpdateCell(
               row.original.id as string,
               'usageStatusCode',
-              value,
+              USAGE_STATUS_CODE_OPTIONS[0].value,
             );
-          }}
-        />
-      );
-    },
-  },
-  {
-    id: 'medicationName',
-    header: '성분명 / 상품명',
-    accessorKey: 'medicationName',
-    cell: ({ row }) => {
-      return (
-        <MedicineSearchCell
-          row={row}
-          value={row.original.medicationName as string}
-          handleSearchEnter={handleSearchEnter}
-        />
-      );
-    },
-  },
-  {
-    id: 'usageObject',
-    header: '약물 사용 목적',
-    accessorKey: 'usageObject',
-    cell: ({ row }) => {
-      return (
-        <TextInputCell
-          value={row.original.usageObject as unknown as string}
-          field="usageObject"
-          row={row}
-          handleUpdateCell={handleUpdateCell}
-          placeholder="사용 목적"
-        />
-      );
-    },
-  },
-  {
-    id: 'prescriptionDate',
-    header: '처방 날짜',
-    accessorKey: 'prescriptionDate',
-    cell: ({ row }) => {
-      const getInitialDate = () => {
-        if (
-          row.original.prescriptionDate &&
-          row.original.prescriptionDate !== null
-        ) {
-          return new Date(row.original.prescriptionDate);
+          }, 0);
         }
-        return undefined;
-      };
 
-      return (
-        <DatePickerComponent
-          initialDate={getInitialDate()}
-          isDateUnknown={row.original.prescriptionDate === null}
-          isPrescriptionDate={true}
-          handleDateUnknown={() => {
-            handleUpdateCell(
-              row.original.id as string,
-              'prescriptionDate',
-              null,
-            );
-          }}
-          placeholder="연도-월-일"
-          handleClicked={(value) => {
-            if (!value) return;
+        return (
+          <SelectCell
+            initialValue={initialValue}
+            options={USAGE_STATUS_CODE_OPTIONS}
+            placeholder="사용 상태를 선택하세요"
+            onValueChange={(value) => {
+              props.handleUpdateCell(
+                row.original.id as string,
+                'usageStatusCode',
+                value,
+              );
+            }}
+          />
+        );
+      },
+    },
+    {
+      id: 'medicationName',
+      header: '성분명 / 상품명',
+      accessorKey: 'medicationName',
+      cell: ({ row }) => {
+        return (
+          <MedicineSearchCell
+            row={row}
+            value={row.original.medicationName as string}
+            handleSearchEnter={props.handleSearchEnter}
+          />
+        );
+      },
+    },
+    {
+      id: 'usageObject',
+      header: '약물 사용 목적',
+      accessorKey: 'usageObject',
+      cell: ({ row }) => {
+        return (
+          <TextInputCell
+            value={row.original.usageObject as unknown as string}
+            field="usageObject"
+            row={row}
+            handleUpdateCell={props.handleUpdateCell}
+            placeholder="사용 목적"
+          />
+        );
+      },
+    },
+    {
+      id: 'prescriptionDate',
+      header: '처방 날짜',
+      accessorKey: 'prescriptionDate',
+      cell: ({ row }) => {
+        const getInitialDate = () => {
+          if (
+            row.original.prescriptionDate &&
+            row.original.prescriptionDate !== null
+          ) {
+            return new Date(row.original.prescriptionDate);
+          }
+          return undefined;
+        };
 
-            const dateString = value.toISOString();
-            const formattedDate = dateString.split('T')[0];
+        return (
+          <DatePickerComponent
+            initialDate={getInitialDate()}
+            isDateUnknown={row.original.prescriptionDate === null}
+            isPrescriptionDate={true}
+            handleDateUnknown={() => {
+              props.handleUpdateCell(
+                row.original.id as string,
+                'prescriptionDate',
+                null,
+              );
+            }}
+            placeholder="연도-월-일"
+            handleClicked={(value) => {
+              if (!value) return;
 
-            handleUpdateCell(
-              row.original.id as string,
-              'prescriptionDate',
-              formattedDate,
-            );
-          }}
-          disableFutureDates={true}
-        />
-      );
+              const dateString = value.toISOString();
+              const formattedDate = dateString.split('T')[0];
+
+              props.handleUpdateCell(
+                row.original.id as string,
+                'prescriptionDate',
+                formattedDate,
+              );
+            }}
+            disableFutureDates={true}
+          />
+        );
+      },
     },
-  },
-  {
-    id: 'prescriptionDays',
-    header: '처방 일수',
-    accessorKey: 'prescriptionDays',
-    size: 100,
-    cell: ({ row }) => {
-      return (
-        <TextInputCell
-          value={row.original.prescriptionDays as unknown as string}
-          field="prescriptionDays"
-          row={row}
-          handleUpdateCell={handleUpdateCell}
-          unit={'일'}
-        />
-      );
+    {
+      id: 'prescriptionDays',
+      header: '처방 일수',
+      accessorKey: 'prescriptionDays',
+      size: 100,
+      cell: ({ row }) => {
+        return (
+          <TextInputCell
+            value={row.original.prescriptionDays as unknown as string}
+            field="prescriptionDays"
+            row={row}
+            handleUpdateCell={props.handleUpdateCell}
+            unit={'일'}
+          />
+        );
+      },
     },
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className="flex w-full items-center justify-center">
-              <button className="content-center rounded-[4px] p-1 text-center text-grayscale-60 hover:bg-grayscale-5">
-                <Ellipsis className="h-4 w-4" />
-              </button>
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => {
-                onDelete(row.original.id as string);
-              }}>
-              삭제하기
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="flex w-full items-center justify-center">
+                <button className="content-center rounded-[4px] p-1 text-center text-grayscale-60 hover:bg-grayscale-5">
+                  <Ellipsis className="h-4 w-4" />
+                </button>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => {
+                  props.onDelete(row.original.id as string);
+                }}>
+                삭제하기
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+      size: 20,
     },
-    size: 20,
-  },
-];
+  ];
+};
 
 const USAGE_STATUS_CODE_OPTIONS = [
   { label: '상시 복용', value: 'REGULAR' },

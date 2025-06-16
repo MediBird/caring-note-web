@@ -43,6 +43,9 @@ export function Index() {
   const file = useRecordingStore(recordingSelectors.file);
   const timer = useRecordingStore(recordingSelectors.timer);
 
+  // 녹음 스토어 액션
+  const loadSession = useRecordingStore((state) => state.loadSession);
+
   // AI 요약 상태 조회 (로딩 상태 확인용)
   const { data: aiSummaryStatusData, isLoading: isAISummaryStatusLoading } =
     useAISummaryStatus(counselSessionId ?? '');
@@ -120,6 +123,13 @@ export function Index() {
   const hasPreviousConsult = useMemo(() => {
     return prevCounselSessionList?.length > 0;
   }, [prevCounselSessionList]);
+
+  // 페이지 진입 시 녹음 스토어 초기화
+  useEffect(() => {
+    if (counselSessionId) {
+      loadSession(counselSessionId);
+    }
+  }, [counselSessionId, loadSession]);
 
   useEffect(() => {
     if (!hasPreviousConsult) {
