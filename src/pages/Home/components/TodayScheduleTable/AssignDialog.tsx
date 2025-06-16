@@ -23,6 +23,7 @@ interface AssignDialogProps {
   isCounselorAssign?: boolean;
   currentCounselorName?: string;
   status: SelectCounselSessionListItemStatusEnum;
+  disabled?: boolean;
 }
 
 // TODO: counselorId 활용 상담 담당 약사 할당 다이얼로그 구현 필요
@@ -33,6 +34,7 @@ function AssignDialog({
   isCounselorAssign,
   currentCounselorName,
   status,
+  disabled,
 }: AssignDialogProps) {
   const { user } = useAuthContext();
   const { mutate: assignMutate } = useCounselAssign();
@@ -109,7 +111,9 @@ function AssignDialog({
       className="w-full"
       size="md"
       variant={!isCounselorAssign ? 'primary' : 'secondary'}
-      disabled={status === SelectCounselSessionListItemStatusEnum.Completed}>
+      disabled={
+        disabled || status === SelectCounselSessionListItemStatusEnum.Completed
+      }>
       {status === SelectCounselSessionListItemStatusEnum.InProgress
         ? '상담 중'
         : status === SelectCounselSessionListItemStatusEnum.Completed

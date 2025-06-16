@@ -10,6 +10,7 @@ import AssignDialog from '@/pages/Home/components/TodayScheduleTable/AssignDialo
 import SurveyDialog from '@/pages/Home/components/TodayScheduleTable/SurveyDialog';
 import { formatDisplayText } from '@/utils/formatDisplayText';
 import { ColumnDef } from '@tanstack/react-table';
+import { cn } from '@/lib/utils';
 
 interface TodayScheduleTableColumnProps {
   onCellClick: (counselSessionId: string) => void;
@@ -83,7 +84,15 @@ export const createColumns = ({
       size: 102,
       cell: ({ row }) => {
         const counselorName = formatDisplayText(row.original.counselorName);
-        return <span className="px-3">{counselorName}</span>;
+        return (
+          <span
+            className={cn(
+              'px-3',
+              counselorName === '탈퇴사용자' && 'text-grayscale-50',
+            )}>
+            {counselorName}
+          </span>
+        );
       },
     },
     {
@@ -109,6 +118,9 @@ export const createColumns = ({
         const isCounselorAssign = row.original.isCounselorAssign;
         const currentCounselorName = row.original.counselorName;
         const status = row.original.status;
+        const isCanceled =
+          status === SelectCounselSessionListItemStatusEnum.Canceled;
+
         return (
           <div className="px-3">
             <AssignDialog
@@ -117,6 +129,7 @@ export const createColumns = ({
               isCounselorAssign={isCounselorAssign}
               currentCounselorName={currentCounselorName}
               status={status as SelectCounselSessionListItemStatusEnum}
+              disabled={isCanceled}
             />
           </div>
         );
@@ -132,6 +145,9 @@ export const createColumns = ({
         const counseleeId = row.original.counseleeId ?? '';
         const dialogState = row.original.cardRecordStatus ?? '';
         const isConsent = row.original.isConsent;
+        const status = row.original.status;
+        const isCanceled =
+          status === SelectCounselSessionListItemStatusEnum.Canceled;
 
         return (
           <div className="px-3">
@@ -142,6 +158,7 @@ export const createColumns = ({
                 dialogState as CounselCardBaseInformationResCardRecordStatusEnum
               }
               isConsent={isConsent}
+              disabled={isCanceled}
             />
           </div>
         );
