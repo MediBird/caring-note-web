@@ -34,7 +34,10 @@ export const usePrevCounselSessionDetailList = (
   });
 
   return {
-    prevCounselSessionDetailList: data ?? [],
+    prevCounselSessionDetailList:
+      data?.sort((a, b) => {
+        return (b.sessionNumber ?? 0) - (a.sessionNumber ?? 0);
+      }) ?? [],
     isLoading,
     error,
   };
