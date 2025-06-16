@@ -51,6 +51,7 @@ const SessionHeader = ({
           className="border-primary-60 text-body1 font-normal text-primary-60 hover:bg-primary-5">
           자세히 보러 가기
         </Button>
+<<<<<<< HEAD
         <Button
           variant="secondary"
           size="lg"
@@ -64,6 +65,29 @@ const SessionHeader = ({
             <ChevronUpIcon className="h-5 w-5" />
           )}
         </Button>
+=======
+        {isOpen ? (
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenChange();
+            }}>
+            <ChevronUpIcon className="h-5 w-5" />
+          </Button>
+        ) : (
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenChange();
+            }}>
+            <ChevronDownIcon className="h-5 w-5" />
+          </Button>
+        )}
+>>>>>>> ee446fe (feat: 세션 헤더 아이콘 방향 변경)
       </div>
     </div>
   );
