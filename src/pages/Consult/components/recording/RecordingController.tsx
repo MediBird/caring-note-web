@@ -15,6 +15,7 @@ import { useRecordingTimer } from '../../hooks/useRecordingTimer';
 import { useTusUpload } from '../../hooks/query/useTusUpload';
 import { RecordingError, RECORDING_CONFIG } from '../../types/recording.types';
 import { cn } from '@/lib/utils';
+import { RecordingControls } from './RecordingControls';
 
 export interface RecordingControllerRef {
   startRecording: () => Promise<void>;
@@ -41,25 +42,34 @@ export const RecordingController = forwardRef<
   const timer = useRecordingStore(recordingSelectors.timer);
   const file = useRecordingStore(recordingSelectors.file);
   const canSave = useRecordingStore(recordingSelectors.canSave);
+  const displayDuration = useRecordingStore(recordingSelectors.displayDuration);
 
   // 스토어 액션
   const {
     setFile,
     setUpload,
     loadSession,
+    resetSession,
     saveToStorage,
     incrementDuration,
     startRecording: startRecordingAction,
+    pauseRecording: pauseRecordingAction,
+    resumeRecording: resumeRecordingAction,
     stopRecording: stopRecordingAction,
     startUploading,
     startProcessing,
   } = useRecordingStore();
 
   // TUS 업로드
-  const { uploadRecording, handleMerge, checkExistingRecording, abortUpload } =
-    useTusUpload({
-      counselSessionId,
-    });
+  const {
+    uploadRecording,
+    handleMerge,
+    checkExistingRecording,
+    abortUpload,
+    isUploading,
+  } = useTusUpload({
+    counselSessionId,
+  });
 
   // 에러 처리
   const handleRecordingError = useCallback(
@@ -197,6 +207,22 @@ export const RecordingController = forwardRef<
     }
   }, [mediaRecorder, recordingTimer]);
 
+  // 일시정지
+  const handlePauseRecording = useCallback(() => {
+    mediaRecorder.pauseRecording();
+    pauseRecordingAction();
+    recordingTimer.stopDurationTimer();
+    recordingTimer.stopAutoSaveTimer();
+  }, [mediaRecorder, pauseRecordingAction, recordingTimer]);
+
+  // 재개
+  const handleResumeRecording = useCallback(() => {
+    mediaRecorder.resumeRecording();
+    resumeRecordingAction();
+    recordingTimer.startDurationTimer();
+    recordingTimer.startAutoSaveTimer();
+  }, [mediaRecorder, resumeRecordingAction, recordingTimer]);
+
   // 정지
   const handleStopRecording = useCallback(async () => {
     recordingTimer.stopDurationTimer();
@@ -227,6 +253,26 @@ export const RecordingController = forwardRef<
     counselSessionId,
     timer.totalDuration,
     saveToStorage,
+  ]);
+
+  // 삭제
+  const handleDeleteRecording = useCallback(async () => {
+    try {
+      abortUpload();
+      mediaRecorder.cleanup();
+      recordingTimer.cleanup();
+      await resetSession(counselSessionId);
+      toast.info('녹음이 삭제되었습니다.');
+    } catch (error) {
+      console.error('삭제 실패:', error);
+      toast.error('녹음 삭제에 실패했습니다.');
+    }
+  }, [
+    abortUpload,
+    mediaRecorder,
+    recordingTimer,
+    resetSession,
+    counselSessionId,
   ]);
 
   // 저장
@@ -292,7 +338,19 @@ export const RecordingController = forwardRef<
 
   return (
     <div className={containerClasses}>
-      <div>녹음 컨트롤러 (임시)</div>
+      <RecordingControls
+        status={session.status}
+        duration={displayDuration}
+        hasBlob={!!file.blob}
+        canSave={!!canSave}
+        isUploading={isUploading}
+        onStart={handleStartRecording}
+        onPause={handlePauseRecording}
+        onResume={handleResumeRecording}
+        onStop={handleStopRecording}
+        onSave={handleSaveRecording}
+        onDelete={handleDeleteRecording}
+      />
     </div>
   );
 });
