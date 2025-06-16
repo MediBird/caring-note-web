@@ -9,7 +9,12 @@ import TemporarySaveDialog from '@/pages/Consult/components/dialog/TemporarySave
 import { Button } from '@/components/ui/button';
 import PencilBlueIcon from '@/assets/icon/24/create.filled.blue.svg?react';
 import { useParams } from 'react-router-dom';
-import { ConsultRecordingControl } from './recording/ConsultRecordingControl';
+import {
+  RecordingController,
+  RecordingControllerRef,
+} from './recording/RecordingController';
+import React from 'react';
+
 interface InfoItemProps {
   content: React.ReactNode;
   showDivider?: boolean;
@@ -32,6 +37,7 @@ interface HeaderButtonsProps {
   name?: string;
   sessionStatus: UpdateStatusInCounselSessionReqStatusEnum | undefined;
   isSuccessSaveConsult: boolean;
+  recordingControlRef?: React.RefObject<RecordingControllerRef>;
 }
 
 const HeaderButtons = ({
@@ -40,6 +46,7 @@ const HeaderButtons = ({
   name,
   sessionStatus,
   isSuccessSaveConsult,
+  recordingControlRef,
 }: HeaderButtonsProps) => (
   <div className="flex gap-3">
     {sessionStatus !== 'COMPLETED' && <TemporarySaveDialog onSave={onSave} />}
@@ -50,6 +57,7 @@ const HeaderButtons = ({
         name={name}
         onComplete={onComplete}
         isSuccessSaveConsult={isSuccessSaveConsult}
+        recordingControlRef={recordingControlRef}
       />
     )}
   </div>
@@ -101,9 +109,7 @@ const ConsultHeader = ({
   completeConsult: () => void;
   hasPreviousConsult: boolean;
   isSuccessSaveConsult: boolean;
-  recordingControlRef?: React.MutableRefObject<{
-    startRecording: () => Promise<void>;
-  } | null>;
+  recordingControlRef?: React.RefObject<RecordingControllerRef>;
 }) => {
   const { counselSessionId } = useParams();
 
@@ -130,13 +136,9 @@ const ConsultHeader = ({
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <ConsultRecordingControl
+                <RecordingController
+                  ref={recordingControlRef}
                   counselSessionId={counselSessionId ?? ''}
-                  onRecordingControlReady={(controls) => {
-                    if (recordingControlRef) {
-                      recordingControlRef.current = controls;
-                    }
-                  }}
                 />
                 <HeaderButtons
                   onSave={saveConsult}
@@ -144,6 +146,7 @@ const ConsultHeader = ({
                   name={counseleeInfo?.name}
                   sessionStatus={sessionStatus}
                   isSuccessSaveConsult={isSuccessSaveConsult}
+                  recordingControlRef={recordingControlRef}
                 />
               </div>
             </div>
