@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
 import { useCounselCardStore } from '@/pages/Survey/hooks/counselCardStore';
@@ -20,7 +20,6 @@ import IndependentLifeSection from '../sections/IndependentLifeSection';
 
 const ConsultCard: React.FC = () => {
   const { counselSessionId } = useParams();
-  const navigate = useNavigate();
   const { setShouldFetch } = useCounselCardStore();
 
   // 히스토리 데이터 초기화
@@ -61,18 +60,17 @@ const ConsultCard: React.FC = () => {
     counselSessionId || '',
   );
 
+  const handleOpenSurveyInNewTab = () => {
+    const surveyUrl = `/survey/${counselSessionId}`;
+    window.open(surveyUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="space-y-6">
       {/* 헤더 카드 */}
       <Card>
         <CardHeader className="absolute right-10">
-          <Button
-            variant="secondary"
-            onClick={() =>
-              navigate(`/survey/${counselSessionId}`, {
-                state: { fromConsult: true },
-              })
-            }>
+          <Button variant="secondary" onClick={handleOpenSurveyInNewTab}>
             기초 설문 수정하기
           </Button>
         </CardHeader>
