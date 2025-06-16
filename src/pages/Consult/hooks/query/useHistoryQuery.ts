@@ -43,9 +43,15 @@ export const useBaseInformationHistoryQuery = (
 
   useEffect(() => {
     if (isSuccess && data) {
+      console.log('BaseInformation History API Response:', data);
+
       const counselPurposeHistory = data?.counselPurpose?.history || [];
       const significantNoteHistory = data?.significantNote?.history || [];
       const medicationNoteHistory = data?.medicationNote?.history || [];
+
+      console.log('Counsel Purpose History:', counselPurposeHistory);
+      console.log('Significant Note History:', significantNoteHistory);
+      console.log('Medication Note History:', medicationNoteHistory);
 
       // 각 히스토리를 분리해서 저장
       setHistoryData(
@@ -124,11 +130,17 @@ export const useHealthInformationHistoryQuery = (
 
   useEffect(() => {
     if (isSuccess && data) {
+      console.log('HealthInformation History API Response:', data);
+
       // 각 히스토리를 분리해서 저장
       const diseasesHistory = data?.diseases?.history || [];
       const diseaseHistoryNoteHistory = data?.historyNote?.history || [];
       const mainInconvenienceNoteHistory =
         data?.mainInconvenienceNote?.history || [];
+
+      console.log('Diseases History:', diseasesHistory);
+      console.log('Disease History Note History:', diseaseHistoryNoteHistory);
+      console.log('Main Inconvenience History:', mainInconvenienceNoteHistory);
 
       setHistoryData(LocalHistoryTypeEnum.Diseases, diseasesHistory);
       setHistoryData(
@@ -141,13 +153,19 @@ export const useHealthInformationHistoryQuery = (
       );
 
       const allergyHistory = data?.allergy?.history || [];
+      const medicationSideEffectHistory =
+        data?.medicationSideEffect?.history || [];
+
+      console.log('Allergy History:', allergyHistory);
+      console.log(
+        'Medication Side Effect History:',
+        medicationSideEffectHistory,
+      );
+
       setHistoryData(
         SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Allergy,
         allergyHistory,
       );
-
-      const medicationSideEffectHistory =
-        data?.medicationSideEffect?.history || [];
       setHistoryData(
         SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationSideEffect,
         medicationSideEffectHistory,
