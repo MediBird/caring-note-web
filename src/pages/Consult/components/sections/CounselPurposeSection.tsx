@@ -7,14 +7,32 @@ import {
 import { COUNSEL_PURPOSE_MAP } from '@/utils/constants';
 import ContentCard from '@/components/common/ContentCard';
 import SectionContainer from '@/components/common/SectionContainer';
+import {
+  useBaseInformationHistoryQuery,
+  useHistoryData,
+} from '../../hooks/query/useHistoryQuery';
+import {
+  formatCounselPurposeHistory,
+  formatMedicationHistory,
+  formatSignificantNoteHistory,
+} from '../../utils/historyFormatters';
 
 interface CounselPurposeSectionProps {
   baseInfoData: CounselCardBaseInformationRes | null | undefined;
+  counselSessionId: string;
 }
 
 const CounselPurposeSection: React.FC<CounselPurposeSectionProps> = ({
   baseInfoData,
+  counselSessionId,
 }) => {
+  // 히스토리 쿼리 실행
+  useBaseInformationHistoryQuery(counselSessionId);
+
+  const { historyData, isLoading, hasData, isInitialized } = useHistoryData(
+    SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
+  );
+
   const counselPurposeItems = [
     {
       value: Array.isArray(baseInfoData?.counselPurposeAndNote?.counselPurpose)
@@ -42,87 +60,15 @@ const CounselPurposeSection: React.FC<CounselPurposeSectionProps> = ({
     },
   ];
 
-  // 상담 목적 히스토리 포맷팅 함수
-  const formatCounselPurposeHistory = (data: unknown): string[] => {
-    if (typeof data === 'object' && data !== null) {
-      const purposeData = data as {
-        counselPurpose?: string[];
-        significantNote?: string;
-        medicationNote?: string;
-      };
-
-      const items: string[] = [];
-
-      if (
-        purposeData.counselPurpose &&
-        Array.isArray(purposeData.counselPurpose)
-      ) {
-        const purposes = purposeData.counselPurpose
-          .map(
-            (purpose) =>
-              COUNSEL_PURPOSE_MAP[
-                purpose as CounselPurposeAndNoteDTOCounselPurposeEnum
-              ],
-          )
-          .filter(Boolean)
-          .join(', ');
-        if (purposes) items.push(purposes);
-      }
-
-      return items.length > 0 ? items : ['데이터 없음'];
-    }
-    return ['데이터 없음'];
-  };
-
-  // 특이사항 히스토리 포맷팅 함수
-  const formatSignificantNoteHistory = (data: unknown): string[] => {
-    if (typeof data === 'object' && data !== null) {
-      const purposeData = data as {
-        counselPurpose?: string[];
-        significantNote?: string;
-        medicationNote?: string;
-      };
-
-      const items: string[] = [];
-
-      if (purposeData.significantNote) {
-        items.push(purposeData.significantNote);
-      }
-
-      return items.length > 0 ? items : ['데이터 없음'];
-    }
-    return ['데이터 없음'];
-  };
-
-  // 약물 히스토리 포맷팅 함수
-  const formatMedicationHistory = (data: unknown): string[] => {
-    if (typeof data === 'object' && data !== null) {
-      const purposeData = data as {
-        counselPurpose?: string[];
-        significantNote?: string;
-        medicationNote?: string;
-      };
-
-      const items: string[] = [];
-
-      if (purposeData.medicationNote) {
-        items.push(purposeData.medicationNote);
-      }
-
-      return items.length > 0 ? items : ['데이터 없음'];
-    }
-    return ['데이터 없음'];
-  };
-
   return (
     <SectionContainer title="상담 목적 및 특이사항" variant="default">
       <ContentCard
         title="상담 목적"
         items={counselPurposeItems}
         hasHistory={true}
-        historyType={
-          SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote
-        }
+        historyData={historyData}
+        isHistoryLoading={isLoading}
+        hasHistoryData={hasData && isInitialized}
         badgeText="상담"
         formatHistoryItem={formatCounselPurposeHistory}
       />
@@ -130,9 +76,9 @@ const CounselPurposeSection: React.FC<CounselPurposeSectionProps> = ({
         title="특이사항"
         items={significantNoteItems}
         hasHistory={true}
-        historyType={
-          SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote
-        }
+        historyData={historyData}
+        isHistoryLoading={isLoading}
+        hasHistoryData={hasData && isInitialized}
         badgeText="특이사항"
         formatHistoryItem={formatSignificantNoteHistory}
       />
@@ -140,9 +86,9 @@ const CounselPurposeSection: React.FC<CounselPurposeSectionProps> = ({
         title="약물"
         items={medicationItems}
         hasHistory={true}
-        historyType={
-          SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote
-        }
+        historyData={historyData}
+        isHistoryLoading={isLoading}
+        hasHistoryData={hasData && isInitialized}
         badgeText="약물"
         formatHistoryItem={formatMedicationHistory}
       />

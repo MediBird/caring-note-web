@@ -2,9 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { SelectPreviousItemListByInformationNameAndItemNameTypeEnum } from '@/api';
-import { useHistoryData } from '@/pages/Consult/hooks/query/useHistoryQuery';
-import HistoryPopover from './HistoryPopover';
+import HistoryPopover, { BaseHistoryItem } from './HistoryPopover';
 
 interface ContentItem {
   label?: string;
@@ -15,7 +13,9 @@ interface ContentCardProps {
   title: string;
   items: ContentItem[];
   hasHistory?: boolean;
-  historyType?: SelectPreviousItemListByInformationNameAndItemNameTypeEnum;
+  historyData?: BaseHistoryItem[];
+  isHistoryLoading?: boolean;
+  hasHistoryData?: boolean;
   badgeVariant?:
     | 'default'
     | 'destructive'
@@ -33,30 +33,26 @@ const ContentCard: React.FC<ContentCardProps> = ({
   title,
   items,
   hasHistory = false,
-  historyType,
+  historyData,
+  isHistoryLoading,
+  hasHistoryData,
   badgeVariant,
   badgeText,
   className,
   horizontalLayout = false,
   formatHistoryItem,
 }) => {
-  // Zustand 스토어에서 히스토리 데이터 가져오기
-  const { historyData, isLoading, hasData } = useHistoryData(
-    historyType ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
-  );
-
   return (
     <Card className={cn('h-fit p-4', className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h3 className="text-subtitle2 font-semibold">{title}</h3>
-            {hasHistory && historyType && (
+            {hasHistory && historyData && historyData.length > 0 && (
               <HistoryPopover
-                historyData={historyData}
-                isLoading={isLoading}
-                hasData={hasData}
+                historyData={historyData || []}
+                isLoading={isHistoryLoading}
+                hasData={hasHistoryData}
                 formatHistoryItem={formatHistoryItem}
               />
             )}

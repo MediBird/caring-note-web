@@ -1,179 +1,464 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   CounselCardControllerApi,
   SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
-  TimeRecordedResObject,
 } from '@/api';
 import { useHistoryStore } from '../store/useHistoryStore';
 import { useEffect } from 'react';
 
 const counselCardControllerApi = new CounselCardControllerApi();
 
-// 히스토리 데이터 조회 함수
-const selectPreviousItemList = async (
+// 기본 정보 히스토리 조회 훅
+export const useBaseInformationHistoryQuery = (
   counselSessionId: string,
-  type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
-): Promise<TimeRecordedResObject[]> => {
-  const response =
-    await counselCardControllerApi.selectPreviousItemListByInformationNameAndItemName(
-      counselSessionId,
-      type,
-    );
-
-  return response.data.data ?? [];
-};
-
-// 개별 히스토리 조회 훅 (내부적으로만 사용)
-const useHistoryQueryInternal = (
-  counselSessionId: string,
-  type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
   enabled: boolean = true,
 ) => {
   const { setHistoryData, setLoading, setError } = useHistoryStore();
-
-  return useQuery({
-    queryKey: ['historyData', counselSessionId, type],
+  const queryResult = useQuery({
+    queryKey: ['baseInformationHistory', counselSessionId],
     queryFn: async () => {
-      setLoading(type, true);
-      try {
-        const data = await selectPreviousItemList(counselSessionId, type);
-        setHistoryData(type, data);
-        setError(type, null);
-        return data;
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : '히스토리 조회 중 오류가 발생했습니다.';
-        setError(type, errorMessage);
-        throw error;
-      } finally {
-        setLoading(type, false);
-      }
+      const response =
+        await counselCardControllerApi.selectMainCounselBaseInformation(
+          counselSessionId,
+        );
+      return response.data.data;
     },
     enabled: !!counselSessionId && enabled,
-    staleTime: 5 * 60 * 1000, // 5분
-    gcTime: 10 * 60 * 1000, // 10분
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
+
+  const { data, isSuccess, isError, error, isLoading } = queryResult;
+
+  useEffect(() => {
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
+      isLoading,
+    );
+  }, [isLoading, setLoading]);
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      const counselPurposeHistory = data?.counselPurpose?.history || [];
+      const significantNoteHistory = data?.significantNote?.history || [];
+      const medicationNoteHistory = data?.medicationNote?.history || [];
+
+      const allHistory = [
+        ...counselPurposeHistory,
+        ...significantNoteHistory,
+        ...medicationNoteHistory,
+      ];
+
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
+        allHistory,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
+        null,
+      );
+    }
+  }, [isSuccess, data, setHistoryData, setError]);
+
+  useEffect(() => {
+    if (isError) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : '기본 정보 히스토리 조회 중 오류가 발생했습니다.';
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
+        errorMessage,
+      );
+    }
+  }, [isError, error, setError]);
+
+  return queryResult;
 };
 
-// 여러 타입의 히스토리를 한번에 조회하는 훅
-export const useInitializeHistoryData = (
+// 건강 정보 히스토리 조회 훅
+export const useHealthInformationHistoryQuery = (
   counselSessionId: string,
-  types: SelectPreviousItemListByInformationNameAndItemNameTypeEnum[],
+  enabled: boolean = true,
 ) => {
-  const { setCounselSessionId, currentCounselSessionId, clearHistoryData } =
-    useHistoryStore();
+  const { setHistoryData, setLoading, setError } = useHistoryStore();
+  const queryResult = useQuery({
+    queryKey: ['healthInformationHistory', counselSessionId],
+    queryFn: async () => {
+      const response =
+        await counselCardControllerApi.selectMainCounselHealthInformation(
+          counselSessionId,
+        );
+      return response.data.data;
+    },
+    enabled: !!counselSessionId && enabled,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
 
-  // counselSessionId가 변경되면 스토어 초기화
+  const { data, isSuccess, isError, error, isLoading } = queryResult;
+
+  useEffect(() => {
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.DiseaseInfo,
+      isLoading,
+    );
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Allergy,
+      isLoading,
+    );
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationSideEffect,
+      isLoading,
+    );
+  }, [isLoading, setLoading]);
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      const diseaseHistory = [
+        ...(data?.diseases?.history || []),
+        ...(data?.historyNote?.history || []),
+        ...(data?.mainInconvenienceNote?.history || []),
+      ];
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.DiseaseInfo,
+        diseaseHistory,
+      );
+
+      const allergyHistory = data?.allergy?.history || [];
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Allergy,
+        allergyHistory,
+      );
+
+      const medicationSideEffectHistory =
+        data?.medicationSideEffect?.history || [];
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationSideEffect,
+        medicationSideEffectHistory,
+      );
+
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.DiseaseInfo,
+        null,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Allergy,
+        null,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationSideEffect,
+        null,
+      );
+    }
+  }, [isSuccess, data, setHistoryData, setError]);
+
+  useEffect(() => {
+    if (isError) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : '건강 정보 히스토리 조회 중 오류가 발생했습니다.';
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.DiseaseInfo,
+        errorMessage,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Allergy,
+        errorMessage,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationSideEffect,
+        errorMessage,
+      );
+    }
+  }, [isError, error, setError]);
+
+  return queryResult;
+};
+
+// 자립생활 역량 히스토리 조회 훅
+export const useIndependentLifeInformationHistoryQuery = (
+  counselSessionId: string,
+  enabled: boolean = true,
+) => {
+  const { setHistoryData, setLoading, setError } = useHistoryStore();
+  const queryResult = useQuery({
+    queryKey: ['independentLifeInformationHistory', counselSessionId],
+    queryFn: async () => {
+      const response =
+        await counselCardControllerApi.selectMainCounselIndependentLifeInformation(
+          counselSessionId,
+        );
+      return response.data.data;
+    },
+    enabled: !!counselSessionId && enabled,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+
+  const { data, isSuccess, isError, error, isLoading } = queryResult;
+
+  useEffect(() => {
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Communication,
+      isLoading,
+    );
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Walking,
+      isLoading,
+    );
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Evacuation,
+      isLoading,
+    );
+  }, [isLoading, setLoading]);
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      const communicationHistory = data?.communication?.history || [];
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Communication,
+        communicationHistory,
+      );
+
+      const walkingHistory = data?.walking?.history || [];
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Walking,
+        walkingHistory,
+      );
+
+      const evacuationHistory = data?.evacuation?.history || [];
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Evacuation,
+        evacuationHistory,
+      );
+
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Communication,
+        null,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Walking,
+        null,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Evacuation,
+        null,
+      );
+    }
+  }, [isSuccess, data, setHistoryData, setError]);
+
+  useEffect(() => {
+    if (isError) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : '자립생활 역량 히스토리 조회 중 오류가 발생했습니다.';
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Communication,
+        errorMessage,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Walking,
+        errorMessage,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Evacuation,
+        errorMessage,
+      );
+    }
+  }, [isError, error, setError]);
+
+  return queryResult;
+};
+
+// 생활 정보 히스토리 조회 훅
+export const useLivingInformationHistoryQuery = (
+  counselSessionId: string,
+  enabled: boolean = true,
+) => {
+  const { setHistoryData, setLoading, setError } = useHistoryStore();
+  const queryResult = useQuery({
+    queryKey: ['livingInformationHistory', counselSessionId],
+    queryFn: async () => {
+      const response =
+        await counselCardControllerApi.selectMainCounselLivingInformation(
+          counselSessionId,
+        );
+      return response.data.data;
+    },
+    enabled: !!counselSessionId && enabled,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+
+  const { data, isSuccess, isError, error, isLoading } = queryResult;
+
+  useEffect(() => {
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Smoking,
+      isLoading,
+    );
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Drinking,
+      isLoading,
+    );
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Exercise,
+      isLoading,
+    );
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationManagement,
+      isLoading,
+    );
+    setLoading(
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Nutrition,
+      isLoading,
+    );
+  }, [isLoading, setLoading]);
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      const smokingHistory = data?.smoking?.history || [];
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Smoking,
+        smokingHistory,
+      );
+
+      const drinkingHistory = data?.drinkingAmount?.history || [];
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Drinking,
+        drinkingHistory,
+      );
+
+      const exerciseHistory = data?.exercise?.history || [];
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Exercise,
+        exerciseHistory,
+      );
+
+      const medicationManagementHistory =
+        data?.medicationManagement?.history || [];
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationManagement,
+        medicationManagementHistory,
+      );
+
+      const nutritionHistory = data?.nutrition?.history || [];
+      setHistoryData(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Nutrition,
+        nutritionHistory,
+      );
+
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Smoking,
+        null,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Drinking,
+        null,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Exercise,
+        null,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationManagement,
+        null,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Nutrition,
+        null,
+      );
+    }
+  }, [isSuccess, data, setHistoryData, setError]);
+
+  useEffect(() => {
+    if (isError) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : '생활 정보 히스토리 조회 중 오류가 발생했습니다.';
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Smoking,
+        errorMessage,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Drinking,
+        errorMessage,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Exercise,
+        errorMessage,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationManagement,
+        errorMessage,
+      );
+      setError(
+        SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Nutrition,
+        errorMessage,
+      );
+    }
+  }, [isError, error, setError]);
+
+  return queryResult;
+};
+
+// 모든 히스토리를 초기화하고 fetching하는 훅
+export const useInitializeAllHistoryData = (counselSessionId: string) => {
+  const queryClient = useQueryClient();
+  const { resetHistoryForSession, currentCounselSessionId } = useHistoryStore();
+
   useEffect(() => {
     if (counselSessionId && counselSessionId !== currentCounselSessionId) {
-      clearHistoryData();
-      setCounselSessionId(counselSessionId);
+      if (currentCounselSessionId) {
+        queryClient.removeQueries({
+          queryKey: ['baseInformationHistory', currentCounselSessionId],
+        });
+        queryClient.removeQueries({
+          queryKey: ['healthInformationHistory', currentCounselSessionId],
+        });
+        queryClient.removeQueries({
+          queryKey: [
+            'independentLifeInformationHistory',
+            currentCounselSessionId,
+          ],
+        });
+        queryClient.removeQueries({
+          queryKey: ['livingInformationHistory', currentCounselSessionId],
+        });
+      }
+      resetHistoryForSession(counselSessionId);
     }
   }, [
     counselSessionId,
     currentCounselSessionId,
-    clearHistoryData,
-    setCounselSessionId,
+    queryClient,
+    resetHistoryForSession,
   ]);
 
-  // 각 타입별로 쿼리 실행 - 조건부 훅 사용을 피하기 위해 모든 타입에 대해 훅 호출
-  const query1 = useHistoryQueryInternal(
-    counselSessionId,
-    types[0] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
-    types.length > 0,
-  );
-  const query2 = useHistoryQueryInternal(
-    counselSessionId,
-    types[1] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.DiseaseInfo,
-    types.length > 1,
-  );
-  const query3 = useHistoryQueryInternal(
-    counselSessionId,
-    types[2] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Allergy,
-    types.length > 2,
-  );
-  const query4 = useHistoryQueryInternal(
-    counselSessionId,
-    types[3] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationSideEffect,
-    types.length > 3,
-  );
-  const query5 = useHistoryQueryInternal(
-    counselSessionId,
-    types[4] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Smoking,
-    types.length > 4,
-  );
-  const query6 = useHistoryQueryInternal(
-    counselSessionId,
-    types[5] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Drinking,
-    types.length > 5,
-  );
-  const query7 = useHistoryQueryInternal(
-    counselSessionId,
-    types[6] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Exercise,
-    types.length > 6,
-  );
-  const query8 = useHistoryQueryInternal(
-    counselSessionId,
-    types[7] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.MedicationManagement,
-    types.length > 7,
-  );
-  const query9 = useHistoryQueryInternal(
-    counselSessionId,
-    types[8] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Nutrition,
-    types.length > 8,
-  );
-  const query10 = useHistoryQueryInternal(
-    counselSessionId,
-    types[9] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Communication,
-    types.length > 9,
-  );
-  const query11 = useHistoryQueryInternal(
-    counselSessionId,
-    types[10] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Walking,
-    types.length > 10,
-  );
-  const query12 = useHistoryQueryInternal(
-    counselSessionId,
-    types[11] ||
-      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.Evacuation,
-    types.length > 11,
-  );
+  const baseInfoQuery = useBaseInformationHistoryQuery(counselSessionId);
+  const healthInfoQuery = useHealthInformationHistoryQuery(counselSessionId);
+  const independentLifeQuery =
+    useIndependentLifeInformationHistoryQuery(counselSessionId);
+  const livingInfoQuery = useLivingInformationHistoryQuery(counselSessionId);
 
-  const queries = [
-    query1,
-    query2,
-    query3,
-    query4,
-    query5,
-    query6,
-    query7,
-    query8,
-    query9,
-    query10,
-    query11,
-    query12,
-  ].slice(0, types.length);
-
-  const isLoading = queries.some((query) => query.isLoading);
-  const hasError = queries.some((query) => query.error);
+  const isLoading =
+    baseInfoQuery.isLoading ||
+    healthInfoQuery.isLoading ||
+    independentLifeQuery.isLoading ||
+    livingInfoQuery.isLoading;
+  const hasError =
+    baseInfoQuery.error ||
+    healthInfoQuery.error ||
+    independentLifeQuery.error ||
+    livingInfoQuery.error;
 
   return {
     isLoading,
     hasError,
-    queries,
   };
 };
 
@@ -181,12 +466,17 @@ export const useInitializeHistoryData = (
 export const useHistoryData = (
   type: SelectPreviousItemListByInformationNameAndItemNameTypeEnum,
 ) => {
-  const { getHistoryData, isHistoryLoading, hasHistoryData } =
-    useHistoryStore();
+  const {
+    getHistoryData,
+    isHistoryLoading,
+    hasHistoryData,
+    isHistoryInitialized,
+  } = useHistoryStore();
 
   return {
     historyData: getHistoryData(type),
     isLoading: isHistoryLoading(type),
     hasData: hasHistoryData(type),
+    isInitialized: isHistoryInitialized(type),
   };
 };

@@ -4,15 +4,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { History, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { TimeRecordedResObject } from '@/api';
 import HistoryList from './HistoryList';
 import { Button } from '../ui/button';
 
+// 히스토리 데이터의 기본 구조
+export interface BaseHistoryItem {
+  counselDate?: string;
+  data?: unknown;
+}
+
 interface HistoryPopoverProps {
-  historyData: TimeRecordedResObject[];
+  historyData: BaseHistoryItem[];
   isLoading?: boolean;
   hasData?: boolean;
   formatHistoryItem?: (data: unknown) => string[];
@@ -70,7 +75,7 @@ const HistoryPopover: React.FC<HistoryPopoverProps> = ({
         />
       </PopoverTrigger>
       <PopoverContent className="w-96 p-0" align="start" side="bottom">
-        <div className="flex max-h-[480px] flex-col">
+        <div className="flex h-[480px] max-h-[480px] flex-col">
           <div className="flex flex-shrink-0 items-center justify-between px-6 py-5">
             <h2 className="text-subtitle2 font-bold">히스토리</h2>
             <Button
@@ -81,8 +86,8 @@ const HistoryPopover: React.FC<HistoryPopoverProps> = ({
               <X />
             </Button>
           </div>
-          <ScrollArea className="flex-1" variant="mini">
-            <div className="px-6">
+          <div className="min-h-0 flex-1">
+            <ScrollArea className="h-full px-6" variant="mini">
               {isLoading ? (
                 <div className="flex items-center justify-center p-8">
                   <div className="text-grayscale-60">
@@ -110,8 +115,9 @@ const HistoryPopover: React.FC<HistoryPopoverProps> = ({
                   ))}
                 </div>
               )}
-            </div>
-          </ScrollArea>
+              <ScrollBar orientation="vertical" />
+            </ScrollArea>
+          </div>
         </div>
       </PopoverContent>
     </Popover>
