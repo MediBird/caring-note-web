@@ -1,8 +1,10 @@
 import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { History } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SelectPreviousItemListByInformationNameAndItemNameTypeEnum } from '@/api';
+import { useHistoryData } from '@/pages/Consult/hooks/query/useHistoryQuery';
+import HistoryPopover from './HistoryPopover';
 
 interface ContentItem {
   label?: string;
@@ -13,7 +15,7 @@ interface ContentCardProps {
   title: string;
   items: ContentItem[];
   hasHistory?: boolean;
-  historyActive?: boolean;
+  historyType?: SelectPreviousItemListByInformationNameAndItemNameTypeEnum;
   badgeVariant?:
     | 'default'
     | 'destructive'
@@ -24,29 +26,38 @@ interface ContentCardProps {
   badgeText?: string;
   className?: string;
   horizontalLayout?: boolean;
+  formatHistoryItem?: (data: unknown) => string[];
 }
 
 const ContentCard: React.FC<ContentCardProps> = ({
   title,
   items,
   hasHistory = false,
+  historyType,
   badgeVariant,
   badgeText,
   className,
   horizontalLayout = false,
+  formatHistoryItem,
 }) => {
+  // Zustand 스토어에서 히스토리 데이터 가져오기
+  const { historyData, isLoading, hasData } = useHistoryData(
+    historyType ||
+      SelectPreviousItemListByInformationNameAndItemNameTypeEnum.CounselPurposeAndNote,
+  );
+
   return (
     <Card className={cn('h-fit p-4', className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h3 className="text-subtitle2 font-semibold">{title}</h3>
-            {hasHistory && (
-              <History
-                className={cn(
-                  'h-6 w-6',
-                  'text-primary hover:text-primary/80 cursor-pointer rounded-lg bg-grayscale-5 p-[2px]',
-                )}
+            {hasHistory && historyType && (
+              <HistoryPopover
+                historyData={historyData}
+                isLoading={isLoading}
+                hasData={hasData}
+                formatHistoryItem={formatHistoryItem}
               />
             )}
           </div>

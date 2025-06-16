@@ -256,7 +256,7 @@ export function Index() {
         // 2. 통합된 MediaRecorder 시작
         await useRecordingStore.getState().startMediaRecording(stream);
 
-        toast.success('녹음이 시작되었습니다.');
+        toast.info('녹음이 시작되었습니다.');
       } catch (error) {
         console.error('Fallback 녹음 시작 실패:', error);
         useRecordingStore.getState().setError('마이크 접근이 거부되었습니다.');

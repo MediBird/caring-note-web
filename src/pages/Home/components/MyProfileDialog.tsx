@@ -95,9 +95,15 @@ export function MyProfileDialog({ children }: MyProfileDialogProps) {
   };
 
   const handleSave = () => {
+    // 이름 필수 검증
+    if (!editData.name.trim()) {
+      alert('이름은 필수 입력 항목입니다.');
+      return;
+    }
+
     const updateData: UpdateMyInfoReq = {
       name: editData.name,
-      phoneNumber: editData.phoneNumber,
+      phoneNumber: editData.phoneNumber || undefined, // 전화번호는 선택사항
     };
     updateMyInfoMutation.mutate(updateData);
   };
@@ -209,7 +215,10 @@ export function MyProfileDialog({ children }: MyProfileDialogProps) {
                         const formattedNumber = formatter.input(
                           e.target.value.replace(/[^0-9]/g, ''),
                         );
-                        setEditData({ ...editData, phoneNumber: formattedNumber });
+                        setEditData({
+                          ...editData,
+                          phoneNumber: formattedNumber,
+                        });
                       }
                     }}
                     disabled={!isEditing}

@@ -220,7 +220,7 @@ export const ConsultRecordingControl: React.FC<
       startDurationTimer();
       startAutoSaveTimer(); // 자동 저장 시작
 
-      toast.success('녹음이 시작되었습니다.');
+      toast.info('녹음이 시작되었습니다.');
     } catch (error) {
       console.error('녹음 시작 실패:', error);
       toast.error('마이크 접근이 거부되었습니다.');
@@ -271,7 +271,7 @@ export const ConsultRecordingControl: React.FC<
         console.log('녹음 파일이 저장소에 저장되었습니다.');
       }
 
-      toast.success('녹음이 정지되었습니다. 저장 버튼을 눌러 업로드하세요.');
+      toast.info('녹음이 정지되었습니다. 저장 버튼을 눌러 업로드하세요.');
     } catch (error) {
       console.error('녹음 정지 실패:', error);
       toast.error('녹음 정지에 실패했습니다.');
@@ -353,12 +353,12 @@ export const ConsultRecordingControl: React.FC<
       case 'idle':
         return (
           <>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <span className="whitespace-nowrap text-body1 font-bold text-grayscale-80">
                 녹음 시작하기
               </span>
               <span className="text-body1 font-medium text-grayscale-30">
-                ({formatDuration(displayDuration)})
+                {formatDuration(displayDuration)}
               </span>
             </div>
             <Button
@@ -378,7 +378,7 @@ export const ConsultRecordingControl: React.FC<
                 녹음 중
               </span>
               <span className="text-body1 font-medium text-grayscale-70">
-                ({formatDuration(displayDuration)})
+                {formatDuration(displayDuration)}
               </span>
               <div className="h-2 w-2 animate-pulse rounded-full bg-error-50"></div>
             </div>
@@ -404,12 +404,12 @@ export const ConsultRecordingControl: React.FC<
       case 'paused':
         return (
           <>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <span className="whitespace-nowrap text-body1 font-bold text-grayscale-80">
                 녹음 일시정지
               </span>
               <span className="text-body1 font-medium text-grayscale-30">
-                ({formatDuration(displayDuration)})
+                {formatDuration(displayDuration)}
               </span>
             </div>
             <div className="flex gap-2">
@@ -434,12 +434,12 @@ export const ConsultRecordingControl: React.FC<
       case 'stopped':
         return (
           <>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <span className="whitespace-nowrap text-body1 font-bold text-grayscale-80">
                 녹음 종료
               </span>
-              <span className="text-body1 font-medium text-grayscale-70">
-                ({formatDuration(displayDuration)})
+              <span className="text-body1 font-medium text-grayscale-60">
+                {formatDuration(displayDuration)}
               </span>
             </div>
             <div className="flex gap-2">
@@ -467,10 +467,10 @@ export const ConsultRecordingControl: React.FC<
           <>
             <div className="flex items-center gap-2">
               <span className="whitespace-nowrap text-body1 font-bold text-grayscale-80">
-                녹음 업로드 중...
+                녹음 저장 중...
               </span>
               <span className="text-body1 font-medium text-grayscale-50">
-                ({formatDuration(displayDuration)})
+                {formatDuration(displayDuration)}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -487,17 +487,8 @@ export const ConsultRecordingControl: React.FC<
                 AI 요약 처리 중...
               </span>
               <span className="text-body1 font-medium text-grayscale-50">
-                ({formatDuration(displayDuration)})
+                {formatDuration(displayDuration)}
               </span>
-              {aiSummaryStatus && (
-                <span className="text-xs text-grayscale-60">
-                  {aiSummaryStatus === 'STT_PROGRESS'
-                    ? 'STT 처리 중'
-                    : aiSummaryStatus === 'GPT_PROGRESS'
-                      ? 'GPT 처리 중'
-                      : aiSummaryStatus}
-                </span>
-              )}
             </div>
             <div className="flex items-center gap-2">
               <div className="h-5 w-5 animate-spin rounded-full border-2 border-grayscale-30 border-t-primary-60"></div>
@@ -508,13 +499,10 @@ export const ConsultRecordingControl: React.FC<
       case 'completed':
         return (
           <>
-            <div className="flex items-center gap-1">
-              <span className="whitespace-nowrap text-body1 font-bold text-primary-60">
+            <div className="flex items-center gap-2">
+              <span className="whitespace-nowrap text-body1 font-semibold text-primary-60">
                 녹음 저장 완료!
               </span>
-              {/* <span className="text-body1 font-medium text-primary-50">
-                ({formatDuration(displayDuration)})
-              </span> */}
             </div>
             <div className="flex gap-2">
               <Button
@@ -546,8 +534,8 @@ export const ConsultRecordingControl: React.FC<
   ]);
 
   const containerClasses = cn(
-    'h-[48px] w-auto min-w-[300px] rounded-lg px-4 py-2',
-    'flex items-center justify-between gap-4 border shadow-sm bg-grayscale-03',
+    'h-[48px] w-auto min-w-[284px] rounded-lg px-4 py-2',
+    'flex items-center justify-between gap-4 bg-grayscale-3',
     className,
   );
 
