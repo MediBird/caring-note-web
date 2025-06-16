@@ -104,11 +104,6 @@ export const useRecordingStore = create<RecordingStore>()(
       })),
 
     loadSession: async (sessionId) => {
-      const state = get();
-
-      // 같은 세션이면 로드하지 않음
-      if (state.session.currentSessionId === sessionId) return;
-
       set((state) => ({
         session: { ...state.session, isLoading: true },
       }));

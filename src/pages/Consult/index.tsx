@@ -40,8 +40,6 @@ export function Index() {
 
   // 녹음 상태 가져오기 (선택자 패턴 사용)
   const session = useRecordingStore(recordingSelectors.session);
-  const file = useRecordingStore(recordingSelectors.file);
-  const timer = useRecordingStore(recordingSelectors.timer);
 
   // 녹음 스토어 액션
   const loadSession = useRecordingStore((state) => state.loadSession);
@@ -174,31 +172,30 @@ export function Index() {
 
   // 페이지 첫 진입시에만 녹음 다이얼로그 표시
   useEffect(() => {
-    // 상담 데이터 로딩이 완료되고, AI 요약 상태 로딩이 완료되고,
-    // 세션 로딩이 완료되고, 아직 다이얼로그를 보여준 적이 없으며,
-    // 녹음이 시작되지 않은 상태이고, AI 요약이 없는 상태에서만 다이얼로그 표시
-    const shouldShowDialog =
-      !isConsultDataLoading &&
-      !isAISummaryStatusLoading &&
-      !session.isLoading && // 세션 로딩 완료 확인
-      !hasShownDialogRef.current &&
-      session.status === 'idle' &&
-      !file.blob &&
-      timer.totalDuration === 0 &&
-      !session.aiSummaryStatus; // AI 요약이 없는 경우에만 다이얼로그 표시
+    const isReady =
+      !isConsultDataLoading && !isAISummaryStatusLoading && !session.isLoading;
 
-    if (shouldShowDialog) {
+    if (!isReady || hasShownDialogRef.current) {
+      return;
+    }
+
+    const summaryStatus = aiSummaryStatusData?.aiCounselSummaryStatus;
+
+    if (
+      !summaryStatus &&
+      session.status === 'idle' &&
+      counselSessionInfo?.status === 'IN_PROGRESS'
+    ) {
       setIsRecordingDialogOpen(true);
       hasShownDialogRef.current = true;
     }
   }, [
     isConsultDataLoading,
     isAISummaryStatusLoading,
-    session.isLoading, // 세션 로딩 상태 추가
+    session.isLoading,
+    aiSummaryStatusData,
     session.status,
-    file.blob,
-    timer.totalDuration,
-    session.aiSummaryStatus,
+    counselSessionInfo?.status,
   ]);
 
   const saveConsult = useCallback(async () => {

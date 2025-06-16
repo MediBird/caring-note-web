@@ -61,7 +61,7 @@ const ConsultCard: React.FC = () => {
             기초 설문 수정하기
           </Button>
         </CardHeader>
-        <div className="columns-1 gap-6 md:columns-2 [&>*]:mb-6 [&>*]:break-inside-avoid">
+        <div className="columns-1 gap-6 lg:columns-2 [&>*]:mb-6 [&>*]:break-inside-avoid">
           {/* 상담 목적 및 특이사항 섹션 */}
           <CounselPurposeSection
             baseInfoData={baseInfoData}
