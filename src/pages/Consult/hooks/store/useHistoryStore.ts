@@ -87,13 +87,15 @@ const createInitialState = (): HistoryState => {
 export const useHistoryStore = create<HistoryStore>((set, get) => ({
   ...createInitialState(),
 
-  setHistoryData: (type, data) =>
+  setHistoryData: (type, data) => {
+    console.log(`Setting history data for type: ${type}`, data);
     set((state) => ({
       historyData: {
         ...state.historyData,
         [type]: data,
       },
-    })),
+    }));
+  },
 
   setLoading: (type, isLoading) =>
     set((state) => ({
@@ -132,11 +134,20 @@ export const useHistoryStore = create<HistoryStore>((set, get) => ({
 
   hasHistoryData: (type) => {
     const data = get().historyData[type];
-    return Array.isArray(data) && data.length > 0;
+    const hasData = Array.isArray(data) && data.length > 0;
+    console.log(`hasHistoryData for ${type}:`, data, 'hasData:', hasData);
+    return hasData;
   },
 
   isHistoryInitialized: (type) => {
     const data = get().historyData[type];
-    return data !== null;
+    const isInitialized = data !== null;
+    console.log(
+      `isHistoryInitialized for ${type}:`,
+      data,
+      'isInitialized:',
+      isInitialized,
+    );
+    return isInitialized;
   },
 }));

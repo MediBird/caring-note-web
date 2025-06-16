@@ -35,10 +35,34 @@ import {
 
 // 상담 목적 히스토리 포맷팅 함수
 export const formatCounselPurposeHistory = (data: unknown): string[] => {
+  console.log('formatCounselPurposeHistory - input data:', data);
+
+  // 데이터가 직접 배열인 경우 처리
+  if (Array.isArray(data)) {
+    console.log('formatCounselPurposeHistory - data is array:', data);
+    const purposes = data
+      .map(
+        (purpose) =>
+          COUNSEL_PURPOSE_MAP[
+            purpose as CounselPurposeAndNoteDTOCounselPurposeEnum
+          ],
+      )
+      .filter(Boolean)
+      .join(', ');
+    console.log('formatCounselPurposeHistory - formatted purposes:', purposes);
+    return purposes ? [purposes] : ['데이터 없음'];
+  }
+
+  // 기존 객체 형태 처리 (하위 호환성)
   if (typeof data === 'object' && data !== null) {
     const counselData = data as {
       counselPurpose?: string[];
     };
+
+    console.log(
+      'formatCounselPurposeHistory - parsed counselData:',
+      counselData,
+    );
 
     const items: string[] = [];
 
@@ -56,19 +80,39 @@ export const formatCounselPurposeHistory = (data: unknown): string[] => {
         .filter(Boolean)
         .join(', ');
       if (purposes) items.push(purposes);
+      console.log(
+        'formatCounselPurposeHistory - formatted purposes:',
+        purposes,
+      );
     }
 
+    console.log('formatCounselPurposeHistory - final items:', items);
     return items.length > 0 ? items : ['데이터 없음'];
   }
+
+  console.log(
+    'formatCounselPurposeHistory - returning 데이터 없음 (not array or object)',
+  );
   return ['데이터 없음'];
 };
 
 // 특이사항 히스토리 포맷팅 함수
 export const formatSignificantNoteHistory = (data: unknown): string[] => {
+  console.log('formatSignificantNoteHistory - input data:', data);
+
+  // 데이터가 직접 문자열인 경우 처리
+  if (typeof data === 'string' && data.trim()) {
+    console.log('formatSignificantNoteHistory - data is string:', data);
+    return [data];
+  }
+
+  // 기존 객체 형태 처리 (하위 호환성)
   if (typeof data === 'object' && data !== null) {
     const noteData = data as {
       significantNote?: string;
     };
+
+    console.log('formatSignificantNoteHistory - parsed noteData:', noteData);
 
     const items: string[] = [];
 
@@ -76,17 +120,35 @@ export const formatSignificantNoteHistory = (data: unknown): string[] => {
       items.push(noteData.significantNote);
     }
 
+    console.log('formatSignificantNoteHistory - final items:', items);
     return items.length > 0 ? items : ['데이터 없음'];
   }
+  console.log(
+    'formatSignificantNoteHistory - returning 데이터 없음 (not string or object)',
+  );
   return ['데이터 없음'];
 };
 
 // 약물 히스토리 포맷팅 함수
 export const formatMedicationHistory = (data: unknown): string[] => {
+  console.log('formatMedicationHistory - input data:', data);
+
+  // 데이터가 직접 문자열인 경우 처리
+  if (typeof data === 'string' && data.trim()) {
+    console.log('formatMedicationHistory - data is string:', data);
+    return [data];
+  }
+
+  // 기존 객체 형태 처리 (하위 호환성)
   if (typeof data === 'object' && data !== null) {
     const medicationData = data as {
       medicationNote?: string;
     };
+
+    console.log(
+      'formatMedicationHistory - parsed medicationData:',
+      medicationData,
+    );
 
     const items: string[] = [];
 
@@ -94,17 +156,37 @@ export const formatMedicationHistory = (data: unknown): string[] => {
       items.push(medicationData.medicationNote);
     }
 
+    console.log('formatMedicationHistory - final items:', items);
     return items.length > 0 ? items : ['데이터 없음'];
   }
+  console.log(
+    'formatMedicationHistory - returning 데이터 없음 (not string or object)',
+  );
   return ['데이터 없음'];
 };
 
 // 질병 정보 히스토리 포맷팅 함수 (앓고 있는 질병용)
 export const formatDiseaseHistory = (data: unknown): string[] => {
+  console.log('formatDiseaseHistory - input data:', data);
+
+  // 데이터가 직접 배열인 경우 처리
+  if (Array.isArray(data)) {
+    console.log('formatDiseaseHistory - data is array:', data);
+    const diseases = data
+      .map((disease) => DISEASE_MAP[disease as DiseaseInfoDTODiseasesEnum])
+      .filter(Boolean)
+      .join(' · ');
+    console.log('formatDiseaseHistory - formatted diseases:', diseases);
+    return diseases ? [diseases] : ['데이터 없음'];
+  }
+
+  // 기존 객체 형태 처리 (하위 호환성)
   if (typeof data === 'object' && data !== null) {
     const diseaseData = data as {
       diseases?: string[];
     };
+
+    console.log('formatDiseaseHistory - parsed diseaseData:', diseaseData);
 
     const items: string[] = [];
 
@@ -114,19 +196,35 @@ export const formatDiseaseHistory = (data: unknown): string[] => {
         .filter(Boolean)
         .join(' · ');
       if (diseases) items.push(diseases);
+      console.log('formatDiseaseHistory - formatted diseases:', diseases);
     }
 
+    console.log('formatDiseaseHistory - final items:', items);
     return items.length > 0 ? items : ['데이터 없음'];
   }
+  console.log(
+    'formatDiseaseHistory - returning 데이터 없음 (not array or object)',
+  );
   return ['데이터 없음'];
 };
 
 // 질병 및 수술 이력 히스토리 포맷팅 함수
 export const formatDiseaseHistoryNote = (data: unknown): string[] => {
+  console.log('formatDiseaseHistoryNote - input data:', data);
+
+  // 데이터가 직접 문자열인 경우 처리
+  if (typeof data === 'string' && data.trim()) {
+    console.log('formatDiseaseHistoryNote - data is string:', data);
+    return [data];
+  }
+
+  // 기존 객체 형태 처리 (하위 호환성)
   if (typeof data === 'object' && data !== null) {
     const diseaseData = data as {
       historyNote?: string;
     };
+
+    console.log('formatDiseaseHistoryNote - parsed diseaseData:', diseaseData);
 
     const items: string[] = [];
 
@@ -134,17 +232,35 @@ export const formatDiseaseHistoryNote = (data: unknown): string[] => {
       items.push(diseaseData.historyNote);
     }
 
+    console.log('formatDiseaseHistoryNote - final items:', items);
     return items.length > 0 ? items : ['데이터 없음'];
   }
+  console.log(
+    'formatDiseaseHistoryNote - returning 데이터 없음 (not string or object)',
+  );
   return ['데이터 없음'];
 };
 
 // 주요 불편 증상 히스토리 포맷팅 함수
 export const formatMainInconvenienceHistory = (data: unknown): string[] => {
+  console.log('formatMainInconvenienceHistory - input data:', data);
+
+  // 데이터가 직접 문자열인 경우 처리
+  if (typeof data === 'string' && data.trim()) {
+    console.log('formatMainInconvenienceHistory - data is string:', data);
+    return [data];
+  }
+
+  // 기존 객체 형태 처리 (하위 호환성)
   if (typeof data === 'object' && data !== null) {
     const diseaseData = data as {
       mainInconvenienceNote?: string;
     };
+
+    console.log(
+      'formatMainInconvenienceHistory - parsed diseaseData:',
+      diseaseData,
+    );
 
     const items: string[] = [];
 
@@ -152,18 +268,26 @@ export const formatMainInconvenienceHistory = (data: unknown): string[] => {
       items.push(diseaseData.mainInconvenienceNote);
     }
 
+    console.log('formatMainInconvenienceHistory - final items:', items);
     return items.length > 0 ? items : ['데이터 없음'];
   }
+  console.log(
+    'formatMainInconvenienceHistory - returning 데이터 없음 (not string or object)',
+  );
   return ['데이터 없음'];
 };
 
 // 알레르기 히스토리 포맷팅 함수
 export const formatAllergyHistory = (data: unknown): string[] => {
+  console.log('formatAllergyHistory - input data:', data, 'type:', typeof data);
+
   if (typeof data === 'object' && data !== null) {
     const allergyData = data as {
       isAllergic?: boolean;
       allergyNote?: string;
     };
+
+    console.log('formatAllergyHistory - parsed allergyData:', allergyData);
 
     const items: string[] = [];
 
@@ -175,19 +299,35 @@ export const formatAllergyHistory = (data: unknown): string[] => {
       items.push(`의심 식품/약물: ${allergyData.allergyNote}`);
     }
 
+    console.log('formatAllergyHistory - final items:', items);
     return items.length > 0 ? items : ['데이터 없음'];
   }
+  console.log(
+    'formatAllergyHistory - returning 데이터 없음 (not object or null)',
+  );
   return ['데이터 없음'];
 };
 
 // 약물 부작용 히스토리 포맷팅 함수
 export const formatMedicationSideEffectHistory = (data: unknown): string[] => {
+  console.log(
+    'formatMedicationSideEffectHistory - input data:',
+    data,
+    'type:',
+    typeof data,
+  );
+
   if (typeof data === 'object' && data !== null) {
     const sideEffectData = data as {
       isMedicationSideEffect?: boolean;
       suspectedMedicationNote?: string;
       symptomsNote?: string;
     };
+
+    console.log(
+      'formatMedicationSideEffectHistory - parsed sideEffectData:',
+      sideEffectData,
+    );
 
     const items: string[] = [];
 
@@ -205,8 +345,12 @@ export const formatMedicationSideEffectHistory = (data: unknown): string[] => {
       items.push(`부작용 증상: ${sideEffectData.symptomsNote}`);
     }
 
+    console.log('formatMedicationSideEffectHistory - final items:', items);
     return items.length > 0 ? items : ['데이터 없음'];
   }
+  console.log(
+    'formatMedicationSideEffectHistory - returning 데이터 없음 (not object or null)',
+  );
   return ['데이터 없음'];
 };
 
