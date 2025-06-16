@@ -37,6 +37,7 @@ export function Index() {
   const recordedBlob = useRecordingStore((state) => state.recordedBlob);
   const aiSummaryStatus = useRecordingStore((state) => state.aiSummaryStatus);
   const totalDuration = useRecordingStore((state) => state.totalDuration);
+  const isLoadingSession = useRecordingStore((state) => state.isLoadingSession);
 
   // AI 요약 상태 조회 (로딩 상태 확인용)
   const { data: aiSummaryStatusData, isLoading: isAISummaryStatusLoading } =
@@ -162,11 +163,12 @@ export function Index() {
   // 페이지 첫 진입시에만 녹음 다이얼로그 표시
   useEffect(() => {
     // 상담 데이터 로딩이 완료되고, AI 요약 상태 로딩이 완료되고,
-    // 아직 다이얼로그를 보여준 적이 없으며,
+    // 세션 로딩이 완료되고, 아직 다이얼로그를 보여준 적이 없으며,
     // 녹음이 시작되지 않은 상태이고, AI 요약이 없는 상태에서만 다이얼로그 표시
     const shouldShowDialog =
       !isConsultDataLoading &&
       !isAISummaryStatusLoading &&
+      !isLoadingSession && // 세션 로딩 완료 확인
       !hasShownDialogRef.current &&
       recordingStatus === 'idle' &&
       !recordedBlob &&
@@ -180,6 +182,7 @@ export function Index() {
   }, [
     isConsultDataLoading,
     isAISummaryStatusLoading,
+    isLoadingSession, // 세션 로딩 상태 추가
     recordingStatus,
     recordedBlob,
     totalDuration,

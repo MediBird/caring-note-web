@@ -30,6 +30,42 @@ interface TableFilterProps {
   selectedValues?: string[];
 }
 
+// 초성 추출 함수
+const getInitialConsonants = (str: string) => {
+  const initialConsonants = [
+    'ㄱ',
+    'ㄲ',
+    'ㄴ',
+    'ㄷ',
+    'ㄸ',
+    'ㄹ',
+    'ㅁ',
+    'ㅂ',
+    'ㅃ',
+    'ㅅ',
+    'ㅆ',
+    'ㅇ',
+    'ㅈ',
+    'ㅉ',
+    'ㅊ',
+    'ㅋ',
+    'ㅌ',
+    'ㅍ',
+    'ㅎ',
+  ];
+
+  return str
+    .split('')
+    .map((char) => {
+      const code = char.charCodeAt(0) - 0xac00;
+      if (code > -1 && code < 11172) {
+        return initialConsonants[Math.floor(code / 588)];
+      }
+      return char;
+    })
+    .join('');
+};
+
 const TableFilter = ({
   title,
   options,
@@ -50,9 +86,24 @@ const TableFilter = ({
     setTempSelectedValues(externalSelectedValues || []);
   }, [externalSelectedValues]);
 
-  const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchValue.toLowerCase()),
-  );
+  const normalizeString = (str: string) => {
+    return str.normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim();
+  };
+
+  const filteredOptions = options.filter((option) => {
+    const normalizedLabel = normalizeString(option.label);
+    const normalizedSearch = normalizeString(searchValue);
+
+    // 일반 검색
+    if (normalizedLabel.includes(normalizedSearch)) {
+      return true;
+    }
+
+    // 초성 검색
+    const labelInitials = getInitialConsonants(normalizedLabel);
+    const searchInitials = getInitialConsonants(normalizedSearch);
+    return labelInitials.includes(searchInitials);
+  });
 
   const handleSelect = (value: string) => {
     setTempSelectedValues((prev) =>
@@ -69,6 +120,10 @@ const TableFilter = ({
       onSelectionChange(tempSelectedValues);
       setSearchValue('');
     }
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchValue(value);
   };
 
   const handleClear = () => {
@@ -118,7 +173,7 @@ const TableFilter = ({
           <CommandInput
             placeholder={title}
             value={searchValue}
-            onValueChange={setSearchValue}
+            onValueChange={handleSearchChange}
           />
           <div className="flex flex-col">
             <CommandList className="max-h-[200px] overflow-auto">

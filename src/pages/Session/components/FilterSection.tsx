@@ -14,6 +14,7 @@ import {
   SearchCounselSessionsStatusesEnum,
 } from '@/constants/counselSessionConstants';
 import { GetCounselorResRoleTypeEnum } from '@/api';
+import { useAuthContext } from '@/context/AuthContext';
 
 export const FilterSection = () => {
   // 스토어와 데이터
@@ -22,6 +23,7 @@ export const FilterSection = () => {
   const { data: counselorNames = [] } = useCounselorList();
   const selectedCounselors = params.counselorNames || [];
   const selectedStatuses = params.statuses || [];
+  const { user } = useAuthContext();
 
   // 입력 오류 표시 상태
   const [keywordError, setKeywordError] = useState<string | null>(null);
@@ -149,7 +151,9 @@ export const FilterSection = () => {
           />
         </div>
 
-        <CreateReservationDialog />
+        {user?.roleType === GetCounselorResRoleTypeEnum.Admin && (
+          <CreateReservationDialog />
+        )}
       </div>
     </div>
   );
