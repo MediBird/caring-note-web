@@ -80,6 +80,10 @@ const FinishConsultDialog: React.FC<FinishConsultDialogProps> = ({
       return;
     }
 
+    if (session.aiSummaryStatus === 'GPT_COMPLETED') {
+      return;
+    }
+
     // 최소 녹음 시간 확인
     if (recordingState.duration < RECORDING_CONFIG.MIN_RECORDING_DURATION) {
       throw new Error(
