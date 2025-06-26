@@ -15,10 +15,10 @@ function MeaningfulStatistics() {
 
   // 로딩 중이거나 데이터가 없을 때의 기본값
   const stats = {
-    counselHours: data?.counselHoursForThisMonth ?? 0,
+    counselHours: data?.counselHoursThisMonth ?? 0,
     counseleeCount: data?.counseleeCountForThisMonth ?? 0,
-    totalSessions: data?.totalSessionCount ?? 0,
-    caringMessages: data?.totalCaringMessageCount ?? 0,
+    totalSessions: data?.medicationCounselCountThisYear ?? 0,
+    caringMessages: data?.counselorCountThisYear ?? 0,
   };
 
   return (

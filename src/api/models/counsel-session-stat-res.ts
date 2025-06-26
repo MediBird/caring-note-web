@@ -25,7 +25,7 @@ export interface CounselSessionStatRes {
      * @type {number}
      * @memberof CounselSessionStatRes
      */
-    'totalSessionCount'?: number;
+    'counselHoursThisMonth'?: number;
     /**
      * 
      * @type {number}
@@ -37,12 +37,12 @@ export interface CounselSessionStatRes {
      * @type {number}
      * @memberof CounselSessionStatRes
      */
-    'totalCaringMessageCount'?: number;
+    'medicationCounselCountThisYear'?: number;
     /**
      * 
      * @type {number}
      * @memberof CounselSessionStatRes
      */
-    'counselHoursForThisMonth'?: number;
+    'counselorCountThisYear'?: number;
 }
 
