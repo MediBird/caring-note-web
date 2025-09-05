@@ -198,11 +198,11 @@ const extractSimpleTextFromLexical = (lexicalState: unknown): string => {
 const markdownToHtml = (markdown: string): string => {
   if (!markdown) return '';
 
-  // 먼저 헤더 처리
+  // 먼저 헤더 처리 (줄바꿈 제거)
   let html = markdown
-    .replace(/### (.*?)(?:\n|$)/g, '<h3>$1</h3>\n') // ### 헤더
-    .replace(/## (.*?)(?:\n|$)/g, '<h2>$1</h2>\n') // ## 헤더
-    .replace(/# (.*?)(?:\n|$)/g, '<h1>$1</h1>\n'); // # 헤더
+    .replace(/### (.*?)(?:\n|$)/g, '<h3>$1</h3>') // ### 헤더
+    .replace(/## (.*?)(?:\n|$)/g, '<h2>$1</h2>') // ## 헤더
+    .replace(/# (.*?)(?:\n|$)/g, '<h1>$1</h1>'); // # 헤더
 
   // 텍스트 스타일링
   html = html
@@ -214,15 +214,16 @@ const markdownToHtml = (markdown: string): string => {
   const lines = html.split('\n');
   const processedLines = lines.map((line) => {
     const trimmedLine = line.trim();
-    if (!trimmedLine) return '';
-    if (trimmedLine.startsWith('<h') || trimmedLine.startsWith('</h'))
-      return line;
-    if (trimmedLine.startsWith('<p>') || trimmedLine.startsWith('</p>'))
-      return line;
+    if (!trimmedLine) return ''; // 빈 줄은 빈 문자열로 유지
+    if (trimmedLine.startsWith('<h') && trimmedLine.includes('</h'))
+      return trimmedLine; // 헤더는 그대로 유지
+    if (trimmedLine.startsWith('<p>') && trimmedLine.includes('</p>'))
+      return trimmedLine; // 이미 p 태그로 감싸진 경우
     return `<p>${trimmedLine}</p>`;
   });
 
-  return processedLines.filter((line) => line).join('\n');
+  // 빈 문자열 제거하고 단일 줄바꿈으로 연결
+  return processedLines.filter((line) => line).join('');
 };
 
 // 기본 정보 포맷팅
