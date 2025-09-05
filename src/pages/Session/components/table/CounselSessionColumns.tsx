@@ -25,8 +25,10 @@ import { COUNSEL_SESSION_STATUS_LABELS } from '@/constants/counselSessionConstan
 
 export const createScheduleColumns = ({
   onDelete,
+  onDownloadPDF,
 }: {
   onDelete: (id: string) => void;
+  onDownloadPDF: (session: SelectCounselSessionRes) => void;
 }): ColumnDef<SelectCounselSessionRes>[] => [
   {
     id: 'counseleeName',
@@ -50,7 +52,7 @@ export const createScheduleColumns = ({
       if (status === SelectCounselSessionListItemStatusEnum.Canceled) {
         return <TableCell text="-" />;
       }
-      
+
       return <TableCell text={sessionCount?.toString() + '회차'} />;
     },
   },
@@ -80,7 +82,7 @@ export const createScheduleColumns = ({
       if (status === SelectCounselSessionListItemStatusEnum.Canceled) {
         return <TableCell text="-" />;
       }
-      
+
       return <TableCell text={formatDisplayText(counselorName)} />;
     },
   },
@@ -135,6 +137,12 @@ export const createScheduleColumns = ({
   {
     id: 'actions',
     cell: ({ row }) => {
+      const handleDownloadPDF = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onDownloadPDF(row.original);
+      };
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -173,6 +181,14 @@ export const createScheduleColumns = ({
               onDelete={onDelete}
               id={row.original.counselSessionId as string}
             />
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onClick={handleDownloadPDF}>
+              <div className="flex items-center gap-2">다운로드</div>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
