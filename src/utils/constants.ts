@@ -634,3 +634,10 @@ export const COUNSELOR_ROLE_TYPE_MAP: Record<
     textColor: 'text-error-60',
   },
 } as const;
+
+// 의약품 사용 상태 코드 매핑
+export const MEDICATION_STATUS_MAP = {
+  REGULAR: '상시복용',
+  AS_NEEDED: '필요 시 복용',
+  STOPPED: '복용 중단',
+} as const;
